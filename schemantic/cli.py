@@ -29,6 +29,7 @@ def parser() -> argparse.ArgumentParser:
     d.add_argument("--no-install", action="store_true")
     i = sub.add_parser("icons", help="search the icons by name, tag and category: icons [search] <words>")
     i.add_argument("words", nargs="*")
+    sub.add_parser("gallery", help="build every example and write the README images to assets/gallery/")
     g = sub.add_parser("docs", help="regenerate references/lint-fixes.md from the findings table")
     g.add_argument("--check", action="store_true", help="exit 1 if the file is out of date instead of writing it")
     return ap
@@ -43,6 +44,9 @@ def run(a) -> tuple[dict, int]:
         words = a.words[1:] if a.words[:1] == ["search"] else a.words
         found = icons.search(words, limit=40) if words else sorted(icons.index())
         return {"icons": found, "count": len(found)}, 0
+    if a.cmd == "gallery":
+        from .gallery import build_gallery
+        return build_gallery(), 0
     if a.cmd == "docs":
         from .findings import LINT_FIXES, lint_fixes_md
         fresh = lint_fixes_md()

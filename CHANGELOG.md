@@ -53,6 +53,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - D7: `build` writes `<name>.md`, an outline of the plate (title, claim, panels and cards, flows, open questions,
   principles), also used as the SVG's `<desc>`.
 - D8: `evals/`: eight cases (prompt, fictional inputs, rubric), an automated grader, a judge prompt and a runner.
+  First results (Sonnet 5.5 and Haiku 5.5): without the skill 0/8 pass the automated grade on either model; with it
+  8/8 build lint-clean with claim titles and nothing invented, and Haiku's judged defects halve (3.8 to 2.0 per
+  plate). The grader matches word stems and card refs, and skips the invented-name check when the plate translates
+  its inputs. Remaining defects and the full table are in `evals/README.md`.
 
 ### Added (Phase E)
 - E1: the `swimlane` archetype: one lane per actor with its name on the left, steps as cards in phase columns
@@ -63,6 +67,18 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   Example: `examples/kliniek-zones.yaml`.
 - The `process-strip` panel pattern: 3–7 numbered steps in a row (fixture `tests/fixtures/process-strip.yaml`).
 - The router tries more straight positions along a shared span before bending.
+
+### Added (Phase F: docs and hygiene)
+- F2: a user-facing README: what it is, install as a skill, one build command, a gallery per archetype, the linted
+  spec sample, status, how it works, licences. Design rationale and findings moved to `docs/design-notes.md`.
+- F3: `docs/architecture.md`: the pipeline, the module map, the JS/Python boundary, how the router chooses, parity and
+  snapshots, and how to add an archetype.
+- F4: `CONTRIBUTING.md` (setup, tests, the golden, snapshot and gallery policy, rules) and this changelog.
+- F5: `schemantic gallery` builds every example and writes WebP images to `assets/gallery/` with a manifest; a test
+  fails when the gallery no longer matches the examples. The old 1.6 MB PNG copies are gone.
+- F6: `references/lint-fixes.md` is generated from `schemantic/findings.py` (`schemantic docs`, tested).
+- F7: a test checks that the README, SKILL.md and the archetypes reference list exactly the built archetypes and
+  patterns.
 
 ### Changed
 - B1: the code is a package, `schemantic/`, with a CLI: `python -m schemantic build | lint | render | doctor | icons |
@@ -85,6 +101,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   `schemantic/findings.py`, and every check has a test that triggers it.
 
 ### Fixed
+- Wrapped rows inside a zone keep their content height; spare height stays in the zone frame instead of opening
+  holes in its panels (found by the evals; the nested-zones golden changes: its panels are shorter).
 - A1: duplicate panel ids, duplicate card ids, and card ids equal to a panel id or an automatic card id are
   `id` errors naming both places; card ids must match `^[a-z][a-z0-9_-]*$`.
 - A2: the default footer widths follow the footer panels present, so a footer without a context panel spans
