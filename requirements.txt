@@ -1,7 +1,9 @@
-playwright
+# playwright is pinned: its Chromium build does the layout, and tests/golden/ was rendered with it.
+playwright==1.64.1
 pyyaml
 jsonschema
 jinja2
 pillow
 fonttools
 brotli
+pytest

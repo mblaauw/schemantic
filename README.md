@@ -27,7 +27,22 @@ python3 scripts/lint.py   examples/orderplatform-toegang.yaml --out out
 `out/_work/` for debugging only). `lint.py` emits a JSON report and exits `1` on errors.
 
 Needs Python 3.10+, `playwright` (with Chromium: `playwright install chromium`),
-`pyyaml`, `jsonschema`, `jinja2`, `pillow`, and `fonttools` with `brotli`.
+`pyyaml`, `jsonschema`, `jinja2`, `pillow`, `fonttools` with `brotli`, and `pytest`.
+
+Only `column-flow` is built. The schema lists the other archetypes as the planned contract,
+but render and lint refuse them with an `archetype` error until their template exists.
+
+## Tests
+
+```bash
+python3 -m pytest -q                  # spec checks, lint, and renders against tests/golden/
+python3 -m pytest -q --update-golden  # after an intended visual change; review and commit the PNGs
+```
+
+Every example in `examples/` is rendered and compared with `tests/golden/<name>.png`, using
+the same blurred comparison lint uses for SVG parity: sub-pixel noise passes, while a
+reworded note already fails. Golden images are made on macOS with the pinned Playwright
+Chromium, and CI runs on macOS for that reason.
 
 Fonts are bundled in `assets/fonts/` (Inter, and DejaVu Sans Mono for paths), so nothing
 needs to be installed and every machine lays the plate out the same way. The HTML loads
@@ -51,7 +66,7 @@ identically in Cairo (Inkscape's renderer) and Chromium.
 | Panel patterns: tier strip, tree, matrix | Built |
 | Flow arrows in gutters, labels on vertical arrows | Built |
 | Locales `nl` (default, English technical terms) and `en` | Built |
-| Lint: schema, areas, flow endpoints, chip mirror, icons, never-translate terms (substring, for Dutch compounds), text overflow, containment, overlap, canvas fit, type floor, contrast, arrow routing, arrow labels, chip length, density, SVG parity | Built |
+| Lint: schema, built archetype, areas, flow endpoints, chip mirror, icons, never-translate terms (substring, for Dutch compounds), text overflow, containment, overlap, canvas fit, type floor, contrast, arrow routing, arrow labels, chip length, density, SVG parity | Built |
 | Other eight body archetypes; process strip, mini sequence, lifecycle loop | Not yet |
 | Elbow connectors, connectors from cards, text-as-outlines SVG | Not yet |
 | `SKILL.md`, `references/` | Not yet |
@@ -67,6 +82,7 @@ assets/icons/            58 Tabler outline icons (MIT, see LICENSE-tabler-icons.
 assets/fonts/            Inter 4.1 (400–800) and DejaVu Sans Mono 2.37, with their licences
 scripts/                 platelib.py (shared), render.py, lint.py
 examples/                fictional plates (spec only; renders go to out/)
+tests/                   pytest suite; golden/ holds the reference render of each example
 ```
 
 ## Spec in one look

@@ -16,6 +16,7 @@ import jsonschema
 import yaml
 from fontTools import subset
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from PIL import Image, ImageChops, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
 CANVAS_SIZES = {"landscape-4x3": (1600, 1200), "landscape-16x9": (1920, 1080)}
@@ -24,11 +25,19 @@ GUTTER_X = 48
 # Row gutters also hold a one-line arrow label at 11 px.
 GUTTER_Y = 44
 TYPE_FLOOR_PX = 11
+# The schema lists every planned archetype; only these have a template. The rest are refused, not drawn as column-flow.
+BUILT_ARCHETYPES = ["column-flow"]
 # Bundled faces (assets/fonts), loaded through @font-face so layout never depends on installed fonts.
 # The HTML gets the full files; the SVG gets a subset of the glyphs it uses.
 FONTS = [("Inter", 400, "Inter-Regular.woff2"), ("Inter", 500, "Inter-Medium.woff2"),
          ("Inter", 600, "Inter-SemiBold.woff2"), ("Inter", 700, "Inter-Bold.woff2"),
          ("Inter", 800, "Inter-ExtraBold.woff2"), ("DejaVu Sans Mono", 400, "DejaVuSansMono.woff2")]
+# Image comparison (SVG parity in lint, golden renders in tests) is structural, not pixel-perfect: Chromium
+# snaps HTML text and borders to whole pixels while the SVG keeps fractions. A 1.5 px blur absorbs that;
+# a dropped card still leaves thousands of pixels.
+PARITY_BLUR_PX = 1.5
+PARITY_DELTA = 40            # grey-level difference (0-255) after blur
+PARITY_ERROR_SHARE = 0.0001  # 0.01 % of the canvas, about 190 px at 1600 x 1200
 
 
 # ---------------------------------------------------------------- spec
@@ -58,10 +67,14 @@ def area_tokens(spec: dict) -> list[list[str]]:
 
 
 def semantic_errors(spec: dict) -> list[dict]:
-    """Checks the schema cannot express: areas, ids, flow endpoints, chips, language."""
+    """Checks the schema cannot express: archetype, areas, ids, flow endpoints, chips, language."""
     out = []
     err = lambda check, id_, detail, level="error": out.append(
         {"level": level, "check": check, "id": id_, "detail": detail})
+
+    if spec["archetype"] not in BUILT_ARCHETYPES:
+        err("archetype", "archetype", f"'{spec['archetype']}' is not built yet; use one of {', '.join(BUILT_ARCHETYPES)}")
+        return out
 
     rows = area_tokens(spec)
     widths = {len(r) for r in rows}
@@ -469,6 +482,19 @@ def export_svg(page, spec: dict) -> tuple[str, list[str]]:
             f'<defs><style>\n{subset_font_css(d["used"])}\n</style></defs>\n')
     fonts = sorted(k.replace("|", " ") for k in d["used"])
     return head + "\n".join(d["items"]) + "\n</svg>\n", fonts
+
+
+def image_diff(a_path: Path, b_path: Path, mask_path: Path) -> dict:
+    """Share of pixels that still differ after a blur; writes the difference mask to mask_path."""
+    a = Image.open(a_path).convert("L").filter(ImageFilter.GaussianBlur(PARITY_BLUR_PX))
+    b = Image.open(b_path).convert("L").filter(ImageFilter.GaussianBlur(PARITY_BLUR_PX))
+    if a.size != b.size:
+        return {"share": 1.0, "detail": f"size differs: {a.size} vs {b.size}", "bbox": None}
+    mask = ImageChops.difference(a, b).point(lambda v: 255 if v > PARITY_DELTA else 0)
+    count = mask.histogram()[255]
+    mask.save(mask_path)
+    return {"share": count / (a.size[0] * a.size[1]), "bbox": mask.getbbox(),
+            "detail": f"{count} pixels differ after a {PARITY_BLUR_PX} px blur" + (f", within {mask.getbbox()}" if count else "")}
 
 
 def rasterise_svg(browser, svg_path: Path, spec: dict, png_path: Path, scale: float = 2) -> None:

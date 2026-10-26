@@ -13,7 +13,6 @@ import json
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageChops, ImageFilter
 from playwright.sync_api import sync_playwright
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -22,11 +21,6 @@ import platelib as pl  # noqa: E402
 # Panel content filling less than this share of its panel reads as "visibly emptier" (review question 4);
 # 0.6 flagged the one panel a reviewer called empty in the first test plate and none of the others.
 DENSITY_MIN = 0.6
-# Parity is structural, not pixel-perfect: Chromium snaps HTML text and borders to whole pixels while the
-# SVG keeps fractional positions. A 1.5 px blur absorbs that; a dropped card still leaves thousands of pixels.
-PARITY_BLUR_PX = 1.5
-PARITY_DELTA = 40           # grey-level difference (0-255) after blur
-PARITY_ERROR_SHARE = 0.0001  # 0.01 % of the canvas, about 190 px at 1600 x 1200
 
 LINT_JS = r"""
 (cfg) => {
@@ -131,15 +125,7 @@ def parity(browser, html: str, spec: dict, svg_path: Path, work: Path) -> dict:
     page.locator("#plate").screenshot(path=str(work / "html.png"))
     page.close()
     pl.rasterise_svg(browser, svg_path, spec, work / "svg.png", scale=1)
-    a = Image.open(work / "html.png").convert("L").filter(ImageFilter.GaussianBlur(PARITY_BLUR_PX))
-    b = Image.open(work / "svg.png").convert("L").filter(ImageFilter.GaussianBlur(PARITY_BLUR_PX))
-    if a.size != b.size:
-        return {"share": 1.0, "detail": f"size differs: html {a.size} vs svg {b.size}", "bbox": None}
-    mask = ImageChops.difference(a, b).point(lambda v: 255 if v > PARITY_DELTA else 0)
-    count = mask.histogram()[255]
-    mask.save(work / "parity-diff.png")
-    return {"share": count / (a.size[0] * a.size[1]), "bbox": mask.getbbox(),
-            "detail": f"{count} pixels differ after a {PARITY_BLUR_PX} px blur" + (f", within {mask.getbbox()}" if count else "")}
+    return pl.image_diff(work / "html.png", work / "svg.png", work / "parity-diff.png")
 
 
 def main() -> int:
@@ -175,7 +161,7 @@ def main() -> int:
             par = parity(browser, html, spec, svg_path, work)
             browser.close()
         report["parity"] = {"share": round(par["share"], 6), "detail": par["detail"]}
-        if par["share"] > PARITY_ERROR_SHARE:
+        if par["share"] > pl.PARITY_ERROR_SHARE:
             issues.append({"level": "error", "check": "svg-parity", "id": "(plate)", "detail": par["detail"]})
         elif par["share"] > 0:
             issues.append({"level": "warning", "check": "svg-parity", "id": "(plate)", "detail": par["detail"]})
