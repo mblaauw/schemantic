@@ -29,4 +29,29 @@ and have a separate agent apply `judge.md` to the same folder (the judged half).
 
 ## Results
 
-Not run yet in this release; see the latest entry in `CHANGELOG.md`.
+Run of 26 October 2026: eight cases, with and without the skill, on Sonnet 5.5 and Haiku 5.5, one run each. A
+case passes when the automated grade passes and the judge finds no invented content and no defect.
+
+| Model | Skill | Automated | Judged | Claim title | Nothing invented | Layout fits | Defects per plate |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Sonnet 5.5 | without | 0/8 | 0/8 | 0/8 | 7/8 | 8/8 | 2.9 |
+| Sonnet 5.5 | with | 8/8 | 0/8 | 8/8 | 8/8 | 8/8 | 2.8 |
+| Haiku 5.5 | without | 0/8 | 0/8 | 0/8 | 5/8 | 7/8 | 3.8 |
+| Haiku 5.5 | with | 8/8 | 2/8 | 8/8 | 8/8 | 8/8 | 2.0 |
+
+Without the skill neither model produces a spec, a lint-clean build or traceable cards, so the automated half fails
+every case; the judge then sees hand-drawn SVG or HTML. With the skill every plate builds clean, every title is a
+claim and nothing is invented. Haiku gains the most: fewer invented items and half the defects.
+
+The judge fails a plate on any one defect, which is strict on purpose. What it still found on the 16 plates made
+with the skill, most frequent first:
+
+- **Holes** (9 plates): a panel visibly emptier than its neighbours, often under the 96 px void threshold, or a
+  short panel beside a tall one. Haiku's case 6 was judged on a render from before the nested-zones fix in this
+  release, which removes its worst holes.
+- **Footer over an eighth** (5): principles, open questions and a legend on two lines take about a fifth.
+- **Paths drawn panel to panel** (4): the title promises a path through named cards that the arrows do not show.
+- **Role colour** (4): systems in a people panel, or one colour for everything.
+- **Open questions the sources settle** (4).
+
+These are the next targets for lint and the review questions.

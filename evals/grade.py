@@ -34,6 +34,16 @@ def words(text: str) -> set[str]:
     return {w for w in re.findall(r"[a-z0-9]+", text.lower()) if len(w) > 2 and w not in STOP}
 
 
+def stem(w: str) -> str:
+    return w[:5]
+
+
+def traced(text: str, stems: set[str], share: float = 1.0) -> bool:
+    """At least `share` of the text's words appear in the sources, compared by their first five letters."""
+    ws = words(text)
+    return sum(stem(w) in stems for w in ws) >= share * len(ws) if ws else False
+
+
 def svg_text(path: Path) -> str:
     return " ".join(re.sub(r"<[^>]+>", "", t) for t in re.findall(r"<text[^>]*>.*?</text>", path.read_text(encoding="utf-8")))
 
@@ -70,9 +80,14 @@ def grade(case: Path, run: Path) -> dict:
         checks["archetype"] = all(doc["archetype"] in rubric["archetype"] for _, doc in specs)
         checks["lang"] = all(doc["canvas"]["lang"] == rubric["lang"] for _, doc in specs)
         cards = [c for _, doc in specs for panel in doc["panels"] for c in panel.get("cards", [])]
-        invented = [c["name"] for c in cards
-                    if not words(c["name"]) <= in_words and not any(q in inputs for q in re.findall(r"'([^']+)'", " ".join(c.get("refs", []))))]
-        checks["invented"] = invented
+        in_stems = {stem(w) for w in in_words}
+        # A card is traced when its name's words are in the sources, or a ref quotes them (the text after "<source>:").
+        refs_of = lambda c: [r.split(":", 1)[-1] for r in c.get("refs", [])]  # noqa: E731
+        invented = [c["name"] for c in cards if c["name"].lower() not in inputs.lower()
+                    and not traced(c["name"], in_stems) and not any(traced(r, in_stems, 0.6) for r in refs_of(c))]
+        # A plate in another language than its sources translates every name; then only the judge can tell.
+        checks["invented"] = invented if language(inputs) == rubric["lang"] else []
+        checks["invented_checked"] = language(inputs) == rubric["lang"]
         count = lambda f: sum(f(doc) for _, doc in specs)  # noqa: E731
         checks["open_questions"] = count(lambda d: len(sp.open_questions(d)))
         checks["warnings"] = count(lambda d: sum(ch["kind"] == "warning" for p in d["panels"] for ch in p.get("chips", []))
