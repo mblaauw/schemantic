@@ -3,7 +3,7 @@
 
 Usage: python3 scripts/lint.py <spec.yaml> [--out DIR]
 
-Spec checks: schema, areas, ids, flow endpoints, chip mirror, icons, never-translate terms.
+Spec checks: schema, archetype, layout keys, areas, ids, flow endpoints, chip mirror, icons, never-translate terms.
 Layout checks (in Chromium): text overflow, overlap, canvas fit, type floor, contrast,
 arrow routing, arrow labels, chip length, panel density, SVG parity with the HTML layout.
 Every finding names the element id, so the fix goes into the spec, not into the output.
@@ -80,15 +80,18 @@ LINT_JS = r"""
     if (r.r > pin.r + 1 || r.b > pin.b + 1 || r.l < pin.l - 1 || r.t < pin.t - 1)
       add('error', 'canvas-fit', el.dataset.id, `extends ${Math.round(Math.max(r.r - pin.r, r.b - pin.b))}px past the canvas margin`); }
 
-  // Arrows: no crossing of panels other than their endpoints; labels clear of every box
-  const panels = kinds.filter(e => e.dataset.kind === 'panel');
+  // Arrows: every run stays off panels other than the endpoints' own, and off cards other than the endpoints;
+  // labels clear of every box
+  const panels = kinds.filter(e => e.dataset.kind === 'panel'), cards = kinds.filter(e => e.dataset.kind === 'card');
   for (const s of cfg.segs) {
-    const seg = {l: Math.min(s.x1, s.x2) - 1, r: Math.max(s.x1, s.x2) + 1, t: Math.min(s.y1, s.y2) - 1, b: Math.max(s.y1, s.y2) + 1};
-    for (const p of panels) {
-      const id = p.dataset.id, ends = [s.from, s.to].map(x => x.split('.')[0]);
-      if (ends.includes(id)) continue;
-      if (inter(seg, rel(p.getBoundingClientRect())) > 0) add('error', 'arrow-routing', `flows/${s.i}`, `arrow ${s.from} -> ${s.to} crosses panel ${id}`);
+    const crossed = new Set();
+    for (let k = 0; k < s.points.length - 1; k++) {
+      const [p, q] = [s.points[k], s.points[k + 1]];
+      const seg = {l: Math.min(p[0], q[0]) - 1, r: Math.max(p[0], q[0]) + 1, t: Math.min(p[1], q[1]) - 1, b: Math.max(p[1], q[1]) + 1};
+      for (const el of panels) if (![s.fromPanel, s.toPanel].includes(el.dataset.id) && inter(seg, rel(el.getBoundingClientRect())) > 0) crossed.add(`panel ${el.dataset.id}`);
+      for (const el of cards) if (![s.from, s.to].includes(el.dataset.id) && inter(seg, rel(el.getBoundingClientRect())) > 0) crossed.add(`card ${el.dataset.id}`);
     }
+    for (const c of crossed) add('error', 'arrow-routing', `flows/${s.i}`, `arrow ${s.from} -> ${s.to} crosses ${c}`);
     const containers = ['body', 'footer', 'titleblock'];
     if (s.label) for (const el of kinds) {
       if (containers.includes(el.dataset.kind)) continue;

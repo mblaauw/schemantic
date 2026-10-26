@@ -10,8 +10,22 @@ There are no coordinates in the spec. Chromium does the layout with CSS Grid; a
 script measures every box, line and text run, then writes native SVG
 (`rect`, `path`, `text`, `line`). The PNG is a raster of that same SVG.
 
-> Status: proof of concept. One body archetype (`column-flow`) and its component
-> set are built end to end; the remaining archetypes are not yet implemented.
+> Status: proof of concept. Three body archetypes (`column-flow`, `hub-and-spokes`,
+> `layer-cake`), a connector router and a Claude skill are built end to end; six more
+> archetypes are planned.
+
+## Use it as a Claude skill
+
+The repository is a skill: [`SKILL.md`](SKILL.md) takes Claude from a description of a system
+to a finished plate. It picks a layout, writes the spec, runs lint, fixes the spec until lint
+is clean, renders, and reviews the PNG. Link the folder into your skills directory:
+
+```bash
+ln -s "$PWD" ~/.claude/skills/schemantic
+```
+
+Then ask for a plate in plain words ("draw our order platform: one gateway, four services,
+a data platform underneath"). The skill sets up its own `.venv` on first use.
 
 ## Quickstart
 
@@ -29,8 +43,9 @@ python3 scripts/lint.py   examples/orderplatform-toegang.yaml --out out
 Needs Python 3.10+, `playwright` (with Chromium: `playwright install chromium`),
 `pyyaml`, `jsonschema`, `jinja2`, `pillow`, `fonttools` with `brotli`, and `pytest`.
 
-Only `column-flow` is built. The schema lists the other archetypes as the planned contract,
-but render and lint refuse them with an `archetype` error until their template exists.
+`column-flow`, `hub-and-spokes` and `layer-cake` are built. The schema lists the other
+archetypes as the planned contract, but render and lint refuse them with an `archetype` error
+until they exist. [`references/archetypes.md`](references/archetypes.md) describes each layout.
 
 ## Tests
 
@@ -62,23 +77,26 @@ identically in Cairo (Inkscape's renderer) and Chromium.
 | --- | --- |
 | Canvas frame: title block, part badge, footer (context, principles, open questions, legend) | Built |
 | Body archetype: column flow, with spanning areas over several rows | Built |
+| Body archetype: hub and spokes (up to 4 above, 4 below, one each side; framed hub) | Built |
+| Body archetype: layer cake (2–5 layers, rails left and right) | Built |
 | Components: panel (role colours), card, bullets, warning and info chips | Built |
 | Panel patterns: tier strip, tree, matrix | Built |
-| Flow arrows in gutters, labels on vertical arrows | Built |
+| Connectors: panel or card endpoints; straight, or one or two rounded bends through the gutters; one- or two-way; labels beside or above any run with room | Built |
 | Locales `nl` (default, English technical terms) and `en` | Built |
-| Lint: schema, built archetype, areas, flow endpoints, chip mirror, icons, never-translate terms (substring, for Dutch compounds), text overflow, containment, overlap, canvas fit, type floor, contrast, arrow routing, arrow labels, chip length, density, SVG parity | Built |
-| Other eight body archetypes; process strip, mini sequence, lifecycle loop | Not yet |
-| Elbow connectors, connectors from cards, text-as-outlines SVG | Not yet |
-| `SKILL.md`, `references/` | Not yet |
+| Lint: schema, built archetype, layout keys, areas, flow endpoints, chip mirror, icons, never-translate terms (substring, for Dutch compounds), text overflow, containment, overlap, canvas fit, type floor, contrast, arrow routing (panels and cards), arrow labels, chip length, density, SVG parity | Built |
+| `SKILL.md` and `references/` (archetypes, spec guide, lint fixes, review questions) | Built |
+| Other six body archetypes; process strip, mini sequence, lifecycle loop | Not yet |
+| Text-as-outlines SVG | Not yet |
 
 ## Layout of the folder
 
 ```text
-SKILL.md (not yet)       references/ (not yet)
+SKILL.md                 the skill: description to finished plate
+references/              archetypes, spec guide, lint fixes, review questions (read by the skill)
 schema/plate.schema.json spec contract
 locales/                 fixed labels per language, never-translate list
 templates/               plate.html.j2, tokens.css (theme, override per project), components.css
-assets/icons/            58 Tabler outline icons (MIT, see LICENSE-tabler-icons.txt)
+assets/icons/            57 Tabler outline icons (MIT, see LICENSE-tabler-icons.txt)
 assets/fonts/            Inter 4.1 (400–800) and DejaVu Sans Mono 2.37, with their licences
 scripts/                 platelib.py (shared), render.py, lint.py
 examples/                fictional plates (spec only; renders go to out/)
@@ -114,7 +132,18 @@ The full contract lives in [`schema/plate.schema.json`](schema/plate.schema.json
 ![Rendered plate: order platform access and data flow](assets/example-orderplatform.png)
 
 Rendered from [`examples/orderplatform-toegang.yaml`](examples/orderplatform-toegang.yaml)
-(`landscape-4x3`, `nl`, part 2 of 3).
+(`column-flow`, `nl`, part 2 of 3).
+
+![Rendered plate: the order platform's event bus as hub and spokes](assets/example-eventbus.png)
+
+Rendered from [`examples/orderplatform-eventbus.yaml`](examples/orderplatform-eventbus.yaml)
+(`hub-and-spokes`, `en`, part 3 of 3). The dead-letter queue connects card to card, turning
+through the gutter into the operations spoke.
+
+![Rendered plate: an internal developer platform as a layer cake](assets/example-layers.png)
+
+Rendered from [`examples/ontwikkelplatform-lagen.yaml`](examples/ontwikkelplatform-lagen.yaml)
+(`layer-cake`, `nl`), with security and observability as rails.
 
 
 ## Findings from building it
@@ -126,6 +155,10 @@ Rendered from [`examples/orderplatform-toegang.yaml`](examples/orderplatform-toe
   plate with one card deleted scores about 4,600 pixels, so the check is structural.
 - Density below 0.6 matched the one panel that looked empty on review; the fix was content, not layout.
 - A long Dutch word ("gestandaardiseerd") overflowed a tier tile; lint caught it, block weights fixed it.
+- Connectors are routed against measured boxes, not drawn from the spec. A rail card connected to the
+  card at the far end of a layer had no clear route; lint said so, and the fix was card order in the spec.
+- Text baselines must be measured at the real font size: a 100 px probe scaled down drifted by a pixel
+  once Inter replaced the system font, enough to fail parity on bold titles.
 
 ## Icons
 

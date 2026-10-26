@@ -22,13 +22,19 @@
     "archetype": {"enum": ["column-flow", "hub-and-spokes", "banded-matrix", "layer-cake", "nested-zones",
                            "swimlane", "before-after", "roadmap", "landscape-map"]},
     "layout": {
+      "$comment": "Which keys apply depends on the archetype; semantic checks enforce that (platelib.LAYOUT_KEYS).",
       "type": "object",
-      "required": ["areas"],
       "additionalProperties": false,
       "properties": {
         "areas": {"type": "array", "minItems": 1, "maxItems": 3, "items": {"type": "string"}},
         "column_widths": {"type": "array", "items": {"type": "number", "exclusiveMinimum": 0}},
-        "row_heights": {"type": "array", "items": {"enum": ["fill", "auto"]}}
+        "row_heights": {"type": "array", "items": {"enum": ["fill", "auto"]}},
+        "hub": {"type": "string"},
+        "top": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "string"}},
+        "bottom": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "string"}},
+        "layers": {"type": "array", "minItems": 2, "maxItems": 5, "items": {"type": "string"}},
+        "left": {"type": "string"},
+        "right": {"type": "string"}
       }
     },
     "panels": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/panel"}},
@@ -36,7 +42,8 @@
       "type": "array",
       "items": {
         "type": "object", "required": ["from", "to"], "additionalProperties": false,
-        "properties": {"from": {"type": "string"}, "to": {"type": "string"}, "label": {"type": "string", "maxLength": 28}}
+        "properties": {"from": {"type": "string"}, "to": {"type": "string"}, "label": {"type": "string", "maxLength": 28},
+                       "both": {"type": "boolean"}}
       }
     },
     "footer": {
@@ -98,7 +105,7 @@
         "role": {"enum": ["platform", "storage", "external"]},
         "arrange": {"enum": ["column", "row"]},
         "weights": {"type": "array", "maxItems": 3, "items": {"type": "number", "exclusiveMinimum": 0}},
-        "card_columns": {"type": "integer", "minimum": 1, "maximum": 3},
+        "card_columns": {"type": "integer", "minimum": 1, "maximum": 6},
         "cards": {"type": "array", "maxItems": 6, "items": {"$ref": "#/$defs/card"}},
         "patterns": {"type": "array", "maxItems": 2, "items": {"$ref": "#/$defs/pattern"}},
         "chips": {"type": "array", "maxItems": 2, "items": {"$ref": "#/$defs/chip"}}

@@ -66,3 +66,48 @@ def test_technical_term_stays_english_inside_compound(example):
     example["panels"][0]["cards"][0]["note"] = "leest de productcatalogus"
     found = errors(example)
     assert [e["id"] for e in found if e["check"] == "language"] == ["catalog"]
+
+
+def hub_spec(example, **layout):
+    example["archetype"] = "hub-and-spokes"
+    example["layout"] = layout
+    return example
+
+
+def test_hub_layout_is_derived(example):
+    spec = hub_spec(example, hub="identity", top=["clients", "gateway", "services"], bottom=["data"], right="x")
+    assert pl.area_tokens(spec) == [
+        ["clients", "gateway", "services", "x"],
+        ["identity", "identity", "identity", "x"],
+        ["data", "data", "data", "x"],
+    ]
+    # The side spoke is as wide as one top spoke; the hub row fills, spoke rows hug their content.
+    assert pl.column_weights(spec, 4) == [1, 1, 1, 1]
+    assert pl.default_row_heights(spec, pl.area_tokens(spec)) == ["auto", "fill", "auto"]
+
+
+def test_hub_spreads_uneven_rows_over_shared_columns(example):
+    spec = hub_spec(example, hub="identity", top=["clients", "gateway", "services"], bottom=["data", "x"])
+    assert pl.area_tokens(spec)[2] == ["data"] * 3 + ["x"] * 3
+
+
+def test_layer_cake_rails_span_every_layer(example):
+    example["archetype"] = "layer-cake"
+    example["layout"] = {"layers": ["clients", "gateway"], "left": "identity"}
+    assert pl.area_tokens(example) == [["identity", "clients"], ["identity", "gateway"]]
+
+
+def test_layout_key_from_another_archetype(example):
+    example["archetype"] = "hub-and-spokes"
+    # row_heights applies to every archetype; areas and column_widths belong to column-flow alone.
+    assert {e["id"] for e in errors(example)} == {"layout.hub", "layout.areas", "layout.column_widths"}
+
+
+def test_panel_placed_twice(example):
+    hub_spec(example, hub="identity", top=["clients", "gateway"], bottom=["services", "data"], right="clients")
+    assert [e["id"] for e in errors(example)] == ["clients"]
+
+
+def test_hub_needs_two_spokes(example):
+    hub_spec(example, hub="identity", top=["clients"])
+    assert [e["id"] for e in errors(example)] == ["layout.hub"]

@@ -1,0 +1,101 @@
+# Fictional example: a layer-cake plate in Dutch with English technical terms, rails on both sides,
+# and connectors from a rail card into a layer card.
+canvas: {size: landscape-4x3, lang: nl}
+title: "Intern ontwikkelplatform — van commit tot productie"
+subtitle: "Vier lagen, met security en observability als rails die alle lagen raken"
+archetype: layer-cake
+
+layout:
+  layers: [experience, delivery, runtime, infra]
+  left: security
+  right: observability
+
+panels:
+  - id: experience
+    title: "Developer experience"
+    subtitle: "Waar teams beginnen"
+    role: external
+    cards:
+      - {icon: browser, name: "Developer portal", note: "één ingang voor alle teams"}
+      - {icon: folder, name: "Service catalog", note: "eigenaar en status per service"}
+      - {icon: route, name: "Golden paths", note: "templates voor een nieuwe service"}
+      - {icon: file-text, name: "Docs", note: "naast de code, in de portal"}
+
+  - id: delivery
+    title: "Delivery"
+    subtitle: "Van commit naar een gedeployde release"
+    role: platform
+    cards:
+      - {icon: git-branch, name: "CI pipelines", note: "build en test per commit"}
+      - {icon: package, name: "Artifact registry", note: "images en packages, gesigneerd"}
+      - {icon: git-merge, name: "GitOps", note: "gewenste staat staat in Git"}
+      - {icon: flag, name: "Feature flags", note: "uitrol los van deploy"}
+
+  - id: runtime
+    title: "Runtime"
+    subtitle: "Waar de services draaien"
+    role: platform
+    cards:
+      - {id: admission, icon: lock-access, name: "Admission control", note: "weigert wat niet aan policy voldoet"}
+      - {icon: server, name: "Kubernetes clusters", note: "één per omgeving"}
+      - {icon: network, name: "Service mesh", note: "mTLS tussen alle services"}
+      - {icon: key, name: "Secrets", note: "korte levensduur, nooit in Git"}
+
+  - id: infra
+    title: "Infrastructuur"
+    subtitle: "Beheerd als code"
+    role: storage
+    cards:
+      - {icon: cloud, name: "Cloud accounts", note: "per team en omgeving"}
+      - {icon: world, name: "Netwerk", note: "private endpoints, geen publieke IP's"}
+      - {icon: database, name: "Managed databases", note: "back-ups en patches door de provider"}
+      - {icon: box, name: "Object storage", note: "buckets per domein"}
+    chips:
+      - {kind: warning, text: "Eén cloud account per team, of per team en omgeving?"}
+
+  - id: security
+    title: "Security"
+    role: platform
+    cards:
+      - icon: users
+        name: "Identity"
+        note: "SSO voor mensen en pipelines"
+        bullets: ["workload identity in plaats van keys", "rollen per team, beheerd in de portal"]
+      - icon: certificate
+        id: policy
+        name: "Policy as code"
+        note: "regels in Git"
+        bullets: ["getest in CI, net als code", "afgedwongen bij admission"]
+      - icon: shield-lock
+        name: "Scanning"
+        note: "images en dependencies"
+        bullets: ["blokkeert bij kritieke CVE's", "een SBOM per image"]
+    chips:
+      - {kind: info, text: "Uitzonderingen via een pull request"}
+
+  - id: observability
+    title: "Observability"
+    role: platform
+    cards:
+      - {icon: file-search, name: "Logs", note: "centraal, 30 dagen", bullets: ["gestructureerd, met trace-id"]}
+      - {icon: chart-bar, name: "Metrics", note: "SLO's per service", bullets: ["error budget zichtbaar in de portal"]}
+      - {icon: route, name: "Traces", note: "door de mesh heen", bullets: ["10% sampling, fouten altijd"]}
+      - {icon: bell, name: "Alerting", note: "naar het team dat eigenaar is", bullets: ["routing via de service catalog"]}
+    chips:
+      - {kind: info, text: "Golden paths leveren alerts mee"}
+
+flows:
+  - {from: experience, to: delivery, label: "scaffolding"}
+  - {from: delivery, to: runtime, label: "deploy via GitOps"}
+  - {from: runtime, to: infra}
+  - {from: policy, to: admission}
+  - {from: runtime, to: observability}
+
+footer:
+  columns: [1.6, 1.1, 0.9]
+  principles:
+    - "Een team komt via de portal binnen, niet via een ticket bij het platformteam."
+    - "Alles wat draait, is gedeployed via GitOps; handmatige wijzigingen worden teruggedraaid."
+    - "Security en observability zitten in het platform, niet in elke service apart."
+  open_questions: {from_chips: true}
+  legend: auto

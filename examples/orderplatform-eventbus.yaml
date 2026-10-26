@@ -1,0 +1,108 @@
+# Fictional example: a hub-and-spokes plate in English, with a connector that starts at a card.
+canvas: {size: landscape-4x3, lang: en, series: orderplatform, part: 3, of: 3}
+title: "Order platform after phase 3 — the event bus"
+subtitle: "Domains publish each fact once; every consumer reads it from the same bus"
+archetype: hub-and-spokes
+
+layout:
+  hub: bus
+  top: [orders, payments, shipping]
+  bottom: [search, analytics, notify]
+  right: ops
+
+panels:
+  - id: bus
+    title: "Event bus"
+    subtitle: "Managed Kafka, one topic per event type"
+    role: platform
+    card_columns: 2
+    cards:
+      - {icon: stack-2, name: "Topics", note: "orders.placed, payments.captured, parcels.shipped"}
+      - {icon: file-text, name: "Schema registry", note: "every event has a versioned schema"}
+      - {icon: refresh, name: "Replay", note: "consumers rewind up to 14 days"}
+      - {id: dlq, icon: alert-triangle, name: "Dead-letter queue", note: "events no consumer could handle"}
+    patterns:
+      - type: matrix
+        caption: "Who reads which topic"
+        columns: ["orders.*", "payments.*", "parcels.*"]
+        rows:
+          - {name: "Search", cells: [full, none, full]}
+          - {name: "Analytics", cells: [full, full, full]}
+          - {name: "Notifications", cells: [full, partial, full]}
+    chips:
+      - {kind: warning, text: "Is 14 days of retention enough to rebuild the search index?"}
+
+  - id: orders
+    title: "Orders"
+    role: platform
+    cards:
+      - {icon: shopping-cart, name: "Order service", note: "publishes OrderPlaced and OrderCancelled"}
+  - id: payments
+    title: "Payments"
+    role: platform
+    cards:
+      - {icon: credit-card, name: "Payment service", note: "publishes PaymentCaptured"}
+  - id: shipping
+    title: "Shipping"
+    role: platform
+    cards:
+      - {icon: truck, name: "Shipping service", note: "publishes ParcelShipped"}
+
+  - id: search
+    title: "Search"
+    role: storage
+    cards:
+      - {icon: file-search, name: "Search index", note: "rebuilt from replay, updated live"}
+  - id: analytics
+    title: "Analytics"
+    role: storage
+    cards:
+      - {icon: chart-bar, name: "Lakehouse ingest", note: "lands every event in Bronze"}
+  - id: notify
+    title: "Notifications"
+    role: platform
+    cards:
+      - {icon: bell, name: "Notification service", note: "e-mail and push on status changes"}
+
+  - id: ops
+    title: "Operations"
+    subtitle: "Who keeps the bus healthy"
+    role: external
+    cards:
+      - icon: gauge
+        name: "Dashboards"
+        note: "consumer lag per topic"
+        bullets: ["alert when lag passes five minutes", "one board per consumer group"]
+      - icon: headset
+        id: oncall
+        name: "On-call"
+        note: "paged on dead letters"
+        bullets: ["first responder replays or skips", "fixes go back to the owning domain"]
+      - icon: file-text
+        name: "Runbooks"
+        note: "next to the bus configuration in Git"
+        bullets: ["replay a topic from a timestamp", "skip one poison message"]
+      - icon: cpu
+        name: "Capacity"
+        note: "partitions and brokers"
+        bullets: ["partition count reviewed every quarter", "brokers scale ahead of peak season"]
+    chips:
+      - {kind: info, text: "Domains run their own consumers; operations runs the bus itself"}
+
+flows:
+  - {from: orders, to: bus}
+  - {from: payments, to: bus}
+  - {from: shipping, to: bus}
+  - {from: bus, to: search}
+  - {from: bus, to: analytics}
+  - {from: bus, to: notify}
+  - {from: dlq, to: oncall}
+
+footer:
+  columns: [1.5, 1.1, 0.9]
+  principles:
+    - "An event is a fact that already happened; it is never changed afterwards."
+    - "The producing domain owns the schema; consumers adapt to new versions."
+    - "No consumer calls a producer directly to fetch what an event already carries."
+  open_questions: {from_chips: true}
+  legend: auto

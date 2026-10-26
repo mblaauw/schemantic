@@ -24,6 +24,9 @@ body { background: var(--paper); }
 .role-storage  { --head: var(--storage-head);  --sub: var(--storage-sub);  --body: var(--storage-body);  --line: var(--storage-line); }
 .role-external { --head: var(--external-head); --sub: var(--external-sub); --body: var(--external-body); --line: var(--external-line); }
 .role-frame    { --head: var(--frame-head);    --sub: var(--frame-sub);    --body: var(--frame-body);    --line: var(--frame-line); }
+/* The hub of a hub-and-spokes plate: same role colours, framed in its header colour */
+.panel-hub { border: 2px solid var(--head); }
+.panel-hub .ph { border-radius: 6px 6px 0 0; }
 .ph { background: var(--head); border-radius: 7px 7px 0 0; padding: 9px 12px 10px; }
 .ph-title { font-size: var(--t-head); font-weight: 700; color: #FFFFFF; line-height: 1.2; }
 .ph-sub { font-size: var(--t-body); color: var(--sub); margin-top: 2px; line-height: 1.3; }
