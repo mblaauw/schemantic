@@ -34,6 +34,8 @@ SPEC_TRIGGERS = {
     "canvas": lambda s: s["canvas"].update(part=4),
     "chip-mirror": lambda s: s["footer"].update(open_questions={"extra": ["Event bus nu of pas in fase 3?"]}),
     "icon": lambda s: s["panels"][0]["cards"][0].update(icon="unicorn"),
+    "role": lambda s: s["panels"][0].update(role="security"),
+    "deprecated": lambda s: panel(s, "data").update(role="storage"),
     "language": lambda s: s["panels"][0]["cards"][0].update(note="leest de productcatalogus"),
 }
 
@@ -104,3 +106,22 @@ def test_internal_triggers(tmp_path, monkeypatch, capsys):
     assert cli.main(["build", str(ROOT / "examples" / "orderplatform-toegang.yaml"), "--out", str(tmp_path)]) == 1
     report = json.loads(capsys.readouterr().out)
     assert [f["check"] for f in report["errors"]] == ["internal"]
+
+
+# C12: themes
+THEME = ROOT / "examples" / "themes" / "warm.css"
+
+
+def test_theme_recolours_and_adds_a_role(tmp_path):
+    spec = mutate(lambda s: panel(s, "identity").update(role="security"))
+    assert "role" in {f["check"] for f in sp.check(spec)}  # without the theme the role does not exist
+    report = pipeline.build(write(tmp_path, spec, "warm"), tmp_path, theme=THEME)
+    assert report["errors"] == [], report["errors"]
+    svg = (tmp_path / "warm.svg").read_text(encoding="utf-8").lower()
+    assert "#8a1538" in svg and "#7a3412" in svg and "Beveiligingsmaatregelen" in (tmp_path / "warm.svg").read_text(encoding="utf-8")
+
+
+def test_theme_path_in_the_spec_is_relative_to_it(tmp_path):
+    spec = mutate(lambda s: s["canvas"].update(theme="missing.css"))
+    report = pipeline.build(write(tmp_path, spec, "t"), tmp_path, deliver=False)
+    assert [(f["check"], f["id"]) for f in report["errors"]] == [("canvas", "canvas.theme")]

@@ -6,7 +6,7 @@ from functools import cache
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from . import archetypes
+from . import archetypes, roles
 from .config import CANVAS_SIZES, ICONS, TEMPLATES
 from .export import font_css
 from .spec import FOOTER_WEIGHTS, footer_panels, load_locale, open_questions
@@ -64,12 +64,13 @@ def matrix_values(pt: dict) -> list[str]:
     return [v for v in ("full", "partial", "none") if v in used]
 
 
-def legend_entries(spec: dict, loc: dict) -> list[dict]:
+def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
     entries, seen = [], set()
     for p in spec["panels"]:
-        if p["role"] not in seen:
-            seen.add(p["role"])
-            entries.append({"kind": "role", "key": p["role"], "label": loc["legend"][p["role"]]})
+        role = roles.canonical(p["role"])
+        if role not in seen:
+            seen.add(role)
+            entries.append({"kind": "role", "key": role, "label": roles.legend_label(role, spec["canvas"]["lang"], loc, theme_css)})
     if spec.get("flows"):
         entries.append({"kind": "arrow", "key": "arrow", "label": loc["legend"]["arrow"]})
     kinds = []
@@ -86,15 +87,16 @@ def legend_entries(spec: dict, loc: dict) -> list[dict]:
 def panels_for_render(spec: dict) -> list[dict]:
     """Panels with the archetype's defaults filled in (the hub frame, a layer's card row, nesting)."""
     arche = archetypes.get(spec["archetype"])
-    return [{**p, **arche.panel_defaults(spec, p)} for p in spec["panels"]]
+    return [{**p, "role": roles.canonical(p["role"]), **arche.panel_defaults(spec, p)} for p in spec["panels"]]
 
 
 def build_html(spec: dict, theme_css: str = "") -> str:
     loc = load_locale(spec["canvas"]["lang"])
     width, height = CANVAS_SIZES[spec["canvas"]["size"]]
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=select_autoescape(["j2", "html"]))
+    # Theme after the tokens, so it overrides them; role rules last, so a theme's own roles get theirs.
     css = "\n".join([font_css(), (TEMPLATES / "tokens.css").read_text(encoding="utf-8"), theme_css,
-                     (TEMPLATES / "components.css").read_text(encoding="utf-8")])
+                     (TEMPLATES / "components.css").read_text(encoding="utf-8"), roles.role_css(theme_css)])
     canvas = spec["canvas"]
     badge = loc["badge"].format(part=canvas["part"], of=canvas["of"]) if canvas.get("part") and canvas.get("of") else None
     footer = spec.get("footer") or {}
@@ -103,5 +105,5 @@ def build_html(spec: dict, theme_css: str = "") -> str:
         spec=spec, panels=panels_for_render(spec), lang=canvas["lang"], L=loc, css=css,
         width=width, height=height, badge=badge, grid=grid_css(spec), footer=footer,
         footer_columns=" ".join(f"minmax(0, {w}fr)" for w in fcols),
-        legend=legend_entries(spec, loc), open_questions=open_questions(spec),
+        legend=legend_entries(spec, loc, theme_css), open_questions=open_questions(spec),
         icons=icon_markup, tree_rows=tree_rows, matrix_values=matrix_values)

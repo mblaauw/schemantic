@@ -76,7 +76,7 @@ panels:
   - id: data
     title: "Data platform"
     subtitle: "Lakehouse met drie lagen, gevuld door pipelines per domein"
-    role: storage
+    role: data
     arrange: row
     weights: [1.35, 0.8, 1]   # tier strip, tree, cards
     patterns:

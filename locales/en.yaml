@@ -6,8 +6,9 @@ footer:
   legend: "Legend"
 legend:
   platform: "Platform component"
-  storage: "Storage and data"
-  external: "Users and external systems"
+  data: "Data and storage"
+  external: "Clients and external systems"
+  actor: "People and teams"
   warning: "Open choice or friction"
   info: "Assumption or note"
   arrow: "Direction of request or data"

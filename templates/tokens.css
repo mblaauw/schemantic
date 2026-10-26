@@ -12,10 +12,12 @@
   --arrow: #2F7FC6;      /* flow arrows and their heads */
   --on-head: #FFFFFF;    /* text on a panel's header colour */
 
-  /* Panel roles: header, header subtitle, body tint, border */
+  /* Panel roles: header, header subtitle, body tint, border. A theme may add a role: give it these four tokens and
+     a legend label per language (--<role>-label-en: "..."; --<role>-label-nl: "..."). */
   --platform-head: #0B4F8F; --platform-sub: #D6E7F7; --platform-body: #EEF5FC; --platform-line: #BCD5EC;
-  --storage-head:  #0D6457; --storage-sub:  #D3F0E9; --storage-body:  #ECF7F4; --storage-line:  #A9D6CB;
+  --data-head:     #0D6457; --data-sub:     #D3F0E9; --data-body:     #ECF7F4; --data-line:     #A9D6CB;
   --external-head: #44546A; --external-sub: #E3E9F0; --external-body: #F3F6F9; --external-line: #CBD5E1;
+  --actor-head:    #5B3F8C; --actor-sub:    #E9E2F5; --actor-body:    #F6F3FB; --actor-line:    #D5C9EA;
   --frame-head:    #2B3A4F; --frame-sub:    #E3E9F0; --frame-body:    #F8FAFC; --frame-line:    #CBD5E1;
 
   --card-bg: #FFFFFF; --card-line: #D3E0EC;

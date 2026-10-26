@@ -16,7 +16,9 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `budget` | more than 5 columns | split the plate or merge panels |
 | `pattern` | a matrix row has the wrong number of cells | one cell per column |
 | `flow` | a flow names an id that does not exist, connects an element to itself, or connects a card to its own panel | use a panel id, or give the card an `id`; connect two different boxes |
-| `canvas` | `part` without `of` (or the reverse), or `part` larger than `of` | give both, with `1 ≤ part ≤ of` |
+| `canvas` | `part` without `of` (or the reverse), `part` larger than `of`, or a theme file that does not exist | give both, with `1 ≤ part ≤ of`; check the theme path (relative to the spec) |
+| `role` | a panel role is neither built in nor defined by the theme, or the theme gives it no legend label in the plate's language | use platform, data, external or actor, or define the role and its label in the theme |
+| `deprecated` | an old name that still works for one release (warning) | use the new name in the detail |
 | `chip-mirror` | a warning chip is not under open questions | `open_questions: {from_chips: true}` |
 | `icon` | unknown icon | pick from the list in `spec-guide.md` |
 | `language` | a translated technical term in an `nl` plate | use the English term (the id of the finding) |

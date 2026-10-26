@@ -20,10 +20,7 @@ body { background: var(--paper); }
 /* Panel */
 .panel { display: flex; flex-direction: column; min-width: 0; min-height: 0; border: 1px solid var(--line);
   border-radius: var(--r-panel); background: var(--body); }
-.role-platform { --head: var(--platform-head); --sub: var(--platform-sub); --body: var(--platform-body); --line: var(--platform-line); }
-.role-storage  { --head: var(--storage-head);  --sub: var(--storage-sub);  --body: var(--storage-body);  --line: var(--storage-line); }
-.role-external { --head: var(--external-head); --sub: var(--external-sub); --body: var(--external-body); --line: var(--external-line); }
-.role-frame    { --head: var(--frame-head);    --sub: var(--frame-sub);    --body: var(--frame-body);    --line: var(--frame-line); }
+/* .role-<name> rules are generated from the role tokens (schemantic/roles.py), so a theme can add roles. */
 /* A row of spokes above or below the hub: its own grid, so the row divides the hub's width evenly */
 .spoke-row { display: grid; column-gap: var(--gutter-x); min-width: 0; min-height: 0; }
 

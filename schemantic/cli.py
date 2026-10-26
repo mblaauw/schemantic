@@ -11,6 +11,7 @@ def _spec_command(sub, name: str, help_: str, scale: bool):
     p = sub.add_parser(name, help=help_)
     p.add_argument("spec")
     p.add_argument("--out", default="out", help="output folder (default: out)")
+    p.add_argument("--theme", help="a CSS file appended after tokens.css (overrides canvas.theme)")
     if scale:
         p.add_argument("--scale", type=float, default=2, help="PNG pixel ratio (default 2)")
     return p
@@ -50,10 +51,10 @@ def run(a) -> tuple[dict, int]:
 
     from .pipeline import build
     if a.cmd == "lint":
-        r = build(a.spec, a.out, deliver=False)
+        r = build(a.spec, a.out, deliver=False, theme=a.theme)
         keep = ("spec", "errors", "warnings", "density", "parity")
         return {k: r[k] for k in keep}, 1 if r["errors"] else 0
-    r = build(a.spec, a.out, scale=a.scale)
+    r = build(a.spec, a.out, scale=a.scale, theme=a.theme)
     if a.cmd == "render":
         if r["svg"] is None:
             return {"rendered": False, "errors": r["errors"]}, 1

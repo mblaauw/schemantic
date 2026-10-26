@@ -51,12 +51,12 @@ panels:
 
   - id: search
     title: "Search"
-    role: storage
+    role: data
     cards:
       - {icon: file-search, name: "Search index", note: "rebuilt from replay, updated live"}
   - id: analytics
     title: "Analytics"
-    role: storage
+    role: data
     cards:
       - {icon: chart-bar, name: "Lakehouse ingest", note: "lands every event in Bronze"}
   - id: notify
@@ -68,7 +68,7 @@ panels:
   - id: ops
     title: "Operations"
     subtitle: "Who keeps the bus healthy"
-    role: external
+    role: actor
     cards:
       - icon: gauge
         name: "Dashboards"

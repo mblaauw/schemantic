@@ -52,6 +52,13 @@ the rest. `scripts/render.py` and `scripts/lint.py` still work but are deprecate
 archetypes as the planned contract, but render and lint refuse them with an `archetype` error
 until they exist. [`references/archetypes.md`](references/archetypes.md) describes each layout.
 
+## Themes
+
+`templates/tokens.css` holds every colour and size. A theme is a CSS file appended after it, named in the spec
+(`canvas.theme: themes/warm.css`, relative to the spec) or with `--theme`. It overrides tokens and may add a role:
+four colour tokens plus a legend label per language, as in [`examples/themes/warm.css`](examples/themes/warm.css).
+Lint still checks contrast, so a theme that is too pale fails.
+
 ## Tests
 
 ```bash
@@ -126,7 +133,7 @@ layout:
 panels:
   - id: clients
     title: "Clients en gebruikers"
-    role: external                     # platform | storage | external
+    role: external                     # platform | data | external | actor
     cards:
       - {icon: browser, name: "Webshop frontend", note: "leest de product catalog"}
 flows:

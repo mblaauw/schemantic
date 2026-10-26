@@ -6,8 +6,9 @@ footer:
   legend: "Legenda"
 legend:
   platform: "Platformcomponent"
-  storage: "Opslag en data"
-  external: "Gebruikers en externe systemen"
+  data: "Data en opslag"
+  external: "Clients en externe systemen"
+  actor: "Mensen en teams"
   warning: "Open keuze of frictie"
   info: "Aanname of toelichting"
   arrow: "Richting van request of data"

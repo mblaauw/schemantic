@@ -36,8 +36,14 @@ CHECKS: dict[str, Check] = {
     "flow": Check("spec", "a flow names an id that does not exist, connects an element to itself, or connects a card "
                   "to its own panel", "use a panel id, or give the card an `id`; connect two different boxes",
                   "Point the flow at an existing panel or card id, and at two different boxes."),
-    "canvas": Check("spec", "`part` without `of` (or the reverse), or `part` larger than `of`", "give both, with `1 ≤ part ≤ of`",
+    "canvas": Check("spec", "`part` without `of` (or the reverse), `part` larger than `of`, or a theme file that does not exist",
+                    "give both, with `1 ≤ part ≤ of`; check the theme path (relative to the spec)",
                     "Give both canvas.part and canvas.of, with part no larger than of."),
+    "role": Check("spec", "a panel role is neither built in nor defined by the theme, or the theme gives it no legend label in "
+                  "the plate's language", "use platform, data, external or actor, or define the role and its label in the theme",
+                  "Use a built-in role (platform, data, external, actor), or define it with a legend label in the theme."),
+    "deprecated": Check("spec", "an old name that still works for one release (warning)", "use the new name in the detail",
+                        "Use the new name given in the detail."),
     "chip-mirror": Check("spec", "a warning chip is not under open questions", "`open_questions: {from_chips: true}`",
                          "Set footer.open_questions.from_chips to true."),
     "icon": Check("spec", "unknown icon", "pick from the list in `spec-guide.md`", "Pick an icon from the list in references/spec-guide.md."),

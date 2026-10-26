@@ -9,7 +9,7 @@ from pathlib import Path
 import jsonschema
 import yaml
 
-from . import archetypes
+from . import archetypes, roles
 from .config import ICONS, ROOT
 
 # Default footer widths per panel, relative to each other; only the panels present get a track.
@@ -128,8 +128,8 @@ def layout_errors(spec: dict, arche: archetypes.Archetype) -> list[dict]:
     return out
 
 
-def semantic_errors(spec: dict) -> list[dict]:
-    """Checks the schema cannot express: archetype, ids, placement, flows, footer, chips, icons, language."""
+def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
+    """Checks the schema cannot express: archetype, ids, placement, roles, flows, footer, chips, icons, language."""
     arche = archetypes.get(spec["archetype"])
     if not arche:
         return [finding("archetype", "archetype",
@@ -138,6 +138,7 @@ def semantic_errors(spec: dict) -> list[dict]:
     out = id_errors(spec) or layout_errors(spec, arche)
     if out:
         return out
+    out += roles.role_findings(spec, theme_css)
 
     for p in spec["panels"]:
         if p.get("weights"):
@@ -193,9 +194,9 @@ def semantic_errors(spec: dict) -> list[dict]:
     return out
 
 
-def check(spec: dict) -> list[dict]:
+def check(spec: dict, theme_css: str = "") -> list[dict]:
     """Schema first; semantic checks only on a spec that has the right shape."""
-    return schema_errors(spec) or semantic_errors(spec)
+    return schema_errors(spec) or semantic_errors(spec, theme_css)
 
 
 def open_questions(spec: dict) -> list[str]:

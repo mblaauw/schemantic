@@ -15,7 +15,7 @@ panels:
   - id: experience
     title: "Developer experience"
     subtitle: "Waar teams beginnen"
-    role: external
+    role: platform
     cards:
       - {icon: browser, name: "Developer portal", note: "één ingang voor alle teams"}
       - {icon: folder, name: "Service catalog", note: "eigenaar en status per service"}
@@ -45,7 +45,7 @@ panels:
   - id: infra
     title: "Infrastructuur"
     subtitle: "Beheerd als code"
-    role: storage
+    role: data
     cards:
       - {icon: cloud, name: "Cloud accounts", note: "per team en omgeving"}
       - {icon: world, name: "Netwerk", note: "private endpoints, geen publieke IP's"}

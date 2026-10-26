@@ -4,6 +4,12 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Added (Phase C)
+- C5: role `actor` for people and teams; `storage` is now `data` (the old name lints as `deprecated` for one release);
+  legend labels say what each role means. A `role` check catches unknown roles and theme roles without a label.
+- C12: themes. `canvas.theme` (relative to the spec) or `--theme` appends a CSS file after `tokens.css`; a theme can
+  recolour and add roles with their own legend labels. `examples/themes/warm.css` shows both.
+
 ### Changed
 - B1: the code is a package, `schemantic/`, with a CLI: `python -m schemantic build | lint | render | doctor | icons |
   docs` (`pip install -e .` adds a `schemantic` command). `scripts/render.py` and `scripts/lint.py` are deprecated

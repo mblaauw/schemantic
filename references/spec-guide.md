@@ -20,7 +20,7 @@ plate readable. Lengths are maximum characters.
 - id: gateway                     # lowercase, a-z 0-9 _ -; used in layout and flows
   title: "API gateway"            # 48
   subtitle: "Authentication, rate limiting and routing"   # 80, optional
-  role: platform                  # platform | storage | external — colour has meaning, see the legend
+  role: platform                  # platform | data | external | actor — colour has meaning, see the legend
   card_columns: 2                 # optional, 1–6
   arrange: row                    # optional: blocks side by side instead of stacked
   weights: [1.35, 0.8, 1]         # with arrange: row — patterns first, then the cards block
@@ -29,8 +29,9 @@ plate readable. Lengths are maximum characters.
   chips: [...]                    # up to 2, pinned to the bottom
 ```
 
-Roles: `platform` for what the team builds or runs, `storage` for data at rest and data platforms,
-`external` for users, partners and systems outside the team's control.
+Roles: `platform` for what the team builds or runs, `data` for data at rest and data platforms, `external` for
+systems outside the team's control, `actor` for people and teams. A theme can add roles (see the README). The old
+name `storage` still works for one release and lints as `deprecated`.
 
 ## Cards
 
