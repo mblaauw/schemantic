@@ -1,0 +1,94 @@
+"""The plate as text: the claim, panels with their cards, flows, open questions and principles. Used as the SVG's
+<desc>, as the <name>.md written next to the images, and as review input. The focus element comes first."""
+from __future__ import annotations
+
+from .spec import card_id, flags, load_locale, open_questions
+
+
+def _focus_first(spec: dict) -> list[dict]:
+    panels = list(spec["panels"])
+    focus = [p for p in panels if p.get("focus") or any(c.get("focus") for c in p.get("cards", []))]
+    return focus + [p for p in panels if p not in focus]
+
+
+def _card(c: dict, cid: str, flag_of: dict, loc: dict) -> str:
+    bits = [c["name"] + (f" ({c['qualifier']})" if c.get("qualifier") else "")]
+    if c.get("status"):
+        bits.append(f"[{loc['status'][c['status']]}]")
+    if c.get("note"):
+        bits.append(f"— {c['note']}")
+    if cid in flag_of:
+        bits.append(f"({flag_of[cid]['n']})")
+    if c.get("focus"):
+        bits.append("(focus)")
+    return " ".join(bits)
+
+
+def lines(spec: dict) -> list[str]:
+    """Plain outline lines, indented two spaces per level."""
+    loc = load_locale(spec["canvas"]["lang"])
+    names = {p["id"]: p["title"] for p in spec["panels"]}
+    flag_of = {f["card"]: f for f in flags(spec)}
+    out = []
+    for p in _focus_first(spec):
+        head = p["title"] + (f" — {p['subtitle']}" if p.get("subtitle") else "")
+        if p.get("status"):
+            head += f" [{loc['status'][p['status']]}]"
+        out.append(head + (" (focus)" if p.get("focus") else ""))
+        for i, c in enumerate(p.get("cards", [])):
+            cid = card_id(p, i, c)
+            names[cid] = c["name"]
+            out.append("  " + _card(c, cid, flag_of, loc))
+            out += [f"    {b}" for b in c.get("bullets", [])]
+        for ch in p.get("chips", []):
+            out.append(f"  ({ch['kind']}) {ch['text']}")
+    for f in spec.get("flows", []):
+        label = f" ({f['label']})" if f.get("label") else ""
+        arrow = "<->" if f.get("both") else "->"
+        out.append(f"{names.get(f['from'], f['from'])} {arrow} {names.get(f['to'], f['to'])}{label}")
+    return out
+
+
+def desc(spec: dict) -> str:
+    """Text for the SVG's <desc>: the subtitle, then the outline."""
+    return "\n".join(([spec["subtitle"], ""] if spec.get("subtitle") else []) + lines(spec))
+
+
+def markdown(spec: dict) -> str:
+    """<name>.md: the title as heading, the claim, panels and cards, flows, open questions, principles."""
+    loc = load_locale(spec["canvas"]["lang"])
+    flag_of = {f["card"]: f for f in flags(spec)}
+    names = {p["id"]: p["title"] for p in spec["panels"]}
+    md = [f"# {spec['title']}", ""]
+    if spec.get("subtitle"):
+        md += [spec["subtitle"], ""]
+    for p in _focus_first(spec):
+        status = f" [{loc['status'][p['status']]}]" if p.get("status") else ""
+        md += [f"## {p['title']}{status}" + (" (focus)" if p.get("focus") else ""), ""]
+        if p.get("subtitle"):
+            md += [p["subtitle"], ""]
+        for i, c in enumerate(p.get("cards", [])):
+            cid = card_id(p, i, c)
+            names[cid] = c["name"]
+            md.append(f"- {_card(c, cid, flag_of, loc)}")
+            md += [f"  - {b}" for b in c.get("bullets", [])]
+        md += [f"- *{ch['text']}*" for ch in p.get("chips", [])]
+        md.append("")
+    if spec.get("flows"):
+        md += [f"## {loc['footer']['flows']}", ""]
+        for f in spec["flows"]:
+            label = f" — {f['label']}" if f.get("label") else ""
+            md.append(f"- {names.get(f['from'], f['from'])} → {names.get(f['to'], f['to'])}{label}")
+        md.append("")
+    questions = open_questions(spec)
+    if questions:
+        md += [f"## {loc['footer']['open_questions']}", ""]
+        md += [f"- {'(' + str(q['n']) + ') ' if q['n'] else ''}{q['text']}" for q in questions]
+        md.append("")
+    principles = (spec.get("footer") or {}).get("principles") or []
+    if principles:
+        md += [f"## {loc['footer']['principles']}", ""] + [f"- {p}" for p in principles] + [""]
+    notes = [f for f in flags(spec) if f["kind"] == "info"]
+    if notes:
+        md += [f"## {loc['footer']['notes']}", ""] + [f"- ({n['n']}) {n['text']}" for n in notes] + [""]
+    return "\n".join(md)

@@ -5,6 +5,7 @@ footer:
   open_questions: "Open questions"
   legend: "Legend"
   notes: "Notes"
+  flows: "Flows"
 legend:
   platform: "Platform component"
   data: "Data and storage"

@@ -30,7 +30,7 @@ def load_theme(spec: dict, spec_path: Path, theme: str | Path | None) -> tuple[s
 
 
 def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale: float = 2,
-          theme: str | Path | None = None, theme_css: str = "") -> dict:
+          theme: str | Path | None = None, theme_css: str = "", outline_text: bool = False) -> dict:
     """Run the whole pipeline. With deliver, writes <out>/<name>.svg and .png; work files go to <out>/_work/.
     Returns the report: errors and warnings (each with a hint), density, parity, and the paths written."""
     spec_path, out = Path(spec_path), Path(out)
@@ -56,15 +56,22 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 dom = dom_lint(page, flows["segs"])
                 issues += dom["issues"]
                 svg, fonts = export_svg(page, spec)
+                snap = snapshot(page, svg, flows["segs"])
                 svg_path = (out if deliver else work) / f"{name}.svg"
-                svg_path.write_text(svg, encoding="utf-8")
+                # Parity checks the layout with real text. With outline_text the deliverable has glyph paths instead,
+                # and the text version stays in _work/ for the parity check.
+                parity_svg = work / f"{name}.text.svg" if outline_text else svg_path
+                parity_svg.write_text(svg, encoding="utf-8")
+                if outline_text:
+                    from .glyphs import outline_text as to_paths
+                    svg_path.write_text(to_paths(svg), encoding="utf-8")
                 snap_path = work / f"{name}.snapshot.json"
-                snap_path.write_text(json.dumps(snapshot(page, svg, flows["segs"]), indent=1, ensure_ascii=False),
+                snap_path.write_text(json.dumps(snap, indent=1, ensure_ascii=False),
                                      encoding="utf-8")
                 # Parity: the page as laid out (connectors included) against the SVG rasterised at the same scale.
                 page.locator("#plate").screenshot(path=str(work / "html.png"))
                 page.close()
-                rasterise_svg(browser, svg_path, work / "svg.png", scale=1)
+                rasterise_svg(browser, parity_svg, work / "svg.png", scale=1)
                 par = image_diff(work / "html.png", work / "svg.png", work / "parity-diff.png")
                 if deliver:
                     size = spec["canvas"]["size"]

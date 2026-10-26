@@ -48,7 +48,7 @@ schemantic.decorate = () => {
   ov.setAttribute("width", P.width);
   ov.setAttribute("height", P.height);
   ov.style.cssText = "position:absolute;left:0;top:0;pointer-events:none;overflow:visible";
-  ov.innerHTML = items.join("");
+  ov.innerHTML = `<g id="decorations" inkscape:label="decorations">${items.join("")}</g>`;
   plate.appendChild(ov);
   return items.length;
 };

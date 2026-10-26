@@ -57,7 +57,7 @@ schemantic.exportSvg = () => {
     const bc = sides.map((s) => cs[`border${s}Color`]);
     const rad = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"].map((s) => num(cs[`border${s}Radius`]));
     const fill = paint(cs.backgroundColor, "fill");
-    const id = el.dataset?.id ? ` data-id="${esc(el.dataset.id)}"` : "";
+    const id = ""; // the element's group carries its id
     const sameR = rad.every((v) => v === rad[0]);
     const uniform = bw[0] > 0 && bw.every((v) => v === bw[0]) && bc.every((c) => c === bc[0]);
     const st0 = uniform ? paint(bc[0], "stroke") : null;
@@ -158,8 +158,17 @@ schemantic.exportSvg = () => {
       icon(node, cs);
       return;
     }
+    // Every element with a kind and an id becomes a named group, nested as in the page, so an editor shows layers.
+    const { kind, id } = node.dataset || {};
+    const title =
+      kind === "panel" ? node.querySelector(".ph-title") : kind === "card" ? node.querySelector(".cn > span") : null;
+    if (kind && id) {
+      const label = `${kind}: ${title ? title.textContent.trim() : id}`;
+      out.push(`<g id="${esc(`${kind}-${id}`)}" data-id="${esc(id)}" inkscape:label="${esc(label)}">`);
+    }
     box(node, cs);
     for (const c of node.childNodes) walk(c);
+    if (kind && id) out.push("</g>");
   };
   walk(plate);
   return { w: f(P.width), h: f(P.height), items: out, used };

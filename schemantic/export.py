@@ -7,6 +7,7 @@ from functools import cache
 
 from fontTools import subset
 
+from . import outline
 from .browser import call
 from .config import FONTS_DIR
 
@@ -55,9 +56,9 @@ def export_svg(page, spec: dict) -> tuple[str, list[str]]:
 
     def esc(s):
         return s.replace("&", "&amp;").replace("<", "&lt;")
-    head = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{d["w"]:g}" height="{d["h"]:g}" '
-            f'viewBox="0 0 {d["w"]:g} {d["h"]:g}" role="img" lang="{spec["canvas"]["lang"]}">\n'
-            f'<title>{esc(title)}</title>\n'
+    head = (f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" '
+            f'width="{d["w"]:g}" height="{d["h"]:g}" viewBox="0 0 {d["w"]:g} {d["h"]:g}" role="img" lang="{spec["canvas"]["lang"]}">\n'
+            f'<title>{esc(title)}</title>\n<desc>{esc(outline.desc(spec))}</desc>\n'
             f'<defs><style>\n{subset_font_css(d["used"])}\n</style></defs>\n')
     fonts = sorted(k.replace("|", " ") for k in d["used"])
     return head + "\n".join(d["items"]) + "\n</svg>\n", fonts

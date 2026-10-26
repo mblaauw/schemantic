@@ -5,6 +5,7 @@ footer:
   open_questions: "Open vragen"
   legend: "Legenda"
   notes: "Toelichting"
+  flows: "Verbindingen"
 legend:
   platform: "Platformcomponent"
   data: "Data en opslag"

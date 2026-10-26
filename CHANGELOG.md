@@ -30,6 +30,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   channels along the body's outer edges as a last resort, and one-lane offsets for flows between the same boxes.
   Straight flows and their labels are placed first; a bent route blocked only by labels moves them along their arrow.
   The title block is an obstacle. A fixture (`tests/fixtures/skip-connection.yaml`) covers a skip connection.
+- C10: the SVG is editable: a named group per panel, card, pattern, chip and flow (with Inkscape labels), nested as
+  on the page, and a `<desc>` with the subtitle and an outline of the plate. `--outline-text` writes text as glyph
+  paths, shaped with HarfBuzz from the bundled fonts (optional `uharfbuzz`); parity still checks the text version.
 - C12: themes. `canvas.theme` (relative to the spec) or `--theme` appends a CSS file after `tokens.css`; a theme can
   recolour and add roles with their own legend labels. `examples/themes/warm.css` shows both.
 

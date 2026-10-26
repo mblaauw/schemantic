@@ -295,3 +295,33 @@ def test_skip_connection_routes_along_the_row_gutter(renders):
     assert len(route["points"]) == 4 and top_row_bottom < y_mid < data_top and y1 > top_row_bottom and y4 > top_row_bottom
     code, report = run("lint", path, "--out", renders(path))
     assert (code, report["errors"]) == (0, [])
+
+
+# C10: an SVG people can edit
+def test_svg_has_named_groups_and_a_description(renders):
+    import xml.etree.ElementTree as ET
+    path = ROOT / "examples" / "orderplatform-toegang.yaml"
+    root = ET.parse(renders(path) / "orderplatform-toegang.svg").getroot()
+    ns = {"s": "http://www.w3.org/2000/svg"}
+    ids = {g.get("id") for g in root.iter("{http://www.w3.org/2000/svg}g") if g.get("id")}
+    spec = sp.load_spec(path)
+    assert {f"panel-{p['id']}" for p in spec["panels"]} <= ids
+    assert {f"flow-{i}" for i in range(len(spec["flows"]))} <= ids
+    assert "card-gateway.card1" in ids
+    assert root.find("s:desc", ns).text.startswith(spec["subtitle"])
+
+
+def test_outline_text_replaces_text_with_paths(tmp_path):
+    pytest.importorskip("uharfbuzz")
+    code, report = run("build", ROOT / "examples" / "orderplatform-eventbus.yaml", "--out", tmp_path, "--outline-text")
+    assert (code, report["errors"]) == (0, [])
+    svg = (tmp_path / "orderplatform-eventbus.svg").read_text(encoding="utf-8")
+    assert "<text" not in svg and "@font-face" not in svg
+    # The outlines land where Chromium drew the text: against the text version, only rasteriser noise differs.
+    with sync_playwright() as p:
+        chromium = browser.launch(p)
+        browser.rasterise_svg(chromium, tmp_path / "orderplatform-eventbus.svg", tmp_path / "outlined.png", scale=1)
+        chromium.close()
+    diff = images.image_diff(tmp_path / "_work" / "svg.png", tmp_path / "outlined.png", tmp_path / "mask.png")
+    width, height = browser.svg_size(tmp_path / "orderplatform-eventbus.svg")
+    assert diff["count"] < 0.0005 * width * height, diff["detail"]

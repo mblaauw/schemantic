@@ -530,7 +530,8 @@ schemantic.route = (flows) => {
       pts.length === 2
         ? `<line x1="${r2(pts[0][0])}" y1="${r2(pts[0][1])}" x2="${r2(pts[1][0])}" y2="${r2(pts[1][1])}" stroke="${col}" stroke-width="${stroke}" stroke-linecap="round"${dash}/>`
         : `<path d="${rounded(pts)}" fill="none" stroke="${col}" stroke-width="${stroke}" stroke-linecap="round" stroke-linejoin="round"${dash}/>`;
-    art[r.i] = line + heads + (r.svg || "");
+    const name = S.esc(`flow: ${r.fl.from} -> ${r.fl.to}`);
+    art[r.i] = `<g id="flow-${r.i}" data-flow="${r.i}" inkscape:label="${name}">${line}${heads}${r.svg || ""}</g>`;
   }
 
   ov.innerHTML = Object.keys(art)
