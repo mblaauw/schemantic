@@ -189,6 +189,8 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
         for c in (c for c in warnings if c not in oq.get("extra", [])):
             out.append(finding("chip-mirror", "footer.open_questions", f"warning not repeated in open questions: '{c}'"))
 
+    out += traceability(spec)
+
     focused = [p["id"] for p in spec["panels"] if p.get("focus")]
     focused += [card_id(p, i, c) for p in spec["panels"] for i, c in enumerate(p.get("cards", [])) if c.get("focus")]
     if len(focused) > 1:
@@ -210,6 +212,26 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
             # Substring, not whole word: Dutch compounds hide the term ("productcatalogus").
             if re.search(re.escape(b.lower()), text):
                 out.append(finding("language", term, f"'{b}' found; keep the technical term '{term}' in English"))
+    return out
+
+
+def traceability(spec: dict) -> list[dict]:
+    """With `sources` declared, every card says where it comes from, and every ref names a declared source."""
+    ids = {s["id"] for s in spec.get("sources", [])}
+    if not ids:
+        return []
+    out = []
+    for p in spec["panels"]:
+        for i, c in enumerate(p.get("cards", [])):
+            cid = card_id(p, i, c)
+            if not c.get("refs"):
+                out.append(finding("traceability", cid, f"card '{c['name']}' has no refs; say which source it comes from",
+                                   level="warning"))
+            for ref in c.get("refs", []):
+                head = ref.split(":", 1)[0].strip()
+                if head not in ids:
+                    out.append(finding("traceability", cid, f"ref '{ref}' does not start with a declared source id ({', '.join(sorted(ids))})",
+                                       level="warning"))
     return out
 
 
@@ -300,7 +322,7 @@ def iter_strings(obj):
         yield obj
     elif isinstance(obj, dict):
         for k, v in obj.items():
-            if k not in ("id", "icon", "role", "kind", "type", "tier", "layout", "from", "to"):
+            if k not in ("id", "icon", "role", "kind", "type", "tier", "layout", "from", "to", "refs", "sources", "brief"):
                 yield from iter_strings(v)
     elif isinstance(obj, list):
         for v in obj:

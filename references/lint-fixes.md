@@ -21,6 +21,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `deprecated` | an old name that still works for one release (warning) | use the new name in the detail |
 | `focus` | more than one panel or card has `focus: true` | keep focus on the one element the title is about |
 | `flows-mean` | the plate has flows but no `flows_mean` (warning) | say what an arrow means: data, request, dependency or control |
+| `traceability` | the spec declares `sources`, and a card has no `refs` or names an undeclared source (warning) | add `refs: ["<source id>: <path or quote>"]` from the inventory; a card you cannot trace is an assumption or an open question, not a fact |
 | `chip-mirror` | a warning chip or warning flag is not under open questions | `open_questions: {from_chips: true}` |
 | `icon` | unknown icon | use one of the closest names in the hint, or search: `schemantic icons <word>` |
 | `language` | a translated technical term in an `nl` plate | use the English term (the id of the finding) |

@@ -1,5 +1,5 @@
 """Docs that cannot drift: every YAML block marked <!-- lint --> (or <!-- lint: <example> -->) in the README and
-the references is merged into an example spec and must lint without errors."""
+the references is merged into an example spec and must lint without errors; <!-- lint: full --> is a whole spec."""
 import re
 
 import pytest
@@ -33,7 +33,8 @@ def test_docs_have_linted_samples():
 
 @pytest.mark.parametrize("example, snippet", list(blocks()))
 def test_doc_sample_lints(example, snippet, tmp_path):
-    spec = merge(sp.load_spec(ROOT / example), yaml.safe_load(snippet))
+    # <!-- lint: full --> marks a complete spec; otherwise the snippet is merged into the example it names.
+    spec = yaml.safe_load(snippet) if example == "full" else merge(sp.load_spec(ROOT / example), yaml.safe_load(snippet))
     code, report = run("lint", write(tmp_path, spec, "sample"), "--out", tmp_path)
     # A sample shows the format, not a full plate: a snippet that trims a panel to one card may leave a void.
     assert [e for e in report["errors"] if e["check"] != "void"] == []

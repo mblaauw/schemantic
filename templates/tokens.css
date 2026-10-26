@@ -43,6 +43,7 @@
   --label-size: 11.5px; --label-weight: 500;
   /* Dash patterns (SVG stroke-dasharray): async connectors, optional connectors, planned boxes */
   --dash-async: 7 5; --dash-optional: 0.5 5; --dash-planned: 5 4;
+  --step: #1763C4;       /* step badges: darker than --arrow, so white numbers reach 4.5:1 */
 
   /* Change status tags and the focus outline */
   --tag-new-bg: #E3F4E8;     --tag-new-text: #1B5E31;

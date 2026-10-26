@@ -325,3 +325,17 @@ def test_outline_text_replaces_text_with_paths(tmp_path):
     diff = images.image_diff(tmp_path / "_work" / "svg.png", tmp_path / "outlined.png", tmp_path / "mask.png")
     width, height = browser.svg_size(tmp_path / "orderplatform-eventbus.svg")
     assert diff["count"] < 0.0005 * width * height, diff["detail"]
+
+
+# D2 and D7: sources travel with the cards; build writes an outline next to the images
+def test_refs_reach_the_svg_and_the_outline_is_written(tmp_path):
+    spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
+    spec["sources"] = [{"id": "adr", "kind": "document", "ref": "docs/adr/0007-gateway.md"}]
+    for p in spec["panels"]:
+        for c in p.get("cards", []):
+            c["refs"] = ["adr: section 2"]
+    code, report = run("build", write(tmp_path, spec, "traced"), "--out", tmp_path)
+    assert (code, report["errors"], report["warnings"]) == (0, [], [])
+    assert 'data-refs="adr: section 2"' in (tmp_path / "traced.svg").read_text(encoding="utf-8")
+    md = (tmp_path / "traced.md").read_text(encoding="utf-8")
+    assert md.startswith("# " + spec["title"]) and "## Open vragen" in md and "Token validatie" in md

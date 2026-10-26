@@ -164,7 +164,8 @@ schemantic.exportSvg = () => {
       kind === "panel" ? node.querySelector(".ph-title") : kind === "card" ? node.querySelector(".cn > span") : null;
     if (kind && id) {
       const label = `${kind}: ${title ? title.textContent.trim() : id}`;
-      out.push(`<g id="${esc(`${kind}-${id}`)}" data-id="${esc(id)}" inkscape:label="${esc(label)}">`);
+      const refs = node.dataset.refs ? ` data-refs="${esc(node.dataset.refs)}"` : "";
+      out.push(`<g id="${esc(`${kind}-${id}`)}" data-id="${esc(id)}"${refs} inkscape:label="${esc(label)}">`);
     }
     box(node, cs);
     for (const c of node.childNodes) walk(c);

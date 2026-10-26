@@ -38,6 +38,22 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - C12: themes. `canvas.theme` (relative to the spec) or `--theme` appends a CSS file after `tokens.css`; a theme can
   recolour and add roles with their own legend labels. `examples/themes/warm.css` shows both.
 
+### Added (Phase D: the skill)
+- D1: `references/analysis.md`: how to build an inventory from notes, a repository or a process description, the
+  editorial passes (grouping, message, cut), and three worked examples with complete, linted specs.
+- D2: a `brief` (message, reader, why, left out, assumptions) and `sources` in the spec, and `refs` on cards
+  (exported as `data-refs`); a `traceability` warning for cards without a source. SKILL.md has the agent write and
+  audit the brief before any panel.
+- D3: SKILL.md routes on the reader's question, names each archetype's misfit, defaults to column-flow, and states
+  the series rule (more than 6 panels or 30 cards).
+- D4: `references/review.md` asks yes/no defect questions, including holes and the footer; visual review stops after
+  three rounds.
+- D5: a third-person description with English and Dutch triggers (under 1,024 characters, tested).
+- D6: setup through the doctor; every command uses the interpreter it prints and `scripts/plate.py`.
+- D7: `build` writes `<name>.md`, an outline of the plate (title, claim, panels and cards, flows, open questions,
+  principles), also used as the SVG's `<desc>`.
+- D8: `evals/`: eight cases (prompt, fictional inputs, rubric), an automated grader, a judge prompt and a runner.
+
 ### Changed
 - B1: the code is a package, `schemantic/`, with a CLI: `python -m schemantic build | lint | render | doctor | icons |
   docs` (`pip install -e .` adds a `schemantic` command). `scripts/render.py` and `scripts/lint.py` are deprecated

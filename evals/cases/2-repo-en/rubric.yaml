@@ -1,0 +1,4 @@
+lang: en
+archetype: [column-flow, hub-and-spokes]
+components: [web, api, notifier, sync, postgres, rabbitmq, scheduling, messaging]
+open_questions_min: 1

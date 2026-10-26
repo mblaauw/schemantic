@@ -1,0 +1,4 @@
+lang: en
+archetype: [column-flow, before-after]
+status_min: 3
+components: [ERP, WMS, picking app, carrier]

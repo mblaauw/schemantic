@@ -17,6 +17,71 @@
       "const": 1,
       "description": "Version of this spec format. Optional; 1 is the current version."
     },
+    "brief": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The plan behind the plate, written before the YAML and audited against the sources. Not rendered.",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "The one claim the plate makes."
+        },
+        "reader": {
+          "type": "string",
+          "description": "Who reads it and what they must take away."
+        },
+        "why": {
+          "type": "string",
+          "description": "Why this archetype, and what it is not."
+        },
+        "left_out": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What the sources hold that the plate leaves out, and why."
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What is assumed rather than found in a source."
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "description": "Where the content comes from. When given, every card names its source in refs (lint: traceability).",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "ref"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]*$"
+          },
+          "kind": {
+            "enum": [
+              "conversation",
+              "notes",
+              "document",
+              "repository",
+              "process",
+              "other"
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "description": "A path, title or URL."
+          }
+        }
+      }
+    },
     "canvas": {
       "type": "object",
       "description": "Page size, language and series badge.",
@@ -483,6 +548,13 @@
               "maxLength": 90
             }
           }
+        },
+        "refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Where this card comes from: '<source id>: <path, line or short quote>'. Not rendered; written to the SVG as data-refs."
         }
       }
     },

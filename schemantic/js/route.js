@@ -464,9 +464,16 @@ schemantic.route = (flows) => {
   const BADGE = 9;
   for (const r of routed) {
     if (!r.fl.step) continue;
+    // Centred on a long run; on a short one (a single gutter) next to its start, clear of the arrowhead.
+    const centre = ([p, q]) => {
+      const len = runLength([p, q]);
+      if (len >= 2 * BADGE + 2 * HEAD) return [mid(p[0], q[0]), mid(p[1], q[1])];
+      const k = (BADGE + 2) / len;
+      return [p[0] + (q[0] - p[0]) * k, p[1] + (q[1] - p[1]) * k];
+    };
     const spot = longestFirst(r.pts)
-      .filter((run) => runLength(run) >= 2 * BADGE + 2 * HEAD)
-      .map(([p, q]) => [mid(p[0], q[0]), mid(p[1], q[1])])
+      .filter((run) => runLength(run) >= 2 * BADGE + HEAD + 4)
+      .map(centre)
       .find(([x, y]) => {
         const b = { l: x - BADGE - 2, r: x + BADGE + 2, t: y - BADGE - 2, b: y + BADGE + 2 };
         return !allBoxes.some((o) => hits(b, o)) && !labelBoxes.some((o) => hits(b, o));
@@ -483,7 +490,7 @@ schemantic.route = (flows) => {
     labelBoxes.push({ l: x - BADGE, r: x + BADGE, t: y - BADGE, b: y + BADGE });
     r.svg =
       (r.svg || "") +
-      `<circle cx="${r2(x)}" cy="${r2(y)}" r="${BADGE}" fill="${col}"/>` +
+      `<circle cx="${r2(x)}" cy="${r2(y)}" r="${BADGE}" fill="${S.token("--step")}"/>` +
       `<text x="${r2(x)}" y="${r2(y + 4)}" text-anchor="middle" font-family="${font}" font-size="11" font-weight="700" fill="${onHead}">${r.fl.step}</text>`;
     r.step = { x, y, n: r.fl.step };
   }

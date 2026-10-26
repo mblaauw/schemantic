@@ -1,0 +1,5 @@
+lang: nl
+archetype: [column-flow, layer-cake]
+components: [kassasystemen, SFTP, webshop, Kafka, Airflow, Flink, Bronze, Silver, Gold, dbt, Power BI]
+open_questions_min: 1
+principles_min: 2

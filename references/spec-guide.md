@@ -10,7 +10,7 @@ plate readable. Lengths are maximum characters.
 | `canvas.size` | `landscape-4x3` (1600 wide, the default choice), `landscape-16x9` (1920×1080, for slides), or `a3-landscape` / `a4-landscape` for print (the sheet at 96 px per inch, height fixed; build with `--dpi 300`) |
 | `canvas.lang` | `nl` or `en` |
 | `canvas.series`, `part`, `of` | a badge "Part 2 of 3"; give both `part` and `of` |
-| `canvas.height` | `fit` (default: the canvas takes its content height) or `fixed` (the preset size; spare height goes to the gaps) |
+| `canvas.height` | `fit` (default: the canvas takes its content height; a 16:9 slide keeps its shape) or `fixed` (the preset size; spare height goes to the gaps) |
 | `canvas.theme` | optional CSS file, relative to the spec, that recolours or adds roles |
 | `title` (80) | the one message, as a claim. Not "Architecture overview" |
 | `subtitle` (120) | how the plate makes that claim true |

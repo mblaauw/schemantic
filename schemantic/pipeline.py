@@ -7,6 +7,7 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
+from . import outline
 from .browser import launch, open_plate, rasterise_svg, svg_size
 from .config import PRINT_SIZES, png_size
 from .export import export_svg
@@ -36,7 +37,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
     spec_path, out = Path(spec_path), Path(out)
     name, work = spec_path.stem, Path(out) / "_work"
     report = {"spec": str(spec_path), "errors": [], "warnings": [], "density": {}, "voids": {}, "parity": None,
-              "svg": None, "png": None, "snapshot": None, "fonts": [], "flow_problems": []}
+              "svg": None, "png": None, "outline": None, "snapshot": None, "fonts": [], "flow_problems": []}
     spec, issues = read_spec(spec_path)
     if not issues:
         file_css, issues = load_theme(spec, spec_path, theme)
@@ -74,6 +75,8 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 rasterise_svg(browser, parity_svg, work / "svg.png", scale=1)
                 par = image_diff(work / "html.png", work / "svg.png", work / "parity-diff.png")
                 if deliver:
+                    (out / f"{name}.md").write_text(outline.markdown(spec), encoding="utf-8")
+                    report["outline"] = str(out / f"{name}.md")
                     size = spec["canvas"]["size"]
                     rasterise_svg(browser, svg_path, out / f"{name}.png", scale=scale,
                                   size=png_size(size, *svg_size(svg_path), scale) if size in PRINT_SIZES else None)

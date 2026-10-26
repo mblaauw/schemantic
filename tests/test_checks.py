@@ -38,6 +38,7 @@ SPEC_TRIGGERS = {
     "icon": lambda s: s["panels"][0]["cards"][0].update(icon="unicorn"),
     "role": lambda s: s["panels"][0].update(role="security"),
     "focus": lambda s: (panel(s, "gateway").update(focus=True), panel(s, "identity").update(focus=True)),
+    "traceability": lambda s: s.update(sources=[{"id": "notes", "kind": "notes", "ref": "review notes"}]),
     "flows-mean": lambda s: s.pop("flows_mean"),
     "deprecated": lambda s: panel(s, "data").update(role="storage"),
     "language": lambda s: s["panels"][0]["cards"][0].update(note="leest de productcatalogus"),

@@ -48,6 +48,10 @@ CHECKS: dict[str, Check] = {
                    "Keep focus on the one element the title is about."),
     "flows-mean": Check("spec", "the plate has flows but no `flows_mean` (warning)", "say what an arrow means: data, request, "
                         "dependency or control", "Add flows_mean: data, request, dependency or control."),
+    "traceability": Check("spec", "the spec declares `sources`, and a card has no `refs` or names an undeclared source (warning)",
+                          "add `refs: [\"<source id>: <path or quote>\"]` from the inventory; a card you cannot trace is an "
+                          "assumption or an open question, not a fact", "Add refs naming the source; untraceable content goes to "
+                          "the brief's assumptions or an open question."),
     "chip-mirror": Check("spec", "a warning chip or warning flag is not under open questions", "`open_questions: {from_chips: true}`",
                          "Set footer.open_questions.from_chips to true."),
     "icon": Check("spec", "unknown icon", "use one of the closest names in the hint, or search: `schemantic icons <word>`",

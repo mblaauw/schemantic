@@ -1,0 +1,4 @@
+lang: en
+archetype: [column-flow, hub-and-spokes]
+components: [portal, identity provider, finance, contract, CRM, API gateway]
+open_questions_min: 1
