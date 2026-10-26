@@ -54,6 +54,11 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   principles), also used as the SVG's `<desc>`.
 - D8: `evals/`: eight cases (prompt, fictional inputs, rubric), an automated grader, a judge prompt and a runner.
 
+### Added (Phase E)
+- E1: the `swimlane` archetype: one lane per actor with its name on the left, steps as cards in phase columns
+  (`layout.columns`, card `col`) that line up across lanes, numbered handoffs. Step badges now only avoid what their
+  arrow avoids, so they can sit where an arrow enters a lane. Example: `examples/incident-swimlane.yaml`.
+
 ### Changed
 - B1: the code is a package, `schemantic/`, with a CLI: `python -m schemantic build | lint | render | doctor | icons |
   docs` (`pip install -e .` adds a `schemantic` command). `scripts/render.py` and `scripts/lint.py` are deprecated

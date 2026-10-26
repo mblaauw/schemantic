@@ -12,15 +12,18 @@ import pkgutil
 from dataclasses import dataclass, field
 
 # Named in the schema as the planned contract; refused until a module here builds them.
-PLANNED = ["banded-matrix", "nested-zones", "swimlane", "before-after", "roadmap", "landscape-map"]
+PLANNED = ["banded-matrix", "nested-zones", "before-after", "roadmap", "landscape-map"]
 
 
 @dataclass
 class GridSpec:
-    """The body grid an archetype derives from a spec."""
-    rows: list[list[str]]       # per row, the panel id or group name in each cell; '.' is empty
+    """The body grid an archetype derives from a spec. Names starting with '_' are groups or bands, never panels."""
+    rows: list[list[str]]       # per row, the panel id or group/band name in each cell; '.' is empty
     columns: list[str]          # CSS column tracks, gutters excluded
-    groups: dict[str, list[str]] = field(default_factory=dict)  # group name -> panels laid out in their own grid
+    groups: dict[str, list[str]] = field(default_factory=dict)  # group name -> the panels inside that cell
+    group_kind: dict[str, str] = field(default_factory=dict)    # group name -> "row" (default), "stack" or "zones"
+    bands: dict[str, list[str]] = field(default_factory=dict)   # band name -> labels of a header row (no panels)
+    zones: list[dict] = field(default_factory=list)             # the zone tree rendered in a "zones" group
 
 
 class Archetype:

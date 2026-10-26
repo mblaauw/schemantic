@@ -1,0 +1,459 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   108
+  ],
+  "body": [
+   40,
+   126,
+   1560,
+   644
+  ],
+  "monitoring": [
+   40,
+   170,
+   1560,
+   268
+  ],
+  "alert": [
+   224,
+   182,
+   456,
+   254
+  ],
+  "oncall": [
+   40,
+   312,
+   1560,
+   394
+  ],
+  "ack": [
+   496,
+   324,
+   728,
+   380
+  ],
+  "fix": [
+   768,
+   324,
+   1002,
+   380
+  ],
+  "commander": [
+   40,
+   438,
+   1560,
+   518
+  ],
+  "declare": [
+   496,
+   450,
+   728,
+   506
+  ],
+  "decide": [
+   768,
+   450,
+   1002,
+   506
+  ],
+  "review": [
+   1314,
+   450,
+   1548,
+   506
+  ],
+  "comms": [
+   40,
+   562,
+   1560,
+   644
+  ],
+  "status": [
+   1042,
+   576,
+   1274,
+   630
+  ],
+  "band.phases": [
+   40,
+   126,
+   1560,
+   154
+  ],
+  "footer": [
+   40,
+   662,
+   1560,
+   754
+  ],
+  "footer.principles": [
+   40,
+   662,
+   876,
+   724
+  ],
+  "footer.open_questions": [
+   904,
+   662,
+   1560,
+   706
+  ],
+  "footer.legend": [
+   40,
+   734,
+   1560,
+   754
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "A customer-facing incident has one commander and one voice"
+  ],
+  [
+   40,
+   100,
+   "Monitoring pages on-call; the commander runs the response; communications alone talks to customers"
+  ],
+  [
+   52,
+   214,
+   "Monitoring"
+  ],
+  [
+   52,
+   234,
+   "Alerting rules"
+  ],
+  [
+   266,
+   206,
+   "Alert fires"
+  ],
+  [
+   266,
+   224,
+   "SLO burn rate over the"
+  ],
+  [
+   266,
+   240,
+   "threshold"
+  ],
+  [
+   52,
+   358,
+   "On-call engineer"
+  ],
+  [
+   538,
+   348,
+   "Acknowledge"
+  ],
+  [
+   538,
+   366,
+   "within five minutes"
+  ],
+  [
+   812,
+   348,
+   "Mitigate"
+  ],
+  [
+   812,
+   366,
+   "roll back or fail over first"
+  ],
+  [
+   52,
+   472,
+   "Incident"
+  ],
+  [
+   52,
+   494,
+   "commander"
+  ],
+  [
+   538,
+   474,
+   "Declare"
+  ],
+  [
+   602,
+   474,
+   "1"
+  ],
+  [
+   538,
+   490,
+   "severity, channel, roles"
+  ],
+  [
+   812,
+   474,
+   "Decide"
+  ],
+  [
+   812,
+   490,
+   "one decision owner at a time"
+  ],
+  [
+   1358,
+   474,
+   "Review"
+  ],
+  [
+   1358,
+   490,
+   "blameless, within five days"
+  ],
+  [
+   52,
+   608,
+   "Communications"
+  ],
+  [
+   1084,
+   600,
+   "Status page"
+  ],
+  [
+   1084,
+   616,
+   "first update within 30 minutes"
+  ],
+  [
+   224,
+   144,
+   "Detect"
+  ],
+  [
+   496,
+   144,
+   "Triage"
+  ],
+  [
+   768,
+   144,
+   "Mitigate"
+  ],
+  [
+   1042,
+   144,
+   "Communicate"
+  ],
+  [
+   1314,
+   144,
+   "Learn"
+  ],
+  [
+   40,
+   674,
+   "Key principles"
+  ],
+  [
+   50,
+   700,
+   "The commander decides; everyone else executes or advises."
+  ],
+  [
+   50,
+   720,
+   "Customers hear about an incident from the status page first, never from a support reply."
+  ],
+  [
+   904,
+   674,
+   "Open questions"
+  ],
+  [
+   910,
+   702,
+   "1"
+  ],
+  [
+   926,
+   700,
+   "Who commands at night: on-call or a separate rota?"
+  ],
+  [
+   40,
+   750,
+   "Legend"
+  ],
+  [
+   134,
+   748,
+   "Platform component"
+  ],
+  [
+   302,
+   748,
+   "People and teams"
+  ],
+  [
+   456,
+   748,
+   "Controls"
+  ],
+  [
+   530,
+   746,
+   "1"
+  ],
+  [
+   548,
+   748,
+   "Step in the order things happen"
+  ],
+  [
+   782,
+   748,
+   "Open choice or friction"
+  ],
+  [
+   440,
+   306,
+   "1"
+  ],
+  [
+   612,
+   420,
+   "2"
+  ],
+  [
+   884,
+   420,
+   "3"
+  ],
+  [
+   986,
+   556,
+   "4"
+  ],
+  [
+   1170,
+   368,
+   "5"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "alert",
+   "to": "ack",
+   "points": [
+    [
+     440,
+     262
+    ],
+    [
+     440,
+     340
+    ],
+    [
+     488,
+     340
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 1,
+   "from": "ack",
+   "to": "declare",
+   "points": [
+    [
+     612,
+     388
+    ],
+    [
+     612,
+     444
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 2,
+   "from": "declare",
+   "to": "decide",
+   "points": [
+    [
+     736,
+     478
+    ],
+    [
+     762,
+     478
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 3,
+   "from": "decide",
+   "to": "fix",
+   "points": [
+    [
+     884,
+     444
+    ],
+    [
+     884,
+     388
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 4,
+   "from": "decide",
+   "to": "status",
+   "points": [
+    [
+     986,
+     512
+    ],
+    [
+     986,
+     592
+    ],
+    [
+     1034,
+     592
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 5,
+   "from": "fix",
+   "to": "review",
+   "points": [
+    [
+     1008,
+     364
+    ],
+    [
+     1330,
+     364
+    ],
+    [
+     1330,
+     444
+    ]
+   ],
+   "label": null
+  }
+ ]
+}

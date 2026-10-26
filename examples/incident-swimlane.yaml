@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=../schema/plate.schema.json
+# Fictional example: a swimlane plate in English. Lanes are actors, steps sit in phase columns, handoffs are flows.
+canvas: {size: landscape-4x3, lang: en}
+title: "A customer-facing incident has one commander and one voice"
+subtitle: "Monitoring pages on-call; the commander runs the response; communications alone talks to customers"
+archetype: swimlane
+
+layout:
+  lanes: [monitoring, oncall, commander, comms]
+  columns: ["Detect", "Triage", "Mitigate", "Communicate", "Learn"]
+
+panels:
+  - id: monitoring
+    title: "Monitoring"
+    subtitle: "Alerting rules"
+    role: platform
+    cards:
+      - {id: alert, icon: bell, name: "Alert fires", note: "SLO burn rate over the threshold", col: 1}
+  - id: oncall
+    title: "On-call engineer"
+    role: actor
+    cards:
+      - {id: ack, icon: headset, name: "Acknowledge", note: "within five minutes", col: 2}
+      - {id: fix, icon: tool, name: "Mitigate", note: "roll back or fail over first", col: 3}
+  - id: commander
+    title: "Incident commander"
+    role: actor
+    cards:
+      - id: declare
+        icon: flag
+        name: "Declare"
+        note: "severity, channel, roles"
+        col: 2
+        flag: {kind: warning, text: "Who commands at night: on-call or a separate rota?"}
+      - {id: decide, icon: git-branch, name: "Decide", note: "one decision owner at a time", col: 3}
+      - {id: review, icon: file-search, name: "Review", note: "blameless, within five days", col: 5}
+  - id: comms
+    title: "Communications"
+    role: actor
+    cards:
+      - {id: status, icon: message-circle, name: "Status page", note: "first update within 30 minutes", col: 4}
+
+flows_mean: control
+flows:
+  - {from: alert, to: ack, step: 1}
+  - {from: ack, to: declare, step: 2}
+  - {from: declare, to: decide}
+  - {from: decide, to: fix, step: 3}
+  - {from: decide, to: status, step: 4}
+  - {from: fix, to: review, step: 5}
+
+footer:
+  principles:
+    - "The commander decides; everyone else executes or advises."
+    - "Customers hear about an incident from the status page first, never from a support reply."
+  open_questions: {from_chips: true}
+  legend: auto

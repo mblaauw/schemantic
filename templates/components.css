@@ -157,3 +157,14 @@ body { background: var(--paper); }
 /* Legend samples for line styles (drawn by js/decorate.js) and focus */
 .ls { flex: 0 0 auto; width: 22px; height: 14px; margin: 0 2px; }
 .sw.focus-sw { background: var(--card-bg); border: 2px solid var(--accent); }
+
+/* Swimlane: the lane's name on the left, its steps in columns that line up with the phase band above */
+.panel.lane { flex-direction: row; }
+.lane > .ph { flex: 0 0 var(--lane-head); width: var(--lane-head); border-radius: 7px 0 0 7px; display: flex;
+  flex-direction: column; justify-content: center; }
+.lane > .pb { flex: 1 1 auto; min-width: 0; }
+.lane .cards { column-gap: var(--step-gap); }
+.band { display: grid; column-gap: var(--step-gap); align-items: end; margin-bottom: -28px;  /* sits close to the lanes */
+  padding: 0 13px 0 calc(var(--lane-head) + 13px); }   /* the lane's border and padding, so columns line up */
+.band-label { font-size: var(--t-name); font-weight: 600; color: var(--muted); padding-bottom: 5px;
+  border-bottom: 2px solid var(--frame-line); }

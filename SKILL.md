@@ -62,7 +62,7 @@ Route on the reader's question. When unsure, use `column-flow`.
 | "How does a request or data get from A to Z?" | `column-flow` | everything hangs off one central part: hub-and-spokes |
 | "What sits around the one central thing, and how does it connect?" | `hub-and-spokes` | there is an order to the parts: column-flow |
 | "What builds on what, and what cuts across all of it?" | `layer-cake` | layers talk sideways more than up and down: column-flow |
-| "Who does what, in which order, and where does work change hands?" | `swimlane` once built; until then `column-flow` with one panel per actor and numbered steps | it is about systems, not people: column-flow |
+| "Who does what, in which order, and where does work change hands?" | `swimlane` | it is about systems, not people: column-flow |
 
 Series rule: more than 6 panels or 30 cards is two plates, each with its own message. Read
 `references/archetypes.md` for each layout's keys, limits and a skeleton; lint refuses names that are not built.

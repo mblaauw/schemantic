@@ -208,49 +208,54 @@ Inventory: employee, manager, finance, payroll (actors); expense app (system); s
 500 euro, pay with salary. Handoffs: employee to manager, manager to finance (only over 500 euro), finance to
 payroll.
 
-Grouping by actor, in the order of the steps. A process with handoffs between people is a swimlane; until that
-archetype is built, use a column-flow with one panel per actor and numbered steps.
+Grouping by actor, in the order of the steps. A process with handoffs between people is a swimlane: one lane per
+actor, steps in phase columns, numbered handoffs.
 
 <!-- lint: full -->
 ```yaml
 canvas: {size: landscape-4x3, lang: en}
 title: "An expense claim passes three desks before it is paid"
 subtitle: "Manager approval for every claim, a finance check above 500 euro, payment with the next salary"
-archetype: column-flow
+archetype: swimlane
 brief:
   message: "Every claim takes the same path; only the finance check depends on the amount."
   reader: "Employees and managers who submit or approve claims"
-  why: "column-flow with one panel per actor, as a stand-in for a swimlane"
+  why: "swimlane: handoffs between people, in order"
 sources:
   - {id: process, kind: process, ref: "Expense claims procedure"}
 layout:
-  areas: ["employee manager finance payroll"]
+  lanes: [employee, manager, finance, payroll]
+  columns: ["Submit", "Approve", "Check", "Pay"]
 panels:
   - id: employee
     title: "Employee"
     role: actor
     cards:
-      - {icon: receipt, name: "Submit claim", note: "in the expense app, with a receipt photo", refs: ["process: submits an expense claim"]}
+      - {id: submit, icon: receipt, name: "Submit claim", note: "in the expense app, with a receipt photo", col: 1,
+         refs: ["process: submits an expense claim"]}
   - id: manager
     title: "Manager"
     role: actor
     cards:
-      - {icon: circle-check, name: "Approve or reject", note: "every claim", refs: ["process: approves or rejects it"]}
+      - {id: approve, icon: circle-check, name: "Approve or reject", note: "every claim", col: 2,
+         refs: ["process: approves or rejects it"]}
   - id: finance
     title: "Finance"
     role: actor
     cards:
-      - {icon: scale, name: "Policy check", note: "claims over 500 euro", refs: ["process: claims over 500 euro"]}
+      - {id: check, icon: scale, name: "Policy check", note: "claims over 500 euro", col: 3,
+         refs: ["process: claims over 500 euro"]}
   - id: payroll
     title: "Payroll"
     role: actor
     cards:
-      - {icon: cash, name: "Pay out", note: "with the next salary run", refs: ["process: paid with the next salary run"]}
+      - {id: pay, icon: cash, name: "Pay out", note: "with the next salary run", col: 4,
+         refs: ["process: paid with the next salary run"]}
 flows_mean: control
 flows:
-  - {from: employee, to: manager, step: 1}
-  - {from: manager, to: finance, step: 2}
-  - {from: finance, to: payroll, step: 3}
+  - {from: submit, to: approve, step: 1}
+  - {from: approve, to: check, step: 2}
+  - {from: check, to: pay, step: 3}
 footer:
   principles:
     - "A claim without a receipt photo cannot be submitted."

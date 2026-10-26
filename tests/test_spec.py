@@ -212,3 +212,29 @@ def test_unknown_icon_hint_names_the_closest_ones(example):
     example["panels"][0]["cards"][0]["icon"] = "kafka"
     found = [e for e in sp.semantic_errors(example) if e["check"] == "icon"]
     assert found and found[0]["hint"].startswith("Closest: topology-bus, arrows-exchange, stack-2")
+
+
+# E1: swimlane layout checks
+def swimlane(example, columns=("Detect", "Triage", "Mitigate")):
+    example["archetype"] = "swimlane"
+    example["layout"] = {"lanes": ["clients", "identity", "gateway", "services", "data"], "columns": list(columns)}
+    return example
+
+
+def test_swimlane_step_beyond_the_columns(example):
+    spec = swimlane(example)
+    spec["panels"][0]["cards"][0]["col"] = 4
+    assert ("layout", "clients") in [(e["check"], e["id"]) for e in errors(spec)]
+
+
+def test_swimlane_two_steps_in_one_column(example):
+    spec = swimlane(example)
+    spec["panels"][0]["cards"][0]["col"] = 2
+    spec["panels"][0]["cards"][1]["col"] = 2
+    found = [e for e in errors(spec) if e["check"] == "layout"]
+    assert found and "two steps in column 2" in found[0]["detail"]
+
+
+def test_swimlane_grid_has_a_phase_band(example):
+    g = archetypes.get("swimlane").grid(swimlane(example))
+    assert g.rows[0] == ["_phases"] and g.bands == {"_phases": ["Detect", "Triage", "Mitigate"]}

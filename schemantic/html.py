@@ -42,7 +42,7 @@ def grid_css(spec: dict) -> dict:
         "columns": " var(--gutter-x) ".join(g.columns),
         "rows": f" {gutter} ".join("minmax(0, 1fr)" if h == "fill" else "auto" for h in heights),
         "areas": " ".join('"' + " ".join(line) + '"' for line in lines),
-        "groups": g.groups,
+        "groups": g.groups, "group_kind": g.group_kind, "bands": g.bands, "zones": g.zones,
     }
 
 
@@ -139,7 +139,7 @@ def build_html(spec: dict, theme_css: str = "") -> str:
     legend = legend_entries(spec, loc, theme_css)
     fcols = footer.get("columns") or [FOOTER_WEIGHTS[col[0]] for col in layout if col != ["legend"]] or [1]
     return env.get_template("plate.html.j2").render(
-        spec=spec, panels=panels_for_render(spec), lang=canvas["lang"], L=loc, css=css,
+        spec=spec, panels=(panels := panels_for_render(spec)), panel_by_id={p['id']: p for p in panels}, lang=canvas["lang"], L=loc, css=css,
         width=width, height=height, badge=badge, grid=grid_css(spec), footer=footer,
         footer_columns=" ".join(f"minmax(0, {w}fr)" for w in fcols),
         legend=legend, footer_layout=layout, open_questions=open_questions(spec), notes=notes(spec),

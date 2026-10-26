@@ -70,11 +70,30 @@ layout:
 - Rails are tall and narrow: short notes, bullets, and an info chip keep them from looking empty.
 - Example: `examples/ontwikkelplatform-lagen.yaml`.
 
+## swimlane
+
+Who does what, in which order, and where work changes hands. One lane per actor (a panel; its name sits on the
+left), steps as cards placed in phase columns that line up across lanes, and handoffs as flows between cards. A band
+of phase names runs above the lanes.
+
+<!-- lint: examples/incident-swimlane.yaml -->
+```yaml
+archetype: swimlane
+layout:
+  lanes: [monitoring, oncall, commander, comms]                       # 2 to 6, top first
+  columns: ["Detect", "Triage", "Mitigate", "Communicate", "Learn"]   # optional, up to 8
+```
+
+- A card's `col` (1 is the first column) places the step; one step per column per lane.
+- Number the handoffs with `step` and say `flows_mean: control` (or `request`): the order is the story.
+- Put a lane's open point on a card as a `flag`; a chip spans the whole lane and blocks handoffs crossing it.
+- Example: `examples/incident-swimlane.yaml`.
+
 ## Not built yet
 
-`banded-matrix`, `nested-zones`, `swimlane`, `before-after`, `roadmap`, `landscape-map` are in the schema as
+`banded-matrix`, `nested-zones`, `before-after`, `roadmap`, `landscape-map` are in the schema as
 planned names. Lint refuses them. Until they exist:
 
-- a swimlane or roadmap → `column-flow` with one row per lane and the phases as columns;
+- a roadmap → `swimlane`, with one lane per workstream and the periods as columns;
 - a before/after → a series of two plates (`part: 1` and `part: 2`);
 - nested zones → `layer-cake`, or `column-flow` with one spanning panel per zone.

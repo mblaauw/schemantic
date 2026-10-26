@@ -476,7 +476,8 @@ schemantic.route = (flows) => {
       .map(centre)
       .find(([x, y]) => {
         const b = { l: x - BADGE - 2, r: x + BADGE + 2, t: y - BADGE - 2, b: y + BADGE + 2 };
-        return !allBoxes.some((o) => hits(b, o)) && !labelBoxes.some((o) => hits(b, o));
+        // A badge sits on its own arrow, so it only has to keep off what the arrow keeps off (not its endpoints' panels).
+        return !r.obstacles.some((o) => hits(b, o)) && !labelBoxes.some((o) => hits(b, o));
       });
     if (!spot) {
       problems.push({

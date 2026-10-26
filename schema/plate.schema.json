@@ -157,7 +157,7 @@
         "roadmap",
         "landscape-map"
       ],
-      "description": "The body layout. Built: column-flow, hub-and-spokes, layer-cake; the others are planned and refused by lint."
+      "description": "The body layout. Built: column-flow, hub-and-spokes, layer-cake, swimlane; the others are planned and refused by lint."
     },
     "layout": {
       "type": "object",
@@ -244,6 +244,25 @@
             "wide"
           ],
           "description": "layer-cake: width of the rails, between 260 px (at 1600 wide) and 30% of the body. normal is the default."
+        },
+        "lanes": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 6,
+          "items": {
+            "type": "string"
+          },
+          "description": "swimlane: lane (panel) ids, top first. A lane's cards are its steps."
+        },
+        "columns": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 8,
+          "items": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "description": "swimlane: phase names over the step columns; a card's col places it in one."
         }
       }
     },
@@ -471,6 +490,34 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "swimlane"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": [
+              "lanes"
+            ],
+            "propertyNames": {
+              "enum": [
+                "lanes",
+                "columns",
+                "chips_at"
+              ]
+            }
+          }
+        }
+      }
     }
   ],
   "$defs": {
@@ -555,6 +602,12 @@
             "type": "string"
           },
           "description": "Where this card comes from: '<source id>: <path, line or short quote>'. Not rendered; written to the SVG as data-refs."
+        },
+        "col": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "swimlane: the step column (1 is the first phase) this card sits in."
         }
       }
     },

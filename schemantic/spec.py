@@ -113,7 +113,7 @@ def layout_errors(spec: dict, arche: archetypes.Archetype) -> list[dict]:
     if out:
         return out
     grid = arche.grid(spec)
-    names = {n for r in grid.rows for n in r if n != "."}
+    names = {n for r in grid.rows for n in r if n != "."} - set(grid.bands)
     placed = (names - set(grid.groups)) | {n for members in grid.groups.values() for n in members}
     panel_ids = {p["id"] for p in spec["panels"]}
     for n in sorted(placed - panel_ids):
