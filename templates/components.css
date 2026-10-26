@@ -176,7 +176,8 @@ body { background: var(--paper); }
 .zone-1 { background: var(--zone-1); } .zone-2 { background: var(--zone-2); } .zone-3 { background: var(--zone-3); }
 .zone-label { align-self: flex-start; display: flex; gap: 8px; align-items: baseline; font-size: var(--t-name); font-weight: 700; color: var(--ink); }
 .zone-kind { font-size: var(--t-small); font-weight: 600; color: var(--muted); }
-.zone-body { flex: 1 1 auto; display: flex; flex-wrap: wrap; gap: 16px var(--gutter-x); align-items: stretch; }
+.zone-body { flex: 1 1 auto; display: flex; flex-wrap: wrap; gap: 16px var(--gutter-x); align-items: stretch;
+  align-content: flex-start; }   /* rows keep their content height; spare height stays in the frame, not in a panel */
 .zone-body > .panel { flex: 1 1 220px; min-width: 0; }
 .zone-body > .zone { flex: 1 1 260px; }
 .stack { display: flex; flex-direction: column; justify-content: space-evenly; gap: var(--gutter-y); min-width: 0; min-height: 0; }
