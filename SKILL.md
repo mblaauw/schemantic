@@ -9,17 +9,18 @@ You write a YAML **spec** that says what is on the plate: panels, cards, flows, 
 Chromium does the layout, a router draws the arrows, and `lint.py` measures the result and names every
 problem by element id. You never write coordinates and never edit the SVG: every fix goes into the spec.
 
-In the commands below, `$SKILL` is the folder that holds this file.
+## 0. Setup, once per session
 
-## 0. Setup, once per machine
+Set `$SKILL` to the absolute path of the folder that holds this `SKILL.md`. Treat that folder as read-only:
+never write specs, renders or a venv into it. Then run the doctor:
 
 ```bash
-test -x "$SKILL/.venv/bin/python" || (python3 -m venv "$SKILL/.venv" \
-  && "$SKILL/.venv/bin/pip" install -q -r "$SKILL/requirements.txt" \
-  && "$SKILL/.venv/bin/python" -m playwright install chromium)
+python3 "$SKILL/scripts/doctor.py"
 ```
 
-Fonts are bundled; nothing else needs installing.
+It prints JSON. Use its `python` value as `$PY` in every command below. It picks a Python that already has the
+dependencies, or creates a venv in `~/.cache/schemantic` (or `$SCHEMANTIC_HOME`), and proves Chromium starts.
+If `ok` is false, tell the user its `problem` and stop. Fonts are bundled; nothing else needs installing.
 
 ## 1. Understand what the plate must say
 
@@ -62,7 +63,7 @@ The short version:
 ## 4. Lint, fix, repeat
 
 ```bash
-"$SKILL/.venv/bin/python" "$SKILL/scripts/lint.py" plates/<name>.yaml --out plates/out
+"$PY" "$SKILL/scripts/lint.py" plates/<name>.yaml --out plates/out
 ```
 
 Lint prints JSON and exits 1 on errors. Each finding has `check`, `id` and `detail`. Fix every error in the
@@ -73,7 +74,7 @@ move cards between panels, change the archetype, or split the plate.
 ## 5. Render and look at it
 
 ```bash
-"$SKILL/.venv/bin/python" "$SKILL/scripts/render.py" plates/<name>.yaml --out plates/out
+"$PY" "$SKILL/scripts/render.py" plates/<name>.yaml --out plates/out
 ```
 
 This writes `plates/out/<name>.svg` and `plates/out/<name>.png`. Open the PNG (read the image) and answer the

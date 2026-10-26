@@ -69,7 +69,7 @@
     "card": {
       "type": "object", "required": ["name"], "additionalProperties": false,
       "properties": {
-        "id": {"type": "string"}, "icon": {"type": "string"},
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"}, "icon": {"type": "string"},
         "name": {"type": "string", "maxLength": 40}, "qualifier": {"type": "string", "maxLength": 40},
         "note": {"type": "string", "maxLength": 70},
         "bullets": {"type": "array", "maxItems": 3, "items": {"type": "string", "maxLength": 60}}

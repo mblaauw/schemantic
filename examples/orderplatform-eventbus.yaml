@@ -87,7 +87,7 @@ panels:
         note: "partitions and brokers"
         bullets: ["partition count reviewed every quarter", "brokers scale ahead of peak season"]
     chips:
-      - {kind: info, text: "Domains run their own consumers; operations runs the bus itself"}
+      - {kind: info, text: "Domains run their consumers; operations runs the bus"}
 
 flows:
   - {from: orders, to: bus}

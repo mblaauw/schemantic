@@ -25,7 +25,9 @@ ln -s "$PWD" ~/.claude/skills/schemantic
 ```
 
 Then ask for a plate in plain words ("draw our order platform: one gateway, four services,
-a data platform underneath"). The skill sets up its own `.venv` on first use.
+a data platform underneath"). On first use the skill runs `scripts/doctor.py`, which uses a Python
+that already has the dependencies or creates a venv in `~/.cache/schemantic`; it never writes into
+the skill folder, so a read-only install works.
 
 ## Quickstart
 
@@ -40,7 +42,7 @@ python3 scripts/lint.py   examples/orderplatform-toegang.yaml --out out
 `render.py` writes `out/<name>.svg` and `out/<name>.png` (intermediate HTML lands in
 `out/_work/` for debugging only). `lint.py` emits a JSON report and exits `1` on errors.
 
-Needs Python 3.10+, `playwright` (with Chromium: `playwright install chromium`),
+Needs Python 3.9+ (tested on 3.9 and 3.14), `playwright` 1.60 or later (with Chromium: `playwright install chromium`),
 `pyyaml`, `jsonschema`, `jinja2`, `pillow`, `fonttools` with `brotli`, and `pytest`.
 
 `column-flow`, `hub-and-spokes` and `layer-cake` are built. The schema lists the other
@@ -54,10 +56,12 @@ python3 -m pytest -q                  # spec checks, lint, and renders against t
 python3 -m pytest -q --update-golden  # after an intended visual change; review and commit the PNGs
 ```
 
-Every example in `examples/` is rendered and compared with `tests/golden/<name>.png`, using
-the same blurred comparison lint uses for SVG parity: sub-pixel noise passes, while a
-reworded note already fails. Golden images are made on macOS with the pinned Playwright
-Chromium, and CI runs on macOS for that reason.
+Every example in `examples/` is rendered and compared twice. The image is compared with
+`tests/golden/<name>.png` after a 1.5 px blur, failing when any one region or 32 × 32 tile
+differs, so sub-pixel noise passes and a one-character change fails. The structure (every
+element box, text line and connector, within 2 px) is compared with `tests/snapshots/<name>.json`,
+and a failure names the element that changed. The goldens were rendered on macOS with the versions in
+`tests/golden/VERSION`; the suite also passes with Python 3.9, Playwright 1.60 and Chromium 148.
 
 Fonts are bundled in `assets/fonts/` (Inter, and DejaVu Sans Mono for paths), so nothing
 needs to be installed and every machine lays the plate out the same way. The HTML loads
@@ -105,6 +109,7 @@ tests/                   pytest suite; golden/ holds the reference render of eac
 
 ## Spec in one look
 
+<!-- lint -->
 ```yaml
 canvas:  {size: landscape-4x3, lang: nl, series: orderplatform, part: 2, of: 3}
 title:   "Orderplatform na fase 2 — toegang en data flow"
@@ -120,11 +125,15 @@ panels:
     cards:
       - {icon: browser, name: "Webshop frontend", note: "leest de product catalog"}
 flows:
-  - {from: clients, to: identity, label: "OIDC"}
+  - {from: clients, to: identity}
+  - {from: identity, to: data, label: "scoped credentials"}   # a label needs a run with room beside it
 footer:
-  principles: ["Eén identity provider", "Data blijft bij de bron"]
+  principles:
+    - "Klanten, partners en medewerkers loggen in via één identity provider."
+    - "Data blijft bij de bron; delen loopt via het lakehouse."
 ```
 
+The sample is completed against `examples/orderplatform-toegang.yaml` and linted by the test suite.
 The full contract lives in [`schema/plate.schema.json`](schema/plate.schema.json).
 
 ## Example output

@@ -138,10 +138,9 @@ def main() -> int:
     a = ap.parse_args()
 
     spec_path = Path(a.spec)
-    spec = pl.load_spec(spec_path)
-    issues = pl.schema_errors(spec)
+    spec, issues = pl.read_spec(spec_path)
     if not issues:
-        issues = pl.semantic_errors(spec)
+        issues = pl.schema_errors(spec) or pl.semantic_errors(spec)
     report = {"spec": str(spec_path), "errors": [], "warnings": [], "density": {}, "parity": None}
     if not any(i["level"] == "error" for i in issues):
         out, name = Path(a.out), spec_path.stem
@@ -153,7 +152,7 @@ def main() -> int:
             page = pl.open_plate(browser, html, spec)
             flows = pl.draw_flows(page, spec)
             for x in flows["problems"]:
-                issues.append({"level": "error", "check": "arrow-routing", "id": f"flows/{x['i']}", "detail": x["problem"]})
+                issues.append({"level": "error", "check": x["check"], "id": f"flows/{x['i']}", "detail": x["problem"]})
             dom = page.evaluate(LINT_JS, {"floor": pl.TYPE_FLOOR_PX, "segs": flows["segs"], "densityMin": DENSITY_MIN})
             issues += dom["issues"]
             report["density"] = dom["density"]
@@ -163,10 +162,10 @@ def main() -> int:
             page.close()
             par = parity(browser, html, spec, svg_path, work)
             browser.close()
-        report["parity"] = {"share": round(par["share"], 6), "detail": par["detail"]}
-        if par["share"] > pl.PARITY_ERROR_SHARE:
+        report["parity"] = {"pixels": par["count"], "regions": par["regions"], "detail": par["detail"]}
+        if par["fail"]:
             issues.append({"level": "error", "check": "svg-parity", "id": "(plate)", "detail": par["detail"]})
-        elif par["share"] > 0:
+        elif par["count"]:
             issues.append({"level": "warning", "check": "svg-parity", "id": "(plate)", "detail": par["detail"]})
     report["errors"] = [i for i in issues if i["level"] == "error"]
     report["warnings"] = [i for i in issues if i["level"] == "warning"]
@@ -175,4 +174,8 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except Exception as exc:  # the skill reads JSON; a traceback would leave it guessing
+        print(json.dumps({"errors": [pl.internal_error(exc)], "warnings": []}, indent=2, ensure_ascii=False))
+        sys.exit(1)

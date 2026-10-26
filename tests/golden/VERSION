@@ -1,0 +1,6 @@
+# Rendered with these versions. Goldens compare structurally (blur plus local regions) and the snapshots in
+# tests/snapshots/ compare geometry within 2 px, so other versions in the tested range pass as well.
+playwright 1.64.1
+chromium 156.0.8078.4
+python 3.14.7
+platform macOS

@@ -52,7 +52,7 @@
 {%- endmacro -%}
 
 {%- macro panel(p) -%}
-<section class="panel role-{{ p.role }}{% if p.hub %} panel-hub{% endif %}" data-kind="panel" data-id="{{ p.id }}" style="grid-area: {{ p.id }}">
+<section class="panel role-{{ p.role }}{% if p.hub %} panel-hub{% endif %}" data-kind="panel" data-id="{{ p.id }}"{% if not p.nested %} style="grid-area: {{ p.id }}"{% endif %}>
 <div class="ph"><div class="ph-title">{{ p.title }}</div>{% if p.subtitle %}<div class="ph-sub">{{ p.subtitle }}</div>{% endif %}</div>
 <div class="pb">
 <div class="blocks arrange-{{ p.arrange or 'column' }}">
@@ -83,7 +83,12 @@
 {%- if badge %}<div class="badge">{{ badge }}</div>{% endif -%}
 </header>
 <main class="body" id="body" data-kind="body" data-id="body">
-{%- for p in panels %}{{ panel(p) }}{% endfor -%}
+{%- for p in panels if not p.nested %}{{ panel(p) }}{% endfor -%}
+{%- for g, ids in groups.items() -%}
+<div class="spoke-row" style="grid-area: {{ g }}; grid-template-columns: repeat({{ ids | length }}, minmax(0, 1fr)); column-gap: {{ gutter_x }}px">
+{%- for p in panels if p.id in ids %}{{ panel(p) }}{% endfor -%}
+</div>
+{%- endfor -%}
 </main>
 <footer class="footer" data-kind="footer" data-id="footer">
 {%- if footer.context -%}

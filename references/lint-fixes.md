@@ -7,12 +7,15 @@ in the spec. Errors block delivery; warnings are judgement calls that usually me
 
 | check | means | fix |
 | --- | --- | --- |
+| `yaml` | the file is missing, is not valid YAML (the detail gives line and column) or holds no mapping | fix the file; quote strings that contain `: ` or start with a special character |
 | `schema` | a field is missing, misspelled, too long or of the wrong type | the `id` is the path to the field; shorten text or correct the key |
+| `id` | two panels share an id, two cards share an id, or a card id equals a panel id or a card's automatic id | rename one; the detail names both places |
+| `canvas` | `part` without `of` (or the reverse), or `part` larger than `of` | give both, with `1 ≤ part ≤ of` |
 | `archetype` | the archetype is planned but not built | pick a built one (`archetypes.md`, "Not built yet") |
-| `layout` | layout keys do not fit the archetype, a panel is placed twice or not at all, an area is not a rectangle, widths/heights do not match the grid | follow the detail; every panel id appears in the layout exactly once |
+| `layout` | layout keys do not fit the archetype, a panel is placed twice or not at all, an area is not a rectangle, widths/heights do not match the grid, or `footer.columns` does not match the footer panels | follow the detail; every panel id appears in the layout exactly once |
 | `budget` | more than 5 columns | split the plate or merge panels |
 | `pattern` | a matrix row has the wrong number of cells | one cell per column |
-| `flow` | a flow names an id that does not exist | use a panel id, or give the card an `id` |
+| `flow` | a flow names an id that does not exist, connects an element to itself, or connects a card to its own panel | use a panel id, or give the card an `id`; connect two different boxes |
 | `chip-mirror` | a warning chip is not under open questions | `open_questions: {from_chips: true}` |
 | `icon` | unknown icon | pick from the list in `spec-guide.md` |
 | `language` | a translated technical term in an `nl` plate | use the English term (the id of the finding) |
@@ -32,3 +35,4 @@ in the spec. Errors block delivery; warnings are judgement calls that usually me
 | `chip-length` | a chip runs to three lines | shorten it to one clear sentence |
 | `density` (warning) | a panel's content fills under 60% of it | add real content (bullets, a pattern, an info chip), merge it with a neighbour, give it less room (`row_heights`, a different layout); never filler |
 | `svg-parity` | the SVG differs from the measured layout | a renderer problem, not a spec problem: report it with the `detail` and the files in `out/_work/` |
+| `internal` | Schemantic itself failed | not a spec problem: report the detail and the spec |

@@ -8,6 +8,7 @@ Every archetype uses the same panels, cards, chips, patterns, flows and footer. 
 A path the reader follows left to right, with optional rows underneath (a data platform under the services,
 for example). You draw the grid by naming cells, like CSS `grid-template-areas`.
 
+<!-- lint -->
 ```yaml
 archetype: column-flow
 layout:
@@ -28,6 +29,7 @@ One central panel (the hub) with up to 10 spokes around it: up to 4 above, up to
 side. Top and bottom spokes share the hub's width evenly, even when their counts differ; side spokes run the
 full height. The hub gets a stronger frame and the free height.
 
+<!-- lint: examples/orderplatform-eventbus.yaml -->
 ```yaml
 archetype: hub-and-spokes
 layout:
@@ -48,6 +50,7 @@ layout:
 Stacked layers, top to bottom, each one building on the one below. Optional rails on the left and right
 for concerns that touch every layer (security, observability, governance).
 
+<!-- lint: examples/ontwikkelplatform-lagen.yaml -->
 ```yaml
 archetype: layer-cake
 layout:

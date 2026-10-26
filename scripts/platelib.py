@@ -9,7 +9,6 @@ from __future__ import annotations
 import base64
 import io
 import json
-import math
 import re
 from pathlib import Path
 
@@ -34,11 +33,15 @@ FONTS = [("Inter", 400, "Inter-Regular.woff2"), ("Inter", 500, "Inter-Medium.wof
          ("Inter", 600, "Inter-SemiBold.woff2"), ("Inter", 700, "Inter-Bold.woff2"),
          ("Inter", 800, "Inter-ExtraBold.woff2"), ("DejaVu Sans Mono", 400, "DejaVuSansMono.woff2")]
 # Image comparison (SVG parity in lint, golden renders in tests) is structural, not pixel-perfect: Chromium
-# snaps HTML text and borders to whole pixels while the SVG keeps fractions. A 1.5 px blur absorbs that;
-# a dropped card still leaves thousands of pixels.
+# snaps HTML text and borders to whole pixels while the SVG keeps fractions. A 1.5 px blur absorbs that.
+# The verdict is local, not a share of the canvas: one reworded word leaves about 100 px in one place, which a
+# canvas-wide share (0.01 % is 190 px) let through. A change fails when one connected region of the mask, or
+# one 32 x 32 tile, holds more than a few pixels.
 PARITY_BLUR_PX = 1.5
 PARITY_DELTA = 40            # grey-level difference (0-255) after blur
-PARITY_ERROR_SHARE = 0.0001  # 0.01 % of the canvas, about 190 px at 1600 x 1200
+PARITY_REGION_PX = 24        # largest allowed connected region of differing pixels
+PARITY_TILE = 32
+PARITY_TILE_PX = 12          # largest allowed number of differing pixels in one tile
 
 
 # ---------------------------------------------------------------- spec
@@ -46,6 +49,28 @@ PARITY_ERROR_SHARE = 0.0001  # 0.01 % of the canvas, about 190 px at 1600 x 1200
 def load_spec(path: str | Path) -> dict:
     with open(path, encoding="utf-8") as fh:
         return yaml.safe_load(fh)
+
+
+def read_spec(path: str | Path) -> tuple[dict | None, list[dict]]:
+    """Load a spec for the CLIs: a missing file, broken YAML or a document that is not a mapping becomes a
+    `yaml` finding instead of a traceback."""
+    err = lambda detail: (None, [{"level": "error", "check": "yaml", "id": "(file)", "detail": detail}])
+    try:
+        spec = load_spec(path)
+    except FileNotFoundError:
+        return err(f"no such file: {path}")
+    except yaml.YAMLError as e:
+        mark = getattr(e, "problem_mark", None)
+        where = f" at line {mark.line + 1}, column {mark.column + 1}" if mark else ""
+        return err(f"not valid YAML{where}: {getattr(e, 'problem', None) or e}")
+    if not isinstance(spec, dict):
+        return err(f"the file holds {type(spec).__name__ if spec is not None else 'nothing'}, not a spec (a mapping of canvas, title, …)")
+    return spec, []
+
+
+def internal_error(exc: Exception) -> dict:
+    return {"level": "error", "check": "internal", "id": "(plate)",
+            "detail": f"{type(exc).__name__}: {exc}. This is a Schemantic bug, not a spec problem; report it with the spec."}
 
 
 def load_locale(lang: str) -> dict:
@@ -82,14 +107,21 @@ def placed_ids(layout: dict) -> list[str]:
     return out
 
 
+def body_groups(spec: dict) -> dict[str, list[str]]:
+    """Spoke rows of a hub, each rendered as its own grid in one body cell, so every row divides the hub's
+    width evenly whatever the other row holds. Group names start with '_', which a panel id cannot."""
+    if spec["archetype"] != "hub-and-spokes":
+        return {}
+    lay = spec["layout"]
+    return {g: lay[k] for g, k in (("_top", "top"), ("_bottom", "bottom")) if lay.get(k)}
+
+
 def area_tokens(spec: dict) -> list[list[str]]:
-    """The body grid as rows of panel ids ('.' is empty), written by hand or derived from the archetype."""
+    """The body grid as rows of panel ids or group names ('.' is empty), written by hand or derived."""
     lay, kind = spec["layout"], spec["archetype"]
     if kind == "hub-and-spokes":
-        top, bottom = lay.get("top", []), lay.get("bottom", [])
-        k = math.lcm(len(top) or 1, len(bottom) or 1)  # hub columns; every spoke spans a whole number of them
-        spread = lambda ids: [ids[c * len(ids) // k] for c in range(k)]
-        rows = ([spread(top)] if top else []) + [[lay["hub"]] * k] + ([spread(bottom)] if bottom else [])
+        groups = body_groups(spec)
+        rows = ([["_top"]] if "_top" in groups else []) + [[lay["hub"]]] + ([["_bottom"]] if "_bottom" in groups else [])
     elif kind == "layer-cake":
         rows = [[layer] for layer in lay["layers"]]
     else:
@@ -108,17 +140,25 @@ def default_row_heights(spec: dict, rows: list[list[str]]) -> list[str]:
     return ["fill"] * len(rows)
 
 
-def column_weights(spec: dict, ncols: int) -> list[float]:
+def column_tracks(spec: dict, ncols: int) -> list[str]:
+    """CSS column tracks for the body grid (gutter tracks are added by grid_css)."""
     lay, kind = spec["layout"], spec["archetype"]
     sides = [bool(lay.get("left")), bool(lay.get("right"))]
+    fr = lambda w: f"minmax(0, {w}fr)"
     if kind == "hub-and-spokes":
-        k = ncols - sum(sides)
-        side = k / max(len(lay.get("top", [])), len(lay.get("bottom", [])), 2)  # a side spoke is as wide as a top spoke
-    elif kind == "layer-cake":
-        k, side = 1, RAIL_WEIGHT
-    else:
-        return lay.get("column_widths") or [1] * ncols
-    return [side] * sides[0] + [1] * k + [side] * sides[1]
+        # A side spoke is as wide as one spoke of the fuller row (counted as at least 2, so a lone spoke never
+        # makes the side as wide as the hub). With n spokes in a row, a spoke is (H - (n-1)·gutter)/n of the hub
+        # width H; solving for the side width S against the body width (100%) gives S = f·100% + g, so CSS does
+        # the arithmetic and the gutters are counted.
+        n, ns = max(len(lay.get("top", [])), len(lay.get("bottom", [])), 2), sum(sides)
+        a, b = 1 / n, (n - 1) * GUTTER_X / n
+        f = a / (1 + ns * a)
+        g = f * (ns * b - ns * GUTTER_X) - b
+        side = f"calc({f * 100:.4f}% + {g:.2f}px)"
+        return [side] * sides[0] + [fr(1)] + [side] * sides[1]
+    if kind == "layer-cake":
+        return [fr(RAIL_WEIGHT)] * sides[0] + [fr(1)] + [fr(RAIL_WEIGHT)] * sides[1]
+    return [fr(w) for w in (lay.get("column_widths") or [1] * ncols)]
 
 
 def semantic_errors(spec: dict) -> list[dict]:
@@ -129,6 +169,10 @@ def semantic_errors(spec: dict) -> list[dict]:
 
     if spec["archetype"] not in BUILT_ARCHETYPES:
         err("archetype", "archetype", f"'{spec['archetype']}' is not built yet; use one of {', '.join(BUILT_ARCHETYPES)}")
+        return out
+    # Ids first: a colliding id makes every later check (and the router) look in the wrong place.
+    out += id_errors(spec)
+    if out:
         return out
     required, allowed = LAYOUT_KEYS[spec["archetype"]]
     keys = set(spec["layout"])
@@ -156,10 +200,12 @@ def semantic_errors(spec: dict) -> list[dict]:
     if ncols > 5 and spec["archetype"] == "column-flow":
         err("budget", "layout.areas", f"{ncols} body columns; the budget is 5. Split the plate.")
     names = {n for r in rows for n in r if n != "."}
+    groups = body_groups(spec)
+    placed = (names - set(groups)) | {n for ids in groups.values() for n in ids}
     panel_ids = [p["id"] for p in spec["panels"]]
-    for n in sorted(names - set(panel_ids)):
+    for n in sorted(placed - set(panel_ids)):
         err("layout", "layout", f"'{n}' is placed in the layout but has no panel")
-    for n in sorted(set(panel_ids) - names):
+    for n in sorted(set(panel_ids) - placed):
         err("layout", n, "panel is not placed in the layout")
     for n in names:  # each area must be a rectangle
         cells = [(r, c) for r, row in enumerate(rows) for c, v in enumerate(row) if v == n]
@@ -195,7 +241,17 @@ def semantic_errors(spec: dict) -> list[dict]:
         for end in ("from", "to"):
             if f[end] not in known:
                 err("flow", f"flows/{i}", f"endpoint '{f[end]}' does not exist")
+        if f["from"] == f["to"]:
+            err("flow", f"flows/{i}", f"from and to are the same element ('{f['from']}')")
 
+    canvas = spec["canvas"]
+    if ("part" in canvas) != ("of" in canvas):
+        err("canvas", "canvas.part" if "part" not in canvas else "canvas.of", "give both part and of, or neither; the badge needs both")
+    elif "part" in canvas and canvas["part"] > canvas["of"]:
+        err("canvas", "canvas.part", f"part {canvas['part']} of {canvas['of']}; part cannot be larger than of")
+    fcols = (spec.get("footer") or {}).get("columns")
+    if fcols and len(fcols) != len(footer_panels(spec)):
+        err("layout", "footer.columns", f"{len(fcols)} widths for {len(footer_panels(spec))} footer panels ({', '.join(footer_panels(spec))})")
     oq = (spec.get("footer") or {}).get("open_questions") or {}
     chips = [ch["text"] for p in spec["panels"] for ch in p.get("chips", []) if ch["kind"] == "warning"]
     if chips and not oq.get("from_chips"):
@@ -215,6 +271,49 @@ def semantic_errors(spec: dict) -> list[dict]:
             if re.search(re.escape(b.lower()), text):
                 err("language", term, f"'{b}' found; keep the technical term '{term}' in English")
     return out
+
+
+def id_errors(spec: dict) -> list[dict]:
+    """Panel ids are unique; an explicit card id is unique across the plate and never equals a panel id or a
+    card's automatic id (<panel>.card<n>). Each collision is reported once, naming both places."""
+    out = []
+    err = lambda id_, detail: out.append({"level": "error", "check": "id", "id": id_, "detail": detail})
+    panels = {}
+    for i, p in enumerate(spec["panels"]):
+        if p["id"] in panels:
+            err(p["id"], f"panels/{panels[p['id']]} and panels/{i} both use id '{p['id']}'")
+        else:
+            panels[p["id"]] = i
+    auto = {f"{p['id']}.card{i}" for p in spec["panels"] for i in range(len(p.get("cards", [])))}
+    context = ((spec.get("footer") or {}).get("context") or {}).get("cards", [])
+    places = [(f"panels/{pi}/cards/{ci}", c) for pi, p in enumerate(spec["panels"]) for ci, c in enumerate(p.get("cards", []))]
+    places += [(f"footer/context/cards/{ci}", c) for ci, c in enumerate(context)]
+    seen = {}
+    for where, c in places:
+        cid = c.get("id")
+        if not cid:
+            continue
+        if cid in panels:
+            err(cid, f"{where} uses '{cid}', which is already the id of panels/{panels[cid]}")
+        elif cid in auto:
+            err(cid, f"{where} uses '{cid}', which is the automatic id of another card")
+        elif cid in seen:
+            err(cid, f"{seen[cid]} and {where} both use id '{cid}'")
+        else:
+            seen[cid] = where
+    return out
+
+
+def footer_panels(spec: dict) -> list[str]:
+    """The footer panels the template renders, in order; the legend is always there."""
+    footer = spec.get("footer") or {}
+    present = [("context", bool(footer.get("context"))), ("principles", bool(footer.get("principles"))),
+               ("open_questions", bool(open_questions(spec))), ("legend", True)]
+    return [name for name, on in present if on]
+
+
+# Default footer widths per panel, relative to each other; only the panels present get a track.
+FOOTER_WEIGHTS = {"context": 1.5, "principles": 1.4, "open_questions": 1.1, "legend": 0.9}
 
 
 def iter_icons(spec: dict):
@@ -266,9 +365,8 @@ def grid_css(spec: dict) -> dict:
                     same = row[c] == row[c + 1] == nxt[c] == nxt[c + 1]
                     gap.append(row[c] if same else ".")
             lines.append(gap)
-    widths = column_weights(spec, n)
     heights = spec["layout"].get("row_heights") or default_row_heights(spec, rows)
-    cols = f" {GUTTER_X}px ".join(f"minmax(0, {w}fr)" for w in widths)
+    cols = f" {GUTTER_X}px ".join(column_tracks(spec, n))
     rows_css = f" {GUTTER_Y}px ".join("minmax(0, 1fr)" if h == "fill" else "auto" for h in heights)
     areas = " ".join('"' + " ".join(l) + '"' for l in lines)
     return {"columns": cols, "rows": rows_css, "areas": areas}
@@ -365,6 +463,8 @@ def panels_for_render(spec: dict) -> list[dict]:
         p = dict(p)
         if kind == "hub-and-spokes" and p["id"] == lay["hub"]:
             p["hub"] = True
+        if any(p["id"] in ids for ids in body_groups(spec).values()):
+            p["nested"] = True  # placed by its spoke row's grid, not by a body grid area
         if kind == "layer-cake" and p["id"] in lay["layers"] and p.get("cards") and not p.get("card_columns"):
             p["card_columns"] = len(p["cards"])
         out.append(p)
@@ -380,9 +480,9 @@ def build_html(spec: dict) -> str:
     canvas = spec["canvas"]
     badge = loc["badge"].format(part=canvas["part"], of=canvas["of"]) if canvas.get("part") and canvas.get("of") else None
     footer = spec.get("footer") or {}
-    fcols = footer.get("columns") or [1.4, 1.4, 1.1, 0.9]
+    fcols = footer.get("columns") or [FOOTER_WEIGHTS[name] for name in footer_panels(spec)]
     return env.get_template("plate.html.j2").render(
-        spec=spec, panels=panels_for_render(spec), lang=canvas["lang"], L=loc, css=css, width=width, height=height, badge=badge,
+        spec=spec, panels=panels_for_render(spec), groups=body_groups(spec), gutter_x=GUTTER_X, lang=canvas["lang"], L=loc, css=css, width=width, height=height, badge=badge,
         grid=grid_css(spec), footer=footer, footer_columns=" ".join(f"minmax(0, {w}fr)" for w in fcols),
         legend=legend_entries(spec, loc), open_questions=open_questions(spec),
         icons=icon_markup, tree_rows=tree_rows, matrix_values=matrix_values)
@@ -422,7 +522,7 @@ FLOWS_JS = r"""
   const solids = [...plate.querySelectorAll('[data-kind="panel"], [data-kind="card"], [data-kind="pattern"], [data-kind="chip"], .ph')]
     .map(el => ({el, box: rel(el)}));
   // Channels: the centre line of every gutter between two body panels, plus a lane on either side of it.
-  const bodyPanels = [...document.querySelectorAll('#body > [data-kind="panel"]')].map(rel);
+  const bodyPanels = [...document.querySelectorAll('#body [data-kind="panel"]')].map(rel);
   const chX = new Map(), chY = new Map();
   for (const a of bodyPanels) for (const b of bodyPanels) {
     if (b.l > a.r && b.l - a.r < 100) { const c = mid(a.r, b.l); [0, -LANE, LANE].forEach(o => chX.set(r2(c + o), Math.abs(o))); }
@@ -503,8 +603,9 @@ FLOWS_JS = r"""
   const problems = [], routed = [];
   const jobs = flows.map((fl, i) => {
     const A = byId(fl.from), B = byId(fl.to);
-    if (!A || !B) { problems.push({i, problem: 'endpoint not found'}); return null; }
-    if (A.contains(B) || B.contains(A)) { problems.push({i, problem: 'connects a card to its own panel; connect it to another box'}); return null; }
+    if (!A || !B) { problems.push({i, kind: 'endpoint', problem: 'endpoint not found'}); return null; }
+    if (A === B) { problems.push({i, kind: 'self', problem: 'from and to are the same element'}); return null; }
+    if (A.contains(B) || B.contains(A)) { problems.push({i, kind: 'nested', problem: 'connects a card to its own panel; connect it to another box'}); return null; }
     const obstacles = solids.filter(s => !(s.el === A || s.el === B || s.el.contains(A) || s.el.contains(B) || A.contains(s.el) || B.contains(s.el))).map(s => s.box);
     return {i, fl, A, B, obstacles, cands: candidates(rel(A), rel(B))};
   }).filter(Boolean);
@@ -512,7 +613,7 @@ FLOWS_JS = r"""
   jobs.sort((p, q) => ((p.cands[0] || {pts: []}).pts.length === 2 ? 0 : 1) - ((q.cands[0] || {pts: []}).pts.length === 2 ? 0 : 1) || p.i - q.i);
   for (const j of jobs) {
     const pick = j.cands.find(c => clear(c.pts, j.obstacles, j.fl.both));
-    if (!pick) { problems.push({i: j.i, problem: 'no clear route between the two boxes; connect their panels instead, or move one so they share a gutter'}); continue; }
+    if (!pick) { problems.push({i: j.i, kind: 'route', problem: 'no clear route between the two boxes; connect their panels instead, or move one so they share a gutter'}); continue; }
     const r = {...j, pts: pick.pts};
     placed.push(r); routed.push(r);
   }
@@ -576,7 +677,7 @@ FLOWS_JS = r"""
       return b.l > 0 && b.t > 0 && b.r < P.width && b.b < P.height && !allBoxes.some(o => hits(b, o)) && !labelBoxes.some(o => hits(b, o))
         && !placed.some(o => o.pts.some((u, j) => j < o.pts.length - 1 && hits(b, segBox(u, o.pts[j + 1], 1.5))));
     });
-    if (!spot) { problems.push({i: r.i, problem: `no room for the label "${r.fl.label}"; shorten it or drop it`}); continue; }
+    if (!spot) { problems.push({i: r.i, kind: 'label', problem: `no room for the label "${r.fl.label}"; shorten it or drop it`}); continue; }
     labelBoxes.push({l: spot[0], r: spot[0] + w, t: spot[1] - asc, b: spot[1] + desc});
     art[r.i] += `<text data-label="${r.i}" x="${r2(spot[0])}" y="${r2(spot[1])}" font-family="${font}" font-size="11.5" font-weight="500" fill="${muted}">${esc(r.fl.label)}</text>`;
     r.label = {x: spot[0], y: spot[1], text: r.fl.label};
@@ -594,8 +695,15 @@ FLOWS_JS = r"""
 """
 
 
+# Router problem kinds and the lint check each one belongs to.
+FLOW_CHECKS = {"route": "arrow-routing", "label": "arrow-label", "endpoint": "flow", "self": "flow", "nested": "flow"}
+
+
 def draw_flows(page, spec: dict) -> dict:
-    return page.evaluate(FLOWS_JS, spec.get("flows", []))
+    out = page.evaluate(FLOWS_JS, spec.get("flows", []))
+    for x in out["problems"]:
+        x["check"] = FLOW_CHECKS[x["kind"]]
+    return out
 
 
 EXPORT_JS = r"""
@@ -709,17 +817,98 @@ def export_svg(page, spec: dict) -> tuple[str, list[str]]:
     return head + "\n".join(d["items"]) + "\n</svg>\n", fonts
 
 
+SNAPSHOT_JS = r"""
+() => {
+  const P = document.getElementById('plate').getBoundingClientRect(), r2 = v => Math.round(v / 2) * 2, out = {};
+  for (const el of document.querySelectorAll('#plate [data-id]')) {
+    const r = el.getBoundingClientRect();
+    out[el.dataset.id] = [r.left - P.left, r.top - P.top, r.right - P.left, r.bottom - P.top].map(r2);
+  }
+  return out;
+}
+"""
+
+
+def snapshot(page, svg: str, segs: list[dict]) -> dict:
+    """What a plate is made of, rounded to 2 px: every element box by data-id, every text line of the SVG with
+    its position, every connector's points. OS-independent, and a diff names what changed."""
+    r2 = lambda v: int(round(float(v) / 2) * 2)
+    unescape = lambda t: t.replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", '"').replace("&amp;", "&")
+    text = [[r2(x), r2(y), unescape(t)] for x, y, t in re.findall(r'<text[^>]*?\bx="([-\d.]+)" y="([-\d.]+)"[^>]*>(.*?)</text>', svg)]
+    flows = [{"i": f["i"], "from": f["from"], "to": f["to"], "points": [[r2(x), r2(y)] for x, y in f["points"]],
+              "label": (f.get("label") or {}).get("text")} for f in segs]
+    return {"boxes": page.evaluate(SNAPSHOT_JS), "text": text, "flows": flows}
+
+
+def snapshot_diff(old: dict, new: dict, tol: int = 2) -> list[str]:
+    """Human-readable differences between two snapshots; geometry within tol px counts as equal."""
+    out = []
+    near = lambda a, b: len(a) == len(b) and all(abs(x - y) <= tol for x, y in zip(a, b))
+    for k in sorted(set(old["boxes"]) | set(new["boxes"])):
+        a, b = old["boxes"].get(k), new["boxes"].get(k)
+        if a is None:
+            out.append(f"added box {k} at {b}")
+        elif b is None:
+            out.append(f"removed box {k} (was {a})")
+        elif not near(a, b):
+            out.append(f"box {k} moved or resized: {a} -> {b}")
+    unused = list(new["text"])
+    for x, y, t in old["text"]:
+        hit = next((n for n in unused if n[2] == t and abs(n[0] - x) <= tol and abs(n[1] - y) <= tol), None)
+        if hit:
+            unused.remove(hit)
+        else:
+            out.append(f"text {t!r} at ({x}, {y}) is gone or moved")
+    out += [f"text {t!r} at ({x}, {y}) is new or moved" for x, y, t in unused]
+    for a, b in zip(old["flows"], new["flows"]):
+        if (a["from"], a["to"], a["label"]) != (b["from"], b["to"], b["label"]) or len(a["points"]) != len(b["points"]) \
+                or not all(near(p, q) for p, q in zip(a["points"], b["points"])):
+            out.append(f"flow {a['i']} ({a['from']} -> {a['to']}) changed: {a['points']} -> {b['points']}")
+    if len(old["flows"]) != len(new["flows"]):
+        out.append(f"{len(old['flows'])} flows before, {len(new['flows'])} now")
+    return out
+
+
 def image_diff(a_path: Path, b_path: Path, mask_path: Path) -> dict:
-    """Share of pixels that still differ after a blur; writes the difference mask to mask_path."""
+    """Compare two renders after a blur. Writes the difference mask to mask_path and returns the pixel count,
+    the failing regions (bounding boxes) and whether the difference is large enough anywhere to fail."""
     a = Image.open(a_path).convert("L").filter(ImageFilter.GaussianBlur(PARITY_BLUR_PX))
     b = Image.open(b_path).convert("L").filter(ImageFilter.GaussianBlur(PARITY_BLUR_PX))
     if a.size != b.size:
-        return {"share": 1.0, "detail": f"size differs: {a.size} vs {b.size}", "bbox": None}
+        return {"count": None, "fail": True, "regions": [], "detail": f"size differs: {a.size} vs {b.size}"}
     mask = ImageChops.difference(a, b).point(lambda v: 255 if v > PARITY_DELTA else 0)
-    count = mask.histogram()[255]
     mask.save(mask_path)
-    return {"share": count / (a.size[0] * a.size[1]), "bbox": mask.getbbox(),
-            "detail": f"{count} pixels differ after a {PARITY_BLUR_PX} px blur" + (f", within {mask.getbbox()}" if count else "")}
+    box = mask.getbbox()
+    if not box:
+        return {"count": 0, "fail": False, "regions": [], "detail": f"0 pixels differ after a {PARITY_BLUR_PX} px blur"}
+    crop, (ox, oy) = mask.crop(box), box[:2]
+    w = crop.size[0]
+    on = {(i % w + ox, i // w + oy) for i, v in enumerate(crop.tobytes()) if v}  # mode L: one byte a pixel
+    tiles: dict[tuple[int, int], list] = {}
+    for x, y in on:
+        tiles.setdefault((x // PARITY_TILE, y // PARITY_TILE), []).append((x, y))
+    regions, seen = [], set()
+    for start in on:  # 8-connected regions
+        if start in seen:
+            continue
+        stack, pts = [start], []
+        seen.add(start)
+        while stack:
+            x, y = stack.pop()
+            pts.append((x, y))
+            for nb in ((x + dx, y + dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
+                if nb in on and nb not in seen:
+                    seen.add(nb)
+                    stack.append(nb)
+        regions.append(pts)
+    bbox = lambda pts: [min(x for x, _ in pts), min(y for _, y in pts), max(x for x, _ in pts) + 1, max(y for _, y in pts) + 1]
+    failing = [bbox(r) for r in regions if len(r) > PARITY_REGION_PX]
+    failing += [bbox(t) for t in tiles.values() if len(t) > PARITY_TILE_PX and not any(
+        f[0] <= t[0][0] < f[2] and f[1] <= t[0][1] < f[3] for f in failing)]
+    detail = f"{len(on)} pixels differ after a {PARITY_BLUR_PX} px blur"
+    if failing:
+        detail += f"; {len(failing)} region(s) over the limit, first at {failing[0]}"
+    return {"count": len(on), "fail": bool(failing), "regions": failing, "detail": detail}
 
 
 def rasterise_svg(browser, svg_path: Path, spec: dict, png_path: Path, scale: float = 2) -> None:

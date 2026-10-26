@@ -76,19 +76,16 @@ def hub_spec(example, **layout):
 
 def test_hub_layout_is_derived(example):
     spec = hub_spec(example, hub="identity", top=["clients", "gateway", "services"], bottom=["data"], right="x")
-    assert pl.area_tokens(spec) == [
-        ["clients", "gateway", "services", "x"],
-        ["identity", "identity", "identity", "x"],
-        ["data", "data", "data", "x"],
-    ]
-    # The side spoke is as wide as one top spoke; the hub row fills, spoke rows hug their content.
-    assert pl.column_weights(spec, 4) == [1, 1, 1, 1]
+    # Spoke rows are groups with their own grid; the side spoke spans every row.
+    assert pl.area_tokens(spec) == [["_top", "x"], ["identity", "x"], ["_bottom", "x"]]
+    assert pl.body_groups(spec) == {"_top": ["clients", "gateway", "services"], "_bottom": ["data"]}
     assert pl.default_row_heights(spec, pl.area_tokens(spec)) == ["auto", "fill", "auto"]
 
 
-def test_hub_spreads_uneven_rows_over_shared_columns(example):
-    spec = hub_spec(example, hub="identity", top=["clients", "gateway", "services"], bottom=["data", "x"])
-    assert pl.area_tokens(spec)[2] == ["data"] * 3 + ["x"] * 3
+def test_side_spoke_track_is_one_spoke_of_the_fuller_row_wide(example):
+    # One side, four bottom spokes: S = H/4 - 36 and S + 48 + H = 100%, so 100% = 5S + 192 and S = 20% - 38.4px.
+    spec = hub_spec(example, hub="identity", top=["clients"], bottom=["gateway", "services", "data", "x"], left="y")
+    assert pl.column_tracks(spec, 2) == ["calc(20.0000% + -38.40px)", "minmax(0, 1fr)"]
 
 
 def test_layer_cake_rails_span_every_layer(example):
@@ -111,3 +108,55 @@ def test_panel_placed_twice(example):
 def test_hub_needs_two_spokes(example):
     hub_spec(example, hub="identity", top=["clients"])
     assert [e["id"] for e in errors(example)] == ["layout.hub"]
+
+
+# A1: ids
+def test_duplicate_panel_id(example):
+    example["panels"].append(dict(example["panels"][2]))
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("id", "gateway")]
+
+
+def test_duplicate_card_id(example):
+    example["panels"][0]["cards"][0]["id"] = "x"
+    example["panels"][1]["cards"][0]["id"] = "x"
+    found = errors(example)
+    assert [(e["check"], e["id"]) for e in found] == [("id", "x")]
+    assert "panels/0/cards/0" in found[0]["detail"] and "panels/1/cards/0" in found[0]["detail"]
+
+
+def test_card_id_equal_to_panel_id(example):
+    example["panels"][0]["cards"][0]["id"] = "gateway"
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("id", "gateway")]
+
+
+def test_card_id_equal_to_an_automatic_id(example):
+    example["panels"][0]["cards"][0]["id"] = "gateway.card1"
+    assert [e["check"] for e in errors(example)] == ["schema"]  # a dot is not allowed in an id
+
+
+# A2: footer columns follow the footer panels
+def test_footer_columns_must_match_panels(example):
+    example["footer"]["columns"] = [1, 1, 1]
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("layout", "footer.columns")]
+
+
+def test_default_footer_columns_cover_only_present_panels(example):
+    del example["footer"]["context"]
+    assert pl.footer_panels(example) == ["principles", "open_questions", "legend"]
+
+
+# A5: a flow from an element to itself
+def test_self_loop_is_a_flow_error(example):
+    example["flows"].append({"from": "gateway", "to": "gateway"})
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("flow", "flows/6")]
+
+
+# A6: series badge
+def test_part_without_of(example):
+    del example["canvas"]["of"]
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("canvas", "canvas.of")]
+
+
+def test_part_larger_than_of(example):
+    example["canvas"]["part"] = 4
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("canvas", "canvas.part")]
