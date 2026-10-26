@@ -197,3 +197,18 @@ def test_flag_counts_for_the_chip_mirror(example):
 def test_row_heights_still_work_but_are_deprecated(example):
     example["layout"]["row_heights"] = ["fill", "auto"]
     assert [(e["check"], e["level"]) for e in sp.check(example)] == [("deprecated", "warning")]
+
+
+# C13: icons the agent can find
+def test_icon_search_finds_architecture_words():
+    from schemantic import icons
+    assert icons.search(["queue"])[:1] == ["stack-2"]
+    assert "database" in icons.search(["database"])[:3]
+    for word, names in icons.synonyms().items():
+        assert all(n in icons.index() for n in names), word
+
+
+def test_unknown_icon_hint_names_the_closest_ones(example):
+    example["panels"][0]["cards"][0]["icon"] = "kafka"
+    found = [e for e in sp.semantic_errors(example) if e["check"] == "icon"]
+    assert found and found[0]["hint"].startswith("Closest: topology-bus, arrows-exchange, stack-2")

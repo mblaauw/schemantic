@@ -33,6 +33,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - C10: the SVG is editable: a named group per panel, card, pattern, chip and flow (with Inkscape labels), nested as
   on the page, and a `<desc>` with the subtitle and an outline of the plate. `--outline-text` writes text as glyph
   paths, shaped with HarfBuzz from the bundled fonts (optional `uharfbuzz`); parity still checks the text version.
+- C13: the full Tabler outline set (4,879 icons, 3.19) with a tag index and curated synonyms for architecture words;
+  `schemantic icons <words>` searches them, and an unknown icon's hint names the three closest.
 - C12: themes. `canvas.theme` (relative to the spec) or `--theme` appends a CSS file after `tokens.css`; a theme can
   recolour and add roles with their own legend labels. `examples/themes/warm.css` shows both.
 

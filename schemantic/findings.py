@@ -50,7 +50,8 @@ CHECKS: dict[str, Check] = {
                         "dependency or control", "Add flows_mean: data, request, dependency or control."),
     "chip-mirror": Check("spec", "a warning chip or warning flag is not under open questions", "`open_questions: {from_chips: true}`",
                          "Set footer.open_questions.from_chips to true."),
-    "icon": Check("spec", "unknown icon", "pick from the list in `spec-guide.md`", "Pick an icon from the list in references/spec-guide.md."),
+    "icon": Check("spec", "unknown icon", "use one of the closest names in the hint, or search: `schemantic icons <word>`",
+                  "Search the icons with: schemantic icons <word>."),
     "language": Check("spec", "a translated technical term in an `nl` plate", "use the English term (the id of the finding)",
                       "Use the English term named in `id`."),
     "text-overflow": Check("layout", "a word or line runs outside its box",
@@ -89,8 +90,9 @@ CHECKS: dict[str, Check] = {
 
 
 def with_hint(finding: dict) -> dict:
+    """The finding with its check's hint, unless the finding brings a more specific one (an icon's closest names)."""
     check = CHECKS.get(finding["check"])
-    return {**finding, "hint": check.hint} if check else finding
+    return {**finding, "hint": finding.get("hint") or check.hint} if check else finding
 
 
 LINT_FIXES = ROOT / "references" / "lint-fixes.md"

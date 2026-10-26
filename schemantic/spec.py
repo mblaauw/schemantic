@@ -9,7 +9,7 @@ from pathlib import Path
 import jsonschema
 import yaml
 
-from . import archetypes, roles
+from . import archetypes, icons, roles
 from .config import ICONS, ROOT
 
 # Default footer widths per column, by its first section, relative to each other.
@@ -198,7 +198,10 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
 
     for icon in iter_icons(spec):
         if not (ICONS / f"{icon}.svg").exists():
-            out.append(finding("icon", icon, "icon not in assets/icons; pick one from the registry"))
+            close = icons.suggest(icon)
+            out.append({**finding("icon", icon, f"no icon named '{icon}'"),
+                        "hint": f"Closest: {', '.join(close)}. Search with: schemantic icons <word>." if close else
+                                "Search with: schemantic icons <word>."})
 
     loc = load_locale(spec["canvas"]["lang"])
     text = "\n".join(iter_strings(spec)).lower()

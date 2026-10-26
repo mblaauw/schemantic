@@ -110,7 +110,7 @@ references/              archetypes, spec guide, lint fixes, review questions (r
 schema/plate.schema.json spec contract
 locales/                 fixed labels per language, never-translate list
 templates/               plate.html.j2, tokens.css (theme, override per project), components.css
-assets/icons/            57 Tabler outline icons (MIT, see LICENSE-tabler-icons.txt)
+assets/icons/            the 4,879 Tabler outline icons 3.19 (MIT), index.json (tags) and synonyms.json
 assets/fonts/            Inter 4.1 (400–800) and DejaVu Sans Mono 2.37, with their licences
 schemantic/              the package: spec, archetypes/ (one module per layout), html, browser, route,
                          export, lint, images, findings, pipeline, cli, doctor; js/ holds the page scripts
@@ -183,7 +183,7 @@ Rendered from [`examples/ontwikkelplatform-lagen.yaml`](examples/ontwikkelplatfo
 
 ## Icons
 
-The outline icon set in `assets/icons/` is [Tabler Icons](https://tabler.io/icons), MIT licensed —
+The outline icon set in `assets/icons/` is [Tabler Icons](https://tabler.io/icons) 3.19, MIT licensed —
 see `assets/icons/LICENSE-tabler-icons.txt`.
 
 ## Fonts

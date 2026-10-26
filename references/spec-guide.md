@@ -42,7 +42,7 @@ name `storage` still works for one release and lints as `deprecated`.
 
 ```yaml
 - id: dlq                         # optional; needed only when a flow starts or ends at this card
-  icon: alert-triangle            # from the list below
+  icon: alert-triangle            # find one with: plate.py icons <word>
   name: "Dead-letter queue"       # 40
   qualifier: "managed"            # 40, optional, shown in brackets after the name
   note: "events no consumer could handle"   # 70, lowercase start, no full stop
@@ -112,8 +112,11 @@ footer:
 
 ## Icons
 
-alert-triangle api arrow-down arrow-right bell bolt box briefcase browser building building-store calendar
-certificate chart-bar clock cloud code cpu credit-card database device-mobile eye file-search file-text flag
-folder gauge git-branch git-merge headset info-circle key lock lock-access map message-circle network package
-plug refresh robot rocket route server settings shield-lock shopping-cart stack-2 table test-pipe tool trash
-truck user users users-group world
+The full Tabler outline set (4,879 icons) is bundled. Find one by name, tag or architecture word:
+
+```bash
+"$PY" "$SKILL/scripts/plate.py" icons queue        # stack-2, list-details, inbox, arrows-right
+"$PY" "$SKILL/scripts/plate.py" icons user group   # every word must match
+```
+
+An unknown icon in a spec is a lint error whose hint names the three closest icons.

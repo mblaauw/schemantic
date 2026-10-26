@@ -27,7 +27,7 @@ def parser() -> argparse.ArgumentParser:
     _spec_command(sub, "render", "build, reporting in the 0.1 render format (deprecated)", scale=True)
     d = sub.add_parser("doctor", help="find a Python with the dependencies and prove Chromium starts")
     d.add_argument("--no-install", action="store_true")
-    i = sub.add_parser("icons", help="list icon names, or the ones matching all words")
+    i = sub.add_parser("icons", help="search the icons by name, tag and category: icons [search] <words>")
     i.add_argument("words", nargs="*")
     g = sub.add_parser("docs", help="regenerate references/lint-fixes.md from the findings table")
     g.add_argument("--check", action="store_true", help="exit 1 if the file is out of date instead of writing it")
@@ -39,9 +39,10 @@ def run(a) -> tuple[dict, int]:
         from . import doctor
         return doctor.diagnose(install=not a.no_install), 0
     if a.cmd == "icons":
-        from .config import ICONS
-        names = sorted(p.stem for p in ICONS.glob("*.svg"))
-        return {"icons": [n for n in names if all(w.lower() in n for w in a.words)]}, 0
+        from . import icons
+        words = a.words[1:] if a.words[:1] == ["search"] else a.words
+        found = icons.search(words, limit=40) if words else sorted(icons.index())
+        return {"icons": found, "count": len(found)}, 0
     if a.cmd == "docs":
         from .findings import LINT_FIXES, lint_fixes_md
         fresh = lint_fixes_md()
