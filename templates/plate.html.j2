@@ -84,8 +84,8 @@
 </header>
 <main class="body" id="body" data-kind="body" data-id="body">
 {%- for p in panels if not p.nested %}{{ panel(p) }}{% endfor -%}
-{%- for g, ids in groups.items() -%}
-<div class="spoke-row" style="grid-area: {{ g }}; grid-template-columns: repeat({{ ids | length }}, minmax(0, 1fr)); column-gap: {{ gutter_x }}px">
+{%- for g, ids in grid.groups.items() -%}
+<div class="spoke-row" style="grid-area: {{ g }}; grid-template-columns: repeat({{ ids | length }}, minmax(0, 1fr))">
 {%- for p in panels if p.id in ids %}{{ panel(p) }}{% endfor -%}
 </div>
 {%- endfor -%}

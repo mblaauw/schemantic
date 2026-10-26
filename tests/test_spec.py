@@ -2,12 +2,11 @@
 import json
 
 import pytest
-
-from conftest import EXAMPLES, ROOT, pl
+from conftest import EXAMPLES, ROOT, archetypes, browser, html, images, route, sp  # noqa: F401
 
 
 def errors(spec: dict) -> list[dict]:
-    found = pl.schema_errors(spec) or pl.semantic_errors(spec)
+    found = sp.schema_errors(spec) or sp.semantic_errors(spec)
     return [e for e in found if e["level"] == "error"]
 
 
@@ -17,11 +16,11 @@ def checks(spec: dict) -> set[str]:
 
 @pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.stem)
 def test_examples_are_valid(path):
-    assert errors(pl.load_spec(path)) == []
+    assert errors(sp.load_spec(path)) == []
 
 
 UNBUILT = [a for a in json.loads((ROOT / "schema" / "plate.schema.json").read_text())["properties"]["archetype"]["enum"]
-           if a not in pl.BUILT_ARCHETYPES]
+           if a not in archetypes.BUILT]
 
 
 @pytest.mark.parametrize("archetype", UNBUILT)
@@ -77,27 +76,48 @@ def hub_spec(example, **layout):
 def test_hub_layout_is_derived(example):
     spec = hub_spec(example, hub="identity", top=["clients", "gateway", "services"], bottom=["data"], right="x")
     # Spoke rows are groups with their own grid; the side spoke spans every row.
-    assert pl.area_tokens(spec) == [["_top", "x"], ["identity", "x"], ["_bottom", "x"]]
-    assert pl.body_groups(spec) == {"_top": ["clients", "gateway", "services"], "_bottom": ["data"]}
-    assert pl.default_row_heights(spec, pl.area_tokens(spec)) == ["auto", "fill", "auto"]
+    assert archetypes.get(spec["archetype"]).grid(spec).rows == [["_top", "x"], ["identity", "x"], ["_bottom", "x"]]
+    assert archetypes.get(spec["archetype"]).grid(spec).groups == {"_top": ["clients", "gateway", "services"], "_bottom": ["data"]}
+    assert archetypes.get(spec["archetype"]).grid(spec).heights == ["auto", "fill", "auto"]
 
 
 def test_side_spoke_track_is_one_spoke_of_the_fuller_row_wide(example):
-    # One side, four bottom spokes: S = H/4 - 36 and S + 48 + H = 100%, so 100% = 5S + 192 and S = 20% - 38.4px.
+    # One side, four bottom spokes: S = H/4 - 36 and S + 48 + H = 100%, so 100% = 5S + 192 and S = 20% - 38.4px = 20% - 0.8 gutters.
     spec = hub_spec(example, hub="identity", top=["clients"], bottom=["gateway", "services", "data", "x"], left="y")
-    assert pl.column_tracks(spec, 2) == ["calc(20.0000% + -38.40px)", "minmax(0, 1fr)"]
+    assert archetypes.get(spec["archetype"]).grid(spec).columns == ["calc(20.0000% + -0.8000 * var(--gutter-x))", "minmax(0, 1fr)"]
 
 
 def test_layer_cake_rails_span_every_layer(example):
     example["archetype"] = "layer-cake"
     example["layout"] = {"layers": ["clients", "gateway"], "left": "identity"}
-    assert pl.area_tokens(example) == [["identity", "clients"], ["identity", "gateway"]]
+    assert archetypes.get(example["archetype"]).grid(example).rows == [["identity", "clients"], ["identity", "gateway"]]
 
 
 def test_layout_key_from_another_archetype(example):
+    # The schema knows each archetype's layout keys, so the mistake is caught there, with the key named.
     example["archetype"] = "hub-and-spokes"
-    # row_heights applies to every archetype; areas and column_widths belong to column-flow alone.
-    assert {e["id"] for e in errors(example)} == {"layout.hub", "layout.areas", "layout.column_widths"}
+    found = errors(example)
+    assert {e["check"] for e in found} == {"schema"} and {e["id"] for e in found} == {"layout"}
+    text = " ".join(e["detail"] for e in found)
+    assert "'hub' is a required property" in text and "'areas'" in text and "'column_widths'" in text
+
+
+# B2 and B6: the registry and the schema agree
+def test_registry_matches_schema():
+    schema = sp.schema()
+    names = schema["properties"]["archetype"]["enum"]
+    assert set(archetypes.REGISTRY) <= set(names)
+    assert set(names) == set(archetypes.REGISTRY) | set(archetypes.PLANNED)
+    blocks = {b["if"]["properties"]["archetype"]["const"]: b["then"]["properties"]["layout"] for b in schema["allOf"]}
+    for name, arche in archetypes.REGISTRY.items():
+        assert set(blocks[name]["required"]) == arche.required, name
+        assert set(blocks[name]["propertyNames"]["enum"]) == arche.allowed, name
+        assert arche.allowed <= set(schema["properties"]["layout"]["properties"]), name
+
+
+def test_examples_declare_the_schema():
+    for path in EXAMPLES:
+        assert path.read_text(encoding="utf-8").startswith("# yaml-language-server: $schema=../schema/plate.schema.json")
 
 
 def test_panel_placed_twice(example):
@@ -142,7 +162,7 @@ def test_footer_columns_must_match_panels(example):
 
 def test_default_footer_columns_cover_only_present_panels(example):
     del example["footer"]["context"]
-    assert pl.footer_panels(example) == ["principles", "open_questions", "legend"]
+    assert sp.footer_panels(example) == ["principles", "open_questions", "legend"]
 
 
 # A5: a flow from an element to itself

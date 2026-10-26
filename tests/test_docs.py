@@ -4,8 +4,7 @@ import re
 
 import pytest
 import yaml
-
-from conftest import ROOT, pl
+from conftest import ROOT, sp
 from test_render import run, write
 
 BLOCK = re.compile(r"<!-- lint(?::\s*(\S+))? -->\s*```yaml\n(.*?)```", re.S)
@@ -34,6 +33,6 @@ def test_docs_have_linted_samples():
 
 @pytest.mark.parametrize("example, snippet", list(blocks()))
 def test_doc_sample_lints(example, snippet, tmp_path):
-    spec = merge(pl.load_spec(ROOT / example), yaml.safe_load(snippet))
-    code, report = run("lint.py", write(tmp_path, spec, "sample"), "--out", tmp_path)
+    spec = merge(sp.load_spec(ROOT / example), yaml.safe_load(snippet))
+    code, report = run("lint", write(tmp_path, spec, "sample"), "--out", tmp_path)
     assert report["errors"] == [] and code == 0

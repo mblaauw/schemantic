@@ -1,5 +1,5 @@
 /* Flat default theme. Every colour has one meaning; a project overrides this file, never components.css.
-   Contrast pairs are checked by lint.py (text >= 4.5:1, large text >= 3:1). */
+   Contrast pairs are checked by lint (text >= 4.5:1, large text >= 3:1). */
 :root {
   --font: Inter, "Segoe UI", system-ui, sans-serif;
   --mono: "DejaVu Sans Mono", "JetBrains Mono", Consolas, monospace;
@@ -10,6 +10,7 @@
   --muted: #4F5D6E;      /* notes, qualifiers */
   --accent: #1763C4;     /* subtitle */
   --arrow: #2F7FC6;      /* flow arrows and their heads */
+  --on-head: #FFFFFF;    /* text on a panel's header colour */
 
   /* Panel roles: header, header subtitle, body tint, border */
   --platform-head: #0B4F8F; --platform-sub: #D6E7F7; --platform-body: #EEF5FC; --platform-line: #BCD5EC;
@@ -29,6 +30,15 @@
   /* Type ramp (px). 11 is the floor. */
   --t-title: 40px; --t-sub: 22px; --t-badge: 18px; --t-head: 17px;
   --t-name: 14px; --t-body: 12.5px; --t-small: 11px;
+
+  /* Gutters hold the connectors: 48 px fits an arrow with clearance on both sides; a row gutter also holds a
+     one-line label at --label-size. The template, the router and Python all read these. */
+  --gutter-x: 48px; --gutter-y: 44px;
+
+  /* Connectors: stroke, gap to the boxes they join, arrowhead length and half-width, corner radius, the offset
+     of a second lane in one gutter, and labels. */
+  --arrow-width: 2.5px; --arrow-gap: 7px; --arrow-head: 10px; --arrow-wing: 6px; --arrow-radius: 8px; --arrow-lane: 10px;
+  --label-size: 11.5px; --label-weight: 500;
 
   /* Spacing on a 4 px scale */
   --r-panel: 8px; --r-card: 6px;

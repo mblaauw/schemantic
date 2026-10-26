@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../schema/plate.schema.json
 # Fictional example: a hub-and-spokes plate in English, with a connector that starts at a card.
 canvas: {size: landscape-4x3, lang: en, series: orderplatform, part: 3, of: 3}
 title: "Order platform after phase 3 — the event bus"

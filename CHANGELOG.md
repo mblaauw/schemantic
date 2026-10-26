@@ -4,6 +4,26 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Changed
+- B1: the code is a package, `schemantic/`, with a CLI: `python -m schemantic build | lint | render | doctor | icons |
+  docs` (`pip install -e .` adds a `schemantic` command). `scripts/render.py` and `scripts/lint.py` are deprecated
+  shims; `scripts/plate.py` runs the CLI from a skill folder.
+- B2: archetypes are a registry, one module each (`schemantic/archetypes/`), found automatically. Adding one needs no
+  edits to shared code.
+- B3: `build` checks, lays out, routes, lints, exports, checks parity and writes the PNG in one Chromium session, in
+  about half the time of the old lint plus render.
+- B4: the page scripts live in `schemantic/js/` (common, route, export, lint, snapshot, fonts-ready), checked by Biome;
+  Python calls them by name. Router unit tests run on hand-made boxes.
+- B5: gutters, connector geometry, label type and the header text colour are tokens in `tokens.css`; no colour is
+  hard-coded elsewhere (tested).
+- B6: the schema has an `$id`, descriptions on every field, `spec_version: 1`, and per-archetype `layout` rules, so a
+  layout key from another archetype is a schema error. Examples declare the schema for editor completion.
+- B7: `pyproject.toml` with tested dependency ranges; `requirements.txt` is checked against it. CI runs ruff and Biome,
+  and the suite on Ubuntu and macOS with Python 3.10 and 3.14. Chromium runs with `--font-render-hinting=none`, which
+  makes Linux layout identical to macOS, so the same goldens pass on both.
+- B8: every finding carries a `hint`. `references/lint-fixes.md` is generated from the table in
+  `schemantic/findings.py`, and every check has a test that triggers it.
+
 ### Fixed
 - A1: duplicate panel ids, duplicate card ids, and card ids equal to a panel id or an automatic card id are
   `id` errors naming both places; card ids must match `^[a-z][a-z0-9_-]*$`.

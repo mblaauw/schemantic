@@ -5,8 +5,9 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / "scripts"))
-import platelib as pl  # noqa: E402
+sys.path.insert(0, str(ROOT))
+from schemantic import archetypes, browser, html, images, route  # noqa: E402,F401
+from schemantic import spec as sp  # noqa: E402
 
 EXAMPLES = sorted((ROOT / "examples").glob("*.yaml"))
 
@@ -24,4 +25,4 @@ def update_golden(request) -> bool:
 @pytest.fixture
 def example() -> dict:
     """A fresh copy of the reference spec, safe to break in a test."""
-    return copy.deepcopy(pl.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml"))
+    return copy.deepcopy(sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml"))

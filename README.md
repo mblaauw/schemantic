@@ -33,17 +33,20 @@ the skill folder, so a read-only install works.
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+pip install -e ".[dev]"
+python -m playwright install chromium
 
-python3 scripts/render.py examples/orderplatform-toegang.yaml --out out
-python3 scripts/lint.py   examples/orderplatform-toegang.yaml --out out
+python -m schemantic build examples/orderplatform-toegang.yaml --out out
 ```
 
-`render.py` writes `out/<name>.svg` and `out/<name>.png` (intermediate HTML lands in
-`out/_work/` for debugging only). `lint.py` emits a JSON report and exits `1` on errors.
+`build` checks the spec, lays the plate out in Chromium, routes the connectors, lints the result
+and writes `out/<name>.svg` and `out/<name>.png`, in one browser session. It prints a JSON report
+and exits `1` on errors; every finding has a `hint`. `lint` does the same without writing the
+deliverables; `doctor` finds a working Python and Chromium; `icons <word>` searches the icons;
+`docs` regenerates `references/lint-fixes.md`. Intermediate files land in `out/_work/`.
 
-Needs Python 3.9+ (tested on 3.9 and 3.14), `playwright` 1.60 or later (with Chromium: `playwright install chromium`),
-`pyyaml`, `jsonschema`, `jinja2`, `pillow`, `fonttools` with `brotli`, and `pytest`.
+Needs Python 3.9+ (tested on 3.9 and 3.14) and Playwright 1.60 or later; `pyproject.toml` lists
+the rest. `scripts/render.py` and `scripts/lint.py` still work but are deprecated shims.
 
 `column-flow`, `hub-and-spokes` and `layer-cake` are built. The schema lists the other
 archetypes as the planned contract, but render and lint refuse them with an `archetype` error
@@ -52,8 +55,8 @@ until they exist. [`references/archetypes.md`](references/archetypes.md) describ
 ## Tests
 
 ```bash
-python3 -m pytest -q                  # spec checks, lint, and renders against tests/golden/
-python3 -m pytest -q --update-golden  # after an intended visual change; review and commit the PNGs
+python -m pytest -q                   # spec, checks, router, docs, snapshots and goldens
+python -m pytest -q --update-golden   # after an intended visual change; review and commit them
 ```
 
 Every example in `examples/` is rendered and compared twice. The image is compared with
@@ -102,7 +105,9 @@ locales/                 fixed labels per language, never-translate list
 templates/               plate.html.j2, tokens.css (theme, override per project), components.css
 assets/icons/            57 Tabler outline icons (MIT, see LICENSE-tabler-icons.txt)
 assets/fonts/            Inter 4.1 (400–800) and DejaVu Sans Mono 2.37, with their licences
-scripts/                 platelib.py (shared), render.py, lint.py
+schemantic/              the package: spec, archetypes/ (one module per layout), html, browser, route,
+                         export, lint, images, findings, pipeline, cli, doctor; js/ holds the page scripts
+scripts/                 plate.py and doctor.py for the skill; render.py and lint.py are deprecated shims
 examples/                fictional plates (spec only; renders go to out/)
 tests/                   pytest suite; golden/ holds the reference render of each example
 ```

@@ -6,7 +6,7 @@ description: Turn a description of a system into a finished architecture plate, 
 # Schemantic: from a description to a finished plate
 
 You write a YAML **spec** that says what is on the plate: panels, cards, flows, principles, open questions.
-Chromium does the layout, a router draws the arrows, and `lint.py` measures the result and names every
+Chromium does the layout, a router draws the arrows, and lint measures the result and names every
 problem by element id. You never write coordinates and never edit the SVG: every fix goes into the spec.
 
 ## 0. Setup, once per session
@@ -60,25 +60,23 @@ The short version:
   assumption.
 - Principles are decisions, written as rules a team can check ("Every request carries a token").
 
-## 4. Lint, fix, repeat
+## 4. Build, fix, repeat
 
 ```bash
-"$PY" "$SKILL/scripts/lint.py" plates/<name>.yaml --out plates/out
+"$PY" "$SKILL/scripts/plate.py" build plates/<name>.yaml --out plates/out
 ```
 
-Lint prints JSON and exits 1 on errors. Each finding has `check`, `id` and `detail`. Fix every error in the
-spec using `references/lint-fixes.md`, then run lint again. Treat `density` warnings as real: the fix is
-content, a merged panel, or a different layout. Stop after five rounds without progress and restructure:
-move cards between panels, change the archetype, or split the plate.
+One command checks the spec, lays the plate out, routes the connectors, lints the result and writes
+`plates/out/<name>.svg` and `plates/out/<name>.png`. It prints JSON and exits 1 on errors. Each finding has
+`check`, `id`, `detail` and `hint` (the first fix to try); `references/lint-fixes.md` has the full table. Fix
+every error in the spec and build again. Treat `density` warnings as real: the fix is content, a merged panel,
+or a different layout. Stop after five rounds without progress and restructure: move cards between panels,
+change the archetype, or split the plate.
 
-## 5. Render and look at it
+## 5. Look at it
 
-```bash
-"$PY" "$SKILL/scripts/render.py" plates/<name>.yaml --out plates/out
-```
-
-This writes `plates/out/<name>.svg` and `plates/out/<name>.png`. Open the PNG (read the image) and answer the
-questions in `references/review.md`. A "no" is a spec change and another lint round, not a hand edit.
+Once the build is clean, open the PNG (read the image) and answer the questions in `references/review.md`.
+A "no" is a spec change and another build, not a hand edit.
 
 ## 6. Deliver
 
