@@ -58,6 +58,11 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - E1: the `swimlane` archetype: one lane per actor with its name on the left, steps as cards in phase columns
   (`layout.columns`, card `col`) that line up across lanes, numbered handoffs. Step badges now only avoid what their
   arrow avoids, so they can sit where an arrow enters a lane. Example: `examples/incident-swimlane.yaml`.
+- E2: the `nested-zones` archetype: labelled dashed frames (account, cluster, namespace) nested up to three deep,
+  side by side, holding panels; `outside` panels in a column on the right. Gaps between zones are router channels.
+  Example: `examples/kliniek-zones.yaml`.
+- The `process-strip` panel pattern: 3–7 numbered steps in a row (fixture `tests/fixtures/process-strip.yaml`).
+- The router tries more straight positions along a shared span before bending.
 
 ### Changed
 - B1: the code is a package, `schemantic/`, with a CLI: `python -m schemantic build | lint | render | doctor | icons |

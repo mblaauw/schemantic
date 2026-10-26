@@ -89,11 +89,45 @@ layout:
 - Put a lane's open point on a card as a `flag`; a chip spans the whole lane and blocks handoffs crossing it.
 - Example: `examples/incident-swimlane.yaml`.
 
+## nested-zones
+
+Where things run: environments, accounts, clusters, namespaces. Zones are labelled dashed frames, side by side at
+the top level and nested up to three deep; panels sit inside them. Panels outside every zone (users, partners) stand
+in a column on the right.
+
+<!-- lint: examples/kliniek-zones.yaml -->
+```yaml
+archetype: nested-zones
+layout:
+  zones:
+    - id: dc
+      kind: on-premises                 # optional, shown before the title
+      title: "Clinic datacentre"
+      zones:
+        - {id: dmz, kind: network, title: "DMZ", panels: [proxy]}
+        - {id: internal, kind: network, title: "Internal network", panels: [ehr, records]}
+    - id: cloud
+      kind: account
+      title: "Cloud, production"
+      zones:
+        - id: cluster
+          kind: cluster
+          title: "Kubernetes"
+          zones:
+            - {id: portal-ns, kind: namespace, title: "portal", panels: [portal]}
+            - {id: integration-ns, kind: namespace, title: "integration", panels: [integration]}
+  outside: [patients, insurers]
+```
+
+- Every panel sits in exactly one zone or in `outside`; a zone holds zones, panels, or both.
+- The zone a thing runs in is the point: say it in the title ("Patient data never leaves the clinic's datacentre").
+- Flows cross zone frames freely; the gaps between zones are gutters for the router.
+- Example: `examples/kliniek-zones.yaml`.
+
 ## Not built yet
 
-`banded-matrix`, `nested-zones`, `before-after`, `roadmap`, `landscape-map` are in the schema as
+`banded-matrix`, `before-after`, `roadmap`, `landscape-map` are in the schema as
 planned names. Lint refuses them. Until they exist:
 
 - a roadmap → `swimlane`, with one lane per workstream and the periods as columns;
 - a before/after → a series of two plates (`part: 1` and `part: 2`);
-- nested zones → `layer-cake`, or `column-flow` with one spanning panel per zone.

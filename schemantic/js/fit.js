@@ -2,7 +2,7 @@
 // (a slide keeps at least `minHeight`, handled as fixed). fixed: the preset height; the surplus goes evenly to the
 // row gutters and the gap above the footer, capped per gap, and what is left stays under the footer, never inside a
 // panel.
-schemantic.fit = ({ mode, width, height, gaps, cap, minHeight }) => {
+schemantic.fit = ({ mode, height, gaps, cap, minHeight }) => {
   const plate = schemantic.plate();
   if (mode === "legacy") return height; // row_heights given: rows share the preset height as in 0.1
   plate.style.height = "auto";

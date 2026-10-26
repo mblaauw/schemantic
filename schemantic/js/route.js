@@ -31,11 +31,12 @@ schemantic.route = (flows) => {
   // Boxes an arrow must not cross; panel headers count, so a card's arrow never runs through its own title.
   const solids = [
     ...plate.querySelectorAll(
-      '[data-kind="panel"], [data-kind="card"], [data-kind="pattern"], [data-kind="chip"], [data-kind="titleblock"], .ph',
+      '[data-kind="panel"], [data-kind="card"], [data-kind="pattern"], [data-kind="chip"], [data-kind="titleblock"], .ph, .zone-label',
     ),
   ].map((el) => ({ el, box: rel(el) }));
   // Channels: the centre line of every gutter between two body panels, plus a lane on either side of it.
-  const bodyPanels = [...document.querySelectorAll('#body [data-kind="panel"]')].map(rel);
+  // Zone frames count too: the gap between two zones is a gutter like any other.
+  const bodyPanels = [...document.querySelectorAll('#body [data-kind="panel"], #body [data-kind="zone"]')].map(rel);
   const chX = new Map();
   const chY = new Map();
   for (const a of bodyPanels) {
@@ -115,7 +116,7 @@ schemantic.route = (flows) => {
     // then a quarter off-centre.
     const along = (lo, hi) => [
       ...[0, -1, 1].map((s) => [mid(lo, hi) + s * LANE * 1.6, LANE * 1.6 * Math.abs(s)]),
-      ...[-1, 1].map((s) => [mid(lo, hi) + (s * (hi - lo)) / 4, (hi - lo) / 4]),
+      ...[-2, 2, -3, 3].map((s) => [mid(lo, hi) + (s * (hi - lo)) / 8, (Math.abs(s) * (hi - lo)) / 8]),
     ];
     if (oy[1] - oy[0] > MIN_OVERLAP) {
       for (const [y, off] of along(...oy)) {

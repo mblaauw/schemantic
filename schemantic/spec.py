@@ -308,7 +308,7 @@ def iter_icons(spec: dict):
             if c.get("icon"):
                 yield c["icon"]
         for pt in p.get("patterns", []):
-            for t in pt.get("tiers", []):
+            for t in pt.get("tiers", []) + pt.get("steps", []):
                 if t.get("icon"):
                     yield t["icon"]
     ctx = (spec.get("footer") or {}).get("context") or {}

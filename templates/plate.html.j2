@@ -35,6 +35,16 @@
 {%- if not loop.last %}{{ icon('arrow-right', 'step-arrow') }}{% endif -%}
 {%- endfor -%}
 </div>
+{%- elif pt.type == 'process-strip' -%}
+<div class="blk steps" data-kind="pattern" data-id="{{ bid }}"{{ st | safe }}>
+{%- if pt.caption %}<div class="steps-cap">{{ pt.caption }}</div>{% endif -%}
+<div class="steps-row">
+{%- for s in pt.steps -%}
+<div class="step" data-kind="step" data-id="{{ bid }}.{{ loop.index0 }}"><span class="step-n">{{ loop.index }}</span>{% if s.icon %}{{ icon(s.icon) }}{% endif %}<div><div class="step-name">{{ s.name }}</div>{% if s.note %}<div class="step-note">{{ s.note }}</div>{% endif %}</div></div>
+{%- if not loop.last %}{{ icon('arrow-right', 'step-arrow') }}{% endif -%}
+{%- endfor -%}
+</div>
+</div>
 {%- elif pt.type == 'tree' -%}
 <div class="blk tree" data-kind="pattern" data-id="{{ bid }}"{{ st | safe }}>
 {%- if pt.caption %}<div class="tree-cap">{{ pt.caption }}</div>{% endif -%}

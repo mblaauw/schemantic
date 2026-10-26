@@ -1,0 +1,93 @@
+# yaml-language-server: $schema=../schema/plate.schema.json
+# Fictional example: a nested-zones plate in English. Zones are where things run; panels sit inside them.
+canvas: {size: landscape-4x3, lang: en}
+title: "Patient data never leaves the clinic's own datacentre"
+subtitle: "The portal runs in the cloud and reaches the records system only through one integration API"
+archetype: nested-zones
+
+layout:
+  zones:
+    - id: dc
+      kind: on-premises
+      title: "Clinic datacentre"
+      zones:
+        - id: dmz
+          kind: network
+          title: "DMZ"
+          panels: [proxy]
+        - id: internal
+          kind: network
+          title: "Internal network"
+          panels: [ehr, records]
+    - id: cloud
+      kind: account
+      title: "Cloud, production"
+      zones:
+        - id: cluster
+          kind: cluster
+          title: "Kubernetes"
+          zones:
+            - {id: portal-ns, kind: namespace, title: "portal", panels: [portal]}
+            - {id: integration-ns, kind: namespace, title: "integration", panels: [integration]}
+  outside: [patients, insurers]
+
+panels:
+  - id: proxy
+    title: "Reverse proxy"
+    role: platform
+    cards:
+      - {icon: shield-lock, name: "mTLS endpoint", note: "only the integration API may connect"}
+      - {icon: file-search, name: "Access log", note: "kept for one year"}
+  - id: ehr
+    title: "Records system"
+    subtitle: "Bought, run by the clinic"
+    role: external
+    cards:
+      - {icon: file-text, name: "Patient records", note: "the source of truth"}
+      - {icon: calendar, name: "Appointments", note: "booked by staff and the portal"}
+  - id: records
+    title: "Records database"
+    role: data
+    cards:
+      - {icon: database, name: "PostgreSQL", note: "replicated to a second room"}
+      - {icon: refresh, name: "Nightly backup", note: "kept for 30 days, encrypted"}
+  - id: portal
+    title: "Patient portal"
+    role: platform
+    status: new
+    cards:
+      - {icon: browser, name: "Web app", note: "appointments and letters"}
+      - {icon: device-mobile, name: "Mobile app", note: "same API as the web app"}
+  - id: integration
+    title: "Integration API"
+    role: platform
+    cards:
+      - {icon: api, name: "Records API", note: "reads only what the portal shows"}
+      - {icon: key, name: "Client certificate", note: "rotated every 90 days"}
+    chips:
+      - {kind: warning, text: "Cache appointments in the cloud, or always ask the records system?"}
+  - id: patients
+    title: "Patients"
+    role: actor
+    cards:
+      - {icon: users, name: "Patients", note: "log in with the national e-ID"}
+  - id: insurers
+    title: "Insurers"
+    role: external
+    cards:
+      - {icon: building-bank, name: "Claims API", note: "receives invoices monthly"}
+
+flows_mean: request
+flows:
+  - {from: patients, to: portal}
+  - {from: portal, to: integration}
+  - {from: integration, to: proxy}
+  - {from: proxy, to: ehr}
+  - {from: ehr, to: records}
+
+footer:
+  principles:
+    - "Patient records are stored only in the clinic's datacentre."
+    - "The cloud reaches the records system only through the integration API, with a client certificate."
+  open_questions: {from_chips: true}
+  legend: auto

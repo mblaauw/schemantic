@@ -10,9 +10,9 @@ There are no coordinates in the spec. Chromium does the layout with CSS Grid; a
 script measures every box, line and text run, then writes native SVG
 (`rect`, `path`, `text`, `line`). The PNG is a raster of that same SVG.
 
-> Status: proof of concept. Four body archetypes (`column-flow`, `hub-and-spokes`, `layer-cake`,
-> `swimlane`), a connector router and a Claude skill are built end to end; more archetypes are
-> planned.
+> Status: proof of concept. Five body archetypes (`column-flow`, `hub-and-spokes`, `layer-cake`,
+> `swimlane`, `nested-zones`), a connector router and a Claude skill are built end to end; more
+> archetypes are planned.
 
 ## Use it as a Claude skill
 
@@ -48,7 +48,7 @@ deliverables; `doctor` finds a working Python and Chromium; `icons <word>` searc
 Needs Python 3.9+ (tested on 3.9 and 3.14) and Playwright 1.60 or later; `pyproject.toml` lists
 the rest. `scripts/render.py` and `scripts/lint.py` still work but are deprecated shims.
 
-`column-flow`, `hub-and-spokes`, `layer-cake` and `swimlane` are built. The schema lists the other
+`column-flow`, `hub-and-spokes`, `layer-cake`, `swimlane` and `nested-zones` are built. The schema lists the other
 archetypes as the planned contract, but render and lint refuse them with an `archetype` error
 until they exist. [`references/archetypes.md`](references/archetypes.md) describes each layout.
 
@@ -94,13 +94,15 @@ identically in Cairo (Inkscape's renderer) and Chromium.
 | Body archetype: hub and spokes (up to 4 above, 4 below, one each side; framed hub) | Built |
 | Body archetype: layer cake (2–5 layers, rails left and right) | Built |
 | Body archetype: swimlane (lanes per actor, steps in phase columns, numbered handoffs) | Built |
+| Body archetype: nested zones (dashed frames up to three deep, panels inside, an outside column) | Built |
 | Components: panel (role colours), card, bullets, warning and info chips | Built |
 | Panel patterns: tier strip, tree, matrix | Built |
 | Connectors: panel or card endpoints; straight, or one or two rounded bends through the gutters; one- or two-way; labels beside or above any run with room | Built |
 | Locales `nl` (default, English technical terms) and `en` | Built |
 | Lint: schema, built archetype, layout keys, areas, flow endpoints, chip mirror, icons, never-translate terms (substring, for Dutch compounds), text overflow, containment, overlap, canvas fit, type floor, contrast, arrow routing (panels and cards), arrow labels, chip length, density, SVG parity | Built |
 | `SKILL.md` and `references/` (archetypes, spec guide, lint fixes, review questions) | Built |
-| Other five body archetypes; process strip, mini sequence, lifecycle loop | Not yet |
+| Panel pattern: process strip | Built |
+| Other four body archetypes (`banded-matrix`, `before-after`, `roadmap`, `landscape-map`); mini sequence, lifecycle loop | Not yet |
 | Text-as-outlines SVG | Not yet |
 
 ## Layout of the folder

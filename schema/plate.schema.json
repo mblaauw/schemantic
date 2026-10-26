@@ -157,7 +157,7 @@
         "roadmap",
         "landscape-map"
       ],
-      "description": "The body layout. Built: column-flow, hub-and-spokes, layer-cake, swimlane; the others are planned and refused by lint."
+      "description": "The body layout. Built: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones; the others are planned and refused by lint."
     },
     "layout": {
       "type": "object",
@@ -263,6 +263,22 @@
             "maxLength": 32
           },
           "description": "swimlane: phase names over the step columns; a card's col places it in one."
+        },
+        "zones": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/zone"
+          },
+          "description": "nested-zones: the top-level zones, side by side; up to three levels deep."
+        },
+        "outside": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "nested-zones: panels outside every zone, in a column on the right."
         }
       }
     },
@@ -518,6 +534,34 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "nested-zones"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": [
+              "zones"
+            ],
+            "propertyNames": {
+              "enum": [
+                "zones",
+                "outside",
+                "chips_at"
+              ]
+            }
+          }
+        }
+      }
     }
   ],
   "$defs": {
@@ -637,13 +681,14 @@
       "required": [
         "type"
       ],
-      "description": "A structured block inside a panel: tier strip, tree or matrix.",
+      "description": "A structured block inside a panel: tier strip, process strip, tree or matrix.",
       "properties": {
         "type": {
           "enum": [
             "tier-strip",
             "tree",
-            "matrix"
+            "matrix",
+            "process-strip"
           ]
         }
       },
@@ -794,6 +839,51 @@
               }
             }
           }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "process-strip"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "steps"
+            ],
+            "properties": {
+              "caption": {
+                "type": "string"
+              },
+              "steps": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 7,
+                "description": "Steps in order, left to right.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "name"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "maxLength": 24
+                    },
+                    "note": {
+                      "type": "string",
+                      "maxLength": 40
+                    },
+                    "icon": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       ]
     },
@@ -880,6 +970,42 @@
         "focus": {
           "type": "boolean",
           "description": "The one element the plate is about: an accent outline. At most one per plate."
+        }
+      }
+    },
+    "zone": {
+      "type": "object",
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false,
+      "description": "A labelled frame: an environment, account, cluster or namespace. Holds zones, panels, or both.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*$"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "kind": {
+          "type": "string",
+          "maxLength": 24,
+          "description": "What the zone is, shown before the title: account, cluster, namespace."
+        },
+        "zones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/zone"
+          }
+        },
+        "panels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     }

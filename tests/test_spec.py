@@ -238,3 +238,31 @@ def test_swimlane_two_steps_in_one_column(example):
 def test_swimlane_grid_has_a_phase_band(example):
     g = archetypes.get("swimlane").grid(swimlane(example))
     assert g.rows[0] == ["_phases"] and g.bands == {"_phases": ["Detect", "Triage", "Mitigate"]}
+
+
+# E2: nested-zones layout checks
+def zones(example, tree, outside=()):
+    example["archetype"] = "nested-zones"
+    example["layout"] = {"zones": tree, **({"outside": list(outside)} if outside else {})}
+    return example
+
+
+def test_zones_place_every_panel(example):
+    spec = zones(example, [{"id": "a", "title": "A", "panels": ["clients", "identity", "gateway", "services"]}], ["data"])
+    assert errors(spec) == []
+    spec = zones(example, [{"id": "a", "title": "A", "panels": ["clients", "identity"]}], ["data"])
+    assert {e["id"] for e in errors(spec)} == {"gateway", "services"}
+
+
+def test_zones_nest_at_most_three_deep(example):
+    deep = {"id": "d4", "title": "4", "panels": ["clients", "identity", "gateway", "services", "data"]}
+    for n in (3, 2, 1):
+        deep = {"id": f"d{n}", "title": str(n), "zones": [deep]}
+    assert [(e["check"], e["id"]) for e in errors(zones(example, [deep]))] == [("layout", "zone.d4")]
+
+
+def test_zones_ids_unique_and_not_empty(example):
+    tree = [{"id": "a", "title": "A", "panels": ["clients", "identity", "gateway", "services", "data"]},
+            {"id": "a", "title": "B"}]
+    details = [e["detail"] for e in errors(zones(example, tree))]
+    assert any("two zones" in d for d in details) and any("empty zone" in d for d in details)

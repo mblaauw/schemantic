@@ -12,7 +12,7 @@ import pkgutil
 from dataclasses import dataclass, field
 
 # Named in the schema as the planned contract; refused until a module here builds them.
-PLANNED = ["banded-matrix", "nested-zones", "before-after", "roadmap", "landscape-map"]
+PLANNED = ["banded-matrix", "before-after", "roadmap", "landscape-map"]
 
 
 @dataclass

@@ -57,6 +57,8 @@ A note says what the card does in this story, not what the product is in general
 ## Patterns
 
 - `tier-strip`: 2–5 tiers (`tier: bronze | silver | gold`, `name`, `note`), for data layers or maturity steps.
+- `process-strip`: 3–7 `steps` (`name` 24, `note` 40, `icon`), numbered left to right, for a short sequence inside
+  one panel; a sequence between actors is a swimlane.
 - `tree`: up to 10 `lines` of monospace text, indented with two spaces per level, for paths and buckets.
 - `matrix`: `columns` (up to 5) × `rows` (up to 8), cells `full | partial | none`, for access or usage. When the
   locale's key words (full, limited, no access) do not fit, give `key: {full: ..., partial: ..., none: ...}`.

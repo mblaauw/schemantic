@@ -168,3 +168,26 @@ body { background: var(--paper); }
   padding: 0 13px 0 calc(var(--lane-head) + 13px); }   /* the lane's border and padding, so columns line up */
 .band-label { font-size: var(--t-name); font-weight: 600; color: var(--muted); padding-bottom: 5px;
   border-bottom: 2px solid var(--frame-line); }
+
+/* Nested zones: dashed frames (drawn by js/decorate.js), side by side at the top level, holding zones and panels */
+.zones { display: flex; gap: var(--gutter-x); align-items: stretch; min-width: 0; }
+.zone { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 10px; padding: 10px 14px 14px;
+  border: 1.5px solid var(--zone-line); border-radius: 10px; }
+.zone-1 { background: var(--zone-1); } .zone-2 { background: var(--zone-2); } .zone-3 { background: var(--zone-3); }
+.zone-label { align-self: flex-start; display: flex; gap: 8px; align-items: baseline; font-size: var(--t-name); font-weight: 700; color: var(--ink); }
+.zone-kind { font-size: var(--t-small); font-weight: 600; color: var(--muted); }
+.zone-body { flex: 1 1 auto; display: flex; flex-wrap: wrap; gap: 16px var(--gutter-x); align-items: stretch; }
+.zone-body > .panel { flex: 1 1 220px; min-width: 0; }
+.zone-body > .zone { flex: 1 1 260px; }
+.stack { display: flex; flex-direction: column; justify-content: space-evenly; gap: var(--gutter-y); min-width: 0; min-height: 0; }
+
+/* Panel pattern: process strip, steps in order with a number */
+.steps-cap { font-size: var(--t-small); font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+.steps-row { display: flex; align-items: stretch; gap: 4px; }
+.step { flex: 1 1 0; min-width: 0; display: flex; gap: 7px; align-items: flex-start; padding: 8px 9px;
+  background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card); }
+.step .ic { width: 18px; height: 18px; }
+.step-n { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px;
+  border-radius: 9px; background: var(--step); color: var(--on-head); font-size: var(--t-small); font-weight: 700; }
+.step-name { font-size: var(--t-name); font-weight: 600; color: var(--ink); line-height: 1.2; }
+.step-note { font-size: var(--t-small); color: var(--muted); line-height: 1.3; }

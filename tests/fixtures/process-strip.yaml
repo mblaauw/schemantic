@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=../../schema/plate.schema.json
+# Fixture: the process-strip pattern inside a panel, next to cards and a tier strip.
+canvas: {size: landscape-4x3, lang: en}
+title: "A change reaches production in five checked steps"
+subtitle: "Every step is automated; a failed check stops the release"
+archetype: column-flow
+layout:
+  areas: ["teams delivery runtime"]
+  column_widths: [0.8, 2, 0.9]
+panels:
+  - id: teams
+    title: "Product teams"
+    role: actor
+    cards:
+      - {icon: users-group, name: "Developers", note: "merge to main"}
+      - {icon: user, name: "Release owner", note: "approves production"}
+  - id: delivery
+    title: "Delivery pipeline"
+    role: platform
+    patterns:
+      - type: process-strip
+        caption: "From merge to production"
+        steps:
+          - {name: "Build", note: "image and SBOM", icon: package}
+          - {name: "Test", note: "unit and contract", icon: test-pipe}
+          - {name: "Scan", note: "CVEs block release", icon: shield-check}
+          - {name: "Stage", note: "smoke tests", icon: server}
+          - {name: "Release", note: "canary, then all", icon: rocket}
+    cards:
+      - {icon: git-branch, name: "Pipeline as code", note: "one template for every service"}
+    chips:
+      - {kind: info, text: "A failed step stops the release; nothing is skipped by hand"}
+  - id: runtime
+    title: "Production"
+    role: platform
+    cards:
+      - {icon: server, name: "Clusters", note: "two regions"}
+      - {icon: activity, name: "Canary analysis", note: "rolls back on errors"}
+flows_mean: control
+flows:
+  - {from: teams, to: delivery}
+  - {from: delivery, to: runtime}
+footer:
+  principles: ["Every change to production goes through the pipeline."]
+  legend: auto

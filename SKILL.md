@@ -63,6 +63,7 @@ Route on the reader's question. When unsure, use `column-flow`.
 | "What sits around the one central thing, and how does it connect?" | `hub-and-spokes` | there is an order to the parts: column-flow |
 | "What builds on what, and what cuts across all of it?" | `layer-cake` | layers talk sideways more than up and down: column-flow |
 | "Who does what, in which order, and where does work change hands?" | `swimlane` | it is about systems, not people: column-flow |
+| "Where does everything run, and what is inside what?" | `nested-zones` | the question is how things talk, not where they live: column-flow |
 
 Series rule: more than 6 panels or 30 cards is two plates, each with its own message. Read
 `references/archetypes.md` for each layout's keys, limits and a skeleton; lint refuses names that are not built.
