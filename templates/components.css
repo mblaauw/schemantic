@@ -15,7 +15,8 @@ body { background: var(--paper); }
   padding: 8px 16px; white-space: nowrap; }
 
 /* Body grid: columns, rows and areas come from the spec */
-.body { flex: 1 1 auto; min-height: 0; display: grid; }
+.body { flex: 0 0 auto; min-height: 0; display: grid; }
+.rows-legacy .body { flex: 1 1 auto; }   /* row_heights: fill rows share the preset height (0.1) */
 
 /* Panel */
 .panel { display: flex; flex-direction: column; min-width: 0; min-height: 0; border: 1px solid var(--line);
@@ -28,6 +29,7 @@ body { background: var(--paper); }
 .panel-hub { border: 2px solid var(--head); }
 .panel-hub .ph { border-radius: 6px 6px 0 0; }
 .ph { background: var(--head); border-radius: 7px 7px 0 0; padding: 9px 12px 10px; }
+.ph-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
 .ph-title { font-size: var(--t-head); font-weight: 700; color: var(--on-head); line-height: 1.2; }
 .ph-sub { font-size: var(--t-body); color: var(--sub); margin-top: 2px; line-height: 1.3; }
 .pb { flex: 1 1 auto; display: flex; flex-direction: column; gap: 10px; padding: 12px; min-height: 0; }
@@ -47,8 +49,12 @@ body { background: var(--paper); }
 .li { display: flex; gap: 6px; align-items: baseline; font-size: var(--t-body); line-height: 1.4; color: var(--text); }
 .dot { flex: 0 0 auto; width: 4px; height: 4px; border-radius: 2px; background: var(--head); margin-bottom: 3px; }
 
-/* Chips: pinned to the bottom of their panel */
-.chips { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+/* Chips: right under the content; pinned to the bottom only when a whole row opts in (layout.chips_at) */
+.chips { display: flex; flex-direction: column; gap: 8px; }
+.chips-bottom { margin-top: auto; }
+/* A panel spanning several rows spreads its cards evenly over its height */
+.spread .blocks { flex: 1 1 auto; }
+.spread .blocks > .cards { flex: 1 1 auto; align-content: space-evenly; }
 .chip { display: flex; gap: 8px; align-items: flex-start; border-radius: var(--r-card); padding: 8px 10px;
   font-size: var(--t-body); line-height: 1.35; font-weight: 600; }
 .chip .ic { width: 18px; height: 18px; }
@@ -88,9 +94,27 @@ body { background: var(--paper); }
 .mx-key { display: flex; gap: 14px; margin-top: 8px; font-size: var(--t-small); color: var(--muted); }
 .mx-key-item { display: flex; gap: 5px; align-items: center; }
 
-/* Footer strip */
-.footer { flex: 0 0 auto; display: grid; gap: 16px; }
-.footer .pb { gap: 6px; }
+/* Footer strip: context, not content. Quiet labels over a hairline instead of header bars; the row takes its
+   content height. Short open questions and notes stack under the principles. */
+.footer { flex: 0 0 auto; display: grid; column-gap: 28px; align-items: start; margin-top: var(--gap-extra, 0px); }
+.fcol { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.footer .panel { border: none; border-radius: 0; background: none; }
+.footer .ph { background: none; border-radius: 0; padding: 0 0 4px; border-bottom: 1px solid var(--frame-line); }
+.footer .ph-title { color: var(--muted); font-size: var(--t-name); font-weight: 600; }
+.footer .pb { padding: 5px 0 0; gap: 3px; }
+.footer .li, .footer .oq, .footer .note, .footer .lg { line-height: 1.3; }
+/* Context cards in the footer are a plain list: no frame, a smaller icon */
+.footer .cards { gap: 3px 14px; }
+.footer .card { border: none; background: none; padding: 1px 0; gap: 8px; }
+.footer .card .ic { width: 18px; height: 18px; }
+.footer .cnote { line-height: 1.3; }
+/* The legend runs as one strip under the other footer columns, its entries flowing across the full width */
+.legend-strip { grid-column: 1 / -1; }
+
+.legend-strip .panel { flex-direction: row; align-items: baseline; gap: 14px; }
+.legend-strip .ph { border-bottom: none; padding: 0; flex: 0 0 auto; }
+.legend-strip .pb { flex-direction: row; flex-wrap: wrap; padding: 0; gap: 0 18px; }
+.footer { row-gap: 10px; }
 .oq { display: flex; gap: 6px; align-items: flex-start; font-size: var(--t-body); line-height: 1.4; }
 .oq .ic { width: 16px; height: 16px; color: var(--warn-icon); margin-top: 1px; }
 .lg { display: flex; gap: 8px; align-items: center; font-size: var(--t-body); line-height: 1.3; }
@@ -99,3 +123,35 @@ body { background: var(--paper); }
 .lg-arrow { color: var(--arrow); }
 .lg-warning { color: var(--warn-icon); }
 .lg-info { color: var(--info-icon); }
+
+/* Change status: a tag after a card's name (wrapping below it when the card is narrow), or at the right of a panel header. Planned boxes get a dashed outline and
+   removed names a strike-through; both are drawn as SVG by js/decorate.js, so the export matches exactly. */
+.tag { flex: 0 0 auto; display: inline-block; font-size: var(--t-small); font-weight: 600; line-height: 1.25;
+  padding: 1px 6px; border-radius: 4px; vertical-align: 1px; white-space: nowrap; }
+.cn .tag { margin-left: 4px; }
+.tag-new { background: var(--tag-new-bg); color: var(--tag-new-text); }
+.tag-changed { background: var(--tag-changed-bg); color: var(--tag-changed-text); }
+.tag-planned { background: var(--tag-planned-bg); color: var(--tag-planned-text); }
+.tag-deprecated { background: var(--tag-deprecated-bg); color: var(--tag-deprecated-text); }
+.tag-removed { background: var(--tag-removed-bg); color: var(--tag-removed-text); }
+.card.status-deprecated, .card.status-removed { background: var(--frame-body); }
+.status-deprecated .cn, .status-deprecated .cnote, .status-removed .cn, .status-removed .cnote { color: var(--muted); }
+.card.status-deprecated .ic, .card.status-removed .ic { color: var(--muted); }
+
+/* Card flags: a numbered marker; the text is in the footer under the same number */
+.flag { display: inline-flex; align-items: center; justify-content: center; min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: 8px; font-size: var(--t-small); font-weight: 700; line-height: 1; color: var(--on-head); vertical-align: 1px; }
+.cn .flag { margin-left: 6px; }
+.flag-warning { background: var(--warn-icon); }
+.flag-info { background: var(--info-icon); }
+.flag-step { background: var(--arrow); }
+.oq .flag, .note .flag { flex: 0 0 auto; margin-top: 1px; }
+.note { display: flex; gap: 6px; align-items: flex-start; font-size: var(--t-body); line-height: 1.4; }
+
+/* Focus: the one element the plate is about */
+.card.focus { border: 2px solid var(--accent); padding: 8px 9px; }
+.panel.focus { border: 2px solid var(--accent); }
+
+/* Legend samples for line styles (drawn by js/decorate.js) and focus */
+.ls { flex: 0 0 auto; width: 22px; height: 14px; margin: 0 2px; }
+.sw.focus-sw { background: var(--card-bg); border: 2px solid var(--accent); }

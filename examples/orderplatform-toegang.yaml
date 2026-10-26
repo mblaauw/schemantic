@@ -10,7 +10,6 @@ layout:
     - "clients identity gateway services"
     - "data    data     data    data"
   column_widths: [1, 1.1, 1, 1.2]
-  row_heights: [fill, auto]
 
 panels:
   - id: clients
@@ -33,7 +32,10 @@ panels:
     cards:
       - {icon: key, name: "OIDC login", note: "SSO voor klanten en medewerkers"}
       - {icon: robot, name: "Service accounts", note: "één per service, geen gedeelde secrets"}
-      - {icon: file-search, name: "Audit log", note: "elke token-uitgifte wordt gelogd"}
+      - icon: file-search
+        name: "Audit log"
+        note: "elke token-uitgifte wordt gelogd"
+
     patterns:
       - type: matrix
         caption: "Wie mag wat"
@@ -44,32 +46,40 @@ panels:
           - {name: "Engineer", cells: [full, full, partial]}
           - {name: "Analist", cells: [none, full, none]}
     chips:
-      - {kind: info, text: "Klanten en medewerkers in aparte realms"}
+      - {kind: info, text: "Klanten en medewerkers in aparte realms; audit log een jaar bewaard"}
 
   - id: gateway
+    focus: true
     title: "API gateway"
     subtitle: "Authenticatie, rate limiting en routing"
     role: platform
     cards:
-      - {icon: shield-lock, name: "Token validatie", note: "JWT check bij elke request"}
-      - {icon: gauge, name: "Rate limiting", note: "beschermt services tegen pieken"}
-      - {icon: route, name: "Routing", note: "per domein naar de juiste service"}
+      - icon: shield-lock
+        name: "Token validatie"
+        note: "JWT check bij elke request"
+        bullets: ["signing keys via JWKS, elk kwartier ververst", "verlopen tokens krijgen een 401"]
+      - icon: gauge
+        name: "Rate limiting"
+        note: "beschermt services tegen pieken"
+        status: new
+        flag: {kind: warning, text: "Rate limits per tenant of per client?"}
+      - icon: route
+        name: "Routing"
+        note: "per domein naar de juiste service"
+        bullets: ["versie in het pad: /v1, /v2", "canary releases per service"]
       - {icon: eye, name: "Observability", note: "logs en traces per request"}
-    chips:
-      - {kind: warning, text: "Rate limits per tenant of per client?"}
 
   - id: services
     title: "Domeinservices"
     subtitle: "Eén service per domein, elk met een eigen database"
     role: platform
-    card_columns: 2
     cards:
       - {icon: building-store, name: "Catalog", note: "producten en prijzen"}
       - {icon: shopping-cart, name: "Orders", note: "bestellingen en status"}
       - {icon: credit-card, name: "Payments", note: "betalingen via de PSP"}
       - {icon: truck, name: "Shipping", note: "verzending en tracking"}
       - {icon: user, name: "Customers", note: "profielen en adressen"}
-      - {icon: bell, name: "Notifications", note: "e-mail en push"}
+      - {icon: bell, name: "Notifications", note: "e-mail en push", status: planned}
     chips:
       - {kind: warning, text: "Payments als eigen service of bij de PSP laten?"}
 
@@ -99,16 +109,16 @@ panels:
     chips:
       - {kind: info, text: "Analisten en de BI tool lezen alleen Gold"}
 
+flows_mean: request
 flows:
   - {from: clients, to: identity}
   - {from: identity, to: gateway}
   - {from: gateway, to: services}
-  - {from: data, to: clients, label: "BI en notebooks"}
+  - {from: clients, to: data, label: "BI en notebooks"}
   - {from: identity, to: data, label: "scoped credentials"}
-  - {from: services, to: data, label: "events en CDC"}
+  - {from: services, to: data, label: "events en CDC", style: async}
 
 footer:
-  columns: [1.6, 1.4, 1.1, 0.9]
   context:
     title: "Rollen en samenwerking"
     card_columns: 2

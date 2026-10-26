@@ -60,10 +60,10 @@ schemantic.exportSvg = () => {
     const id = el.dataset?.id ? ` data-id="${esc(el.dataset.id)}"` : "";
     const sameR = rad.every((v) => v === rad[0]);
     const uniform = bw[0] > 0 && bw.every((v) => v === bw[0]) && bc.every((c) => c === bc[0]);
-    if (uniform) {
+    const st0 = uniform ? paint(bc[0], "stroke") : null;
+    if (uniform && st0) {
       const s = bw[0];
-      const st = paint(bc[0], "stroke");
-      if (!st && !fill) return;
+      const st = st0;
       const [ix, iy, iw, ih] = [x + s / 2, y + s / 2, w - s, h - s];
       const ir = rad.map((v) => Math.max(0, v - s / 2));
       const pa = `${fill || 'fill="none"'} ${st || ""} stroke-width="${f(s)}"`;

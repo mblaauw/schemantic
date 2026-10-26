@@ -1,6 +1,8 @@
 """B8: every lint check has a hint, a generated doc row, and a test here that triggers it."""
 import copy
 import json
+import re
+from pathlib import Path
 
 import pytest
 from conftest import ROOT, sp
@@ -27,7 +29,7 @@ SPEC_TRIGGERS = {
     "schema": lambda s: s.update(title="x" * 81),
     "id": lambda s: (s["panels"][0]["cards"][0].update(id="x"), s["panels"][1]["cards"][0].update(id="x")),
     "archetype": lambda s: s.update(archetype="roadmap"),
-    "layout": lambda s: s["footer"].update(columns=[1, 1, 1]),
+    "layout": lambda s: s["footer"].update(columns=[1, 1]),
     "budget": lambda s: s["layout"].update(areas=["clients identity gateway services data data"], row_heights=["fill"]),
     "pattern": lambda s: panel(s, "identity")["patterns"][0]["rows"][0]["cells"].append("full"),
     "flow": lambda s: s["flows"].append({"from": "gateway", "to": "billing"}),
@@ -35,6 +37,8 @@ SPEC_TRIGGERS = {
     "chip-mirror": lambda s: s["footer"].update(open_questions={"extra": ["Event bus nu of pas in fase 3?"]}),
     "icon": lambda s: s["panels"][0]["cards"][0].update(icon="unicorn"),
     "role": lambda s: s["panels"][0].update(role="security"),
+    "focus": lambda s: (panel(s, "gateway").update(focus=True), panel(s, "identity").update(focus=True)),
+    "flows-mean": lambda s: s.pop("flows_mean"),
     "deprecated": lambda s: panel(s, "data").update(role="storage"),
     "language": lambda s: s["panels"][0]["cards"][0].update(note="leest de productcatalogus"),
 }
@@ -47,7 +51,10 @@ def admission_last(s):
 
 LAYOUT_TRIGGERS = {
     "text-overflow": (lambda s: panel(s, "data")["patterns"][0]["tiers"][1].update(note="gestandaardiseerdeproductgegevens"), "", BASE),
-    "containment": (lambda s: [c.update(bullets=["een regel tekst die ruimte inneemt"] * 3) for c in panel(s, "clients")["cards"]], "", BASE),
+    # Panels grow with their content, so only the old fill rows (row_heights) can squeeze one.
+    "containment": (lambda s: (s["layout"].update(row_heights=["fill", "fill"]),
+                               [c.update(bullets=["een regel tekst die ruimte inneemt"] * 3) for c in panel(s, "clients")["cards"]]),
+                    "", BASE),
     "canvas-fit": (lambda s: None, ".titleblock { margin-right: -160px; }", BASE),
     "overlap": (lambda s: None, ".card + .card { margin-top: -30px; }", BASE),
     "type-floor": (lambda s: None, ":root { --t-body: 9px; }", BASE),
@@ -56,7 +63,7 @@ LAYOUT_TRIGGERS = {
     "arrow-label": (lambda s: s["flows"][0].update(label="OIDC"), "", BASE),
     "chip-length": (lambda s: panel(s, "security")["chips"][0].update(text="Uitzonderingen op policy lopen via een pull request"),
                     "", LAYERS),
-    "density": (lambda s: panel(s, "services").update(cards=panel(s, "services")["cards"][:1], chips=[]), "", BASE),
+    "void": (lambda s: panel(s, "services").update(cards=panel(s, "services")["cards"][:1], chips=[]), "", BASE),
 }
 OTHER = {"yaml", "svg-parity", "internal"}
 
@@ -125,3 +132,17 @@ def test_theme_path_in_the_spec_is_relative_to_it(tmp_path):
     spec = mutate(lambda s: s["canvas"].update(theme="missing.css"))
     report = pipeline.build(write(tmp_path, spec, "t"), tmp_path, deliver=False)
     assert [(f["check"], f["id"]) for f in report["errors"]] == [("canvas", "canvas.theme")]
+
+
+# C1 and C2: no holes, a low footer, in both canvas modes
+@pytest.mark.parametrize("mode", ["fit", "fixed"])
+@pytest.mark.parametrize("path", sorted((ROOT / "examples").glob("*.yaml")), ids=lambda p: p.stem)
+def test_examples_have_no_voids_and_a_low_footer(path, mode, tmp_path):
+    spec = mutate(lambda s: s["canvas"].update(height=mode), sp.load_spec(path))
+    report = pipeline.build(write(tmp_path, spec, path.stem), tmp_path, deliver=False)
+    limit = 96 if mode == "fit" else 160
+    assert max(report["voids"].values()) <= limit, report["voids"]
+    boxes = json.loads(Path(report["snapshot"]).read_text(encoding="utf-8"))["boxes"]
+    height = float(re.search(r'height="([\d.]+)"', (tmp_path / "_work" / f"{path.stem}.svg").read_text()[:400]).group(1))
+    footer = boxes["footer"][3] - boxes["footer"][1]
+    assert footer <= 0.13 * height + 2, f"footer {footer}px of {height}px"

@@ -3,6 +3,12 @@
 Every archetype uses the same panels, cards, chips, patterns, flows and footer. They differ only in
 `layout`: how panels are placed. Lint names any layout key that does not belong to the chosen archetype.
 
+Rows take their content height and the canvas fits them (`canvas.height: fit`, the default); with
+`canvas.height: fixed` the preset size stays and spare height goes to the gaps between rows. A panel that spans
+several rows (a rail, a side spoke) spreads its cards over its height. Chips sit under their panel's content;
+`layout.chips_at: bottom` pins them to the bottom in rows where every panel has chips, so they line up.
+`row_heights` is deprecated.
+
 ## column-flow
 
 A path the reader follows left to right, with optional rows underneath (a data platform under the services,
@@ -16,7 +22,6 @@ layout:
     - "clients identity gateway services"
     - "data    data     data    data"      # a panel may span cells, as long as it forms a rectangle
   column_widths: [1, 1.1, 1, 1.2]         # optional, relative
-  row_heights: [fill, auto]               # optional: fill shares the height, auto hugs the content
 ```
 
 - Flows between neighbours run straight across the gutter. Flows to a spanning row below run straight down.
@@ -27,7 +32,7 @@ layout:
 
 One central panel (the hub) with up to 10 spokes around it: up to 4 above, up to 4 below, and one on each
 side. Top and bottom spokes share the hub's width evenly, even when their counts differ; side spokes run the
-full height. The hub gets a stronger frame and the free height.
+full height. The hub gets a stronger frame.
 
 <!-- lint: examples/orderplatform-eventbus.yaml -->
 ```yaml
@@ -37,7 +42,6 @@ layout:
   top: [orders, payments, shipping]       # producers, callers or sources usually go on top
   bottom: [search, analytics, notify]     # consumers or targets below
   right: ops                              # optional; also `left`. Good for operators and owners
-  row_heights: [auto, fill, auto]         # optional; this is the default (top, hub, bottom)
 ```
 
 - Give each spoke one flow to or from the hub; the router draws them straight.
@@ -57,7 +61,6 @@ layout:
   layers: [experience, delivery, runtime, infra]   # 2 to 5, top first
   left: security                                   # optional rails
   right: observability
-  row_heights: [auto, auto, auto, auto]            # optional; auto is the default
 ```
 
 - A layer lays its cards out in one row by default (`card_columns` = number of cards); 3–5 cards fit well.

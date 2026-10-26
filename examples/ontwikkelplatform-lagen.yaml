@@ -85,15 +85,15 @@ panels:
     chips:
       - {kind: info, text: "Golden paths leveren alerts mee"}
 
+flows_mean: control
 flows:
   - {from: experience, to: delivery, label: "scaffolding"}
   - {from: delivery, to: runtime, label: "deploy via GitOps"}
   - {from: runtime, to: infra}
   - {from: policy, to: admission}
-  - {from: runtime, to: observability}
+  - {from: runtime, to: observability, style: async}
 
 footer:
-  columns: [1.6, 1.1, 0.9]
   principles:
     - "Een team komt via de portal binnen, niet via een ticket bij het platformteam."
     - "Alles wat draait, is gedeployed via GitOps; handmatige wijzigingen worden teruggedraaid."

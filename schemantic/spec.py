@@ -12,8 +12,12 @@ import yaml
 from . import archetypes, roles
 from .config import ICONS, ROOT
 
-# Default footer widths per panel, relative to each other; only the panels present get a track.
-FOOTER_WEIGHTS = {"context": 1.5, "principles": 1.4, "open_questions": 1.1, "legend": 0.9}
+# Default footer widths per column, by its first section, relative to each other.
+FOOTER_WEIGHTS = {"context": 1.5, "principles": 1.4, "open_questions": 1.1, "notes": 1.1, "legend": 0.9}
+# With more footer columns than this (the legend strip not counted), open questions or notes of at most
+# FOOTER_STACK_MAX items stack under another column instead of taking one of their own.
+FOOTER_MAX_COLUMNS = 3
+FOOTER_STACK_MAX = 2
 
 
 def finding(check: str, id_: str, detail: str, level: str = "error") -> dict:
@@ -125,6 +129,9 @@ def layout_errors(spec: dict, arche: archetypes.Archetype) -> list[dict]:
     rh = spec["layout"].get("row_heights")
     if rh and len(rh) != len(grid.rows):
         out.append(finding("layout", "layout.row_heights", f"{len(rh)} heights for {len(grid.rows)} rows"))
+    if rh:
+        out.append(finding("deprecated", "layout.row_heights", "rows now take their content height and the canvas fits them "
+                           "(canvas.height); row_heights still works until the next release", level="warning"))
     return out
 
 
@@ -136,7 +143,7 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
                         f"'{spec['archetype']}' is not built yet; use one of {', '.join(archetypes.BUILT)}")]
     # Ids first: a colliding id makes every later check (and the router) look in the wrong place.
     out = id_errors(spec) or layout_errors(spec, arche)
-    if out:
+    if any(f["level"] == "error" for f in out):
         return out
     out += roles.role_findings(spec, theme_css)
 
@@ -150,7 +157,7 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
 
     known = {p["id"] for p in spec["panels"]}
     for p in spec["panels"]:
-        known |= {c.get("id") or f"{p['id']}.card{i}" for i, c in enumerate(p.get("cards", []))}
+        known |= {card_id(p, i, c) for i, c in enumerate(p.get("cards", []))}
         for pt in p.get("patterns", []):
             if pt["type"] == "matrix":
                 for r in pt["rows"]:
@@ -171,14 +178,23 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
     elif "part" in canvas and canvas["part"] > canvas["of"]:
         out.append(finding("canvas", "canvas.part", f"part {canvas['part']} of {canvas['of']}; part cannot be larger than of"))
     fcols = (spec.get("footer") or {}).get("columns")
-    present = footer_panels(spec)
-    if fcols and len(fcols) != len(present):
-        out.append(finding("layout", "footer.columns", f"{len(fcols)} widths for {len(present)} footer panels ({', '.join(present)})"))
+    layout = [col for col in footer_layout(spec) if col != ["legend"]]  # the legend is a strip under the columns
+    if fcols and len(fcols) != len(layout):
+        shown = "; ".join(" + ".join(col) for col in layout)
+        out.append(finding("layout", "footer.columns", f"{len(fcols)} widths for {len(layout)} footer columns ({shown})"))
     oq = (spec.get("footer") or {}).get("open_questions") or {}
-    chips = [ch["text"] for p in spec["panels"] for ch in p.get("chips", []) if ch["kind"] == "warning"]
-    if chips and not oq.get("from_chips"):
-        for c in (c for c in chips if c not in oq.get("extra", [])):
-            out.append(finding("chip-mirror", "footer.open_questions", f"warning chip not repeated in open questions: '{c}'"))
+    warnings = [ch["text"] for p in spec["panels"] for ch in p.get("chips", []) if ch["kind"] == "warning"]
+    warnings += [f["text"] for f in flags(spec) if f["kind"] == "warning"]
+    if warnings and not oq.get("from_chips"):
+        for c in (c for c in warnings if c not in oq.get("extra", [])):
+            out.append(finding("chip-mirror", "footer.open_questions", f"warning not repeated in open questions: '{c}'"))
+
+    focused = [p["id"] for p in spec["panels"] if p.get("focus")]
+    focused += [card_id(p, i, c) for p in spec["panels"] for i, c in enumerate(p.get("cards", [])) if c.get("focus")]
+    if len(focused) > 1:
+        out.append(finding("focus", focused[1], f"{len(focused)} elements have focus ({', '.join(focused)}); a plate has one point"))
+    if spec.get("flows") and not spec.get("flows_mean"):
+        out.append(finding("flows-mean", "flows_mean", "the plate has flows but does not say what an arrow means", level="warning"))
 
     for icon in iter_icons(spec):
         if not (ICONS / f"{icon}.svg").exists():
@@ -199,21 +215,66 @@ def check(spec: dict, theme_css: str = "") -> list[dict]:
     return schema_errors(spec) or semantic_errors(spec, theme_css)
 
 
-def open_questions(spec: dict) -> list[str]:
-    oq = (spec.get("footer") or {}).get("open_questions") or {}
+def card_id(panel: dict, i: int, card: dict) -> str:
+    return card.get("id") or f"{panel['id']}.card{i}"
+
+
+def flags(spec: dict) -> list[dict]:
+    """Card flags in plate order, numbered from 1: {n, card, kind, text}. The number shows on the card and in the
+    footer (open questions for warnings, notes for info)."""
     out = []
-    if oq.get("from_chips"):
-        out += [ch["text"] for p in spec["panels"] for ch in p.get("chips", []) if ch["kind"] == "warning"]
-    out += [q for q in oq.get("extra", []) if q not in out]
+    for p in spec["panels"]:
+        for i, c in enumerate(p.get("cards", [])):
+            if c.get("flag"):
+                out.append({"n": len(out) + 1, "card": card_id(p, i, c), **c["flag"]})
     return out
+
+
+def open_questions(spec: dict) -> list[dict]:
+    """Open questions in the footer: warning chips (from_chips), then extra ones, then numbered warning flags."""
+    oq = (spec.get("footer") or {}).get("open_questions") or {}
+    texts = []
+    if oq.get("from_chips"):
+        texts += [ch["text"] for p in spec["panels"] for ch in p.get("chips", []) if ch["kind"] == "warning"]
+    texts += [q for q in oq.get("extra", []) if q not in texts]
+    out = [{"n": None, "text": t} for t in texts]
+    if oq.get("from_chips"):
+        out += [{"n": f["n"], "text": f["text"]} for f in flags(spec) if f["kind"] == "warning"]
+    return out
+
+
+def notes(spec: dict) -> list[dict]:
+    """Numbered info flags, for the footer's notes panel."""
+    return [{"n": f["n"], "text": f["text"]} for f in flags(spec) if f["kind"] == "info"]
 
 
 def footer_panels(spec: dict) -> list[str]:
     """The footer panels the template renders, in order; the legend is always there."""
     footer = spec.get("footer") or {}
     present = [("context", bool(footer.get("context"))), ("principles", bool(footer.get("principles"))),
-               ("open_questions", bool(open_questions(spec))), ("legend", True)]
+               ("open_questions", bool(open_questions(spec))), ("notes", bool(notes(spec))), ("legend", True)]
     return [name for name, on in present if on]
+
+
+def footer_layout(spec: dict) -> list[list[str]]:
+    """Footer columns, each a list of sections. When there would be too many columns, short open questions and notes
+    stack under the column with the least text (principles or open questions), so the footer stays low."""
+    present = footer_panels(spec)
+    footer = spec.get("footer") or {}
+    size = {"open_questions": open_questions(spec), "notes": notes(spec)}
+    text = {"principles": sum(len(p) for p in footer.get("principles", [])),
+            "open_questions": sum(len(q["text"]) for q in size["open_questions"]),
+            "notes": sum(len(q["text"]) for q in size["notes"])}
+    cols: list[list[str]] = []
+    many = len([n for n in present if n != "legend"]) > FOOTER_MAX_COLUMNS
+    for name in present:
+        hosts = [c for c in cols if c[0] in ("principles", "open_questions")]
+        if many and name in size and hosts and len(size[name]) <= FOOTER_STACK_MAX:
+            host = min(hosts, key=lambda c: sum(text[s] for s in c))
+            host.append(name)
+        else:
+            cols.append([name])
+    return cols
 
 
 def iter_icons(spec: dict):

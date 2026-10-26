@@ -11,7 +11,7 @@ RAIL_WEIGHT = 0.22
 class LayerCake(Archetype):
     name = "layer-cake"
     required = frozenset({"layers"})
-    allowed = frozenset({"layers", "left", "right", "row_heights"})
+    allowed = frozenset({"layers", "left", "right", "row_heights", "chips_at"})
 
     def grid(self, spec: dict) -> GridSpec:
         lay = spec["layout"]
@@ -20,8 +20,7 @@ class LayerCake(Archetype):
         rows = [left + [layer] + right for layer in lay["layers"]]
         rail = f"minmax(0, {RAIL_WEIGHT}fr)"
         columns = [rail] * sides[0] + ["minmax(0, 1fr)"] + [rail] * sides[1]
-        # Layers hug their content; auto tracks still stretch into leftover height, so the fullest layer gets room.
-        return GridSpec(rows=rows, columns=columns, heights=["auto"] * len(rows))
+        return GridSpec(rows=rows, columns=columns)
 
     def panel_defaults(self, spec: dict, panel: dict) -> dict:
         if panel["id"] in spec["layout"]["layers"] and panel.get("cards") and not panel.get("card_columns"):

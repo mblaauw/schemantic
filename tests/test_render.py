@@ -84,8 +84,8 @@ def write(tmp_path, spec, name):
     return path
 
 
-def test_connector_turns_corners_from_a_card():
-    # Dead-letter queue (a card inside the hub) to On-call (a card in the side spoke) has no straight line.
+def test_connector_runs_from_a_card_in_one_panel_to_a_card_in_another():
+    # Dead-letter queue (a card inside the hub) to On-call (a card in the side spoke); bends are tested in test_router.
     spec = sp.load_spec(ROOT / "examples" / "orderplatform-eventbus.yaml")
     i = next(k for k, f in enumerate(spec["flows"]) if f["from"] == "dlq")
     with sync_playwright() as p:
@@ -95,7 +95,7 @@ def test_connector_turns_corners_from_a_card():
         chromium.close()
     seg = next(s for s in routed["segs"] if s["i"] == i)
     assert routed["problems"] == []
-    assert len(seg["points"]) > 2 and (seg["fromPanel"], seg["toPanel"]) == ("bus", "ops")
+    assert (seg["from"], seg["to"], seg["fromPanel"], seg["toPanel"]) == ("dlq", "oncall", "bus", "ops")
 
 
 def test_unroutable_card_connector_is_reported(tmp_path):
@@ -187,7 +187,7 @@ def test_label_without_room_is_arrow_label(tmp_path):
 # A2: without footer.columns the footer still spans the full width
 def test_default_footer_fills_the_width(tmp_path):
     spec = sp.load_spec(ROOT / "examples" / "orderplatform-eventbus.yaml")
-    del spec["footer"]["columns"]
+    spec["footer"].pop("columns", None)
     with sync_playwright() as p:
         chromium = browser.launch(p)
         page = browser.open_plate(chromium, html.build_html(spec), spec)
@@ -236,3 +236,17 @@ def test_read_only_skill_folder(tmp_path):
     finally:
         for p in [skill, *skill.rglob("*")]:
             p.chmod(p.stat().st_mode | 0o200)
+
+
+# C6, C7, C14: line styles, status tags, focus, in the exported SVG
+def test_async_flows_are_dashed_and_in_the_legend(renders):
+    svg = (renders(ROOT / "examples" / "orderplatform-eventbus.yaml") / "orderplatform-eventbus.svg").read_text(encoding="utf-8")
+    dashes = config.tokens()["--dash-async"]
+    assert svg.count(f'stroke-dasharray="{dashes}"') >= 7  # six async arrows and the legend sample
+    assert "Asynchronous: event or message" in svg and "Direction of data" in svg
+
+
+def test_status_tags_and_planned_outline_export(renders):
+    svg = (renders(ROOT / "examples" / "orderplatform-toegang.yaml") / "orderplatform-toegang.svg").read_text(encoding="utf-8")
+    assert ">nieuw</text>" in svg and ">gepland</text>" in svg
+    assert f'stroke-dasharray="{config.tokens()["--dash-planned"]}"' in svg

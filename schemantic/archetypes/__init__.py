@@ -20,20 +20,19 @@ class GridSpec:
     """The body grid an archetype derives from a spec."""
     rows: list[list[str]]       # per row, the panel id or group name in each cell; '.' is empty
     columns: list[str]          # CSS column tracks, gutters excluded
-    heights: list[str]          # 'fill' or 'auto' per row
     groups: dict[str, list[str]] = field(default_factory=dict)  # group name -> panels laid out in their own grid
 
 
 class Archetype:
     name: str = ""
     required: frozenset[str] = frozenset()   # layout keys the archetype needs
-    allowed: frozenset[str] = frozenset()    # layout keys it accepts
+    allowed: frozenset[str] = frozenset()    # layout keys it accepts (chips_at and row_heights apply to every one)
     router_hints: dict = {}                   # reserved for layouts that prefer certain channels
 
     def placed(self, spec: dict) -> list[str]:
         """Panel ids as the layout names them, duplicates kept so they can be reported."""
         out = []
-        for key in sorted(self.allowed - {"row_heights", "column_widths"}):
+        for key in sorted(self.allowed - {"row_heights", "column_widths", "chips_at"}):
             v = spec["layout"].get(key)
             out += v if isinstance(v, list) else ([v] if v else [])
         return out

@@ -44,7 +44,11 @@ CHECKS: dict[str, Check] = {
                   "Use a built-in role (platform, data, external, actor), or define it with a legend label in the theme."),
     "deprecated": Check("spec", "an old name that still works for one release (warning)", "use the new name in the detail",
                         "Use the new name given in the detail."),
-    "chip-mirror": Check("spec", "a warning chip is not under open questions", "`open_questions: {from_chips: true}`",
+    "focus": Check("spec", "more than one panel or card has `focus: true`", "keep focus on the one element the title is about",
+                   "Keep focus on the one element the title is about."),
+    "flows-mean": Check("spec", "the plate has flows but no `flows_mean` (warning)", "say what an arrow means: data, request, "
+                        "dependency or control", "Add flows_mean: data, request, dependency or control."),
+    "chip-mirror": Check("spec", "a warning chip or warning flag is not under open questions", "`open_questions: {from_chips: true}`",
                          "Set footer.open_questions.from_chips to true."),
     "icon": Check("spec", "unknown icon", "pick from the list in `spec-guide.md`", "Pick an icon from the list in references/spec-guide.md."),
     "language": Check("spec", "a translated technical term in an `nl` plate", "use the English term (the id of the finding)",
@@ -73,10 +77,9 @@ CHECKS: dict[str, Check] = {
                          "Shorten or drop the label, or explain the flow in a card note."),
     "chip-length": Check("layout", "a chip runs to three lines", "shorten it to one clear sentence",
                          "Shorten the chip to one sentence of about 50 characters."),
-    "density": Check("layout", "a panel's content fills under 60% of it",
-                     "add real content (bullets, a pattern, an info chip), merge it with a neighbour, give it less room "
-                     "(`row_heights`, a different layout); never filler",
-                     "Add real content to the panel, or merge it with a neighbour; never filler."),
+    "void": Check("layout", "a run of empty space inside a body panel: warning over 96 px, error over 160 px",
+                  "add real content (bullets, a pattern, an info chip); move the panel next to one of its height; merge it "
+                  "with a neighbour; never filler", "Add real content to the panel, or place it next to a panel of its height."),
     "svg-parity": Check("layout", "the SVG differs from the measured layout",
                         "a renderer problem, not a spec problem: report it with the `detail` and the files in `out/_work/`",
                         "Report it with the detail and the files in out/_work/; it is not a spec problem."),

@@ -78,7 +78,6 @@ def test_hub_layout_is_derived(example):
     # Spoke rows are groups with their own grid; the side spoke spans every row.
     assert archetypes.get(spec["archetype"]).grid(spec).rows == [["_top", "x"], ["identity", "x"], ["_bottom", "x"]]
     assert archetypes.get(spec["archetype"]).grid(spec).groups == {"_top": ["clients", "gateway", "services"], "_bottom": ["data"]}
-    assert archetypes.get(spec["archetype"]).grid(spec).heights == ["auto", "fill", "auto"]
 
 
 def test_side_spoke_track_is_one_spoke_of_the_fuller_row_wide(example):
@@ -156,7 +155,7 @@ def test_card_id_equal_to_an_automatic_id(example):
 
 # A2: footer columns follow the footer panels
 def test_footer_columns_must_match_panels(example):
-    example["footer"]["columns"] = [1, 1, 1]
+    example["footer"]["columns"] = [1, 1]  # context, principles, open questions: three columns
     assert [(e["check"], e["id"]) for e in errors(example)] == [("layout", "footer.columns")]
 
 
@@ -180,3 +179,20 @@ def test_part_without_of(example):
 def test_part_larger_than_of(example):
     example["canvas"]["part"] = 4
     assert [(e["check"], e["id"]) for e in errors(example)] == [("canvas", "canvas.part")]
+
+
+# C8: card flags
+def test_flags_are_numbered_and_reach_the_footer(example):
+    assert sp.flags(example) == [{"n": 1, "card": "gateway.card1", "kind": "warning", "text": "Rate limits per tenant of per client?"}]
+    assert {"n": 1, "text": "Rate limits per tenant of per client?"} in sp.open_questions(example)
+
+
+def test_flag_counts_for_the_chip_mirror(example):
+    example["footer"]["open_questions"] = {"extra": ["Payments als eigen service of bij de PSP laten?", "Event bus nu of pas in fase 3?"]}
+    found = errors(example)
+    assert [(e["check"], "Rate limits" in e["detail"]) for e in found] == [("chip-mirror", True)]
+
+
+def test_row_heights_still_work_but_are_deprecated(example):
+    example["layout"]["row_heights"] = ["fill", "auto"]
+    assert [(e["check"], e["level"]) for e in sp.check(example)] == [("deprecated", "warning")]

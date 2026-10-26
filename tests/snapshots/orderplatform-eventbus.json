@@ -10,13 +10,13 @@
    40,
    136,
    1560,
-   948
+   862
   ],
   "bus": [
    40,
    300,
    1168,
-   784
+   698
   ],
   "bus.card0": [
    54,
@@ -50,45 +50,45 @@
   ],
   "bus.chip0": [
    54,
-   734,
+   648,
    1154,
-   770
+   684
   ],
   "ops": [
    1216,
    136,
    1560,
-   948
+   862
   ],
   "ops.card0": [
    1230,
-   206,
+   246,
    1548,
-   296
+   336
   ],
   "oncall": [
    1230,
-   304,
+   382,
    1548,
-   394
+   474
   ],
   "ops.card2": [
    1230,
-   402,
+   520,
    1548,
-   494
+   610
   ],
   "ops.card3": [
    1230,
-   502,
+   658,
    1548,
-   592
+   748
   ],
   "ops.chip0": [
    1230,
-   884,
+   798,
    1548,
-   934
+   850
   ],
   "orders": [
    40,
@@ -128,63 +128,63 @@
   ],
   "search": [
    40,
-   828,
+   742,
    384,
-   948
+   862
   ],
   "search.card0": [
    54,
-   880,
+   794,
    372,
-   934
+   850
   ],
   "analytics": [
    432,
-   828,
+   742,
    776,
-   948
+   862
   ],
   "analytics.card0": [
    446,
-   880,
+   794,
    764,
-   934
+   850
   ],
   "notify": [
    824,
-   828,
+   742,
    1168,
-   948
+   862
   ],
   "notify.card0": [
    838,
-   880,
+   794,
    1156,
-   934
+   850
   ],
   "footer": [
    40,
-   970,
+   884,
    1560,
-   1168
+   996
   ],
   "footer.principles": [
    40,
-   970,
-   678,
-   1168
+   884,
+   876,
+   966
   ],
   "footer.open_questions": [
-   694,
-   970,
-   1162,
-   1168
+   904,
+   884,
+   1560,
+   928
   ],
   "footer.legend": [
-   1178,
-   970,
+   40,
+   976,
    1560,
-   1168
+   996
   ]
  },
  "text": [
@@ -305,7 +305,7 @@
   ],
   [
    92,
-   754,
+   668,
    "Is 14 days of retention enough to rebuild the search index?"
   ],
   [
@@ -320,92 +320,92 @@
   ],
   [
    1272,
-   230,
+   270,
    "Dashboards"
   ],
   [
    1272,
-   246,
+   286,
    "consumer lag per topic"
   ],
   [
    1282,
-   264,
+   304,
    "alert when lag passes five minutes"
   ],
   [
    1282,
-   282,
+   322,
    "one board per consumer group"
   ],
   [
    1272,
-   328,
+   406,
    "On-call"
   ],
   [
    1272,
-   346,
+   424,
    "paged on dead letters"
   ],
   [
    1282,
-   362,
+   442,
    "first responder replays or skips"
   ],
   [
    1282,
-   380,
+   458,
    "fixes go back to the owning domain"
   ],
   [
    1272,
-   426,
+   544,
    "Runbooks"
   ],
   [
    1272,
-   444,
+   560,
    "next to the bus configuration in Git"
   ],
   [
    1282,
-   462,
+   578,
    "replay a topic from a timestamp"
   ],
   [
    1282,
-   478,
+   596,
    "skip one poison message"
   ],
   [
    1272,
-   526,
+   682,
    "Capacity"
   ],
   [
    1272,
-   542,
+   698,
    "partitions and brokers"
   ],
   [
    1282,
-   560,
+   716,
    "partition count reviewed every quarter"
   ],
   [
    1282,
-   578,
+   734,
    "brokers scale ahead of peak season"
   ],
   [
    1266,
-   904,
+   818,
    "Domains run their consumers; operations"
   ],
   [
    1266,
-   920,
+   836,
    "runs the bus"
   ],
   [
@@ -455,112 +455,117 @@
   ],
   [
    52,
-   854,
+   768,
    "Search"
   ],
   [
    96,
-   904,
+   818,
    "Search index"
   ],
   [
    96,
-   920,
+   834,
    "rebuilt from replay, updated live"
   ],
   [
    444,
-   854,
+   768,
    "Analytics"
   ],
   [
    488,
-   904,
+   818,
    "Lakehouse ingest"
   ],
   [
    488,
-   920,
+   834,
    "lands every event in Bronze"
   ],
   [
    836,
-   854,
+   768,
    "Notifications"
   ],
   [
    880,
-   904,
+   818,
    "Notification service"
   ],
   [
    880,
-   920,
+   834,
    "e-mail and push on status changes"
   ],
   [
-   52,
-   996,
+   40,
+   898,
    "Key principles"
   ],
   [
-   64,
-   1036,
+   50,
+   922,
    "An event is a fact that already happened; it is never changed afterwards."
   ],
   [
-   64,
-   1058,
+   50,
+   942,
    "The producing domain owns the schema; consumers adapt to new versions."
   ],
   [
-   64,
-   1082,
+   50,
+   962,
    "No consumer calls a producer directly to fetch what an event already carries."
   ],
   [
-   706,
-   996,
+   904,
+   898,
    "Open questions"
   ],
   [
-   728,
-   1036,
+   926,
+   922,
    "Is 14 days of retention enough to rebuild the search index?"
   ],
   [
-   1190,
-   996,
+   40,
+   992,
    "Legend"
   ],
   [
-   1220,
-   1034,
+   134,
+   988,
    "Platform component"
   ],
   [
-   1220,
-   1056,
+   302,
+   988,
    "Data and storage"
   ],
   [
-   1220,
-   1078,
+   452,
+   988,
    "People and teams"
   ],
   [
-   1220,
-   1102,
-   "Direction of request or data"
+   606,
+   988,
+   "Direction of data"
   ],
   [
-   1220,
-   1126,
+   756,
+   988,
+   "Asynchronous: event or message"
+  ],
+  [
+   1000,
+   988,
    "Open choice or friction"
   ],
   [
-   1220,
-   1150,
+   1184,
+   988,
    "Assumption or note"
   ]
  ],
@@ -620,11 +625,11 @@
    "points": [
     [
      212,
-     790
+     704
     ],
     [
      212,
-     820
+     734
     ]
    ],
    "label": null
@@ -636,11 +641,11 @@
    "points": [
     [
      604,
-     790
+     704
     ],
     [
      604,
-     820
+     734
     ]
    ],
    "label": null
@@ -652,11 +657,11 @@
    "points": [
     [
      996,
-     790
+     704
     ],
     [
      996,
-     820
+     734
     ]
    ],
    "label": null
@@ -668,19 +673,11 @@
    "points": [
     [
      1160,
-     452
-    ],
-    [
-     1192,
-     452
-    ],
-    [
-     1192,
-     378
+     454
     ],
     [
      1222,
-     378
+     454
     ]
    ],
    "label": null

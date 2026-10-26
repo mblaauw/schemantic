@@ -34,7 +34,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
     Returns the report: errors and warnings (each with a hint), density, parity, and the paths written."""
     spec_path, out = Path(spec_path), Path(out)
     name, work = spec_path.stem, Path(out) / "_work"
-    report = {"spec": str(spec_path), "errors": [], "warnings": [], "density": {}, "parity": None,
+    report = {"spec": str(spec_path), "errors": [], "warnings": [], "density": {}, "voids": {}, "parity": None,
               "svg": None, "png": None, "snapshot": None, "fonts": [], "flow_problems": []}
     spec, issues = read_spec(spec_path)
     if not issues:
@@ -63,10 +63,10 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 # Parity: the page as laid out (connectors included) against the SVG rasterised at the same scale.
                 page.locator("#plate").screenshot(path=str(work / "html.png"))
                 page.close()
-                rasterise_svg(browser, svg_path, spec, work / "svg.png", scale=1)
+                rasterise_svg(browser, svg_path, work / "svg.png", scale=1)
                 par = image_diff(work / "html.png", work / "svg.png", work / "parity-diff.png")
                 if deliver:
-                    rasterise_svg(browser, svg_path, spec, out / f"{name}.png", scale=scale)
+                    rasterise_svg(browser, svg_path, out / f"{name}.png", scale=scale)
                     report["png"] = str(out / f"{name}.png")
             finally:
                 browser.close()
@@ -74,7 +74,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
             issues.append({"level": "error", "check": "svg-parity", "id": "(plate)", "detail": par["detail"]})
         elif par["count"]:
             issues.append({"level": "warning", "check": "svg-parity", "id": "(plate)", "detail": par["detail"]})
-        report.update(density=dom["density"], fonts=fonts, svg=str(svg_path) if deliver else None, snapshot=str(snap_path),
+        report.update(density=dom["density"], voids=dom["voids"], fonts=fonts, svg=str(svg_path) if deliver else None, snapshot=str(snap_path),
                       parity={"pixels": par["count"], "regions": par["regions"], "detail": par["detail"]},
                       flow_problems=[dict(flow=spec["flows"][x["i"]], check=x["check"], problem=x["problem"])
                                      for x in flows["problems"]])

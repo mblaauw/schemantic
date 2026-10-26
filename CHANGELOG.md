@@ -7,6 +7,20 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ### Added (Phase C)
 - C5: role `actor` for people and teams; `storage` is now `data` (the old name lints as `deprecated` for one release);
   legend labels say what each role means. A `role` check catches unknown roles and theme roles without a label.
+- C1: `canvas.height: fit` (default) sizes the canvas to its content; `fixed` keeps the preset size and spreads spare
+  height over the gaps between rows, capped per gap, never into a panel. Chips sit under their panel's content
+  (`layout.chips_at: bottom` lines them up in rows where every panel has chips). A panel spanning several rows
+  spreads its cards. A `void` check (warning over 96 px, error over 160 px) replaces the density warning; density stays
+  in the report. `row_heights` is deprecated.
+- C2: a quieter, lower footer: labels over a hairline instead of header bars, context as a plain list, the legend as
+  one strip across the full width, and short open questions or notes stacked when there are many columns. Every
+  example's footer is at most 13% of the canvas.
+- C6: `flows_mean` (data, request, dependency, control) sets what arrows mean in the legend (lint warns without it);
+  `style: async | optional` draws dashed or dotted connectors; `step: n` adds a numbered badge.
+- C7: `status: new | changed | planned | deprecated | removed` on cards and panels: a tag, a dashed outline for
+  planned, muted for deprecated, struck through for removed; listed in the legend.
+- C8: card `flag: {kind, text}`: a numbered marker on the card, its text in open questions (warning) or notes (info).
+- C14: `focus: true` on one panel or card gives it an accent outline; lint allows one.
 - C12: themes. `canvas.theme` (relative to the spec) or `--theme` appends a CSS file after `tokens.css`; a theme can
   recolour and add roles with their own legend labels. `examples/themes/warm.css` shows both.
 

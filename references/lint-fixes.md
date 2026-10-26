@@ -19,7 +19,9 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `canvas` | `part` without `of` (or the reverse), `part` larger than `of`, or a theme file that does not exist | give both, with `1 ≤ part ≤ of`; check the theme path (relative to the spec) |
 | `role` | a panel role is neither built in nor defined by the theme, or the theme gives it no legend label in the plate's language | use platform, data, external or actor, or define the role and its label in the theme |
 | `deprecated` | an old name that still works for one release (warning) | use the new name in the detail |
-| `chip-mirror` | a warning chip is not under open questions | `open_questions: {from_chips: true}` |
+| `focus` | more than one panel or card has `focus: true` | keep focus on the one element the title is about |
+| `flows-mean` | the plate has flows but no `flows_mean` (warning) | say what an arrow means: data, request, dependency or control |
+| `chip-mirror` | a warning chip or warning flag is not under open questions | `open_questions: {from_chips: true}` |
 | `icon` | unknown icon | pick from the list in `spec-guide.md` |
 | `language` | a translated technical term in an `nl` plate | use the English term (the id of the finding) |
 
@@ -36,6 +38,6 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `arrow-routing` | no clear route, or a route crosses a panel or card | connect the panels instead of cards; move the target card to the side of its panel nearest the source; place the two panels next to each other |
 | `arrow-label` | no room for a label, or it touches a box | shorten the label, drop it, or explain the flow in a card note |
 | `chip-length` | a chip runs to three lines | shorten it to one clear sentence |
-| `density` | a panel's content fills under 60% of it | add real content (bullets, a pattern, an info chip), merge it with a neighbour, give it less room (`row_heights`, a different layout); never filler |
+| `void` | a run of empty space inside a body panel: warning over 96 px, error over 160 px | add real content (bullets, a pattern, an info chip); move the panel next to one of its height; merge it with a neighbour; never filler |
 | `svg-parity` | the SVG differs from the measured layout | a renderer problem, not a spec problem: report it with the `detail` and the files in `out/_work/` |
 | `internal` | Schemantic itself failed | not a spec problem: report the detail and the spec |

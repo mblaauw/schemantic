@@ -10,7 +10,7 @@ from . import Archetype, GridSpec, error
 class HubAndSpokes(Archetype):
     name = "hub-and-spokes"
     required = frozenset({"hub"})
-    allowed = frozenset({"hub", "top", "bottom", "left", "right", "row_heights"})
+    allowed = frozenset({"hub", "top", "bottom", "left", "right", "row_heights", "chips_at"})
 
     def validate(self, spec: dict) -> list[dict]:
         if len(self.placed(spec)) < 3:
@@ -40,8 +40,7 @@ class HubAndSpokes(Archetype):
         k = f * (ns * b - ns) - b
         side = f"calc({f * 100:.4f}% + {k:.4f} * var(--gutter-x))"
         columns = [side] * sides[0] + ["minmax(0, 1fr)"] + [side] * sides[1]
-        heights = ["fill" if lay["hub"] in row else "auto" for row in rows]
-        return GridSpec(rows=rows, columns=columns, heights=heights, groups=groups)
+        return GridSpec(rows=rows, columns=columns, groups=groups)
 
     def panel_defaults(self, spec: dict, panel: dict) -> dict:
         if panel["id"] == spec["layout"]["hub"]:

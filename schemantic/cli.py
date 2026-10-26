@@ -52,7 +52,7 @@ def run(a) -> tuple[dict, int]:
     from .pipeline import build
     if a.cmd == "lint":
         r = build(a.spec, a.out, deliver=False, theme=a.theme)
-        keep = ("spec", "errors", "warnings", "density", "parity")
+        keep = ("spec", "errors", "warnings", "density", "voids", "parity")
         return {k: r[k] for k in keep}, 1 if r["errors"] else 0
     r = build(a.spec, a.out, scale=a.scale, theme=a.theme)
     if a.cmd == "render":

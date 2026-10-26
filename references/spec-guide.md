@@ -10,9 +10,12 @@ plate readable. Lengths are maximum characters.
 | `canvas.size` | `landscape-4x3` (1600×1200, the default choice) or `landscape-16x9` (1920×1080, for slides; less height) |
 | `canvas.lang` | `nl` or `en` |
 | `canvas.series`, `part`, `of` | a badge "Part 2 of 3"; give both `part` and `of` |
+| `canvas.height` | `fit` (default: the canvas takes its content height) or `fixed` (the preset size; spare height goes to the gaps) |
+| `canvas.theme` | optional CSS file, relative to the spec, that recolours or adds roles |
 | `title` (80) | the one message, as a claim. Not "Architecture overview" |
 | `subtitle` (120) | how the plate makes that claim true |
-| `archetype`, `layout` | see `archetypes.md` |
+| `archetype`, `layout` | see `archetypes.md`; `layout.chips_at: bottom` lines chips up at the bottom of a row |
+| `flows_mean` | what every arrow means: `data`, `request`, `dependency` or `control`; sets the legend (lint warns without it) |
 
 ## Panels
 
@@ -24,9 +27,11 @@ plate readable. Lengths are maximum characters.
   card_columns: 2                 # optional, 1–6
   arrange: row                    # optional: blocks side by side instead of stacked
   weights: [1.35, 0.8, 1]         # with arrange: row — patterns first, then the cards block
+  status: new                     # optional: new | changed | planned | deprecated | removed
+  focus: true                     # optional: the one element the plate is about (at most one per plate)
   cards: [...]                    # up to 6
   patterns: [...]                 # up to 2
-  chips: [...]                    # up to 2, pinned to the bottom
+  chips: [...]                    # up to 2, right under the content
 ```
 
 Roles: `platform` for what the team builds or runs, `data` for data at rest and data platforms, `external` for
@@ -42,6 +47,9 @@ name `storage` still works for one release and lints as `deprecated`.
   qualifier: "managed"            # 40, optional, shown in brackets after the name
   note: "events no consumer could handle"   # 70, lowercase start, no full stop
   bullets: ["first responder replays or skips"]   # up to 3, 60 each
+  status: planned                 # optional: a tag after the name; planned is dashed, deprecated muted, removed struck
+  flag: {kind: warning, text: "Rate limits per tenant or per client?"}   # optional: numbered marker, text in the footer
+  focus: true                     # optional, as on panels
 ```
 
 A note says what the card does in this story, not what the product is in general.
@@ -55,16 +63,20 @@ A note says what the card does in this story, not what the product is in general
 ## Chips
 
 - `warning` (90): an open choice or friction. It is repeated under open questions; set
-  `footer.open_questions.from_chips: true` or repeat its exact text in `extra`.
+  `footer.open_questions.from_chips: true` or repeat its exact text in `extra`. A card `flag` does the same for one
+  card, with a number.
 - `info` (90): an assumption or a note the reader needs. A chip holds at most two lines.
 
 ## Flows
 
 ```yaml
+flows_mean: request                                   # data | request | dependency | control: what an arrow means
 flows:
   - {from: clients, to: identity}                     # panel to panel: the default
-  - {from: data, to: clients, label: "BI and notebooks"}   # label 28; needs room beside the arrow
+  - {from: clients, to: data, label: "BI and notebooks"}   # label 28; needs room beside the arrow
   - {from: dlq, to: oncall}                           # card to card: give both cards an id
+  - {from: services, to: bus, style: async}           # sync (solid, default) | async (dashed) | optional (dotted)
+  - {from: orders, to: payments, step: 2}             # a numbered badge, for the order things happen
   - {from: services, to: bus, both: true}             # arrowheads at both ends
 ```
 
@@ -72,13 +84,14 @@ The router draws straight arrows across a gutter where it can, and otherwise tur
 gutters (one or two bends). It never crosses another panel or card. A label sits beside a vertical run or
 above a horizontal one; short gutters fit short labels only.
 
-Flow direction is the direction of the request or the data, as the legend says. Pick one per plate.
+Say what arrows mean once, with `flows_mean`, and keep every arrow in that direction. The legend shows the meaning,
+and a line style only when the plate uses it.
 
 ## Footer
 
 ```yaml
 footer:
-  columns: [1.6, 1.4, 1.1, 0.9]   # relative widths of the footer panels present
+  columns: [1.6, 1.4, 1.1]        # optional: relative widths of the footer columns (the legend is a strip below)
   context:                         # optional: people or roles
     title: "Roles"
     card_columns: 2

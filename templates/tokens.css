@@ -41,6 +41,15 @@
      of a second lane in one gutter, and labels. */
   --arrow-width: 2.5px; --arrow-gap: 7px; --arrow-head: 10px; --arrow-wing: 6px; --arrow-radius: 8px; --arrow-lane: 10px;
   --label-size: 11.5px; --label-weight: 500;
+  /* Dash patterns (SVG stroke-dasharray): async connectors, optional connectors, planned boxes */
+  --dash-async: 7 5; --dash-optional: 0.5 5; --dash-planned: 5 4;
+
+  /* Change status tags and the focus outline */
+  --tag-new-bg: #E3F4E8;     --tag-new-text: #1B5E31;
+  --tag-changed-bg: #EAF3FC; --tag-changed-text: #1D3A5E;
+  --tag-planned-bg: #EEF1F5; --tag-planned-text: #3D4A5C;
+  --tag-deprecated-bg: #FFF2E8; --tag-deprecated-text: #7A2D0E;
+  --tag-removed-bg: #FCE8E8; --tag-removed-text: #8E1B1B;
 
   /* Spacing on a 4 px scale */
   --r-panel: 8px; --r-card: 6px;

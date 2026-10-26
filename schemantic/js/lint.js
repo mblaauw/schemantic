@@ -156,24 +156,38 @@ schemantic.lint = (cfg) => {
     if (lines > 2) add("error", "chip-length", ch.dataset.id, `${lines} lines; a chip holds at most 2`);
   }
 
-  // Density: content height against the panel body it sits in
+  // Voids: the largest empty vertical run inside a body panel (between its blocks and chips, or below them). The
+  // content's share of the panel (density) is kept in the report for information.
   const density = {};
+  const voids = {};
   for (const p of panels) {
     if (p.dataset.id.startsWith("footer.")) continue;
     const pb = p.querySelector(".pb");
     const ib = inner(pb);
-    const kids = [...pb.children];
-    const used = kids.reduce((s, k) => s + k.getBoundingClientRect().height, 0);
-    const gaps = (kids.length - 1) * num(getComputedStyle(pb).rowGap || getComputedStyle(pb).gap);
-    const fill = Math.min(1, (used + gaps) / (ib.b - ib.t));
-    density[p.dataset.id] = Math.round(fill * 100) / 100;
-    if (fill < cfg.densityMin)
+    const parts = [
+      ...pb.querySelectorAll(":scope > .blocks > .cards > *, :scope > .blocks > :not(.cards), :scope > .chips > *"),
+    ].map((el) => rel(el));
+    const spans = parts.map((r) => [r.t, r.b]).sort((a, b) => a[0] - b[0]);
+    let cursor = ib.t + 1;
+    let gap = 0;
+    let used = 0;
+    for (const [t, b] of spans) {
+      if (t > cursor) gap = Math.max(gap, t - cursor);
+      if (b > cursor) {
+        used += b - Math.max(t, cursor);
+        cursor = b;
+      }
+    }
+    gap = Math.max(gap, ib.b - 1 - cursor);
+    voids[p.dataset.id] = Math.round(gap);
+    density[p.dataset.id] = Math.round(Math.min(1, used / (ib.b - ib.t - 2)) * 100) / 100;
+    if (gap > cfg.voidError || gap > cfg.voidWarn)
       add(
-        "warning",
-        "density",
+        gap > cfg.voidError ? "error" : "warning",
+        "void",
         p.dataset.id,
-        `content fills ${Math.round(fill * 100)}% of the panel; add substance, merge panels, or give this column less height`,
+        `${Math.round(gap)}px of empty space inside the panel; add real content, move it next to a panel of its height, or merge it`,
       );
   }
-  return { issues, density };
+  return { issues, density, voids };
 };

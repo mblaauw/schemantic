@@ -4,11 +4,11 @@ from __future__ import annotations
 from .browser import call
 from .config import TYPE_FLOOR_PX
 
-# Panel content filling less than this share of its panel reads as "visibly emptier" (review question 4);
-# 0.6 flagged the one panel a reviewer called empty in the first test plate and none of the others.
-DENSITY_MIN = 0.6
+# A run of empty space inside a body panel longer than this reads as a hole in the plate (review question 4).
+VOID_WARN_PX = 96
+VOID_ERROR_PX = 160
 
 
 def dom_lint(page, segs: list[dict]) -> dict:
-    """{issues, density} for the plate in `page`, with the routed connectors in `segs`."""
-    return call(page, "lint", {"floor": TYPE_FLOOR_PX, "segs": segs, "densityMin": DENSITY_MIN})
+    """{issues, density, voids} for the plate in `page`, with the routed connectors in `segs`."""
+    return call(page, "lint", {"floor": TYPE_FLOOR_PX, "segs": segs, "voidWarn": VOID_WARN_PX, "voidError": VOID_ERROR_PX})

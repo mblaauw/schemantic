@@ -15,6 +15,8 @@ schemantic.route = (flows) => {
   const labelSize = S.px("--label-size");
   const labelWeight = S.token("--label-weight");
   const stroke = S.px("--arrow-width");
+  const onHead = S.token("--on-head");
+  const dashes = { async: S.token("--dash-async"), optional: S.token("--dash-optional") };
   // Visual geometry comes from tokens; the rest are routing heuristics.
   const PAD = S.px("--arrow-gap");
   const HEAD = S.px("--arrow-head");
@@ -336,10 +338,11 @@ schemantic.route = (flows) => {
       pts[0] = start.base;
       heads = start.svg + heads;
     }
+    const dash = dashes[r.fl.style] ? ` stroke-dasharray="${dashes[r.fl.style]}"` : "";
     const line =
       pts.length === 2
-        ? `<line x1="${r2(pts[0][0])}" y1="${r2(pts[0][1])}" x2="${r2(pts[1][0])}" y2="${r2(pts[1][1])}" stroke="${col}" stroke-width="${stroke}" stroke-linecap="round"/>`
-        : `<path d="${rounded(pts)}" fill="none" stroke="${col}" stroke-width="${stroke}" stroke-linecap="round" stroke-linejoin="round"/>`;
+        ? `<line x1="${r2(pts[0][0])}" y1="${r2(pts[0][1])}" x2="${r2(pts[1][0])}" y2="${r2(pts[1][1])}" stroke="${col}" stroke-width="${stroke}" stroke-linecap="round"${dash}/>`
+        : `<path d="${rounded(pts)}" fill="none" stroke="${col}" stroke-width="${stroke}" stroke-linecap="round" stroke-linejoin="round"${dash}/>`;
     art[r.i] = line + heads;
   }
 
@@ -362,11 +365,38 @@ schemantic.route = (flows) => {
     return { w: r.width, asc: P.top - r.top, desc: r.bottom - P.top };
   };
   const runLength = ([p, q]) => Math.abs(q[0] - p[0]) + Math.abs(q[1] - p[1]);
+  const longestFirst = (pts) => runs(pts).sort((s, t) => runLength(t) - runLength(s));
+  // Step badges: a numbered disc on the longest run with room, before labels so labels keep clear of it.
+  const BADGE = 9;
+  for (const r of routed) {
+    if (!r.fl.step) continue;
+    const spot = longestFirst(r.pts)
+      .filter((run) => runLength(run) >= 2 * BADGE + 2 * HEAD)
+      .map(([p, q]) => [mid(p[0], q[0]), mid(p[1], q[1])])
+      .find(([x, y]) => {
+        const b = { l: x - BADGE - 2, r: x + BADGE + 2, t: y - BADGE - 2, b: y + BADGE + 2 };
+        return !allBoxes.some((o) => hits(b, o)) && !labelBoxes.some((o) => hits(b, o));
+      });
+    if (!spot) {
+      problems.push({
+        i: r.i,
+        kind: "label",
+        problem: `no room for step badge ${r.fl.step}; shorten the plate or drop the step`,
+      });
+      continue;
+    }
+    const [x, y] = spot;
+    labelBoxes.push({ l: x - BADGE, r: x + BADGE, t: y - BADGE, b: y + BADGE });
+    art[r.i] +=
+      `<circle cx="${r2(x)}" cy="${r2(y)}" r="${BADGE}" fill="${col}"/>` +
+      `<text x="${r2(x)}" y="${r2(y + 4)}" text-anchor="middle" font-family="${font}" font-size="11" font-weight="700" fill="${onHead}">${r.fl.step}</text>`;
+    r.step = { x, y, n: r.fl.step };
+  }
   for (const r of routed) {
     if (!r.fl.label) continue;
     const { w, asc, desc } = measure(r.fl.label);
     const spots = [];
-    for (const [p, q] of runs(r.pts).sort((s, t) => runLength(t) - runLength(s))) {
+    for (const [p, q] of longestFirst(r.pts)) {
       if (p[0] === q[0]) {
         const y = mid(p[1], q[1]) + 4;
         if (Math.abs(q[1] - p[1]) > asc + desc + 8) spots.push([p[0] + 9, y], [p[0] - 9 - w, y]);

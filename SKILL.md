@@ -69,8 +69,8 @@ The short version:
 One command checks the spec, lays the plate out, routes the connectors, lints the result and writes
 `plates/out/<name>.svg` and `plates/out/<name>.png`. It prints JSON and exits 1 on errors. Each finding has
 `check`, `id`, `detail` and `hint` (the first fix to try); `references/lint-fixes.md` has the full table. Fix
-every error in the spec and build again. Treat `density` warnings as real: the fix is content, a merged panel,
-or a different layout. Stop after five rounds without progress and restructure: move cards between panels,
+every error in the spec and build again. Treat `void` warnings as real: the fix is content, a merged panel, or
+placing the panel next to one of its height. Stop after five rounds without progress and restructure: move cards between panels,
 change the archetype, or split the plate.
 
 ## 5. Look at it

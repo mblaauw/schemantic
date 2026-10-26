@@ -57,6 +57,13 @@
         "theme": {
           "type": "string",
           "description": "A CSS file, relative to the spec, appended after tokens.css: override colours, add roles. Lint still checks contrast."
+        },
+        "height": {
+          "enum": [
+            "fit",
+            "fixed"
+          ],
+          "description": "fit (default): the canvas takes its content height (at least 9:16 of the width). fixed: the preset height; surplus space goes to the gaps between rows, never into a panel."
         }
       }
     },
@@ -115,7 +122,7 @@
               "auto"
             ]
           },
-          "description": "One per row: fill shares the free height, auto hugs the content."
+          "description": "Deprecated: rows take their content height. Still honoured (fill rows share the preset height) until the next release."
         },
         "hub": {
           "type": "string",
@@ -155,6 +162,13 @@
         "right": {
           "type": "string",
           "description": "hub-and-spokes: a side spoke; layer-cake: a rail spanning every layer."
+        },
+        "chips_at": {
+          "enum": [
+            "content",
+            "bottom"
+          ],
+          "description": "content (default): chips sit right under the panel's content. bottom: pinned to the panel's bottom, in rows where every panel has chips."
         }
       }
     },
@@ -193,9 +207,32 @@
           "both": {
             "type": "boolean",
             "description": "Arrowheads at both ends."
+          },
+          "style": {
+            "enum": [
+              "sync",
+              "async",
+              "optional"
+            ],
+            "description": "sync: solid (default); async: dashed (event or message); optional: dotted."
+          },
+          "step": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20,
+            "description": "A numbered badge on the arrow, for the order things happen."
           }
         }
       }
+    },
+    "flows_mean": {
+      "enum": [
+        "data",
+        "request",
+        "dependency",
+        "control"
+      ],
+      "description": "What every arrow on this plate means; sets the legend label. data: where data goes; request: who calls whom; dependency: what needs what; control: what steers what."
     },
     "footer": {
       "type": "object",
@@ -289,7 +326,8 @@
               "enum": [
                 "areas",
                 "column_widths",
-                "row_heights"
+                "row_heights",
+                "chips_at"
               ]
             }
           }
@@ -320,7 +358,8 @@
                 "bottom",
                 "left",
                 "right",
-                "row_heights"
+                "row_heights",
+                "chips_at"
               ]
             }
           }
@@ -349,7 +388,8 @@
                 "layers",
                 "left",
                 "right",
-                "row_heights"
+                "row_heights",
+                "chips_at"
               ]
             }
           }
@@ -396,6 +436,41 @@
           "items": {
             "type": "string",
             "maxLength": 60
+          }
+        },
+        "status": {
+          "enum": [
+            "new",
+            "changed",
+            "planned",
+            "deprecated",
+            "removed"
+          ],
+          "description": "Change in this phase: a tag in the corner; planned is dashed, deprecated muted, removed struck through."
+        },
+        "focus": {
+          "type": "boolean",
+          "description": "The one element the plate is about: an accent outline. At most one per plate."
+        },
+        "flag": {
+          "type": "object",
+          "required": [
+            "kind",
+            "text"
+          ],
+          "additionalProperties": false,
+          "description": "A numbered marker on the card; the text goes to the footer under the same number (warning: open questions; info: notes).",
+          "properties": {
+            "kind": {
+              "enum": [
+                "warning",
+                "info"
+              ]
+            },
+            "text": {
+              "type": "string",
+              "maxLength": 90
+            }
           }
         }
       }
@@ -636,6 +711,20 @@
           "items": {
             "$ref": "#/$defs/chip"
           }
+        },
+        "status": {
+          "enum": [
+            "new",
+            "changed",
+            "planned",
+            "deprecated",
+            "removed"
+          ],
+          "description": "Change in this phase: a tag in the corner; planned is dashed, deprecated muted, removed struck through."
+        },
+        "focus": {
+          "type": "boolean",
+          "description": "The one element the plate is about: an accent outline. At most one per plate."
         }
       }
     }
