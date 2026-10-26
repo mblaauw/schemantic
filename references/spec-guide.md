@@ -82,7 +82,8 @@ flows:
 ```
 
 The router draws straight arrows across a gutter where it can, and otherwise turns corners through the
-gutters (one or two bends). It never crosses another panel or card. A label sits beside a vertical run or
+gutters (one or two bends), or goes around: out of a box and back into the other on the same side, along a gutter
+beyond both (a skip connection past the panels between them). It never crosses another panel or card. A label sits beside a vertical run or
 above a horizontal one; short gutters fit short labels only.
 
 Say what arrows mean once, with `flows_mean`, and keep every arrow in that direction. The legend shows the meaning,

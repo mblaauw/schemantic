@@ -10,6 +10,8 @@ from schemantic import archetypes, browser, html, images, route  # noqa: E402,F4
 from schemantic import spec as sp  # noqa: E402
 
 EXAMPLES = sorted((ROOT / "examples").glob("*.yaml"))
+# Rendered and compared with goldens and snapshots: the examples plus fixtures for cases the examples do not show.
+RENDERED = EXAMPLES + sorted((ROOT / "tests" / "fixtures").glob("*.yaml"))
 
 
 def pytest_addoption(parser):

@@ -31,7 +31,7 @@ schemantic.route = (flows) => {
   // Boxes an arrow must not cross; panel headers count, so a card's arrow never runs through its own title.
   const solids = [
     ...plate.querySelectorAll(
-      '[data-kind="panel"], [data-kind="card"], [data-kind="pattern"], [data-kind="chip"], .ph',
+      '[data-kind="panel"], [data-kind="card"], [data-kind="pattern"], [data-kind="chip"], [data-kind="titleblock"], .ph',
     ),
   ].map((el) => ({ el, box: rel(el) }));
   // Channels: the centre line of every gutter between two body panels, plus a lane on either side of it.
@@ -50,6 +50,14 @@ schemantic.route = (flows) => {
       }
     }
   }
+  // Outer channels: along the body's edges, in the plate margin, for routes that must go around everything.
+  // They cost more than any gutter channel, so they are the last resort.
+  const OUTER = 80;
+  const body = rel(document.getElementById("body"));
+  for (const c of [body.l - 20, body.r + 20]) if (c > CLEAR && c < P.width - CLEAR) chX.set(r2(c), OUTER);
+  for (const c of [body.t - 9, body.b + 9]) if (c > CLEAR && c < P.height - CLEAR) chY.set(r2(c), OUTER);
+  // A U-route (out of one side, along a channel, back in on the same side) costs a little more than a Z.
+  const U_COST = 40;
 
   const segBox = (p, q, m) => ({
     l: Math.min(p[0], q[0]) - m,
@@ -68,7 +76,7 @@ schemantic.route = (flows) => {
   };
   const runs = (pts) => pts.slice(1).map((q, k) => [pts[k], q]);
   const placed = [];
-  const clear = (pts, obstacles, both) => {
+  const clear = (pts, obstacles, both, labels = true) => {
     const n = pts.length - 1;
     for (let k = 0; k < n; k++) {
       const p = pts[k];
@@ -78,7 +86,7 @@ schemantic.route = (flows) => {
       if (len < need) return false;
       const sb = segBox(p, q, CLEAR);
       if (sb.l < 0 || sb.t < 0 || sb.r > P.width || sb.b > P.height) return false;
-      if (obstacles.some((o) => hits(sb, o))) return false;
+      if (obstacles.some((o) => hits(sb, o)) || (labels && labelBoxes.some((o) => hits(sb, o)))) return false;
       if (placed.some((r) => runs(r.pts).some(([u, v]) => collinear(p, q, u, v)))) return false;
     }
     return true;
@@ -103,7 +111,12 @@ schemantic.route = (flows) => {
     // Straight: across the gap between facing sides, centred on the shared span, then a quarter off-centre.
     const oy = [Math.max(a.t, b.t), Math.min(a.b, b.b)];
     const ox = [Math.max(a.l, b.l), Math.min(a.r, b.r)];
-    const along = (lo, hi) => [0, -1, 1].map((s) => [mid(lo, hi) + (s * (hi - lo)) / 4, ((hi - lo) / 4) * Math.abs(s)]);
+    // Centred on the shared span; then one lane off-centre (two flows between the same boxes run side by side);
+    // then a quarter off-centre.
+    const along = (lo, hi) => [
+      ...[0, -1, 1].map((s) => [mid(lo, hi) + s * LANE * 1.6, LANE * 1.6 * Math.abs(s)]),
+      ...[-1, 1].map((s) => [mid(lo, hi) + (s * (hi - lo)) / 4, (hi - lo) / 4]),
+    ];
     if (oy[1] - oy[0] > MIN_OVERLAP) {
       for (const [y, off] of along(...oy)) {
         if (a.r <= b.l)
@@ -250,6 +263,61 @@ schemantic.route = (flows) => {
         }
       }
     }
+    // U: out of A and into B on the same side, along a channel beyond both (for boxes side by side with others between).
+    for (const [c, oc] of chY) {
+      for (const [x1, o1] of pick(a.l, a.r, cx(b))) {
+        for (const [x2, o2] of pick(b.l, b.r, cx(a))) {
+          if (Math.abs(x1 - x2) < 1) continue;
+          if (c > a.b && c > b.b)
+            add(
+              [
+                [x1, a.b + PAD],
+                [x1, c],
+                [x2, c],
+                [x2, b.b + PAD],
+              ],
+              oc + o1 + o2 + U_COST * 2,
+            );
+          if (c < a.t && c < b.t)
+            add(
+              [
+                [x1, a.t - PAD],
+                [x1, c],
+                [x2, c],
+                [x2, b.t - PAD],
+              ],
+              oc + o1 + o2 + U_COST * 2,
+            );
+        }
+      }
+    }
+    for (const [c, oc] of chX) {
+      for (const [y1, o1] of pick(a.t, a.b, cy(b))) {
+        for (const [y2, o2] of pick(b.t, b.b, cy(a))) {
+          if (Math.abs(y1 - y2) < 1) continue;
+          if (c > a.r && c > b.r)
+            add(
+              [
+                [a.r + PAD, y1],
+                [c, y1],
+                [c, y2],
+                [b.r + PAD, y2],
+              ],
+              oc + o1 + o2 + U_COST * 2,
+            );
+          if (c < a.l && c < b.l)
+            add(
+              [
+                [a.l - PAD, y1],
+                [c, y1],
+                [c, y2],
+                [b.l - PAD, y2],
+              ],
+              oc + o1 + o2 + U_COST * 2,
+            );
+        }
+      }
+    }
     const length = (pts) => runs(pts).reduce((s, [p, q]) => s + Math.abs(q[0] - p[0]) + Math.abs(q[1] - p[1]), 0);
     return out
       .map((c) => ({ ...c, cost: length(c.pts) + BEND * (c.pts.length - 2) + c.off * 0.5 }))
@@ -283,11 +351,94 @@ schemantic.route = (flows) => {
       return { i, fl, A, B, obstacles, cands: candidates(rel(A), rel(B)) };
     })
     .filter(Boolean);
-  // Straight flows claim their gutters first; bent ones route around them.
-  const bent = (j) => ((j.cands[0] || { pts: [] }).pts.length === 2 ? 0 : 1);
+  const ov = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  ov.setAttribute("data-raw-svg", "");
+  ov.setAttribute("width", P.width);
+  ov.setAttribute("height", P.height);
+  ov.style.cssText = "position:absolute;left:0;top:0;pointer-events:none;overflow:visible";
+  plate.appendChild(ov);
+
+  // Labels: beside a vertical run or above/below a horizontal one, on the longest run first, clear of every box,
+  // every arrow and every other label.
+  const labelBoxes = [];
+  const allBoxes = solids.map((s) => s.box);
+  const textAttrs = `font-family="${font}" font-size="${labelSize}" font-weight="${labelWeight}"`;
+  const measure = (text) => {
+    ov.innerHTML = `<text x="0" y="0" ${textAttrs}>${S.esc(text)}</text>`;
+    const r = ov.firstChild.getBoundingClientRect();
+    ov.innerHTML = "";
+    return { w: r.width, asc: P.top - r.top, desc: r.bottom - P.top };
+  };
+  const runLength = ([p, q]) => Math.abs(q[0] - p[0]) + Math.abs(q[1] - p[1]);
+  const longestFirst = (pts) => runs(pts).sort((s, t) => runLength(t) - runLength(s));
+  const placeLabel = (r) => {
+    if (!r.fl.label) return;
+    const { w, asc, desc } = measure(r.fl.label);
+    const spots = [];
+    for (const [p, q] of longestFirst(r.pts)) {
+      if (p[0] === q[0]) {
+        // Beside a vertical run: centred, then at its top or bottom end, to leave a lane free for a crossing route.
+        const [top, bottom] = [Math.min(p[1], q[1]), Math.max(p[1], q[1])];
+        if (bottom - top > asc + desc + 8)
+          for (const y of [mid(p[1], q[1]) + 4, top + asc + 1, bottom - desc - 1])
+            spots.push([p[0] + 9, y], [p[0] - 9 - w, y]);
+      } else if (Math.abs(q[0] - p[0]) > w + 20) {
+        const x = mid(p[0], q[0]) - w / 2;
+        spots.push([x, p[1] - 6 - desc], [x, p[1] + 6 + asc]);
+      }
+    }
+    const spot = spots.find(([x, y]) => {
+      const b = { l: x - 3, r: x + w + 3, t: y - asc - 3, b: y + desc + 3 };
+      return (
+        b.l > 0 &&
+        b.t > 0 &&
+        b.r < P.width &&
+        b.b < P.height &&
+        !allBoxes.some((o) => hits(b, o)) &&
+        !labelBoxes.some((o) => hits(b, o)) &&
+        !placed.some((o) => runs(o.pts).some(([u, v]) => hits(b, segBox(u, v, 1.5))))
+      );
+    });
+    if (!spot) {
+      problems.push({ i: r.i, kind: "label", problem: `no room for the label "${r.fl.label}"; shorten it or drop it` });
+      return;
+    }
+    r.labelBox = { l: spot[0], r: spot[0] + w, t: spot[1] - asc, b: spot[1] + desc };
+    labelBoxes.push(r.labelBox);
+    r.svg =
+      (r.svg || "") +
+      `<text data-label="${r.i}" data-text x="${r2(spot[0])}" y="${r2(spot[1])}" ${textAttrs} fill="${muted}">${S.esc(r.fl.label)}</text>`;
+    r.label = { x: spot[0], y: spot[1], text: r.fl.label };
+  };
+
+  // Straight flows claim their gutters first and get their labels; bent ones then route around both, and get
+  // theirs last.
+  // A flow is straight when a straight candidate clears every box (other routes aside).
+  const free = (pts, obstacles) => runs(pts).every(([p, q]) => !obstacles.some((o) => hits(segBox(p, q, CLEAR), o)));
+  const bent = (j) => (j.cands.some((c) => c.pts.length === 2 && free(c.pts, j.obstacles)) ? 0 : 1);
   jobs.sort((p, q) => bent(p) - bent(q) || p.i - q.i);
-  for (const j of jobs) {
-    const pick = j.cands.find((c) => clear(c.pts, j.obstacles, j.fl.both));
+  // Take a label off the plate, so it can be placed again around a route that needed its spot.
+  const unplace = (r) => {
+    labelBoxes.splice(labelBoxes.indexOf(r.labelBox), 1);
+    r.svg = (r.svg || "").replace(/<text data-label="\d+" data-text[^>]*>.*?<\/text>/, "");
+    r.labelBox = null;
+    r.label = null;
+  };
+  const route = (j) => {
+    let pick = j.cands.find((c) => clear(c.pts, j.obstacles, j.fl.both));
+    if (!pick && labelBoxes.length) {
+      // Blocked only by labels: take the route, then move the labels it touches to another spot along their arrow.
+      pick = j.cands.find((c) => clear(c.pts, j.obstacles, j.fl.both, false));
+      if (pick) {
+        const moved = routed.filter(
+          (o) => o.labelBox && runs(pick.pts).some(([u, v]) => hits(o.labelBox, segBox(u, v, CLEAR))),
+        );
+        for (const o of moved) unplace(o);
+        placed.push({ pts: pick.pts });
+        for (const o of moved) placeLabel(o);
+        placed.pop();
+      }
+    }
     if (!pick) {
       problems.push({
         i: j.i,
@@ -295,12 +446,48 @@ schemantic.route = (flows) => {
         problem:
           "no clear route between the two boxes; connect their panels instead, or move one so they share a gutter",
       });
-      continue;
+      return null;
     }
     const r = { ...j, pts: pick.pts };
     placed.push(r);
     routed.push(r);
+    return r;
+  };
+  const first = jobs
+    .filter((j) => !bent(j))
+    .map(route)
+    .filter(Boolean);
+  for (const r of first) placeLabel(r);
+  const later = jobs.filter(bent).map(route).filter(Boolean);
+
+  // Step badges: a numbered disc on the longest run with room, before labels so labels keep clear of it.
+  const BADGE = 9;
+  for (const r of routed) {
+    if (!r.fl.step) continue;
+    const spot = longestFirst(r.pts)
+      .filter((run) => runLength(run) >= 2 * BADGE + 2 * HEAD)
+      .map(([p, q]) => [mid(p[0], q[0]), mid(p[1], q[1])])
+      .find(([x, y]) => {
+        const b = { l: x - BADGE - 2, r: x + BADGE + 2, t: y - BADGE - 2, b: y + BADGE + 2 };
+        return !allBoxes.some((o) => hits(b, o)) && !labelBoxes.some((o) => hits(b, o));
+      });
+    if (!spot) {
+      problems.push({
+        i: r.i,
+        kind: "label",
+        problem: `no room for step badge ${r.fl.step}; shorten the plate or drop the step`,
+      });
+      continue;
+    }
+    const [x, y] = spot;
+    labelBoxes.push({ l: x - BADGE, r: x + BADGE, t: y - BADGE, b: y + BADGE });
+    r.svg =
+      (r.svg || "") +
+      `<circle cx="${r2(x)}" cy="${r2(y)}" r="${BADGE}" fill="${col}"/>` +
+      `<text x="${r2(x)}" y="${r2(y + 4)}" text-anchor="middle" font-family="${font}" font-size="11" font-weight="700" fill="${onHead}">${r.fl.step}</text>`;
+    r.step = { x, y, n: r.fl.step };
   }
+  for (const r of later) placeLabel(r);
 
   // Draw: straight arrows as a line, bent ones as a path with rounded corners; heads are filled triangles.
   const head = (tip, from) => {
@@ -343,88 +530,7 @@ schemantic.route = (flows) => {
       pts.length === 2
         ? `<line x1="${r2(pts[0][0])}" y1="${r2(pts[0][1])}" x2="${r2(pts[1][0])}" y2="${r2(pts[1][1])}" stroke="${col}" stroke-width="${stroke}" stroke-linecap="round"${dash}/>`
         : `<path d="${rounded(pts)}" fill="none" stroke="${col}" stroke-width="${stroke}" stroke-linecap="round" stroke-linejoin="round"${dash}/>`;
-    art[r.i] = line + heads;
-  }
-
-  const ov = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  ov.setAttribute("data-raw-svg", "");
-  ov.setAttribute("width", P.width);
-  ov.setAttribute("height", P.height);
-  ov.style.cssText = "position:absolute;left:0;top:0;pointer-events:none;overflow:visible";
-  plate.appendChild(ov);
-
-  // Labels: beside a vertical run or above/below a horizontal one, on the longest run first, clear of every box,
-  // every arrow and every other label.
-  const labelBoxes = [];
-  const allBoxes = solids.map((s) => s.box);
-  const textAttrs = `font-family="${font}" font-size="${labelSize}" font-weight="${labelWeight}"`;
-  const measure = (text) => {
-    ov.innerHTML = `<text x="0" y="0" ${textAttrs}>${S.esc(text)}</text>`;
-    const r = ov.firstChild.getBoundingClientRect();
-    ov.innerHTML = "";
-    return { w: r.width, asc: P.top - r.top, desc: r.bottom - P.top };
-  };
-  const runLength = ([p, q]) => Math.abs(q[0] - p[0]) + Math.abs(q[1] - p[1]);
-  const longestFirst = (pts) => runs(pts).sort((s, t) => runLength(t) - runLength(s));
-  // Step badges: a numbered disc on the longest run with room, before labels so labels keep clear of it.
-  const BADGE = 9;
-  for (const r of routed) {
-    if (!r.fl.step) continue;
-    const spot = longestFirst(r.pts)
-      .filter((run) => runLength(run) >= 2 * BADGE + 2 * HEAD)
-      .map(([p, q]) => [mid(p[0], q[0]), mid(p[1], q[1])])
-      .find(([x, y]) => {
-        const b = { l: x - BADGE - 2, r: x + BADGE + 2, t: y - BADGE - 2, b: y + BADGE + 2 };
-        return !allBoxes.some((o) => hits(b, o)) && !labelBoxes.some((o) => hits(b, o));
-      });
-    if (!spot) {
-      problems.push({
-        i: r.i,
-        kind: "label",
-        problem: `no room for step badge ${r.fl.step}; shorten the plate or drop the step`,
-      });
-      continue;
-    }
-    const [x, y] = spot;
-    labelBoxes.push({ l: x - BADGE, r: x + BADGE, t: y - BADGE, b: y + BADGE });
-    art[r.i] +=
-      `<circle cx="${r2(x)}" cy="${r2(y)}" r="${BADGE}" fill="${col}"/>` +
-      `<text x="${r2(x)}" y="${r2(y + 4)}" text-anchor="middle" font-family="${font}" font-size="11" font-weight="700" fill="${onHead}">${r.fl.step}</text>`;
-    r.step = { x, y, n: r.fl.step };
-  }
-  for (const r of routed) {
-    if (!r.fl.label) continue;
-    const { w, asc, desc } = measure(r.fl.label);
-    const spots = [];
-    for (const [p, q] of longestFirst(r.pts)) {
-      if (p[0] === q[0]) {
-        const y = mid(p[1], q[1]) + 4;
-        if (Math.abs(q[1] - p[1]) > asc + desc + 8) spots.push([p[0] + 9, y], [p[0] - 9 - w, y]);
-      } else if (Math.abs(q[0] - p[0]) > w + 20) {
-        const x = mid(p[0], q[0]) - w / 2;
-        spots.push([x, p[1] - 6 - desc], [x, p[1] + 6 + asc]);
-      }
-    }
-    const spot = spots.find(([x, y]) => {
-      const b = { l: x - 3, r: x + w + 3, t: y - asc - 3, b: y + desc + 3 };
-      return (
-        b.l > 0 &&
-        b.t > 0 &&
-        b.r < P.width &&
-        b.b < P.height &&
-        !allBoxes.some((o) => hits(b, o)) &&
-        !labelBoxes.some((o) => hits(b, o)) &&
-        !placed.some((o) => runs(o.pts).some(([u, v]) => hits(b, segBox(u, v, 1.5))))
-      );
-    });
-    if (!spot) {
-      problems.push({ i: r.i, kind: "label", problem: `no room for the label "${r.fl.label}"; shorten it or drop it` });
-      continue;
-    }
-    labelBoxes.push({ l: spot[0], r: spot[0] + w, t: spot[1] - asc, b: spot[1] + desc });
-    art[r.i] +=
-      `<text data-label="${r.i}" x="${r2(spot[0])}" y="${r2(spot[1])}" ${textAttrs} fill="${muted}">${S.esc(r.fl.label)}</text>`;
-    r.label = { x: spot[0], y: spot[1], text: r.fl.label };
+    art[r.i] = line + heads + (r.svg || "");
   }
 
   ov.innerHTML = Object.keys(art)

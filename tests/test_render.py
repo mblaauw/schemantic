@@ -8,7 +8,7 @@ import sys
 
 import pytest
 import yaml
-from conftest import EXAMPLES, ROOT, archetypes, browser, html, images, route, sp  # noqa: F401
+from conftest import EXAMPLES, RENDERED, ROOT, archetypes, browser, html, images, route, sp  # noqa: F401
 from playwright.sync_api import sync_playwright
 
 from schemantic import config
@@ -37,7 +37,7 @@ def renders(tmp_path_factory):
     return render
 
 
-@pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.stem)
+@pytest.mark.parametrize("path", RENDERED, ids=lambda p: p.stem)
 def test_render_matches_golden(path, renders, tmp_path, update_golden):
     fresh, golden = renders(path) / f"{path.stem}.png", GOLDEN / f"{path.stem}.png"
     if update_golden or not golden.exists():
@@ -50,7 +50,7 @@ def test_render_matches_golden(path, renders, tmp_path, update_golden):
         "If the change is intended, run pytest --update-golden and commit the new image.")
 
 
-@pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.stem)
+@pytest.mark.parametrize("path", RENDERED, ids=lambda p: p.stem)
 def test_structure_matches_snapshot(path, renders, update_golden):
     fresh = json.loads((renders(path) / "_work" / f"{path.stem}.snapshot.json").read_text(encoding="utf-8"))
     stored = SNAPSHOTS / f"{path.stem}.json"
@@ -282,3 +282,16 @@ def test_a3_at_300_dpi(tmp_path):
     from PIL import Image
     with Image.open(tmp_path / "a3.png") as im:
         assert im.size == (4961, 3508) and round(im.info["dpi"][0]) == 300
+
+
+# C9: a skip connection goes around, along the row gutter, not through the panels between
+def test_skip_connection_routes_along_the_row_gutter(renders):
+    path = ROOT / "tests" / "fixtures" / "skip-connection.yaml"
+    snap = json.loads((renders(path) / "_work" / "skip-connection.snapshot.json").read_text())
+    route = next(f for f in snap["flows"] if (f["from"], f["to"]) == ("clients", "services"))
+    top_row_bottom = snap["boxes"]["clients"][3]
+    data_top = snap["boxes"]["data"][1]
+    (x1, y1), (_, y_mid), _, (x4, y4) = route["points"]
+    assert len(route["points"]) == 4 and top_row_bottom < y_mid < data_top and y1 > top_row_bottom and y4 > top_row_bottom
+    code, report = run("lint", path, "--out", renders(path))
+    assert (code, report["errors"]) == (0, [])

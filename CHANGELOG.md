@@ -26,6 +26,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - C4: a matrix is as wide as its content, left-aligned, with columns of at least 72 px; `key` overrides its labels.
 - C11: `a3-landscape` and `a4-landscape` canvases (the sheet at 96 px per inch, height fixed), and `--dpi` (default
   192): A3 at 300 dpi is exactly 4961 × 3508 px, with the dpi recorded in the PNG.
+- C9: the router goes around: U-routes (out of one side, along a channel beyond both boxes, back in on the same side),
+  channels along the body's outer edges as a last resort, and one-lane offsets for flows between the same boxes.
+  Straight flows and their labels are placed first; a bent route blocked only by labels moves them along their arrow.
+  The title block is an obstacle. A fixture (`tests/fixtures/skip-connection.yaml`) covers a skip connection.
 - C12: themes. `canvas.theme` (relative to the spec) or `--theme` appends a CSS file after `tokens.css`; a theme can
   recolour and add roles with their own legend labels. `examples/themes/warm.css` shows both.
 
