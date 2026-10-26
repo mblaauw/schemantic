@@ -1,0 +1,18 @@
+# Fixed labels for lang: en.
+badge: "Part {part} of {of}"
+footer:
+  principles: "Key principles"
+  open_questions: "Open questions"
+  legend: "Legend"
+legend:
+  platform: "Platform component"
+  storage: "Storage and data"
+  external: "Users and external systems"
+  warning: "Open choice or friction"
+  info: "Assumption or note"
+  arrow: "Direction of request or data"
+matrix:
+  full: "full"
+  partial: "limited"
+  none: "no access"
+never_translate: {}

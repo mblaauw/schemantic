@@ -1,0 +1,27 @@
+# Fixed labels for lang: nl. Prose is Dutch; technical terms stay English (see never_translate).
+badge: "Deel {part} van {of}"
+footer:
+  principles: "Belangrijke uitgangspunten"
+  open_questions: "Open vragen"
+  legend: "Legenda"
+legend:
+  platform: "Platformcomponent"
+  storage: "Opslag en data"
+  external: "Gebruikers en externe systemen"
+  warning: "Open keuze of frictie"
+  info: "Aanname of toelichting"
+  arrow: "Richting van request of data"
+matrix:
+  full: "volledig"
+  partial: "beperkt"
+  none: "geen toegang"
+# English term -> Dutch translations that must not appear in nl plates
+never_translate:
+  catalog: ["catalogus"]
+  pipeline: ["pijplijn", "pijpleiding"]
+  bucket: ["emmer"]
+  data lake: ["datameer", "gegevensmeer"]
+  API gateway: ["API-poort", "API poort"]
+  rate limiting: ["snelheidsbeperking"]
+  token: ["penning"]
+  deploy: ["ontplooien"]

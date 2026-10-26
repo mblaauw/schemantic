@@ -1,0 +1,111 @@
+{#- One template for every archetype: the body grid comes from the spec's layout.areas. -#}
+{%- macro icon(name, cls='ic', extra='') -%}
+<svg class="{{ cls }}{{ extra }}" data-icon="{{ name }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">{{ icons(name) | safe }}</svg>
+{%- endmacro -%}
+
+{%- macro bullets(items) -%}
+{%- for b in items %}<div class="li"><span class="dot"></span><span>{{ b }}</span></div>{% endfor -%}
+{%- endmacro -%}
+
+{%- macro card(c, cid) -%}
+<div class="card" data-kind="card" data-id="{{ cid }}">{{ icon(c.icon or 'box') }}<div class="ct"><div class="cn">{{ c.name }}{% if c.qualifier %} <span class="cq">({{ c.qualifier }})</span>{% endif %}</div>
+{%- if c.note %}<div class="cnote">{{ c.note }}</div>{% endif -%}
+{%- if c.bullets %}<div class="cb">{{ bullets(c.bullets) }}</div>{% endif -%}
+</div></div>
+{%- endmacro -%}
+
+{%- macro cards_block(p, flex='') -%}
+<div class="blk cards" style="grid-template-columns: repeat({{ p.card_columns or 1 }}, minmax(0, 1fr)){{ flex }}">
+{%- for c in p.cards %}{{ card(c, c.id or (p.id ~ '.card' ~ loop.index0)) }}{% endfor -%}
+</div>
+{%- endmacro -%}
+
+{%- macro pattern(pt, pid, i, flex='') -%}
+{%- set bid = pid ~ '.' ~ pt.type ~ i -%}
+{%- set st = (' style="' ~ flex[2:] ~ '"') if flex else '' -%}
+{%- if pt.type == 'tier-strip' -%}
+<div class="blk tiers" data-kind="pattern" data-id="{{ bid }}"{{ st | safe }}>
+{%- for t in pt.tiers -%}
+<div class="tier tier-{{ t.tier }}" data-kind="tier" data-id="{{ bid }}.{{ loop.index0 }}">{{ icon(t.icon or 'database') }}<div><div class="tier-n">{{ t.name }}</div>{% if t.note %}<div class="tier-note">{{ t.note }}</div>{% endif %}</div></div>
+{%- if not loop.last %}{{ icon('arrow-right', 'step-arrow') }}{% endif -%}
+{%- endfor -%}
+</div>
+{%- elif pt.type == 'tree' -%}
+<div class="blk tree" data-kind="pattern" data-id="{{ bid }}"{{ st | safe }}>
+{%- if pt.caption %}<div class="tree-cap">{{ pt.caption }}</div>{% endif -%}
+{%- for row in tree_rows(pt.lines) -%}
+<div class="trow" style="padding-left: {{ (row.depth - 1) * 14 if row.depth > 0 else 0 }}px">{% if row.depth > 0 %}<span class="tk"></span>{% endif %}<span>{{ row.text }}</span></div>
+{%- endfor -%}
+</div>
+{%- elif pt.type == 'matrix' -%}
+<div class="blk matrix" data-kind="pattern" data-id="{{ bid }}"{{ st | safe }}>
+{%- if pt.caption %}<div class="mx-cap">{{ pt.caption }}</div>{% endif -%}
+<div class="mx-grid" style="grid-template-columns: minmax(0, 1.3fr) repeat({{ pt.columns | length }}, minmax(0, 1fr))"><span></span>
+{%- for col in pt.columns %}<div class="mx-col">{{ col }}</div>{% endfor -%}
+{%- for r in pt.rows -%}<div class="mx-row">{{ r.name }}</div>
+{%- for v in r.cells %}<div class="mx-cell"><span class="mx-{{ v }}"></span></div>{% endfor -%}
+{%- endfor -%}
+</div>
+<div class="mx-key">{% for v in matrix_values(pt) %}<div class="mx-key-item"><span class="mx-{{ v }}"></span><span>{{ L.matrix[v] }}</span></div>{% endfor %}</div>
+</div>
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro panel(p) -%}
+<section class="panel role-{{ p.role }}" data-kind="panel" data-id="{{ p.id }}" style="grid-area: {{ p.id }}">
+<div class="ph"><div class="ph-title">{{ p.title }}</div>{% if p.subtitle %}<div class="ph-sub">{{ p.subtitle }}</div>{% endif %}</div>
+<div class="pb">
+<div class="blocks arrange-{{ p.arrange or 'column' }}">
+{#- In a row, blocks share the width by `weights` (patterns first, then cards). -#}
+{%- set w = p.weights or [] -%}
+{%- set npat = (p.patterns or []) | length -%}
+{%- if (p.arrange or 'column') == 'column' and p.cards %}{{ cards_block(p) }}{% endif -%}
+{%- for pt in p.patterns or [] %}{{ pattern(pt, p.id, loop.index0, ('; flex: ' ~ w[loop.index0] ~ ' 1 0') if p.arrange == 'row' and w | length > loop.index0 else '') }}{% endfor -%}
+{%- if p.arrange == 'row' and p.cards %}{{ cards_block(p, ('; flex: ' ~ w[npat] ~ ' 1 0') if w | length > npat else '') }}{% endif -%}
+</div>
+{%- if p.chips -%}
+<div class="chips">{% for ch in p.chips %}<div class="chip chip-{{ ch.kind }}" data-kind="chip" data-id="{{ p.id }}.chip{{ loop.index0 }}">{{ icon('alert-triangle' if ch.kind == 'warning' else 'info-circle') }}<div>{{ ch.text }}</div></div>{% endfor %}</div>
+{%- endif -%}
+</div>
+</section>
+{%- endmacro -%}
+
+<!doctype html>
+<html lang="{{ lang }}"><head><meta charset="utf-8"><title>{{ spec.title }}</title>
+<style>{{ css | safe }}
+#body { grid-template-columns: {{ grid.columns }}; grid-template-rows: {{ grid.rows }}; grid-template-areas: {{ grid.areas | safe }}; }
+.footer { grid-template-columns: {{ footer_columns }}; }
+</style></head>
+<body>
+<div id="plate" style="width: {{ width }}px; height: {{ height }}px">
+<header class="titleblock" data-kind="titleblock" data-id="titleblock">
+<div><h1 class="title">{{ spec.title }}</h1>{% if spec.subtitle %}<p class="subtitle">{{ spec.subtitle }}</p>{% endif %}</div>
+{%- if badge %}<div class="badge">{{ badge }}</div>{% endif -%}
+</header>
+<main class="body" id="body" data-kind="body" data-id="body">
+{%- for p in spec.panels %}{{ panel(p) }}{% endfor -%}
+</main>
+<footer class="footer" data-kind="footer" data-id="footer">
+{%- if footer.context -%}
+<section class="panel role-frame" data-kind="panel" data-id="footer.context"><div class="ph"><div class="ph-title">{{ footer.context.title }}</div></div>
+<div class="pb">{{ cards_block({'id': 'footer.context', 'cards': footer.context.cards, 'card_columns': footer.context.card_columns or 2}) }}</div></section>
+{%- endif -%}
+{%- if footer.principles -%}
+<section class="panel role-frame" data-kind="panel" data-id="footer.principles"><div class="ph"><div class="ph-title">{{ L.footer.principles }}</div></div>
+<div class="pb">{{ bullets(footer.principles) }}</div></section>
+{%- endif -%}
+{%- if open_questions -%}
+<section class="panel role-frame" data-kind="panel" data-id="footer.open_questions"><div class="ph"><div class="ph-title">{{ L.footer.open_questions }}</div></div>
+<div class="pb">{% for q in open_questions %}<div class="oq">{{ icon('alert-triangle') }}<span>{{ q }}</span></div>{% endfor %}</div></section>
+{%- endif -%}
+<section class="panel role-frame" data-kind="panel" data-id="footer.legend"><div class="ph"><div class="ph-title">{{ L.footer.legend }}</div></div>
+<div class="pb">
+{%- for e in legend -%}
+{%- if e.kind == 'role' %}<div class="lg"><span class="sw" style="background: var(--{{ e.key }}-head)"></span><span>{{ e.label }}</span></div>
+{%- elif e.kind == 'arrow' %}<div class="lg">{{ icon('arrow-right', 'ic', ' lg-arrow') }}<span>{{ e.label }}</span></div>
+{%- else %}<div class="lg">{{ icon('alert-triangle' if e.key == 'warning' else 'info-circle', 'ic', ' lg-' ~ e.key) }}<span>{{ e.label }}</span></div>{% endif -%}
+{%- endfor -%}
+</div></section>
+</footer>
+</div>
+</body></html>
