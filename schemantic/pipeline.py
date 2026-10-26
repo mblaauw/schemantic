@@ -7,7 +7,8 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-from .browser import launch, open_plate, rasterise_svg
+from .browser import launch, open_plate, rasterise_svg, svg_size
+from .config import PRINT_SIZES, png_size
 from .export import export_svg
 from .findings import with_hint
 from .html import build_html
@@ -66,7 +67,9 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 rasterise_svg(browser, svg_path, work / "svg.png", scale=1)
                 par = image_diff(work / "html.png", work / "svg.png", work / "parity-diff.png")
                 if deliver:
-                    rasterise_svg(browser, svg_path, out / f"{name}.png", scale=scale)
+                    size = spec["canvas"]["size"]
+                    rasterise_svg(browser, svg_path, out / f"{name}.png", scale=scale,
+                                  size=png_size(size, *svg_size(svg_path), scale) if size in PRINT_SIZES else None)
                     report["png"] = str(out / f"{name}.png")
             finally:
                 browser.close()

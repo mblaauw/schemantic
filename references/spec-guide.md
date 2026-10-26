@@ -7,7 +7,7 @@ plate readable. Lengths are maximum characters.
 
 | Field | Rule |
 | --- | --- |
-| `canvas.size` | `landscape-4x3` (1600×1200, the default choice) or `landscape-16x9` (1920×1080, for slides; less height) |
+| `canvas.size` | `landscape-4x3` (1600 wide, the default choice), `landscape-16x9` (1920×1080, for slides), or `a3-landscape` / `a4-landscape` for print (the sheet at 96 px per inch, height fixed; build with `--dpi 300`) |
 | `canvas.lang` | `nl` or `en` |
 | `canvas.series`, `part`, `of` | a badge "Part 2 of 3"; give both `part` and `of` |
 | `canvas.height` | `fit` (default: the canvas takes its content height) or `fixed` (the preset size; spare height goes to the gaps) |
@@ -58,7 +58,8 @@ A note says what the card does in this story, not what the product is in general
 
 - `tier-strip`: 2–5 tiers (`tier: bronze | silver | gold`, `name`, `note`), for data layers or maturity steps.
 - `tree`: up to 10 `lines` of monospace text, indented with two spaces per level, for paths and buckets.
-- `matrix`: `columns` (up to 5) × `rows` (up to 8), cells `full | partial | none`, for access or usage.
+- `matrix`: `columns` (up to 5) × `rows` (up to 8), cells `full | partial | none`, for access or usage. When the
+  locale's key words (full, limited, no access) do not fit, give `key: {full: ..., partial: ..., none: ...}`.
 
 ## Chips
 

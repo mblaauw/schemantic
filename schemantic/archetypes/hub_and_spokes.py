@@ -4,7 +4,7 @@ Each spoke row is its own grid in one body cell, so a row divides the hub's widt
 holds. Side spokes span every row and are as wide as one spoke of the fuller row."""
 from __future__ import annotations
 
-from . import Archetype, GridSpec, error
+from . import Archetype, GridSpec, error, side_track
 
 
 class HubAndSpokes(Archetype):
@@ -38,7 +38,7 @@ class HubAndSpokes(Archetype):
         a, b = 1 / n, (n - 1) / n          # spoke = a·H - b·gutter
         f = a / (1 + ns * a)
         k = f * (ns * b - ns) - b
-        side = f"calc({f * 100:.4f}% + {k:.4f} * var(--gutter-x))"
+        side = side_track(spec, f"calc({f * 100:.4f}% + {k:.4f} * var(--gutter-x))")
         columns = [side] * sides[0] + ["minmax(0, 1fr)"] + [side] * sides[1]
         return GridSpec(rows=rows, columns=columns, groups=groups)
 

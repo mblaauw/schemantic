@@ -2,570 +2,570 @@
  "boxes": {
   "titleblock": [
    40,
-   36,
+   32,
    1560,
-   114
+   108
   ],
   "body": [
    40,
-   136,
+   126,
    1560,
-   862
+   852
   ],
   "bus": [
    40,
-   300,
+   290,
    1168,
-   698
+   688
   ],
   "bus.card0": [
    54,
-   372,
+   362,
    600,
-   428
+   418
   ],
   "bus.card1": [
    608,
-   372,
+   362,
    1154,
-   428
+   418
   ],
   "bus.card2": [
    54,
-   436,
+   426,
    600,
-   490
+   480
   ],
   "dlq": [
    608,
-   436,
+   426,
    1154,
-   490
+   480
   ],
   "bus.matrix0": [
    54,
-   500,
-   1154,
-   638
+   490,
+   416,
+   628
   ],
   "bus.chip0": [
    54,
-   648,
+   638,
    1154,
-   684
+   674
   ],
   "ops": [
    1216,
-   136,
+   126,
    1560,
-   862
+   852
   ],
   "ops.card0": [
    1230,
-   246,
+   236,
    1548,
-   336
+   326
   ],
   "oncall": [
    1230,
-   382,
+   372,
    1548,
-   474
+   464
   ],
   "ops.card2": [
    1230,
-   520,
+   510,
    1548,
-   610
+   600
   ],
   "ops.card3": [
    1230,
-   658,
+   648,
    1548,
-   748
+   738
   ],
   "ops.chip0": [
    1230,
-   798,
+   788,
    1548,
-   850
+   840
   ],
   "orders": [
    40,
-   136,
+   126,
    384,
-   256
+   246
   ],
   "orders.card0": [
    54,
-   188,
+   178,
    372,
-   244
+   234
   ],
   "payments": [
    432,
-   136,
+   126,
    776,
-   256
+   246
   ],
   "payments.card0": [
    446,
-   188,
+   178,
    764,
-   244
+   234
   ],
   "shipping": [
    824,
-   136,
+   126,
    1168,
-   256
+   246
   ],
   "shipping.card0": [
    838,
-   188,
+   178,
    1156,
-   244
+   234
   ],
   "search": [
    40,
-   742,
+   732,
    384,
-   862
+   852
   ],
   "search.card0": [
    54,
-   794,
+   784,
    372,
-   850
+   840
   ],
   "analytics": [
    432,
-   742,
+   732,
    776,
-   862
+   852
   ],
   "analytics.card0": [
    446,
-   794,
+   784,
    764,
-   850
+   840
   ],
   "notify": [
    824,
-   742,
+   732,
    1168,
-   862
+   852
   ],
   "notify.card0": [
    838,
-   794,
+   784,
    1156,
-   850
+   840
   ],
   "footer": [
    40,
-   884,
+   870,
    1560,
-   996
+   982
   ],
   "footer.principles": [
    40,
-   884,
+   870,
    876,
-   966
+   952
   ],
   "footer.open_questions": [
    904,
-   884,
+   870,
    1560,
-   928
+   914
   ],
   "footer.legend": [
    40,
-   976,
+   962,
    1560,
-   996
+   982
   ]
  },
  "text": [
   [
    40,
-   72,
+   68,
    "Order platform after phase 3 — the event bus"
   ],
   [
    40,
-   108,
+   100,
    "Domains publish each fact once; every consumer reads it from the same bus"
   ],
   [
    1452,
-   62,
+   58,
    "Part 3 of 3"
   ],
   [
    54,
-   328,
+   318,
    "Event bus"
   ],
   [
    54,
-   346,
+   336,
    "Managed Kafka, one topic per event type"
   ],
   [
    96,
-   396,
+   386,
    "Topics"
   ],
   [
    96,
-   412,
+   402,
    "orders.placed, payments.captured, parcels.shipped"
   ],
   [
    652,
-   396,
+   386,
    "Schema registry"
   ],
   [
    652,
-   412,
+   402,
    "every event has a versioned schema"
   ],
   [
    96,
-   460,
+   450,
    "Replay"
   ],
   [
    96,
-   476,
+   466,
    "consumers rewind up to 14 days"
   ],
   [
    652,
-   460,
+   450,
    "Dead-letter queue"
   ],
   [
    652,
-   476,
+   466,
    "events no consumer could handle"
   ],
   [
-   64,
-   520,
+   68,
+   510,
    "Who reads which topic"
   ],
   [
-   492,
-   540,
+   172,
+   530,
    "orders.*"
   ],
   [
-   736,
-   540,
+   250,
+   530,
    "payments.*"
   ],
   [
-   996,
-   540,
+   342,
+   530,
    "parcels.*"
   ],
   [
-   64,
-   562,
+   68,
+   552,
    "Search"
   ],
   [
-   64,
-   582,
+   68,
+   572,
    "Analytics"
   ],
   [
-   64,
-   604,
+   68,
+   594,
    "Notifications"
   ],
   [
-   80,
-   626,
-   "full"
+   82,
+   616,
+   "reads all events"
   ],
   [
-   124,
-   626,
-   "limited"
+   192,
+   616,
+   "reads some"
   ],
   [
-   188,
-   626,
-   "no access"
+   282,
+   616,
+   "does not read"
   ],
   [
    92,
-   668,
+   658,
    "Is 14 days of retention enough to rebuild the search index?"
   ],
   [
    1228,
-   162,
+   152,
    "Operations"
   ],
   [
    1228,
-   180,
+   170,
    "Who keeps the bus healthy"
   ],
   [
    1272,
-   270,
+   260,
    "Dashboards"
   ],
   [
    1272,
-   286,
+   276,
    "consumer lag per topic"
   ],
   [
    1282,
-   304,
+   294,
    "alert when lag passes five minutes"
   ],
   [
    1282,
-   322,
+   312,
    "one board per consumer group"
   ],
   [
    1272,
-   406,
+   396,
    "On-call"
   ],
   [
    1272,
-   424,
+   414,
    "paged on dead letters"
   ],
   [
    1282,
-   442,
+   432,
    "first responder replays or skips"
   ],
   [
    1282,
-   458,
+   448,
    "fixes go back to the owning domain"
   ],
   [
    1272,
-   544,
+   534,
    "Runbooks"
   ],
   [
    1272,
-   560,
+   550,
    "next to the bus configuration in Git"
   ],
   [
    1282,
-   578,
+   568,
    "replay a topic from a timestamp"
   ],
   [
    1282,
-   596,
+   586,
    "skip one poison message"
   ],
   [
    1272,
-   682,
+   672,
    "Capacity"
   ],
   [
    1272,
-   698,
+   688,
    "partitions and brokers"
   ],
   [
    1282,
-   716,
+   706,
    "partition count reviewed every quarter"
   ],
   [
    1282,
-   734,
+   724,
    "brokers scale ahead of peak season"
   ],
   [
    1266,
-   818,
+   808,
    "Domains run their consumers; operations"
   ],
   [
    1266,
-   836,
+   826,
    "runs the bus"
   ],
   [
    52,
-   162,
+   152,
    "Orders"
   ],
   [
    96,
-   212,
+   202,
    "Order service"
   ],
   [
    96,
-   228,
+   218,
    "publishes OrderPlaced and OrderCancelled"
   ],
   [
    444,
-   162,
+   152,
    "Payments"
   ],
   [
    488,
-   212,
+   202,
    "Payment service"
   ],
   [
    488,
-   228,
+   218,
    "publishes PaymentCaptured"
   ],
   [
    836,
-   162,
+   152,
    "Shipping"
   ],
   [
    880,
-   212,
+   202,
    "Shipping service"
   ],
   [
    880,
-   228,
+   218,
    "publishes ParcelShipped"
   ],
   [
    52,
-   768,
+   758,
    "Search"
   ],
   [
    96,
-   818,
+   808,
    "Search index"
   ],
   [
    96,
-   834,
+   824,
    "rebuilt from replay, updated live"
   ],
   [
    444,
-   768,
+   758,
    "Analytics"
   ],
   [
    488,
-   818,
+   808,
    "Lakehouse ingest"
   ],
   [
    488,
-   834,
+   824,
    "lands every event in Bronze"
   ],
   [
    836,
-   768,
+   758,
    "Notifications"
   ],
   [
    880,
-   818,
+   808,
    "Notification service"
   ],
   [
    880,
-   834,
+   824,
    "e-mail and push on status changes"
   ],
   [
    40,
-   898,
+   884,
    "Key principles"
   ],
   [
    50,
-   922,
+   908,
    "An event is a fact that already happened; it is never changed afterwards."
   ],
   [
    50,
-   942,
+   928,
    "The producing domain owns the schema; consumers adapt to new versions."
   ],
   [
    50,
-   962,
+   948,
    "No consumer calls a producer directly to fetch what an event already carries."
   ],
   [
    904,
-   898,
+   884,
    "Open questions"
   ],
   [
    926,
-   922,
+   908,
    "Is 14 days of retention enough to rebuild the search index?"
   ],
   [
    40,
-   992,
+   978,
    "Legend"
   ],
   [
    134,
-   988,
+   974,
    "Platform component"
   ],
   [
    302,
-   988,
+   974,
    "Data and storage"
   ],
   [
    452,
-   988,
+   974,
    "People and teams"
   ],
   [
    606,
-   988,
+   974,
    "Direction of data"
   ],
   [
    756,
-   988,
+   974,
    "Asynchronous: event or message"
   ],
   [
    1000,
-   988,
+   974,
    "Open choice or friction"
   ],
   [
    1184,
-   988,
+   974,
    "Assumption or note"
   ]
  ],
@@ -577,11 +577,11 @@
    "points": [
     [
      212,
-     264
+     254
     ],
     [
      212,
-     294
+     284
     ]
    ],
    "label": null
@@ -593,11 +593,11 @@
    "points": [
     [
      604,
-     264
+     254
     ],
     [
      604,
-     294
+     284
     ]
    ],
    "label": null
@@ -609,11 +609,11 @@
    "points": [
     [
      996,
-     264
+     254
     ],
     [
      996,
-     294
+     284
     ]
    ],
    "label": null
@@ -625,11 +625,11 @@
    "points": [
     [
      212,
-     704
+     694
     ],
     [
      212,
-     734
+     724
     ]
    ],
    "label": null
@@ -641,11 +641,11 @@
    "points": [
     [
      604,
-     704
+     694
     ],
     [
      604,
-     734
+     724
     ]
    ],
    "label": null
@@ -657,11 +657,11 @@
    "points": [
     [
      996,
-     704
+     694
     ],
     [
      996,
-     734
+     724
     ]
    ],
    "label": null
@@ -673,11 +673,11 @@
    "points": [
     [
      1160,
-     454
+     444
     ],
     [
      1222,
-     454
+     444
     ]
    ],
    "label": null

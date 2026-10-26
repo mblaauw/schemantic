@@ -69,7 +69,11 @@ def image_diff(a_path: Path, b_path: Path, mask_path: Path) -> dict:
     a = Image.open(a_path).convert("L").filter(ImageFilter.GaussianBlur(PARITY_BLUR_PX))
     b = Image.open(b_path).convert("L").filter(ImageFilter.GaussianBlur(PARITY_BLUR_PX))
     if a.size != b.size:
-        return {"count": None, "fail": True, "regions": [], "detail": f"size differs: {a.size} vs {b.size}"}
+        if max(abs(a.size[0] - b.size[0]), abs(a.size[1] - b.size[1])) > 1:
+            return {"count": None, "fail": True, "regions": [], "detail": f"size differs: {a.size} vs {b.size}"}
+        # A fractional canvas (a paper size) rounds one way in a screenshot and the other in the raster.
+        size = (min(a.size[0], b.size[0]), min(a.size[1], b.size[1]))
+        a, b = a.crop((0, 0, *size)), b.crop((0, 0, *size))
     mask = ImageChops.difference(a, b).point(lambda v: 255 if v > PARITY_DELTA else 0)
     mask.save(mask_path)
     box = mask.getbbox()

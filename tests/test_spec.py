@@ -83,7 +83,8 @@ def test_hub_layout_is_derived(example):
 def test_side_spoke_track_is_one_spoke_of_the_fuller_row_wide(example):
     # One side, four bottom spokes: S = H/4 - 36 and S + 48 + H = 100%, so 100% = 5S + 192 and S = 20% - 38.4px = 20% - 0.8 gutters.
     spec = hub_spec(example, hub="identity", top=["clients"], bottom=["gateway", "services", "data", "x"], left="y")
-    assert archetypes.get(spec["archetype"]).grid(spec).columns == ["calc(20.0000% + -0.8000 * var(--gutter-x))", "minmax(0, 1fr)"]
+    side = "clamp(260px, calc(20.0000% + -0.8000 * var(--gutter-x)), 30%)"
+    assert archetypes.get(spec["archetype"]).grid(spec).columns == [side, "minmax(0, 1fr)"]
 
 
 def test_layer_cake_rails_span_every_layer(example):

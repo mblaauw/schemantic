@@ -71,6 +71,10 @@ panels:
         name: "Scanning"
         note: "images en dependencies"
         bullets: ["blokkeert bij kritieke CVE's", "een SBOM per image"]
+      - icon: test-pipe
+        name: "Pentests"
+        note: "twee keer per jaar, door een externe partij"
+        bullets: ["bevindingen worden tickets bij het team"]
     chips:
       - {kind: info, text: "Uitzonderingen via een pull request"}
 

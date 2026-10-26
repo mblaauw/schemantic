@@ -44,6 +44,9 @@ SPEC_TRIGGERS = {
 }
 
 
+LONG_CHIP = "Uitzonderingen op een policy lopen altijd via een pull request met review door security"
+
+
 def admission_last(s):
     runtime = panel(s, "runtime")
     runtime["cards"].append(runtime["cards"].pop(0))
@@ -61,7 +64,7 @@ LAYOUT_TRIGGERS = {
     "contrast": (lambda s: None, ":root { --muted: #C8CDD2; }", BASE),
     "arrow-routing": (admission_last, "", LAYERS),
     "arrow-label": (lambda s: s["flows"][0].update(label="OIDC"), "", BASE),
-    "chip-length": (lambda s: panel(s, "security")["chips"][0].update(text="Uitzonderingen op policy lopen via een pull request"),
+    "chip-length": (lambda s: panel(s, "security")["chips"][0].update(text=LONG_CHIP),
                     "", LAYERS),
     "void": (lambda s: panel(s, "services").update(cards=panel(s, "services")["cards"][:1], chips=[]), "", BASE),
 }

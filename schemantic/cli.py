@@ -13,7 +13,8 @@ def _spec_command(sub, name: str, help_: str, scale: bool):
     p.add_argument("--out", default="out", help="output folder (default: out)")
     p.add_argument("--theme", help="a CSS file appended after tokens.css (overrides canvas.theme)")
     if scale:
-        p.add_argument("--scale", type=float, default=2, help="PNG pixel ratio (default 2)")
+        p.add_argument("--dpi", type=float, default=192, help="PNG resolution: 96 is 1 px per CSS px (default 192)")
+        p.add_argument("--scale", type=float, help="PNG pixel ratio; overrides --dpi (kept from 0.1)")
     return p
 
 
@@ -54,7 +55,7 @@ def run(a) -> tuple[dict, int]:
         r = build(a.spec, a.out, deliver=False, theme=a.theme)
         keep = ("spec", "errors", "warnings", "density", "voids", "parity")
         return {k: r[k] for k in keep}, 1 if r["errors"] else 0
-    r = build(a.spec, a.out, scale=a.scale, theme=a.theme)
+    r = build(a.spec, a.out, scale=a.scale or a.dpi / 96, theme=a.theme)
     if a.cmd == "render":
         if r["svg"] is None:
             return {"rendered": False, "errors": r["errors"]}, 1

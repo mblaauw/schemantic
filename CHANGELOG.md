@@ -21,6 +21,11 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   planned, muted for deprecated, struck through for removed; listed in the legend.
 - C8: card `flag: {kind, text}`: a numbered marker on the card, its text in open questions (warning) or notes (info).
 - C14: `focus: true` on one panel or card gives it an accent outline; lint allows one.
+- C3: side columns (rails, side spokes) are at least 260 px wide (at a 1600 px canvas) and at most 30% of the body;
+  `layout.rail_width: narrow | normal | wide` for rails.
+- C4: a matrix is as wide as its content, left-aligned, with columns of at least 72 px; `key` overrides its labels.
+- C11: `a3-landscape` and `a4-landscape` canvases (the sheet at 96 px per inch, height fixed), and `--dpi` (default
+  192): A3 at 300 dpi is exactly 4961 × 3508 px, with the dpi recorded in the PNG.
 - C12: themes. `canvas.theme` (relative to the spec) or `--theme` appends a CSS file after `tokens.css`; a theme can
   recolour and add roles with their own legend labels. `examples/themes/warm.css` shows both.
 

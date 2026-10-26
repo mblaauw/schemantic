@@ -45,13 +45,13 @@
 {%- elif pt.type == 'matrix' -%}
 <div class="blk matrix" data-kind="pattern" data-id="{{ bid }}"{{ st | safe }}>
 {%- if pt.caption %}<div class="mx-cap">{{ pt.caption }}</div>{% endif -%}
-<div class="mx-grid" style="grid-template-columns: minmax(0, 1.3fr) repeat({{ pt.columns | length }}, minmax(0, 1fr))"><span></span>
+<div class="mx-grid" style="grid-template-columns: max-content repeat({{ pt.columns | length }}, minmax(72px, max-content))"><span></span>
 {%- for col in pt.columns %}<div class="mx-col">{{ col }}</div>{% endfor -%}
 {%- for r in pt.rows -%}<div class="mx-row">{{ r.name }}</div>
 {%- for v in r.cells %}<div class="mx-cell"><span class="mx-{{ v }}"></span></div>{% endfor -%}
 {%- endfor -%}
 </div>
-<div class="mx-key">{% for v in matrix_values(pt) %}<div class="mx-key-item"><span class="mx-{{ v }}"></span><span>{{ L.matrix[v] }}</span></div>{% endfor %}</div>
+<div class="mx-key">{% for v in matrix_values(pt) %}<div class="mx-key-item"><span class="mx-{{ v }}"></span><span>{{ (pt.key or {}).get(v) or L.matrix[v] }}</span></div>{% endfor %}</div>
 </div>
 {%- endif -%}
 {%- endmacro -%}

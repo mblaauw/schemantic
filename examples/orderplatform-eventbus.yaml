@@ -25,6 +25,7 @@ panels:
     patterns:
       - type: matrix
         caption: "Who reads which topic"
+        key: {full: "reads all events", partial: "reads some", none: "does not read"}
         columns: ["orders.*", "payments.*", "parcels.*"]
         rows:
           - {name: "Search", cells: [full, none, full]}

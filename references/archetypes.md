@@ -61,6 +61,7 @@ layout:
   layers: [experience, delivery, runtime, infra]   # 2 to 5, top first
   left: security                                   # optional rails
   right: observability
+  rail_width: normal                               # optional: narrow | normal | wide
 ```
 
 - A layer lays its cards out in one row by default (`card_columns` = number of cards); 3–5 cards fit well.

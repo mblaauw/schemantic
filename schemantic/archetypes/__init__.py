@@ -49,6 +49,19 @@ class Archetype:
         return {}
 
 
+# Side columns (rails, side spokes) stay readable: at least SIDE_MIN_PX at a 1600 px canvas (scaled with the canvas),
+# at most SIDE_MAX percent of the body.
+SIDE_MIN_PX = 260
+SIDE_MAX = 30
+
+
+def side_track(spec: dict, preferred: str) -> str:
+    """A side column's CSS track: the preferred width, clamped to readable bounds."""
+    from ..config import CANVAS_SIZES
+    min_px = SIDE_MIN_PX * CANVAS_SIZES[spec["canvas"]["size"]][0] / 1600
+    return f"clamp({min_px:.0f}px, {preferred}, {SIDE_MAX}%)"
+
+
 def error(check: str, id_: str, detail: str) -> dict:
     return {"level": "error", "check": check, "id": id_, "detail": detail}
 

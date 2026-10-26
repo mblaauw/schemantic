@@ -250,3 +250,35 @@ def test_status_tags_and_planned_outline_export(renders):
     svg = (renders(ROOT / "examples" / "orderplatform-toegang.yaml") / "orderplatform-toegang.svg").read_text(encoding="utf-8")
     assert ">nieuw</text>" in svg and ">gepland</text>" in svg
     assert f'stroke-dasharray="{config.tokens()["--dash-planned"]}"' in svg
+
+
+# C3: rail and side-spoke notes stay readable
+def test_side_column_notes_wrap_at_most_twice():
+    for name, sides in (("ontwikkelplatform-lagen", ["security", "observability"]), ("orderplatform-eventbus", ["ops"])):
+        spec = sp.load_spec(ROOT / "examples" / f"{name}.yaml")
+        with sync_playwright() as p:
+            chromium = browser.launch(p)
+            page = browser.open_plate(chromium, html.build_html(spec), spec)
+            lines = page.evaluate("""(ids) => ids.flatMap((id) => [...document.querySelectorAll(`[data-id="${id}"] .cnote`)]
+                .map((el) => Math.round(el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight))))""", sides)
+            chromium.close()
+        assert max(lines) <= 3, (name, lines)  # a note on at most three lines: it wraps at most twice
+
+
+# C4: a compact matrix
+def test_matrix_is_as_wide_as_its_content(renders):
+    out = renders(ROOT / "examples" / "orderplatform-eventbus.yaml")
+    snap = json.loads((out / "_work" / "orderplatform-eventbus.snapshot.json").read_text())
+    left, _, right, _ = snap["boxes"]["bus.matrix0"]
+    assert right - left - 24 < 420  # row label to last column, inside the 12 px padding
+
+
+# C11: print sizes
+def test_a3_at_300_dpi(tmp_path):
+    spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
+    spec["canvas"]["size"] = "a3-landscape"
+    code, report = run("build", write(tmp_path, spec, "a3"), "--out", tmp_path, "--dpi", 300)
+    assert (code, report["errors"]) == (0, [])
+    from PIL import Image
+    with Image.open(tmp_path / "a3.png") as im:
+        assert im.size == (4961, 3508) and round(im.info["dpi"][0]) == 300
