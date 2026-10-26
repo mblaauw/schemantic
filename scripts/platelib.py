@@ -6,12 +6,15 @@ The model never writes coordinates; every position comes from the browser's layo
 """
 from __future__ import annotations
 
+import base64
+import io
 import json
 import re
 from pathlib import Path
 
 import jsonschema
 import yaml
+from fontTools import subset
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -21,6 +24,11 @@ GUTTER_X = 48
 # Row gutters also hold a one-line arrow label at 11 px.
 GUTTER_Y = 44
 TYPE_FLOOR_PX = 11
+# Bundled faces (assets/fonts), loaded through @font-face so layout never depends on installed fonts.
+# The HTML gets the full files; the SVG gets a subset of the glyphs it uses.
+FONTS = [("Inter", 400, "Inter-Regular.woff2"), ("Inter", 500, "Inter-Medium.woff2"),
+         ("Inter", 600, "Inter-SemiBold.woff2"), ("Inter", 700, "Inter-Bold.woff2"),
+         ("Inter", 800, "Inter-ExtraBold.woff2"), ("DejaVu Sans Mono", 400, "DejaVuSansMono.woff2")]
 
 
 # ---------------------------------------------------------------- spec
@@ -235,11 +243,42 @@ def open_questions(spec: dict) -> list[str]:
     return out
 
 
+def font_face(family: str, weight: int, data: bytes) -> str:
+    uri = "data:font/woff2;base64," + base64.b64encode(data).decode("ascii")
+    return f"@font-face {{ font-family: '{family}'; font-weight: {weight}; font-style: normal; src: url({uri}) format('woff2'); }}"
+
+
+def font_css() -> str:
+    return "\n".join(font_face(fam, w, (ROOT / "assets" / "fonts" / file).read_bytes()) for fam, w, file in FONTS)
+
+
+def subset_font_css(used: dict[str, str]) -> str:
+    """@font-face rules holding only the glyphs each bundled face draws. `used` maps 'Family|weight' to text."""
+    rules = []
+    for key, text in used.items():
+        family, weight = key.split("|")
+        faces = [f for f in FONTS if f[0] == family]
+        if not faces:
+            continue  # not bundled: the viewer's own fonts decide
+        _, w, file = min(faces, key=lambda f: abs(f[1] - int(weight)))  # nearest weight, as the browser picks
+        opts = subset.Options()
+        opts.flavor = "woff2"
+        opts.drop_tables.append("FFTM")  # FontForge timestamp; fontTools cannot subset it and warns
+        sub = subset.Subsetter(opts)
+        font = subset.load_font(str(ROOT / "assets" / "fonts" / file), opts)
+        sub.populate(text=text)
+        sub.subset(font)
+        buf = io.BytesIO()
+        subset.save_font(font, buf, opts)
+        rules.append(font_face(family, w, buf.getvalue()))
+    return "\n".join(rules)
+
+
 def build_html(spec: dict) -> str:
     loc = load_locale(spec["canvas"]["lang"])
     width, height = CANVAS_SIZES[spec["canvas"]["size"]]
     env = Environment(loader=FileSystemLoader(ROOT / "templates"), autoescape=select_autoescape(["j2", "html"]))
-    css = (ROOT / "templates" / "tokens.css").read_text(encoding="utf-8") + "\n" + \
+    css = font_css() + "\n" + (ROOT / "templates" / "tokens.css").read_text(encoding="utf-8") + "\n" + \
           (ROOT / "templates" / "components.css").read_text(encoding="utf-8")
     canvas = spec["canvas"]
     badge = loc["badge"].format(part=canvas["part"], of=canvas["of"]) if canvas.get("part") and canvas.get("of") else None
@@ -258,8 +297,12 @@ def open_plate(browser, html: str, spec: dict, scale: float = 1):
     width, height = CANVAS_SIZES[spec["canvas"]["size"]]
     page = browser.new_page(viewport={"width": width, "height": height}, device_scale_factor=scale)
     page.set_content(html)
-    page.evaluate("document.fonts.ready.then(() => true)")
+    page.evaluate(FONTS_READY_JS)
     return page
+
+
+# Load every declared face before measuring, not only the ones layout has asked for so far.
+FONTS_READY_JS = "Promise.all([...document.fonts].map(f => f.load())).then(() => document.fonts.ready).then(() => true)"
 
 
 FLOWS_JS = r"""
@@ -320,7 +363,8 @@ def draw_flows(page, spec: dict) -> dict:
 EXPORT_JS = r"""
 () => {
   const plate = document.getElementById('plate'), P = plate.getBoundingClientRect();
-  const out = [], fonts = new Set();
+  const out = [], used = {};
+  const use = (family, weight, s) => { const k = family.split(',')[0].replace(/["']/g, '').trim() + '|' + weight; used[k] = (used[k] || '') + s; };
   const num = v => parseFloat(v) || 0, f = v => Math.round(v * 100) / 100;
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const parse = c => { const m = c && c.match(/rgba?\(([^)]+)\)/); if (!m) return null;
@@ -333,15 +377,16 @@ EXPORT_JS = r"""
       `V${f(y + h - br)}` + (br ? `A${f(br)} ${f(br)} 0 0 1 ${f(x + w - br)} ${f(y + h)}` : '') +
       `H${f(x + bl)}` + (bl ? `A${f(bl)} ${f(bl)} 0 0 1 ${f(x)} ${f(y + h - bl)}` : '') +
       `V${f(y + tl)}` + (tl ? `A${f(tl)} ${f(tl)} 0 0 1 ${f(x + tl)} ${f(y)}` : '') + 'Z'; };
-  const ratios = {};
-  const baseline = cs => { const key = cs.fontFamily + '|' + cs.fontWeight; if (key in ratios) return ratios[key];
+  // Measured at the real size: Chromium rounds ascent per size, so a 100 px probe scaled down drifts by up to a pixel.
+  const offsets = {};
+  const baseline = cs => { const key = cs.fontFamily + '|' + cs.fontWeight + '|' + cs.fontSize; if (key in offsets) return offsets[key];
     const probe = document.createElement('div');
-    probe.style.cssText = `position:absolute;left:-9999px;top:0;font-family:${cs.fontFamily};font-weight:${cs.fontWeight};font-size:100px;line-height:normal;white-space:nowrap`;
+    probe.style.cssText = `position:absolute;left:-9999px;top:0;font-family:${cs.fontFamily};font-weight:${cs.fontWeight};font-size:${cs.fontSize};line-height:normal;white-space:nowrap`;
     probe.innerHTML = 'H<span style="display:inline-block;width:1px;height:0;vertical-align:baseline"></span>';
     document.body.appendChild(probe);
     const rg = document.createRange(); rg.setStart(probe.firstChild, 0); rg.setEnd(probe.firstChild, 1);
     const top = rg.getClientRects()[0].top, base = probe.lastChild.getBoundingClientRect().bottom;
-    probe.remove(); return ratios[key] = (base - top) / 100; };
+    probe.remove(); return offsets[key] = base - top; };
 
   const box = (el, cs) => {
     const r = el.getBoundingClientRect(); const x = r.left - P.left, y = r.top - P.top, w = r.width, h = r.height;
@@ -373,8 +418,8 @@ EXPORT_JS = r"""
   const text = node => {
     const el = node.parentElement, cs = getComputedStyle(el), s = node.textContent;
     if (!s.trim() || cs.visibility === 'hidden') return;
-    const fs = num(cs.fontSize), ratio = baseline(cs), pre = cs.whiteSpace.startsWith('pre');
-    fonts.add(cs.fontFamily.split(',')[0].replace(/["']/g, '').trim());
+    const fs = num(cs.fontSize), ascent = baseline(cs), pre = cs.whiteSpace.startsWith('pre');
+    use(cs.fontFamily, cs.fontWeight, s);
     const attrs = `font-family="${esc(cs.fontFamily.replace(/"/g, "'"))}" font-size="${f(fs)}" font-weight="${cs.fontWeight}" ${paint(cs.color, 'fill')}${pre ? ' xml:space="preserve"' : ''}`;
     const lines = []; let cur = null; const rg = document.createRange();
     for (let i = 0; i < s.length; i++) {
@@ -387,7 +432,7 @@ EXPORT_JS = r"""
     for (const l of lines) {
       let t = pre ? l.t.replace(/\s+$/, '') : l.t.replace(/\s+/g, ' ').trim();
       if (!t || l.left === null) continue;
-      out.push(`<text x="${f(l.left - P.left)}" y="${f(l.top - P.top + ratio * fs)}" ${attrs}>${esc(t)}</text>`);
+      out.push(`<text x="${f(l.left - P.left)}" y="${f(l.top - P.top + ascent)}" ${attrs}>${esc(t)}</text>`);
     }
   };
 
@@ -401,13 +446,15 @@ EXPORT_JS = r"""
     if (node.nodeType !== 1) return;
     const cs = getComputedStyle(node);
     if (cs.display === 'none' || cs.visibility === 'hidden') return;
-    if (node.hasAttribute('data-raw-svg')) { out.push(node.innerHTML); return; }
+    if (node.hasAttribute('data-raw-svg')) { out.push(node.innerHTML);
+      for (const t of node.querySelectorAll('text')) use(t.getAttribute('font-family'), t.getAttribute('font-weight') || '400', t.textContent);
+      return; }
     if (node.hasAttribute('data-icon')) { icon(node, cs); return; }
     box(node, cs);
     for (const c of node.childNodes) walk(c);
   };
   walk(plate);
-  return {w: f(P.width), h: f(P.height), items: out, fonts: [...fonts]};
+  return {w: f(P.width), h: f(P.height), items: out, used};
 }
 """
 
@@ -418,14 +465,16 @@ def export_svg(page, spec: dict) -> tuple[str, list[str]]:
     esc = lambda s: s.replace("&", "&amp;").replace("<", "&lt;")
     head = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{d["w"]:g}" height="{d["h"]:g}" '
             f'viewBox="0 0 {d["w"]:g} {d["h"]:g}" role="img" lang="{spec["canvas"]["lang"]}">\n'
-            f'<title>{esc(title)}</title>\n')
-    return head + "\n".join(d["items"]) + "\n</svg>\n", d["fonts"]
+            f'<title>{esc(title)}</title>\n'
+            f'<defs><style>\n{subset_font_css(d["used"])}\n</style></defs>\n')
+    fonts = sorted(k.replace("|", " ") for k in d["used"])
+    return head + "\n".join(d["items"]) + "\n</svg>\n", fonts
 
 
 def rasterise_svg(browser, svg_path: Path, spec: dict, png_path: Path, scale: float = 2) -> None:
     width, height = CANVAS_SIZES[spec["canvas"]["size"]]
     page = browser.new_page(viewport={"width": width, "height": height}, device_scale_factor=scale)
     page.goto(svg_path.resolve().as_uri())
-    page.evaluate("document.fonts ? document.fonts.ready.then(() => true) : true")
+    page.evaluate(FONTS_READY_JS)
     page.screenshot(path=str(png_path), clip={"x": 0, "y": 0, "width": width, "height": height})
     page.close()

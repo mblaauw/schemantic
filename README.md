@@ -27,8 +27,13 @@ python3 scripts/lint.py   examples/orderplatform-toegang.yaml --out out
 `out/_work/` for debugging only). `lint.py` emits a JSON report and exits `1` on errors.
 
 Needs Python 3.10+, `playwright` (with Chromium: `playwright install chromium`),
-`pyyaml`, `jsonschema`, `jinja2`, `pillow`, and the Inter font installed
-(DejaVu Sans Mono for paths).
+`pyyaml`, `jsonschema`, `jinja2`, `pillow`, and `fonttools` with `brotli`.
+
+Fonts are bundled in `assets/fonts/` (Inter, and DejaVu Sans Mono for paths), so nothing
+needs to be installed and every machine lays the plate out the same way. The HTML loads
+the full files through `@font-face`; the SVG embeds a WOFF2 subset of the glyphs it draws,
+so it renders the same in any browser. Tools that ignore `@font-face` in SVG (Inkscape,
+Cairo) still need Inter installed.
 
 ## Why it is built this way
 
@@ -59,6 +64,7 @@ schema/plate.schema.json spec contract
 locales/                 fixed labels per language, never-translate list
 templates/               plate.html.j2, tokens.css (theme, override per project), components.css
 assets/icons/            58 Tabler outline icons (MIT, see LICENSE-tabler-icons.txt)
+assets/fonts/            Inter 4.1 (400–800) and DejaVu Sans Mono 2.37, with their licences
 scripts/                 platelib.py (shared), render.py, lint.py
 examples/                fictional plates (spec only; renders go to out/)
 ```
@@ -109,3 +115,10 @@ Rendered from [`examples/orderplatform-toegang.yaml`](examples/orderplatform-toe
 
 The outline icon set in `assets/icons/` is [Tabler Icons](https://tabler.io/icons), MIT licensed —
 see `assets/icons/LICENSE-tabler-icons.txt`.
+
+## Fonts
+
+`assets/fonts/` holds [Inter](https://rsms.me/inter/) 4.1 (SIL Open Font License, see
+`assets/fonts/LICENSE-inter.txt`) and [DejaVu Sans Mono](https://dejavu-fonts.github.io/) 2.37
+(free licence, see `assets/fonts/LICENSE-dejavu.txt`), taken unmodified from their official
+releases; DejaVu was converted from TTF to WOFF2.

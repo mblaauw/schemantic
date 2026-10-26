@@ -3,3 +3,5 @@ pyyaml
 jsonschema
 jinja2
 pillow
+fonttools
+brotli
