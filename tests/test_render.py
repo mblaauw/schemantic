@@ -5,6 +5,7 @@ import re
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 import yaml
@@ -213,7 +214,12 @@ def test_golden_catches_a_local_text_change(change, tmp_path):
 # A9: an installed skill folder is read-only; the doctor and a render still work, writing only elsewhere
 def test_read_only_skill_folder(tmp_path):
     skill = tmp_path / "skill"
-    shutil.copytree(ROOT, skill, ignore=shutil.ignore_patterns(".venv", ".git", "out", "tests", "__pycache__", ".pytest_cache"))
+    patterns = shutil.ignore_patterns(".venv", ".git", "out", "tests", "__pycache__", ".pytest_cache", "runs")
+
+    def ignore(folder, names):  # CI keeps pytest's temp folder inside the checkout; never copy it into itself
+        return set(patterns(folder, names)) | {n for n in names if tmp_path.is_relative_to(Path(folder) / n)}
+
+    shutil.copytree(ROOT, skill, ignore=ignore)
     before = {p for p in skill.rglob("*")}
     for p in [skill, *skill.rglob("*")]:
         p.chmod(p.stat().st_mode & ~0o222)
