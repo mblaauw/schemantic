@@ -422,7 +422,8 @@ schemantic.route = (flows) => {
   jobs.sort((p, q) => bent(p) - bent(q) || p.i - q.i);
   // Take a label off the plate, so it can be placed again around a route that needed its spot.
   const unplace = (r) => {
-    labelBoxes.splice(labelBoxes.indexOf(r.labelBox), 1);
+    const at = labelBoxes.indexOf(r.labelBox);
+    if (at >= 0) labelBoxes.splice(at, 1);
     r.svg = (r.svg || "").replace(/<text data-label="\d+" data-text[^>]*>.*?<\/text>/, "");
     r.labelBox = null;
     r.label = null;

@@ -79,6 +79,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - F6: `references/lint-fixes.md` is generated from `schemantic/findings.py` (`schemantic docs`, tested).
 - F7: a test checks that the README, SKILL.md and the archetypes reference list exactly the built archetypes and
   patterns.
+- F1: the code is MIT (`LICENSE`), so it can be used, forked and taught from; the bundled Tabler icons (MIT) and
+  Inter and DejaVu fonts (OFL) keep their own notices in `assets/`. A test checks that the licence, the notices and
+  the README agree.
 
 ### Changed
 - B1: the code is a package, `schemantic/`, with a CLI: `python -m schemantic build | lint | render | doctor | icons |

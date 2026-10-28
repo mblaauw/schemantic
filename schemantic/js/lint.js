@@ -107,13 +107,10 @@ schemantic.lint = (cfg) => {
   const pin = inner(plate);
   for (const el of kinds) {
     const r = rel(el);
-    if (r.r > pin.r + 1 || r.b > pin.b + 1 || r.l < pin.l - 1 || r.t < pin.t - 1)
-      add(
-        "error",
-        "canvas-fit",
-        el.dataset.id,
-        `extends ${Math.round(Math.max(r.r - pin.r, r.b - pin.b))}px past the canvas margin`,
-      );
+    if (r.r > pin.r + 1 || r.b > pin.b + 1 || r.l < pin.l - 1 || r.t < pin.t - 1) {
+      const over = Math.max(r.r - pin.r, r.b - pin.b, pin.l - r.l, pin.t - r.t);
+      add("error", "canvas-fit", el.dataset.id, `extends ${Math.round(over)}px past the canvas margin`);
+    }
   }
 
   // Arrows: every run stays off panels other than the endpoints' own, and off cards other than the endpoints;

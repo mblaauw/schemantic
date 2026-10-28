@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,6 +7,8 @@ name = "schemantic"
 dynamic = ["version"]
 description = "From a description of a system to a finished architecture plate (SVG and PNG)."
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.9"
 # Tested ranges. requirements.txt is generated from this list (see tests/test_repo.py); the skill's doctor reads it.
 dependencies = [

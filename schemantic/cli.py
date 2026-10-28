@@ -1,6 +1,7 @@
 """Command line: `schemantic build | lint | render | doctor | icons | gallery | docs | offline | verify | smoke`.
 Every command prints JSON and exits 1 on errors; an unexpected failure is an `internal` finding, never a traceback,
 because an agent reads the output."""
+
 from __future__ import annotations
 
 import argparse
@@ -45,11 +46,14 @@ def parser() -> argparse.ArgumentParser:
 def run(a) -> tuple[dict, int]:
     if a.cmd == "doctor":
         from . import doctor
+
         return doctor.diagnose(install=not a.no_install), 0
     if a.cmd == "icons":
         from . import icons
+
         words = a.words[1:] if a.words[:1] == ["search"] else a.words
-        found = icons.search(words, limit=40) if words else sorted(icons.index())
+        # All the words must match; if none does, any word is better than an empty answer for "identity provider".
+        found = (icons.search(words, limit=40) or icons.search(words, limit=40, every=False)) if words else sorted(icons.index())
         return {"icons": found, "count": len(found)}, 0
     if a.cmd in ("offline", "verify", "smoke"):
         from . import offline
@@ -58,9 +62,11 @@ def run(a) -> tuple[dict, int]:
         return r, 0 if r["ok"] else 1
     if a.cmd == "gallery":
         from .gallery import build_gallery
+
         return build_gallery(), 0
     if a.cmd == "docs":
         from .findings import LINT_FIXES, lint_fixes_md
+
         fresh = lint_fixes_md()
         current = LINT_FIXES.read_text(encoding="utf-8") if LINT_FIXES.exists() else ""
         if a.check:
@@ -69,6 +75,7 @@ def run(a) -> tuple[dict, int]:
         return {"path": str(LINT_FIXES), "written": True}, 0
 
     from .pipeline import build
+
     if a.cmd == "lint":
         r = build(a.spec, a.out, deliver=False, theme=a.theme)
         keep = ("spec", "errors", "warnings", "density", "voids", "parity")
@@ -88,6 +95,7 @@ def main(argv: list[str] | None = None) -> int:
         report, code = run(a)
     except Exception as exc:  # the skill reads JSON; a traceback would leave it guessing
         from .spec import internal_error
+
         report, code = {"errors": [internal_error(exc)], "warnings": []}, 1
     if a.cmd == "doctor":
         code = 0 if report.get("ok") else 1
@@ -97,4 +105,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
