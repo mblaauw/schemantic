@@ -245,33 +245,46 @@ def card_id(panel: dict, i: int, card: dict) -> str:
     return card.get("id") or f"{panel['id']}.card{i}"
 
 
+def open_questions(spec: dict) -> list[dict]:
+    """Open questions in reading order, labelled Q1, Q2, ... (V1 in Dutch): panel by panel, its warning flags and then
+    its warning chips (with from_chips, or when listed in extra), then the other extra questions. `id` is the card
+    or chip that shows the same label in the body, so a reader can go from the footer to the place and back."""
+    oq = (spec.get("footer") or {}).get("open_questions") or {}
+    extra = oq.get("extra", [])
+    shown = lambda text: oq.get("from_chips") or text in extra  # noqa: E731
+    items = []
+    for p in spec["panels"]:
+        for i, c in enumerate(p.get("cards", [])):
+            if (c.get("flag") or {}).get("kind") == "warning" and shown(c["flag"]["text"]):
+                items.append((c["flag"]["text"], card_id(p, i, c)))
+        for k, ch in enumerate(p.get("chips", [])):
+            if ch["kind"] == "warning" and shown(ch["text"]):
+                items.append((ch["text"], f"{p['id']}.chip{k}"))
+    items += [(q, None) for q in extra if q not in {text for text, _ in items}]
+    prefix = load_locale(spec["canvas"]["lang"])["markers"]["question"]
+    return [{"label": f"{prefix}{n}", "text": text, "id": at} for n, (text, at) in enumerate(items, 1)]
+
+
 def flags(spec: dict) -> list[dict]:
-    """Card flags in plate order, numbered from 1: {n, card, kind, text}. The number shows on the card and in the
-    footer (open questions for warnings, notes for info)."""
-    out = []
+    """Card flags in plate order: {card, kind, text, label}. A warning flag shows its open question's label (Q2); an
+    info flag is a note, labelled N1, N2, ... and listed in the footer's notes."""
+    asked = {q["id"]: q["label"] for q in open_questions(spec) if q["id"]}
+    prefix = load_locale(spec["canvas"]["lang"])["markers"]["note"]
+    out, n = [], 0
     for p in spec["panels"]:
         for i, c in enumerate(p.get("cards", [])):
             if c.get("flag"):
-                out.append({"n": len(out) + 1, "card": card_id(p, i, c), **c["flag"]})
-    return out
-
-
-def open_questions(spec: dict) -> list[dict]:
-    """Open questions in the footer: warning chips (from_chips), then extra ones, then numbered warning flags."""
-    oq = (spec.get("footer") or {}).get("open_questions") or {}
-    texts = []
-    if oq.get("from_chips"):
-        texts += [ch["text"] for p in spec["panels"] for ch in p.get("chips", []) if ch["kind"] == "warning"]
-    texts += [q for q in oq.get("extra", []) if q not in texts]
-    out = [{"n": None, "text": t} for t in texts]
-    if oq.get("from_chips"):
-        out += [{"n": f["n"], "text": f["text"]} for f in flags(spec) if f["kind"] == "warning"]
+                cid = card_id(p, i, c)
+                if c["flag"]["kind"] == "info":
+                    n += 1
+                out.append({"card": cid, **c["flag"],
+                            "label": f"{prefix}{n}" if c["flag"]["kind"] == "info" else asked.get(cid, "?")})
     return out
 
 
 def notes(spec: dict) -> list[dict]:
-    """Numbered info flags, for the footer's notes panel."""
-    return [{"n": f["n"], "text": f["text"]} for f in flags(spec) if f["kind"] == "info"]
+    """Info flags, for the footer's notes panel."""
+    return [{"label": f["label"], "text": f["text"]} for f in flags(spec) if f["kind"] == "info"]
 
 
 def footer_panels(spec: dict) -> list[str]:

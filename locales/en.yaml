@@ -1,5 +1,6 @@
 # Fixed labels for lang: en.
 badge: "Part {part} of {of}"
+markers: {question: "Q", note: "N"}   # open question Q1, note N1
 footer:
   principles: "Key principles"
   open_questions: "Open questions"

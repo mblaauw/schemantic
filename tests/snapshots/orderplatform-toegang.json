@@ -4,289 +4,294 @@
    40,
    32,
    1560,
-   108
+   132
   ],
   "body": [
    40,
-   126,
+   150,
    1560,
-   928
+   950
   ],
   "clients": [
    40,
-   126,
+   150,
    360,
-   628
+   588
   ],
   "clients.card0": [
    54,
-   196,
+   220,
    348,
-   252
+   276
   ],
   "clients.card1": [
    54,
-   260,
+   284,
    348,
-   314
+   338
   ],
   "clients.card2": [
    54,
-   322,
+   346,
    348,
-   378
+   402
   ],
   "clients.card3": [
    54,
-   386,
+   410,
    348,
-   442
+   466
   ],
   "clients.card4": [
    54,
-   450,
+   474,
    348,
-   506
+   530
   ],
   "clients.chip0": [
    54,
-   516,
+   540,
    348,
-   552
+   576
   ],
   "identity": [
    408,
-   126,
+   150,
    760,
-   628
+   644
   ],
   "identity.card0": [
    422,
-   196,
+   220,
    748,
-   252
+   276
   ],
   "identity.card1": [
    422,
-   260,
+   284,
    748,
-   314
+   338
   ],
   "identity.card2": [
    422,
-   322,
+   346,
    748,
-   378
+   402
   ],
   "identity.matrix0": [
    422,
-   388,
+   412,
    748,
-   546
+   570
   ],
   "identity.chip0": [
    422,
-   556,
+   580,
    748,
-   608
+   632
   ],
   "gateway": [
    808,
-   126,
+   150,
    1128,
-   628
+   568
   ],
   "gateway.card0": [
    822,
-   198,
+   222,
    1114,
-   306
+   330
   ],
   "gateway.card1": [
    822,
-   314,
+   338,
    1114,
-   368
+   392
   ],
   "gateway.card2": [
    822,
-   376,
+   400,
    1114,
-   468
+   492
   ],
   "gateway.card3": [
    822,
-   476,
+   500,
    1114,
-   530
+   554
   ],
   "services": [
    1176,
-   126,
+   150,
    1560,
-   628
+   650
   ],
   "services.card0": [
    1190,
-   196,
+   220,
    1548,
-   252
+   276
   ],
   "services.card1": [
    1190,
-   260,
+   284,
    1548,
-   314
+   338
   ],
   "services.card2": [
    1190,
-   322,
+   346,
    1548,
-   378
+   402
   ],
   "services.card3": [
    1190,
-   386,
+   410,
    1548,
-   442
+   466
   ],
   "services.card4": [
    1190,
-   450,
+   474,
    1548,
-   506
+   530
   ],
   "services.card5": [
    1190,
-   514,
+   538,
    1548,
-   568
+   592
   ],
   "services.chip0": [
    1190,
-   578,
+   602,
    1548,
-   614
+   638
   ],
   "data": [
    40,
-   672,
+   694,
    1560,
-   928
+   950
   ],
   "data.tier-strip0": [
    54,
-   742,
+   766,
    674,
-   868
+   892
   ],
   "data.tier-strip0.0": [
    54,
-   742,
+   766,
    244,
-   868
+   892
   ],
   "data.tier-strip0.1": [
    268,
-   742,
+   766,
    458,
-   868
+   892
   ],
   "data.tier-strip0.2": [
    482,
-   742,
+   766,
    674,
-   868
+   892
   ],
   "data.tree1": [
    686,
-   742,
+   766,
    1076,
-   868
+   892
   ],
   "data.card0": [
    1088,
-   742,
+   766,
    1548,
-   798
+   820
   ],
   "data.card1": [
    1088,
-   806,
+   828,
    1548,
-   862
+   884
   ],
   "data.chip0": [
    54,
-   878,
+   902,
    1548,
-   914
+   938
   ],
   "footer": [
    40,
-   946,
+   968,
    1560,
-   1094
+   1118
   ],
   "footer.context": [
    40,
-   946,
+   968,
    590,
-   1048
+   1072
   ],
   "footer.context.card0": [
    40,
-   972,
+   996,
    308,
-   1008
+   1032
   ],
   "footer.context.card1": [
    322,
-   972,
+   996,
    590,
-   1008
+   1032
   ],
   "footer.context.card2": [
    40,
-   1012,
+   1034,
    308,
-   1048
+   1072
   ],
   "footer.context.card3": [
    322,
-   1012,
+   1034,
    590,
-   1048
+   1072
   ],
   "footer.principles": [
    618,
-   946,
+   968,
    1130,
-   1026
+   1050
   ],
   "footer.open_questions": [
    1158,
-   946,
+   968,
    1560,
-   1030
+   1052
   ],
   "footer.legend": [
    40,
-   1058,
+   1082,
    1560,
-   1094
+   1118
   ]
  },
  "text": [
   [
    40,
-   68,
-   "Orderplatform na fase 2 — toegang en data flow"
+   46,
+   "Orderplatform na fase 2: toegang en data flow"
   ],
   [
    40,
-   100,
-   "Eén identity provider en één API gateway bepalen wie welke service en data bereikt"
+   92,
+   "Eén identity provider en één gateway bepalen wie wat bereikt"
+  ],
+  [
+   40,
+   124,
+   "Mensen loggen in via OIDC, systemen met service accounts; data delen loopt via het lakehouse"
   ],
   [
    1436,
@@ -295,602 +300,622 @@
   ],
   [
    52,
-   152,
+   176,
    "Clients en gebruikers"
   ],
   [
    52,
-   170,
+   194,
    "Wie het platform aanroept"
   ],
   [
    96,
-   220,
+   244,
    "Webshop frontend"
   ],
   [
    96,
-   236,
+   260,
    "leest de product catalog"
   ],
   [
    96,
-   284,
+   308,
    "Mobile app"
   ],
   [
    96,
-   300,
+   324,
    "iOS en Android, zelfde API"
   ],
   [
    96,
-   346,
+   370,
    "Partner integraties"
   ],
   [
    96,
-   364,
+   388,
    "B2B order API voor leveranciers"
   ],
   [
    96,
-   410,
+   434,
    "Data engineers"
   ],
   [
    96,
-   426,
+   450,
    "bouwen pipelines per domein"
   ],
   [
    96,
-   474,
+   498,
    "Analisten"
   ],
   [
    96,
-   490,
+   514,
    "rapporteren via de BI tool"
   ],
   [
    90,
-   536,
+   560,
    "Partners krijgen eigen client credentials"
   ],
   [
    420,
-   152,
+   176,
    "Identity provider"
   ],
   [
    420,
-   170,
+   194,
    "OIDC voor mensen, service accounts voor systemen"
   ],
   [
    464,
-   220,
+   244,
    "OIDC login"
   ],
   [
    464,
-   236,
+   260,
    "SSO voor klanten en medewerkers"
   ],
   [
    464,
-   284,
+   308,
    "Service accounts"
   ],
   [
    464,
-   300,
+   324,
    "één per service, geen gedeelde secrets"
   ],
   [
    464,
-   346,
+   370,
    "Audit log"
   ],
   [
    464,
-   364,
+   388,
    "elke token-uitgifte wordt gelogd"
   ],
   [
    434,
-   408,
+   432,
    "Wie mag wat"
   ],
   [
    510,
-   428,
+   452,
    "Orders API"
   ],
   [
    594,
-   428,
+   452,
    "Data (Gold)"
   ],
   [
    690,
-   428,
+   452,
    "Beheer"
   ],
   [
    434,
-   450,
+   474,
    "Klant"
   ],
   [
    434,
-   470,
+   494,
    "Partner"
   ],
   [
    434,
-   492,
+   516,
    "Engineer"
   ],
   [
    434,
-   512,
+   536,
    "Analist"
   ],
   [
    448,
-   534,
+   558,
    "volledig"
   ],
   [
    518,
-   534,
+   558,
    "beperkt"
   ],
   [
    588,
-   534,
+   558,
    "geen toegang"
   ],
   [
    458,
-   578,
+   602,
    "Klanten en medewerkers in aparte realms;"
   ],
   [
    458,
-   594,
+   618,
    "audit log een jaar bewaard"
   ],
   [
    822,
-   152,
+   176,
    "API gateway"
   ],
   [
    822,
-   170,
+   194,
    "Authenticatie, rate limiting en routing"
   ],
   [
    864,
-   222,
+   246,
    "Token validatie"
   ],
   [
    864,
-   238,
+   262,
    "JWT check bij elke request"
   ],
   [
    876,
-   256,
+   280,
    "signing keys via JWKS, elk kwartier"
   ],
   [
    876,
-   274,
+   298,
    "ververst"
   ],
   [
    876,
-   290,
+   314,
    "verlopen tokens krijgen een 401"
   ],
   [
    864,
-   338,
+   362,
    "Rate limiting"
   ],
   [
-   960,
-   336,
-   "1"
+   958,
+   360,
+   "V1"
   ],
   [
-   984,
-   336,
+   988,
+   360,
    "nieuw"
   ],
   [
    864,
-   354,
+   378,
    "beschermt services tegen pieken"
   ],
   [
    864,
-   400,
+   424,
    "Routing"
   ],
   [
    864,
-   418,
+   442,
    "per domein naar de juiste service"
   ],
   [
    876,
-   436,
+   460,
    "versie in het pad: /v1, /v2"
   ],
   [
    876,
-   452,
+   476,
    "canary releases per service"
   ],
   [
    864,
-   500,
+   524,
    "Observability"
   ],
   [
    864,
-   516,
+   540,
    "logs en traces per request"
   ],
   [
    1188,
-   152,
+   176,
    "Domeinservices"
   ],
   [
    1188,
-   170,
+   194,
    "Eén service per domein, elk met een eigen database"
   ],
   [
    1232,
-   220,
+   244,
    "Catalog"
   ],
   [
    1232,
-   236,
+   260,
    "producten en prijzen"
   ],
   [
    1232,
-   284,
+   308,
    "Orders"
   ],
   [
    1232,
-   300,
+   324,
    "bestellingen en status"
   ],
   [
    1232,
-   346,
+   370,
    "Payments"
   ],
   [
    1232,
-   364,
+   388,
    "betalingen via de PSP"
   ],
   [
    1232,
-   410,
+   434,
    "Shipping"
   ],
   [
    1232,
-   426,
+   450,
    "verzending en tracking"
   ],
   [
    1232,
-   474,
+   498,
    "Customers"
   ],
   [
    1232,
-   490,
+   514,
    "profielen en adressen"
   ],
   [
    1232,
-   538,
+   562,
    "Notifications"
   ],
   [
    1332,
-   536,
+   560,
    "gepland"
   ],
   [
    1232,
-   554,
+   578,
    "e-mail en push"
   ],
   [
-   1226,
-   600,
+   1204,
+   624,
+   "V2"
+  ],
+  [
+   1232,
+   624,
    "Payments als eigen service of bij de PSP laten?"
   ],
   [
    52,
-   698,
+   720,
    "Data platform"
   ],
   [
    52,
-   716,
+   740,
    "Lakehouse met drie lagen, gevuld door pipelines per domein"
   ],
   [
    94,
-   802,
+   826,
    "Bronze"
   ],
   [
    94,
-   818,
+   840,
    "raw events en CDC"
   ],
   [
    308,
-   802,
+   826,
    "Silver"
   ],
   [
    308,
-   818,
+   840,
    "gestandaardiseerd"
   ],
   [
    524,
-   802,
+   826,
    "Gold"
   ],
   [
    524,
-   818,
+   840,
    "curated per domein"
   ],
   [
    696,
-   762,
+   786,
    "Opslag (object storage)"
   ],
   [
    696,
-   782,
+   806,
    "s3://orderplatform-prod/"
   ],
   [
    710,
-   800,
+   824,
    "orders/"
   ],
   [
    724,
-   818,
+   842,
    "bronze/  silver/  gold/"
   ],
   [
    710,
-   836,
+   860,
    "payments/"
   ],
   [
    724,
-   854,
+   878,
    "bronze/  silver/  gold/"
   ],
   [
    1130,
-   766,
+   790,
    "Lakehouse catalog"
   ],
   [
    1130,
-   782,
+   806,
    "Iceberg tabellen per domein"
   ],
   [
    1130,
-   830,
+   852,
    "Pipelines"
   ],
   [
    1130,
-   846,
+   870,
    "jobs per domein, gedeployed via CI/CD"
   ],
   [
    90,
-   900,
+   922,
    "Analisten en de BI tool lezen alleen Gold"
   ],
   [
    40,
-   958,
+   982,
    "Rollen en samenwerking"
   ],
   [
    66,
-   988,
+   1010,
    "Data engineer"
   ],
   [
    66,
-   1004,
+   1026,
    "bouwt en onderhoudt pipelines"
   ],
   [
    348,
-   988,
+   1010,
    "Analist"
   ],
   [
    348,
-   1004,
+   1026,
    "rapporteert op Gold"
   ],
   [
    66,
-   1026,
+   1050,
    "Domeinteam"
   ],
   [
    66,
-   1044,
+   1066,
    "eigenaar van service en data"
   ],
   [
    348,
-   1026,
+   1050,
    "Platformteam"
   ],
   [
    348,
-   1044,
+   1066,
    "beheert gateway en lakehouse"
   ],
   [
    616,
-   958,
+   982,
    "Belangrijke uitgangspunten"
   ],
   [
    628,
-   984,
+   1008,
    "Alleen pipelines schrijven naar productie; handmatige writes zijn niet toegestaan."
   ],
   [
    628,
-   1004,
+   1026,
    "Elke request draagt een token; zonder token weigert de gateway."
   ],
   [
    628,
-   1022,
+   1046,
    "Services delen geen database; data delen loopt via het lakehouse."
   ],
   [
    1158,
-   958,
+   982,
    "Open vragen"
   ],
   [
-   1180,
-   984,
-   "Payments als eigen service of bij de PSP laten?"
+   1162,
+   1008,
+   "V1"
   ],
   [
-   1180,
-   1004,
-   "Event bus nu of pas in fase 3?"
-  ],
-  [
-   1164,
-   1024,
-   "1"
-  ],
-  [
-   1180,
-   1024,
+   1184,
+   1008,
    "Rate limits per tenant of per client?"
   ],
   [
+   1162,
+   1028,
+   "V2"
+  ],
+  [
+   1186,
+   1028,
+   "Payments als eigen service of bij de PSP laten?"
+  ],
+  [
+   1162,
+   1048,
+   "V3"
+  ],
+  [
+   1186,
+   1048,
+   "Event bus nu of pas in fase 3?"
+  ],
+  [
    40,
-   1074,
+   1098,
    "Legenda"
   ],
   [
    142,
-   1072,
+   1094,
    "Clients en externe systemen"
   ],
   [
    358,
-   1072,
+   1094,
    "Platformcomponent"
   ],
   [
    522,
-   1072,
+   1094,
    "Data en opslag"
   ],
   [
    658,
-   1072,
+   1094,
    "Richting van requests"
   ],
   [
    838,
-   1072,
+   1094,
    "Asynchroon: event of bericht"
   ],
   [
    1034,
-   1070,
+   1094,
    "nieuw"
   ],
   [
    1080,
-   1072,
+   1094,
    "Nieuw in deze fase"
   ],
   [
    1216,
-   1070,
+   1094,
    "gepland"
   ],
   [
    1274,
-   1072,
+   1094,
    "Gepland, nog niet gebouwd"
   ],
   [
    142,
-   1090,
+   1112,
    "Waar deze plaat om draait"
   ],
   [
+   318,
+   1112,
+   "V1"
+  ],
+  [
    344,
-   1090,
+   1112,
    "Open keuze of frictie"
   ],
   [
    516,
-   1090,
+   1112,
    "Aanname of toelichting"
   ],
   [
    208,
-   654,
+   646,
    "BI en notebooks"
   ],
   [
    592,
-   654,
+   674,
    "scoped credentials"
   ],
   [
    1376,
-   654,
+   676,
    "events en CDC"
   ]
  ],
@@ -902,11 +927,11 @@
    "points": [
     [
      368,
-     376
+     368
     ],
     [
      400,
-     376
+     368
     ]
    ],
    "label": null
@@ -918,11 +943,11 @@
    "points": [
     [
      768,
-     376
+     358
     ],
     [
      800,
-     376
+     358
     ]
    ],
    "label": null
@@ -934,11 +959,11 @@
    "points": [
     [
      1136,
-     376
+     358
     ],
     [
      1168,
-     376
+     358
     ]
    ],
    "label": null
@@ -950,11 +975,11 @@
    "points": [
     [
      200,
-     634
+     596
     ],
     [
      200,
-     664
+     688
     ]
    ],
    "label": "BI en notebooks"
@@ -966,11 +991,11 @@
    "points": [
     [
      584,
-     634
+     652
     ],
     [
      584,
-     664
+     688
     ]
    ],
    "label": "scoped credentials"
@@ -982,11 +1007,11 @@
    "points": [
     [
      1368,
-     634
+     658
     ],
     [
      1368,
-     664
+     688
     ]
    ],
    "label": "events en CDC"

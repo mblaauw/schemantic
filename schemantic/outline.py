@@ -18,7 +18,7 @@ def _card(c: dict, cid: str, flag_of: dict, loc: dict) -> str:
     if c.get("note"):
         bits.append(f"— {c['note']}")
     if cid in flag_of:
-        bits.append(f"({flag_of[cid]['n']})")
+        bits.append(f"[{flag_of[cid]['label']}]")
     if c.get("focus"):
         bits.append("(focus)")
     return " ".join(bits)
@@ -59,7 +59,7 @@ def markdown(spec: dict) -> str:
     loc = load_locale(spec["canvas"]["lang"])
     flag_of = {f["card"]: f for f in flags(spec)}
     names = {p["id"]: p["title"] for p in spec["panels"]}
-    md = [f"# {spec['title']}", ""]
+    md = [f"# {spec['title']}", ""] + ([f"*{spec['topic']}*", ""] if spec.get("topic") else [])
     if spec.get("subtitle"):
         md += [spec["subtitle"], ""]
     for p in _focus_first(spec):
@@ -83,12 +83,12 @@ def markdown(spec: dict) -> str:
     questions = open_questions(spec)
     if questions:
         md += [f"## {loc['footer']['open_questions']}", ""]
-        md += [f"- {'(' + str(q['n']) + ') ' if q['n'] else ''}{q['text']}" for q in questions]
+        md += [f"- {q['label']} {q['text']}" for q in questions]
         md.append("")
     principles = (spec.get("footer") or {}).get("principles") or []
     if principles:
         md += [f"## {loc['footer']['principles']}", ""] + [f"- {p}" for p in principles] + [""]
     notes = [f for f in flags(spec) if f["kind"] == "info"]
     if notes:
-        md += [f"## {loc['footer']['notes']}", ""] + [f"- ({n['n']}) {n['text']}" for n in notes] + [""]
+        md += [f"## {loc['footer']['notes']}", ""] + [f"- {n['label']} {n['text']}" for n in notes] + [""]
     return "\n".join(md)

@@ -202,8 +202,9 @@ def test_part_larger_than_of(example):
 
 # C8: card flags
 def test_flags_are_numbered_and_reach_the_footer(example):
-    assert sp.flags(example) == [{"n": 1, "card": "gateway.card1", "kind": "warning", "text": "Rate limits per tenant of per client?"}]
-    assert {"n": 1, "text": "Rate limits per tenant of per client?"} in sp.open_questions(example)
+    assert sp.flags(example) == [{"card": "gateway.card1", "kind": "warning", "text": "Rate limits per tenant of per client?",
+                                  "label": "V1"}]
+    assert sp.open_questions(example)[0] == {"label": "V1", "text": "Rate limits per tenant of per client?", "id": "gateway.card1"}
 
 
 def test_flag_counts_for_the_chip_mirror(example):

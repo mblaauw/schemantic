@@ -144,4 +144,5 @@ def build_html(spec: dict, theme_css: str = "") -> str:
         footer_columns=" ".join(f"minmax(0, {w}fr)" for w in fcols),
         legend=legend, footer_layout=layout, open_questions=open_questions(spec), notes=notes(spec),
         flag_of={f['card']: f for f in flags(spec)},
+        question_at={q["id"]: q["label"] for q in open_questions(spec) if q["id"]},
         icons=icon_markup, tree_rows=tree_rows, matrix_values=matrix_values)

@@ -51,7 +51,8 @@ One plate per archetype, each built from a fictional spec in [`examples/`](examp
 <!-- lint -->
 ```yaml
 canvas:  {size: landscape-4x3, lang: nl, series: orderplatform, part: 2, of: 3}
-title:   "Orderplatform na fase 2 — toegang en data flow"
+topic:   "Orderplatform na fase 2: toegang en data flow"
+title:   "Eén identity provider en één gateway bepalen wie wat bereikt"
 archetype: column-flow
 layout:
   areas:

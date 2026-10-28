@@ -15,6 +15,11 @@ def draw_flows(page, spec: dict) -> dict:
     return out
 
 
+# Between two panels there is no card to connect instead: the fix is where they sit, or room.
+PANELS_HINT = "Place the two panels in neighbouring columns or rows so they share a gutter, or cut content to give room."
+
+
 def problems_as_findings(flows: dict) -> list[dict]:
-    return [{"level": "error", "check": x["check"], "id": f"flows/{x['i']}", "detail": x["problem"]}
+    return [{"level": "error", "check": x["check"], "id": f"flows/{x['i']}", "detail": x["problem"],
+             **({"hint": PANELS_HINT} if x["kind"] == "route" and not x.get("cards") else {})}
             for x in flows["problems"]]

@@ -85,7 +85,7 @@ def crossings(segs: list[dict]) -> int:
         inside = lambda v, x, y: min(x, y) + 2 < v < max(x, y) - 2  # noqa: E731
         return h[0][1] == h[1][1] and w[0][0] == w[1][0] and inside(w[0][0], h[0][0], h[1][0]) \
             and inside(h[0][1], w[0][1], w[1][1])
-    runs = [list(zip(s["points"], s["points"][1:])) for s in segs]
+    runs = [list(zip(s["points"], s["points"][1:], strict=False)) for s in segs]
     return sum(across(p, q) or across(q, p) for i, a in enumerate(runs) for b in runs[i + 1:] for p in a for q in b)
 
 

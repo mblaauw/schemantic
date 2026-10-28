@@ -57,7 +57,7 @@ def _outline(attrs: dict, text: str) -> str:
     y = float(attrs["y"])
     glyphs = tt.getGlyphSet()
     pen = SVGPathPen(glyphs, ntos=lambda v: f"{v:.2f}".rstrip("0").rstrip("."))
-    for info, pos in zip(buf.glyph_infos, buf.glyph_positions):
+    for info, pos in zip(buf.glyph_infos, buf.glyph_positions, strict=True):
         name = tt.getGlyphName(info.codepoint)
         glyphs[name].draw(TransformPen(pen, (scale, 0, 0, -scale, x + pos.x_offset * scale, y - pos.y_offset * scale)))
         x += pos.x_advance * scale

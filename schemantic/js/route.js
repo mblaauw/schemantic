@@ -494,11 +494,14 @@ schemantic.route = (flows) => {
       if (r) return r;
     }
     if (!pick) {
+      const cards = j.A.dataset.kind === "card" || j.B.dataset.kind === "card";
       problems.push({
         i: j.i,
         kind: "route",
-        problem:
-          "no clear route between the two boxes; connect their panels instead, or move one so they share a gutter",
+        cards,
+        problem: cards
+          ? "no clear route between the two cards; connect their panels instead, or move one so they share a gutter"
+          : "no clear route between the two panels: every way round crosses another box",
       });
       return null;
     }

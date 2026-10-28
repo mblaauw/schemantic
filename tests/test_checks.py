@@ -67,13 +67,17 @@ LAYOUT_TRIGGERS = {
     "arrow-routing": (admission_last, "", LAYERS),
     "arrow-label": (lambda s: s["flows"][0].update(label="OIDC"), "", BASE),
     "arrow-crossing": (lambda s: None, "", SKIP),
+    "footer-share": (lambda s: None, "#plate .footer .pb { padding-bottom: 80px; }", BASE),
+    "widow": (lambda s: s.update(title="Domains publish each fact once; every consumer reads it from the bus"), "", BASE),
     "paint": (lambda s: None, ".ph-title { letter-spacing: 2px; }", BASE),
     "font": (lambda s: s["panels"][0]["cards"][0].update(note="kantoor in 東京"), "", BASE),
     "network": (lambda s: None, '@font-face { font-family: Remote; src: url("https://192.0.2.1/remote.woff2"); } '
                                 '.ph-title { font-family: Remote, Inter; }', BASE),
     "chip-length": (lambda s: panel(s, "security")["chips"][0].update(text=LONG_CHIP),
                     "", LAYERS),
-    "void": (lambda s: panel(s, "services").update(cards=panel(s, "services")["cards"][:1], chips=[]), "", BASE),
+    # A short panel ends with its content; a hole is left only where a panel spans rows (a rail beside four layers).
+    "void": (lambda s: panel(s, "security").update(cards=[c for c in panel(s, "security")["cards"] if c.get("id") == "policy"],
+                                                   chips=[]), "", LAYERS),
 }
 OTHER = {"yaml", "svg-parity", "internal"}
 

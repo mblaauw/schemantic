@@ -44,11 +44,14 @@ No coordinates does not mean the layout designs itself. Three parts decide three
   advances to whole pixels on Linux, text runs a few pixels wider than on macOS, and lines wrap differently. Without
   the second, Linux antialiases text with colour fringes, which a colour-aware image comparison sees on every bold
   glyph. With both, the layout and the pixels match, and the same goldens pass on both.
+- **A frame says "this is full".** A panel stretched to the height of its row showed an empty band inside its
+  frame, and reviewers read it as missing content. The same space below a panel that ends with its content reads
+  as rhythm, so panels now end with their content; only panels spanning rows still fill them.
 - **Holes are the common defect, and the fix is content.** A density ratio missed panels that looked empty; the
   void check (the largest empty run inside a panel) matches what reviewers see. Most voids came from a fixed canvas
   dumping its spare height into one row, which `canvas.height: fit` removes.
 - **A footer is context.** Dark header bars on footer panels drew the eye away from the body and took 17–18% of the
-  canvas; quiet labels and a legend strip bring it under 13%.
+  canvas; quiet labels and a legend strip bring it under 13%, and lint warns above 15% (`footer-share`).
 - **Connectors are routed, not drawn.** Every route is checked against the measured boxes. A rail card connected to
   the card at the far end of a layer had no clear route; lint said so, and the fix was card order in the spec.
   Straight arrows and their labels are placed first; bent routes then avoid them, and may move a label along its

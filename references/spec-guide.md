@@ -12,7 +12,8 @@ plate readable. Lengths are maximum characters.
 | `canvas.series`, `part`, `of` | a badge "Part 2 of 3"; give both `part` and `of` |
 | `canvas.height` | `fit` (default: the canvas takes its content height; a 16:9 slide keeps its shape) or `fixed` (the preset size; spare height goes to the gaps) |
 | `canvas.theme` | optional CSS file, relative to the spec, that recolours or adds roles |
-| `title` (80) | the one message, as a claim. Not "Architecture overview" |
+| `topic` (60) | optional: what the plate is about, in a few words ("Order platform after phase 2"); a quiet line above the title, so the title is free to make the claim |
+| `title` (80) | the one message, as a claim. Not "Architecture overview": that is a topic. Lint warns when its last line is one word |
 | `subtitle` (120) | how the plate makes that claim true |
 | `archetype`, `layout` | see `archetypes.md`; `layout.chips_at: bottom` lines chips up at the bottom of a row |
 | `flows_mean` | what every arrow means: `data`, `request`, `dependency` or `control`; sets the legend (lint warns without it) |
@@ -65,9 +66,10 @@ A note says what the card does in this story, not what the product is in general
 
 ## Chips
 
-- `warning` (90): an open choice or friction. It is repeated under open questions; set
+- `warning` (90): an open choice or friction. It is listed under open questions; set
   `footer.open_questions.from_chips: true` or repeat its exact text in `extra`. A card `flag` does the same for one
-  card, with a number.
+  card. Every open question gets a label in reading order (Q1, Q2; V1 in Dutch) that shows on the chip or card and
+  in the footer, so the reader can go from one to the other. Info flags are notes (N1).
 - `info` (90): an assumption or a note the reader needs. A chip holds at most two lines.
 
 ## Flows

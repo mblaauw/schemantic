@@ -13,7 +13,7 @@
 
 {%- macro card(c, cid) -%}
 {%- set fl = flag_of.get(cid) -%}
-<div class="card{% if c.status %} status-{{ c.status }}{% endif %}{% if c.focus %} focus{% endif %}" data-kind="card" data-id="{{ cid }}"{% if c.col %} style="grid-column: {{ c.col }}; grid-row: 1"{% endif %}{% if c.refs %} data-refs="{{ c.refs | join(' | ') }}"{% endif %}{% if c.status == 'planned' %} data-dash{% endif %}>{{ icon(c.icon or 'box') }}<div class="ct"><div class="cn"><span{% if c.status == 'removed' %} data-strike{% endif %}>{{ c.name }}</span>{% if c.qualifier %} <span class="cq">({{ c.qualifier }})</span>{% endif %}{% if fl %}<span class="flag flag-{{ fl.kind }}">{{ fl.n }}</span>{% endif %}{% if c.status %} {{ tag(c.status) }}{% endif %}</div>
+<div class="card{% if c.status %} status-{{ c.status }}{% endif %}{% if c.focus %} focus{% endif %}" data-kind="card" data-id="{{ cid }}"{% if c.col %} style="grid-column: {{ c.col }}; grid-row: 1"{% endif %}{% if c.refs %} data-refs="{{ c.refs | join(' | ') }}"{% endif %}{% if c.status == 'planned' %} data-dash{% endif %}>{{ icon(c.icon or 'box') }}<div class="ct"><div class="cn"><span{% if c.status == 'removed' %} data-strike{% endif %}>{{ c.name }}</span>{% if c.qualifier %} <span class="cq">({{ c.qualifier }})</span>{% endif %}{% if fl %}<span class="flag flag-{{ fl.kind }}">{{ fl.label }}</span>{% endif %}{% if c.status %} {{ tag(c.status) }}{% endif %}</div>
 {%- if c.note %}<div class="cnote">{{ c.note }}</div>{% endif -%}
 {%- if c.bullets %}<div class="cb">{{ bullets(c.bullets) }}</div>{% endif -%}
 </div></div>
@@ -90,7 +90,7 @@
 {%- if p.arrange == 'row' and p.cards %}{{ cards_block(p, ('; flex: ' ~ w[npat] ~ ' 1 0') if w | length > npat else '') }}{% endif -%}
 </div>
 {%- if p.chips -%}
-<div class="chips{% if p.chips_bottom %} chips-bottom{% endif %}">{% for ch in p.chips %}<div class="chip chip-{{ ch.kind }}" data-kind="chip" data-id="{{ p.id }}.chip{{ loop.index0 }}">{{ icon('alert-triangle' if ch.kind == 'warning' else 'info-circle') }}<div>{{ ch.text }}</div></div>{% endfor %}</div>
+<div class="chips{% if p.chips_bottom %} chips-bottom{% endif %}">{% for ch in p.chips %}{% set ql = question_at.get(p.id ~ '.chip' ~ loop.index0) %}<div class="chip chip-{{ ch.kind }}" data-kind="chip" data-id="{{ p.id }}.chip{{ loop.index0 }}">{% if ql %}<span class="flag flag-warning">{{ ql }}</span>{% else %}{{ icon('alert-triangle' if ch.kind == 'warning' else 'info-circle') }}{% endif %}<div>{{ ch.text }}</div></div>{% endfor %}</div>
 {%- endif -%}
 </div>
 </section>
@@ -105,7 +105,7 @@
 <body>
 <div id="plate"{% if spec.layout.row_heights %} class="rows-legacy"{% endif %} style="width: {{ width }}px; height: {{ height }}px">
 <header class="titleblock" data-kind="titleblock" data-id="titleblock">
-<div><h1 class="title">{{ spec.title }}</h1>{% if spec.subtitle %}<p class="subtitle">{{ spec.subtitle }}</p>{% endif %}</div>
+<div>{% if spec.topic %}<p class="topic">{{ spec.topic }}</p>{% endif %}<h1 class="title">{{ spec.title }}</h1>{% if spec.subtitle %}<p class="subtitle">{{ spec.subtitle }}</p>{% endif %}</div>
 {%- if badge %}<div class="badge">{{ badge }}</div>{% endif -%}
 </header>
 <main class="body" id="body" data-kind="body" data-id="body">
@@ -137,10 +137,10 @@
 <div class="pb">{{ bullets(footer.principles) }}</div></section>
 {%- elif name == 'open_questions' -%}
 <section class="panel role-frame" data-kind="panel" data-id="footer.open_questions"><div class="ph"><div class="ph-title">{{ L.footer.open_questions }}</div></div>
-<div class="pb">{% for q in open_questions %}<div class="oq">{% if q.n %}<span class="flag flag-warning">{{ q.n }}</span>{% else %}{{ icon('alert-triangle') }}{% endif %}<span>{{ q.text }}</span></div>{% endfor %}</div></section>
+<div class="pb">{% for q in open_questions %}<div class="oq"><span class="flag flag-warning">{{ q.label }}</span><span>{{ q.text }}</span></div>{% endfor %}</div></section>
 {%- elif name == 'notes' -%}
 <section class="panel role-frame" data-kind="panel" data-id="footer.notes"><div class="ph"><div class="ph-title">{{ L.footer.notes }}</div></div>
-<div class="pb">{% for q in notes %}<div class="note"><span class="flag flag-info">{{ q.n }}</span><span>{{ q.text }}</span></div>{% endfor %}</div></section>
+<div class="pb">{% for q in notes %}<div class="note"><span class="flag flag-info">{{ q.label }}</span><span>{{ q.text }}</span></div>{% endfor %}</div></section>
 {%- elif name == 'legend' -%}
 <section class="panel role-frame" data-kind="panel" data-id="footer.legend"><div class="ph"><div class="ph-title">{{ L.footer.legend }}</div></div>
 <div class="pb">
@@ -151,6 +151,7 @@
 {%- elif e.kind == 'step' %}<div class="lg"><span class="flag flag-step">1</span><span>{{ e.label }}</span></div>
 {%- elif e.kind == 'status' %}<div class="lg">{{ tag(e.key) }}<span>{{ e.label }}</span></div>
 {%- elif e.kind == 'focus' %}<div class="lg"><span class="sw focus-sw"></span><span>{{ e.label }}</span></div>
+{%- elif e.key == 'warning' and open_questions %}<div class="lg"><span class="flag flag-warning">{{ open_questions[0].label }}</span><span>{{ e.label }}</span></div>
 {%- else %}<div class="lg">{{ icon('alert-triangle' if e.key == 'warning' else 'info-circle', 'ic', ' lg-' ~ e.key) }}<span>{{ e.label }}</span></div>{% endif -%}
 {%- endfor -%}
 </div></section>

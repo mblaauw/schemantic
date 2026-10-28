@@ -19,7 +19,7 @@ from .export import export_svg, font_findings, measure
 from .findings import with_hint
 from .html import build_html
 from .images import image_diff, snapshot
-from .lint import dom_lint
+from .lint import dom_lint, widow_findings
 from .route import draw_flows, problems_as_findings
 from .spec import check, read_spec
 
@@ -87,7 +87,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 issues += dom["issues"]
                 layout = measure(page)
                 (work / f"{name}.layout.json").write_text(json.dumps(layout, ensure_ascii=False), encoding="utf-8")
-                issues += paint_findings(layout["unsupported"]) + font_findings(layout)
+                issues += paint_findings(layout["unsupported"]) + font_findings(layout) + widow_findings(layout, spec)
                 svg, fonts = export_svg(layout, spec)
                 snap = snapshot(page, layout, flows["segs"])
                 svg_path = work / f"{name}.svg"

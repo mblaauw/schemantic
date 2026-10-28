@@ -1,6 +1,7 @@
 # yaml-language-server: $schema=../schema/plate.schema.json
 # Fictional example: a swimlane plate in English. Lanes are actors, steps sit in phase columns, handoffs are flows.
 canvas: {size: landscape-4x3, lang: en}
+topic: "Incident response for customer-facing outages"
 title: "A customer-facing incident has one commander and one voice"
 subtitle: "Monitoring pages on-call; the commander runs the response; communications alone talks to customers"
 archetype: swimlane

@@ -10,13 +10,13 @@
    40,
    126,
    1560,
-   928
+   926
   ],
   "clients": [
    40,
    126,
    360,
-   628
+   564
   ],
   "clients.card0": [
    54,
@@ -58,7 +58,7 @@
    408,
    126,
    760,
-   628
+   620
   ],
   "identity.card0": [
    422,
@@ -94,7 +94,7 @@
    808,
    126,
    1128,
-   628
+   544
   ],
   "gateway.card0": [
    822,
@@ -124,7 +124,7 @@
    1176,
    126,
    1560,
-   628
+   626
   ],
   "services.card0": [
    1190,
@@ -170,9 +170,9 @@
   ],
   "data": [
    40,
-   672,
+   670,
    1560,
-   928
+   926
   ],
   "data.tier-strip0": [
    54,
@@ -208,13 +208,13 @@
    1088,
    742,
    1548,
-   798
+   796
   ],
   "data.card1": [
    1088,
-   806,
+   804,
    1548,
-   862
+   860
   ],
   "data.chip0": [
    54,
@@ -224,13 +224,13 @@
   ],
   "footer": [
    40,
-   946,
+   944,
    1560,
    1094
   ],
   "footer.context": [
    40,
-   946,
+   944,
    590,
    1048
   ],
@@ -248,27 +248,27 @@
   ],
   "footer.context.card2": [
    40,
-   1012,
+   1010,
    308,
    1048
   ],
   "footer.context.card3": [
    322,
-   1012,
+   1010,
    590,
    1048
   ],
   "footer.principles": [
    618,
-   946,
+   944,
    1130,
    1026
   ],
   "footer.open_questions": [
    1158,
-   946,
+   944,
    1560,
-   1030
+   1028
   ],
   "footer.legend": [
    40,
@@ -504,12 +504,12 @@
    "Rate limiting"
   ],
   [
-   960,
+   958,
    336,
-   "1"
+   "V1"
   ],
   [
-   984,
+   988,
    336,
    "nieuw"
   ],
@@ -624,13 +624,18 @@
    "e-mail en push"
   ],
   [
-   1226,
+   1204,
+   600,
+   "V2"
+  ],
+  [
+   1232,
    600,
    "Payments als eigen service of bij de PSP laten?"
   ],
   [
    52,
-   698,
+   696,
    "Data platform"
   ],
   [
@@ -645,7 +650,7 @@
   ],
   [
    94,
-   818,
+   816,
    "raw events en CDC"
   ],
   [
@@ -655,7 +660,7 @@
   ],
   [
    308,
-   818,
+   816,
    "gestandaardiseerd"
   ],
   [
@@ -665,7 +670,7 @@
   ],
   [
    524,
-   818,
+   816,
    "curated per domein"
   ],
   [
@@ -710,7 +715,7 @@
   ],
   [
    1130,
-   830,
+   828,
    "Pipelines"
   ],
   [
@@ -720,7 +725,7 @@
   ],
   [
    90,
-   900,
+   898,
    "Analisten en de BI tool lezen alleen Gold"
   ],
   [
@@ -730,22 +735,22 @@
   ],
   [
    66,
-   988,
+   986,
    "Data engineer"
   ],
   [
    66,
-   1004,
+   1002,
    "bouwt en onderhoudt pipelines"
   ],
   [
    348,
-   988,
+   986,
    "Analist"
   ],
   [
    348,
-   1004,
+   1002,
    "rapporteert op Gold"
   ],
   [
@@ -755,7 +760,7 @@
   ],
   [
    66,
-   1044,
+   1042,
    "eigenaar van service en data"
   ],
   [
@@ -765,7 +770,7 @@
   ],
   [
    348,
-   1044,
+   1042,
    "beheert gateway en lakehouse"
   ],
   [
@@ -780,7 +785,7 @@
   ],
   [
    628,
-   1004,
+   1002,
    "Elke request draagt een token; zonder token weigert de gateway."
   ],
   [
@@ -794,24 +799,34 @@
    "Open vragen"
   ],
   [
-   1180,
+   1162,
    984,
+   "V1"
+  ],
+  [
+   1184,
+   984,
+   "Rate limits per tenant of per client?"
+  ],
+  [
+   1162,
+   1004,
+   "V2"
+  ],
+  [
+   1186,
+   1004,
    "Payments als eigen service of bij de PSP laten?"
   ],
   [
-   1180,
-   1004,
+   1162,
+   1024,
+   "V3"
+  ],
+  [
+   1186,
+   1024,
    "Event bus nu of pas in fase 3?"
-  ],
-  [
-   1164,
-   1024,
-   "1"
-  ],
-  [
-   1180,
-   1024,
-   "Rate limits per tenant of per client?"
   ],
   [
    40,
@@ -820,27 +835,27 @@
   ],
   [
    142,
-   1072,
+   1070,
    "Clients en externe systemen"
   ],
   [
    358,
-   1072,
+   1070,
    "Platformcomponent"
   ],
   [
    522,
-   1072,
+   1070,
    "Data en opslag"
   ],
   [
    658,
-   1072,
+   1070,
    "Richting van requests"
   ],
   [
    838,
-   1072,
+   1070,
    "Asynchroon: event of bericht"
   ],
   [
@@ -850,7 +865,7 @@
   ],
   [
    1080,
-   1072,
+   1070,
    "Nieuw in deze fase"
   ],
   [
@@ -860,37 +875,42 @@
   ],
   [
    1274,
-   1072,
+   1070,
    "Gepland, nog niet gebouwd"
   ],
   [
    142,
-   1090,
+   1088,
    "Waar deze plaat om draait"
   ],
   [
+   318,
+   1088,
+   "V1"
+  ],
+  [
    344,
-   1090,
+   1088,
    "Open keuze of frictie"
   ],
   [
    516,
-   1090,
+   1088,
    "Aanname of toelichting"
   ],
   [
    208,
-   654,
+   622,
    "BI en notebooks"
   ],
   [
    592,
-   646,
+   640,
    "scoped credentials"
   ],
   [
    1376,
-   654,
+   652,
    "events en CDC"
   ]
  ],
@@ -902,11 +922,11 @@
    "points": [
     [
      368,
-     376
+     344
     ],
     [
      400,
-     376
+     344
     ]
    ],
    "label": null
@@ -918,11 +938,11 @@
    "points": [
     [
      768,
-     376
+     334
     ],
     [
      800,
-     376
+     334
     ]
    ],
    "label": null
@@ -934,11 +954,11 @@
    "points": [
     [
      1136,
-     376
+     334
     ],
     [
      1168,
-     376
+     334
     ]
    ],
    "label": null
@@ -950,7 +970,7 @@
    "points": [
     [
      200,
-     634
+     572
     ],
     [
      200,
@@ -966,7 +986,7 @@
    "points": [
     [
      584,
-     634
+     628
     ],
     [
      584,
@@ -998,15 +1018,15 @@
    "points": [
     [
      344,
-     634
+     572
     ],
     [
      344,
-     660
+     656
     ],
     [
      1192,
-     660
+     656
     ],
     [
      1192,

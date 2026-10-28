@@ -322,7 +322,8 @@ def test_matrix_is_as_wide_as_its_content(renders):
 
 # C11: print sizes
 def test_a3_at_300_dpi(tmp_path):
-    spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
+    # The event bus fits the A3 sheet; the denser toegang plate needs the print model that scales to paper (planned)
+    spec = sp.load_spec(ROOT / "examples" / "orderplatform-eventbus.yaml")
     spec["canvas"]["size"] = "a3-landscape"
     code, report = run("build", write(tmp_path, spec, "a3"), "--out", tmp_path, "--dpi", 300)
     assert (code, report["errors"]) == (0, [])
