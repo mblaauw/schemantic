@@ -3,9 +3,10 @@
 Usage: python3 scripts/doctor.py [--no-install]   (or: python -m schemantic doctor)
 
 Order: the interpreter running this script; an existing cache venv; a new cache venv. The cache lives in
-${SCHEMANTIC_HOME:-${XDG_CACHE_HOME:-~/.cache}/schemantic}. Nothing is ever written into the skill folder, which
-is read-only once installed. Chromium is launched once; only if that fails does it try `playwright install
-chromium`, which needs network access. Uses the standard library only, so any python3 can run it.
+${SCHEMANTIC_HOME:-${XDG_CACHE_HOME:-~/.cache}/schemantic}; an offline kit installs its venv and Chromium there.
+Nothing is ever written into the skill folder, which is read-only once installed. Chromium is launched once; only
+if that fails does it try `playwright install chromium`, which needs network access. Uses the standard library only,
+so any python3 can run it.
 """
 import argparse
 import json
@@ -37,6 +38,13 @@ def home() -> Path:
     return Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache").expanduser() / "schemantic"
 
 
+def use_kit_browsers() -> None:
+    """An offline kit installs Chromium into <home>/browsers; point Playwright there unless told otherwise. Must run
+    before Playwright starts, which reads the variable once."""
+    if not os.environ.get("PLAYWRIGHT_BROWSERS_PATH") and (home() / "browsers").is_dir():
+        os.environ["PLAYWRIGHT_BROWSERS_PATH"] = str(home() / "browsers")
+
+
 def venv_python(venv: Path) -> Path:
     return venv / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
 
@@ -58,6 +66,7 @@ def run(cmd: list[str], steps: list[str], what: str) -> bool:
 
 
 def diagnose(install: bool = True) -> dict:
+    use_kit_browsers()  # the probes run in child processes, which inherit it
     steps: list[str] = []
     venv = home() / "venv"
     candidates = [Path(sys.executable)] + ([venv_python(venv)] if venv_python(venv).exists() else [])

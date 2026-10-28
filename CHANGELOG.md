@@ -119,6 +119,12 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   - F06: pattern blocks and their tiers and rows reject unknown fields, so a misspelt field is a schema error.
   - F13: icon names must be lowercase words joined by hyphens, and the semantic check looks them up in the icon index
     rather than as a file path.
+  - Air-gapped use: `schemantic offline <folder>` writes a kit with the runtime, the wheels at the tested versions
+    with their hashes (`requirements.lock`), Playwright's Chromium, a manifest and `SHA256SUMS`; its `install.sh`
+    installs with no network (`pip --no-index --require-hashes`), checks every file, and runs a smoke test that must
+    reproduce the builder's layout digest. `schemantic verify` and `schemantic smoke` run those checks alone. Every
+    build refuses network requests; a theme with a remote font or image is a `network` error. CI installs a kit on
+    Ubuntu and macOS with the network cut off. See `docs/offline.md`.
   - F16: a published plate comes with `<name>.build.json`: the Schemantic, spec, Chromium, Playwright and Python
     versions, and digests of the spec, theme and fonts (also `build` in the report).
 - Wrapped rows inside a zone keep their content height; spare height stays in the zone frame instead of opening

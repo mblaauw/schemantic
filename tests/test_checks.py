@@ -67,6 +67,8 @@ LAYOUT_TRIGGERS = {
     "arrow-routing": (admission_last, "", LAYERS),
     "arrow-label": (lambda s: s["flows"][0].update(label="OIDC"), "", BASE),
     "arrow-crossing": (lambda s: None, "", SKIP),
+    "network": (lambda s: None, '@font-face { font-family: Remote; src: url("https://192.0.2.1/remote.woff2"); } '
+                                '.ph-title { font-family: Remote, Inter; }', BASE),
     "chip-length": (lambda s: panel(s, "security")["chips"][0].update(text=LONG_CHIP),
                     "", LAYERS),
     "void": (lambda s: panel(s, "services").update(cards=panel(s, "services")["cards"][:1], chips=[]), "", BASE),

@@ -28,9 +28,13 @@ python -m schemantic build examples/orderplatform-toegang.yaml --out out
 
 `build` checks the spec, lays the plate out in Chromium, routes the connectors, lints the result, and writes
 `out/<name>.svg`, `.png` and `.md` (the outline). It prints a JSON report and exits 1 on errors; every finding names
-an element and carries a hint. Other commands: `lint`, `doctor`, `icons <word>`, `gallery`, `docs`. Print with
-`canvas.size: a3-landscape` and `--dpi 300`; hand off to a design tool with `--outline-text`; restyle with a theme
-(`canvas.theme` or `--theme`, see [`examples/themes/warm.css`](examples/themes/warm.css)).
+an element and carries a hint. Other commands: `lint`, `doctor`, `icons <word>`, `gallery`, `docs`, `offline`,
+`verify`, `smoke`. Print with `canvas.size: a3-landscape` and `--dpi 300`; hand off to a design tool with
+`--outline-text`; restyle with a theme (`canvas.theme` or `--theme`, see
+[`examples/themes/warm.css`](examples/themes/warm.css)).
+
+Rendering needs no network. For a machine without one, `schemantic offline <folder>` writes a kit (pinned and hashed
+wheels, Chromium, checksums, an installer with a smoke test); see [`docs/offline.md`](docs/offline.md).
 
 ## Gallery
 

@@ -6,3 +6,4 @@ out/
 .pytest_cache/
 pytest-tmp/
 evals/runs/
+dist/

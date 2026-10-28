@@ -92,6 +92,10 @@ CHECKS: dict[str, Check] = {
     "svg-parity": Check("layout", "the SVG differs from the measured layout",
                         "a renderer problem, not a spec problem: report it with the `detail` and the files in `out/_work/`",
                         "Report it with the detail and the files in out/_work/; it is not a spec problem."),
+    "network": Check("layout", "the plate tried to load something from the network (a theme with a remote font or image)",
+                     "put the file next to the theme and use a relative path, or drop it: a plate loads nothing from the "
+                     "network, so it builds the same on a machine without one",
+                     "Bundle the font or image with the theme, or drop it; plates load nothing from the network."),
     "internal": Check("layout", "Schemantic itself failed", "not a spec problem: report the detail and the spec",
                       "Report the detail and the spec; it is not a spec problem."),
 }

@@ -20,7 +20,8 @@ python3 "$SKILL/scripts/doctor.py"
 
 It prints JSON. Use its `python` value as `$PY` in every command below. It picks a Python that already has the
 dependencies, or creates a venv in `~/.cache/schemantic` (or `$SCHEMANTIC_HOME`), and proves Chromium starts. If
-`ok` is false, tell the user its `problem` and stop.
+`ok` is false, tell the user its `problem` and stop. On a machine without network access, the user installs an
+offline kit first (`docs/offline.md`); the doctor then finds its venv and Chromium.
 
 ## 1. Inventory the sources
 

@@ -55,6 +55,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
               "svg": None, "png": None, "outline": None, "snapshot": None, "fonts": [], "flow_problems": [], "build": None, "preview": None}
     spec, issues = read_spec(spec_path)
     staged: dict[str, Path] = {}  # deliverables written to _work/, waiting for a clean report
+    refused: list[str] = []  # network requests the page tried to make
     if not issues:
         file_css, issues = load_theme(spec, spec_path, theme)
         theme_css = "\n".join(c for c in (file_css, theme_css) if c)
@@ -68,7 +69,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
             browser = launch(p)
             try:
                 report["build"] = manifest(spec, spec_path, theme_css, browser.version)
-                page = open_plate(browser, html, spec)
+                page = open_plate(browser, html, spec, refused=refused)
                 flows = draw_flows(page, spec)
                 issues += problems_as_findings(flows)
                 dom = dom_lint(page, flows["segs"])
@@ -89,18 +90,21 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 # Parity: the page as laid out (connectors included) against the SVG rasterised at the same scale.
                 page.locator("#plate").screenshot(path=str(work / "html.png"))
                 page.close()
-                rasterise_svg(browser, parity_svg, work / "svg.png", scale=1)
+                rasterise_svg(browser, parity_svg, work / "svg.png", scale=1, refused=refused)
                 par = image_diff(work / "html.png", work / "svg.png", work / "parity-diff.png")
                 if deliver:
                     (work / f"{name}.md").write_text(outline.markdown(spec), encoding="utf-8")
                     (work / f"{name}.build.json").write_text(json.dumps(report["build"], indent=1) + "\n", encoding="utf-8")
                     size = spec["canvas"]["size"]
                     rasterise_svg(browser, svg_path, work / f"{name}.png", scale=scale,
-                                  size=png_size(size, *svg_size(svg_path), scale) if size in PRINT_SIZES else None)
+                                  size=png_size(size, *svg_size(svg_path), scale) if size in PRINT_SIZES else None,
+                                  refused=refused)
                     staged = {k: work / f"{name}.{ext}" for k, ext in
                               (("svg", "svg"), ("png", "png"), ("outline", "md"), ("manifest", "build.json"))}
             finally:
                 browser.close()
+        for url in dict.fromkeys(refused):
+            issues.append({"level": "error", "check": "network", "id": "(plate)", "detail": f"tried to load {url}"})
         if par["fail"]:
             issues.append({"level": "error", "check": "svg-parity", "id": "(plate)", "detail": par["detail"]})
         elif par["count"]:

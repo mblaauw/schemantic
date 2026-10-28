@@ -42,4 +42,5 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `chip-length` | a chip runs to three lines | shorten it to one clear sentence |
 | `void` | a run of empty space inside a body panel: warning over 96 px, error over 160 px | add real content (bullets, a pattern, an info chip); move the panel next to one of its height; merge it with a neighbour; never filler |
 | `svg-parity` | the SVG differs from the measured layout | a renderer problem, not a spec problem: report it with the `detail` and the files in `out/_work/` |
+| `network` | the plate tried to load something from the network (a theme with a remote font or image) | put the file next to the theme and use a relative path, or drop it: a plate loads nothing from the network, so it builds the same on a machine without one |
 | `internal` | Schemantic itself failed | not a spec problem: report the detail and the spec |

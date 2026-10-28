@@ -10,6 +10,9 @@ from PIL import Image
 
 from . import archetypes
 from .config import CANVAS_SIZES, JS_DIR, PRINT_SIZES
+from .doctor import use_kit_browsers
+
+use_kit_browsers()  # before any Playwright starts: a Chromium installed by an offline kit is found without setup
 
 # With a fixed canvas, each gap grows by at most this much; the rest of the surplus stays under the footer.
 GAP_CAP = 48
@@ -18,6 +21,11 @@ GAP_CAP = 48
 # pixels wider than on macOS and lines wrap differently. Without the second it antialiases text with colour fringes
 # (subpixel, for LCD screens), which macOS headless does not; grey antialiasing makes the pixels match too.
 LAUNCH_ARGS = ["--font-render-hinting=none", "--disable-lcd-text"]
+# A plate loads nothing from the network: fonts, icons and styles are bundled, so a build gives the same result on a
+# machine without one. Page requests that would leave the machine are refused and reported (see `offline`); anything
+# else Chromium tries goes to a proxy that is not there, so not even a DNS lookup leaves.
+OFFLINE_ARGS = ["--proxy-server=http://127.0.0.1:9", "--proxy-bypass-list=<-loopback>", "--no-pings"]
+REMOTE = re.compile(r"^(https?|wss?|ftp)://", re.IGNORECASE)
 
 
 # common.js first: the other scripts attach their function to the `schemantic` object it creates.
@@ -25,7 +33,16 @@ SCRIPTS = ["common.js", "fit.js", "decorate.js", "route.js", "export.js", "lint.
 
 
 def launch(playwright):
-    return playwright.chromium.launch(args=LAUNCH_ARGS)
+    return playwright.chromium.launch(args=LAUNCH_ARGS + OFFLINE_ARGS)
+
+
+def offline(page, refused: list[str] | None = None) -> None:
+    """Refuse every request from the page that would leave the machine, noting its URL in `refused`."""
+    def refuse(route):
+        if refused is not None:
+            refused.append(route.request.url)
+        route.abort()
+    page.route(REMOTE, refuse)
 
 
 @cache
@@ -45,10 +62,12 @@ def height_mode(spec: dict) -> str:
     return spec["canvas"].get("height", "fixed" if spec["canvas"]["size"] in PRINT_SIZES else "fit")
 
 
-def open_plate(browser, html: str, spec: dict, scale: float = 1):
-    """Load the plate, wait for its fonts, set the canvas height (fit or fixed), and draw the decorations."""
+def open_plate(browser, html: str, spec: dict, scale: float = 1, refused: list[str] | None = None):
+    """Load the plate, wait for its fonts, set the canvas height (fit or fixed), and draw the decorations. Requests
+    for the network are refused and noted in `refused`."""
     width, height = CANVAS_SIZES[spec["canvas"]["size"]]
     page = browser.new_page(viewport={"width": math.ceil(width), "height": math.ceil(height)}, device_scale_factor=scale)
+    offline(page, refused)
     page.set_content(html)
     page.evaluate(fonts_ready())
     page.add_script_tag(content=page_scripts())
@@ -74,11 +93,13 @@ def svg_size(svg_path: Path) -> tuple[float, float]:
     return float(w), float(h)
 
 
-def rasterise_svg(browser, svg_path: Path, png_path: Path, scale: float = 2, size: tuple[int, int] | None = None) -> None:
+def rasterise_svg(browser, svg_path: Path, png_path: Path, scale: float = 2, size: tuple[int, int] | None = None,
+                  refused: list[str] | None = None) -> None:
     """Screenshot the SVG at `scale` (dpi / 96), and record the dpi in the PNG. With `size` (a paper sheet at that
     dpi), the image is fitted to exactly that many pixels; the difference is a fraction of a pixel per edge."""
     width, height = svg_size(svg_path)
     page = browser.new_page(viewport={"width": math.ceil(width), "height": math.ceil(height)}, device_scale_factor=scale)
+    offline(page, refused)
     page.goto(svg_path.resolve().as_uri())
     page.evaluate(fonts_ready())
     page.screenshot(path=str(png_path), clip={"x": 0, "y": 0, "width": width, "height": height})

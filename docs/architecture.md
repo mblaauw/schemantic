@@ -8,9 +8,10 @@ spec.yaml ─► read_spec ─► schema + semantic checks ─► build_html ─
 ```
 
 `schemantic build` runs all of it in one Chromium session (`schemantic/pipeline.py`); `lint` skips writing the
-deliverables. The deliverables (SVG, PNG, outline and a `.build.json` manifest of versions and digests) are written to
-`_work/` and move to the output folder only when the build has no errors. Every step reports findings in one shape (`level`, `check`, `id`, `detail`, `hint`), and a failure
-anywhere is a finding, never a traceback.
+deliverables. The deliverables (SVG, PNG, outline and a `.build.json` manifest of versions and digests) are written
+to `_work/` and move to the output folder only when the build has no errors. Chromium runs with the network refused
+(see [`offline.md`](offline.md)). Every step reports findings in one shape (`level`, `check`, `id`, `detail`,
+`hint`), and a failure anywhere is a finding, never a traceback.
 
 ## Module map
 
@@ -26,6 +27,7 @@ anywhere is a finding, never a traceback.
 | `findings.py` | every check, its meaning, fix and hint; generates `references/lint-fixes.md` |
 | `outline.py`, `glyphs.py`, `icons.py`, `gallery.py` | the text outline, glyph outlines, icon search, README images |
 | `cli.py`, `doctor.py` | the command line; finding a Python and Chromium (standard library only) |
+| `offline.py` | the offline kit: wheels, Chromium, checksums, installer, smoke test |
 | `js/` | page scripts: `common` (helpers), `fit`, `decorate`, `route`, `export`, `lint`, `snapshot`, `fonts-ready` |
 
 ## The JavaScript and Python boundary

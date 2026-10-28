@@ -1,5 +1,6 @@
-"""Command line: `schemantic build | lint | render | doctor | icons | docs`. Every command prints JSON and exits 1 on
-errors; an unexpected failure is an `internal` finding, never a traceback, because an agent reads the output."""
+"""Command line: `schemantic build | lint | render | doctor | icons | gallery | docs | offline | verify | smoke`.
+Every command prints JSON and exits 1 on errors; an unexpected failure is an `internal` finding, never a traceback,
+because an agent reads the output."""
 from __future__ import annotations
 
 import argparse
@@ -32,6 +33,12 @@ def parser() -> argparse.ArgumentParser:
     sub.add_parser("gallery", help="build every example and write the README images to assets/gallery/")
     g = sub.add_parser("docs", help="regenerate references/lint-fixes.md from the findings table")
     g.add_argument("--check", action="store_true", help="exit 1 if the file is out of date instead of writing it")
+    o = sub.add_parser("offline", help="write an offline kit (wheels, Chromium, checksums, install.sh) to a new folder")
+    o.add_argument("dest")
+    v = sub.add_parser("verify", help="check an offline kit's files against its SHA256SUMS")
+    v.add_argument("kit")
+    s = sub.add_parser("smoke", help="build the reference plate and print its layout digest")
+    s.add_argument("--expect", help="the digest it must match (an offline kit's manifest has it)")
     return ap
 
 
@@ -44,6 +51,11 @@ def run(a) -> tuple[dict, int]:
         words = a.words[1:] if a.words[:1] == ["search"] else a.words
         found = icons.search(words, limit=40) if words else sorted(icons.index())
         return {"icons": found, "count": len(found)}, 0
+    if a.cmd in ("offline", "verify", "smoke"):
+        from . import offline
+        r = offline.bundle(a.dest) if a.cmd == "offline" else offline.verify(a.kit) if a.cmd == "verify" else \
+            offline.smoke(a.expect)
+        return r, 0 if r["ok"] else 1
     if a.cmd == "gallery":
         from .gallery import build_gallery
         return build_gallery(), 0
