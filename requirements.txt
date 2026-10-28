@@ -1,9 +1,9 @@
-# playwright is pinned: its Chromium build does the layout, and tests/golden/ was rendered with it.
-playwright==1.64.1
-pyyaml
-jsonschema
-jinja2
-pillow
-fonttools
-brotli
-pytest
+# Generated from pyproject.toml [project.dependencies] plus [dev]; tests/test_repo.py checks they match.
+playwright>=1.60,<2
+pyyaml>=6
+jsonschema>=4.17
+jinja2>=3.1
+pillow>=10
+fonttools>=4.40
+brotli>=1.1
+pytest>=8

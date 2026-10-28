@@ -1,110 +1,54 @@
 # Schemantic
 
-**From meaning to structure to pixels.**
+**From meaning to structure to pixels.** Schemantic turns a description of a system into a finished one-page
+architecture plate: a small YAML spec in; a vector SVG, a PNG raster of it, and a text outline out.
 
-Schemantic turns an idea into an architecture plate. You describe the system as a
-small YAML spec — panels, cards, flows, principles, open questions — and it renders
-a finished, print-grade overview plate as **SVG and PNG**.
+![An access and data-flow plate for a fictional order platform](assets/gallery/orderplatform-toegang.webp)
 
-There are no coordinates in the spec. Chromium does the layout with CSS Grid; a
-script measures every box, line and text run, then writes native SVG
-(`rect`, `path`, `text`, `line`). The PNG is a raster of that same SVG.
+## Install as a skill
 
-> Status: proof of concept. Three body archetypes (`column-flow`, `hub-and-spokes`,
-> `layer-cake`), a connector router and a Claude skill are built end to end; six more
-> archetypes are planned.
-
-## Use it as a Claude skill
-
-The repository is a skill: [`SKILL.md`](SKILL.md) takes Claude from a description of a system
-to a finished plate. It picks a layout, writes the spec, runs lint, fixes the spec until lint
-is clean, renders, and reviews the PNG. Link the folder into your skills directory:
+The repository is a Claude skill: [`SKILL.md`](SKILL.md) takes Claude from notes, a design document, a repository
+or a process description to a lint-clean plate. Link the folder into your skills directory:
 
 ```bash
 ln -s "$PWD" ~/.claude/skills/schemantic
 ```
 
-Then ask for a plate in plain words ("draw our order platform: one gateway, four services,
-a data platform underneath"). The skill sets up its own `.venv` on first use.
+Then ask in plain words ("make an architecture plate of these meeting notes"). On first use the skill runs
+`scripts/doctor.py`, which uses a Python that already has the dependencies or creates a venv in
+`~/.cache/schemantic`. It never writes into the skill folder, so a read-only install works.
 
 ## Quickstart
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-
-python3 scripts/render.py examples/orderplatform-toegang.yaml --out out
-python3 scripts/lint.py   examples/orderplatform-toegang.yaml --out out
+pip install -e ".[dev]" && python -m playwright install chromium
+python -m schemantic build examples/orderplatform-toegang.yaml --out out
 ```
 
-`render.py` writes `out/<name>.svg` and `out/<name>.png` (intermediate HTML lands in
-`out/_work/` for debugging only). `lint.py` emits a JSON report and exits `1` on errors.
+`build` checks the spec, lays the plate out in Chromium, routes the connectors, lints the result, and writes
+`out/<name>.svg`, `.png` and `.md` (the outline). It prints a JSON report and exits 1 on errors; every finding names
+an element and carries a hint. Other commands: `lint`, `doctor`, `icons <word>`, `gallery`, `docs`, `offline`,
+`verify`, `smoke`. Print with `canvas.size: a3-landscape` and `--dpi 300`; hand off to a design tool with
+`--outline-text`; restyle with a theme (`canvas.theme` or `--theme`, see
+[`examples/themes/warm.css`](examples/themes/warm.css)).
 
-Needs Python 3.10+, `playwright` (with Chromium: `playwright install chromium`),
-`pyyaml`, `jsonschema`, `jinja2`, `pillow`, `fonttools` with `brotli`, and `pytest`.
+Rendering needs no network. For a machine without one, `schemantic offline <folder>` writes a kit (pinned and hashed
+wheels, Chromium, checksums, an installer with a smoke test); see [`docs/offline.md`](docs/offline.md).
 
-`column-flow`, `hub-and-spokes` and `layer-cake` are built. The schema lists the other
-archetypes as the planned contract, but render and lint refuse them with an `archetype` error
-until they exist. [`references/archetypes.md`](references/archetypes.md) describes each layout.
+## Gallery
 
-## Tests
+One plate per archetype, each built from a fictional spec in [`examples/`](examples/).
 
-```bash
-python3 -m pytest -q                  # spec checks, lint, and renders against tests/golden/
-python3 -m pytest -q --update-golden  # after an intended visual change; review and commit the PNGs
-```
-
-Every example in `examples/` is rendered and compared with `tests/golden/<name>.png`, using
-the same blurred comparison lint uses for SVG parity: sub-pixel noise passes, while a
-reworded note already fails. Golden images are made on macOS with the pinned Playwright
-Chromium, and CI runs on macOS for that reason.
-
-Fonts are bundled in `assets/fonts/` (Inter, and DejaVu Sans Mono for paths), so nothing
-needs to be installed and every machine lays the plate out the same way. The HTML loads
-the full files through `@font-face`; the SVG embeds a WOFF2 subset of the glyphs it draws,
-so it renders the same in any browser. Tools that ignore `@font-face` in SVG (Inkscape,
-Cairo) still need Inter installed.
-
-## Why it is built this way
-
-HTML-to-SVG converters in the Satori style have no CSS Grid. Measuring in a real
-browser and emitting SVG from the measured geometry works, and the result renders
-identically in Cairo (Inkscape's renderer) and Chromium.
-
-## What is built
-
-| Part | Status |
+| | |
 | --- | --- |
-| Canvas frame: title block, part badge, footer (context, principles, open questions, legend) | Built |
-| Body archetype: column flow, with spanning areas over several rows | Built |
-| Body archetype: hub and spokes (up to 4 above, 4 below, one each side; framed hub) | Built |
-| Body archetype: layer cake (2–5 layers, rails left and right) | Built |
-| Components: panel (role colours), card, bullets, warning and info chips | Built |
-| Panel patterns: tier strip, tree, matrix | Built |
-| Connectors: panel or card endpoints; straight, or one or two rounded bends through the gutters; one- or two-way; labels beside or above any run with room | Built |
-| Locales `nl` (default, English technical terms) and `en` | Built |
-| Lint: schema, built archetype, layout keys, areas, flow endpoints, chip mirror, icons, never-translate terms (substring, for Dutch compounds), text overflow, containment, overlap, canvas fit, type floor, contrast, arrow routing (panels and cards), arrow labels, chip length, density, SVG parity | Built |
-| `SKILL.md` and `references/` (archetypes, spec guide, lint fixes, review questions) | Built |
-| Other six body archetypes; process strip, mini sequence, lifecycle loop | Not yet |
-| Text-as-outlines SVG | Not yet |
+| ![column-flow](assets/gallery/orderplatform-toegang.webp) **column-flow**: a path, with status tags, a flag and focus | ![hub-and-spokes](assets/gallery/orderplatform-eventbus.webp) **hub-and-spokes**: one bus, async flows, a card-to-card connector |
+| ![layer-cake](assets/gallery/ontwikkelplatform-lagen.webp) **layer-cake**: layers with security and observability rails | ![swimlane](assets/gallery/incident-swimlane.webp) **swimlane**: actors, phases and numbered handoffs |
+| ![nested-zones](assets/gallery/kliniek-zones.webp) **nested-zones**: where everything runs | |
 
-## Layout of the folder
+## The spec in one look
 
-```text
-SKILL.md                 the skill: description to finished plate
-references/              archetypes, spec guide, lint fixes, review questions (read by the skill)
-schema/plate.schema.json spec contract
-locales/                 fixed labels per language, never-translate list
-templates/               plate.html.j2, tokens.css (theme, override per project), components.css
-assets/icons/            57 Tabler outline icons (MIT, see LICENSE-tabler-icons.txt)
-assets/fonts/            Inter 4.1 (400–800) and DejaVu Sans Mono 2.37, with their licences
-scripts/                 platelib.py (shared), render.py, lint.py
-examples/                fictional plates (spec only; renders go to out/)
-tests/                   pytest suite; golden/ holds the reference render of each example
-```
-
-## Spec in one look
-
+<!-- lint -->
 ```yaml
 canvas:  {size: landscape-4x3, lang: nl, series: orderplatform, part: 2, of: 3}
 title:   "Orderplatform na fase 2 — toegang en data flow"
@@ -116,58 +60,56 @@ layout:
 panels:
   - id: clients
     title: "Clients en gebruikers"
-    role: external                     # platform | storage | external
+    role: external                     # platform | data | external | actor
     cards:
       - {icon: browser, name: "Webshop frontend", note: "leest de product catalog"}
+flows_mean: request
 flows:
-  - {from: clients, to: identity, label: "OIDC"}
+  - {from: clients, to: identity}
+  - {from: identity, to: data, label: "scoped credentials"}   # a label needs a run with room beside it
 footer:
-  principles: ["Eén identity provider", "Data blijft bij de bron"]
+  principles:
+    - "Klanten, partners en medewerkers loggen in via één identity provider."
+    - "Data blijft bij de bron; delen loopt via het lakehouse."
 ```
 
-The full contract lives in [`schema/plate.schema.json`](schema/plate.schema.json).
+The sample is completed against `examples/orderplatform-toegang.yaml` and linted by the tests. The contract is
+[`schema/plate.schema.json`](schema/plate.schema.json) (with editor completion through `yaml-language-server`); the
+field guide is [`references/spec-guide.md`](references/spec-guide.md).
 
-## Example output
+## Status
 
-![Rendered plate: order platform access and data flow](assets/example-orderplatform.png)
+Proof of concept, version 0.2 in progress (see [`CHANGELOG.md`](CHANGELOG.md)).
 
-Rendered from [`examples/orderplatform-toegang.yaml`](examples/orderplatform-toegang.yaml)
-(`column-flow`, `nl`, part 2 of 3).
+| Built | Planned |
+| --- | --- |
+| Archetypes: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones | Archetypes: before-after, roadmap, banded-matrix, landscape-map |
+| Patterns: tier strip, process strip, tree, matrix | Patterns: mini sequence, lifecycle loop |
+| Connectors: straight, L, Z and U routes; card endpoints; sync, async, optional; steps | |
+| Roles, themes, change status, card flags, focus; locales `nl` and `en` | |
+| Lint with hints for every check; SVG parity; goldens and snapshots on Linux and macOS | |
+| The skill: analysis method, brief and traceability, review questions, evals | |
 
-![Rendered plate: the order platform's event bus as hub and spokes](assets/example-eventbus.png)
+## How it works
 
-Rendered from [`examples/orderplatform-eventbus.yaml`](examples/orderplatform-eventbus.yaml)
-(`hub-and-spokes`, `en`, part 3 of 3). The dead-letter queue connects card to card, turning
-through the gutter into the operations spoke.
+Schemantic works like a compiler. The spec says what the plate holds and how it is composed: the agent picks an
+archetype and places panels in words (columns, a hub, layers, lanes, zones), never in pixels. Chromium computes the
+geometry of that composition with CSS Grid; page scripts size the canvas, route connectors around the measured boxes
+and lint the result. The measured page becomes a layout document (every box, text line, icon and connector, at its
+position), and the SVG is written from that document with a subset of the bundled fonts; the PNG is a raster of the
+SVG. Styles stay within what the SVG can draw, and lint names anything outside it. Print sizes (A3, A4, `--dpi`) are
+there; the SVG is checked against Chromium's own rendering, not yet in other viewers or as PDF. See
+[`docs/architecture.md`](docs/architecture.md) for the pipeline and the router, and
+[`docs/design-notes.md`](docs/design-notes.md) for why it is built this way.
 
-![Rendered plate: an internal developer platform as a layer cake](assets/example-layers.png)
+## Contributing
 
-Rendered from [`examples/ontwikkelplatform-lagen.yaml`](examples/ontwikkelplatform-lagen.yaml)
-(`layer-cake`, `nl`), with security and observability as rails.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md): setup, tests, the golden and gallery policy, and the rules.
 
+## Licences
 
-## Findings from building it
-
-- Satori-style HTML-to-SVG converters lack CSS Grid; measuring in Chromium and emitting SVG works and
-  renders the same in Cairo (Inkscape's renderer) as in Chromium.
-- Pixel-exact parity is the wrong test: Chromium snaps HTML text to whole pixels, SVG keeps fractions
-  (0.9 % of pixels differ with no visible change). After a 1.5 px blur a correct plate scores 0 and a
-  plate with one card deleted scores about 4,600 pixels, so the check is structural.
-- Density below 0.6 matched the one panel that looked empty on review; the fix was content, not layout.
-- A long Dutch word ("gestandaardiseerd") overflowed a tier tile; lint caught it, block weights fixed it.
-- Connectors are routed against measured boxes, not drawn from the spec. A rail card connected to the
-  card at the far end of a layer had no clear route; lint said so, and the fix was card order in the spec.
-- Text baselines must be measured at the real font size: a 100 px probe scaled down drifted by a pixel
-  once Inter replaced the system font, enough to fail parity on bold titles.
-
-## Icons
-
-The outline icon set in `assets/icons/` is [Tabler Icons](https://tabler.io/icons), MIT licensed —
-see `assets/icons/LICENSE-tabler-icons.txt`.
-
-## Fonts
-
-`assets/fonts/` holds [Inter](https://rsms.me/inter/) 4.1 (SIL Open Font License, see
-`assets/fonts/LICENSE-inter.txt`) and [DejaVu Sans Mono](https://dejavu-fonts.github.io/) 2.37
-(free licence, see `assets/fonts/LICENSE-dejavu.txt`), taken unmodified from their official
-releases; DejaVu was converted from TTF to WOFF2.
+- **Code:** not decided yet; no licence file is included.
+- **Icons:** [Tabler Icons](https://tabler.io/icons) 3.19, MIT (`assets/icons/LICENSE-tabler-icons.txt`).
+- **Fonts:** [Inter](https://rsms.me/inter/) 4.1, SIL Open Font License (`assets/fonts/LICENSE-inter.txt`), and
+  [DejaVu Sans Mono](https://dejavu-fonts.github.io/) 2.37 (`assets/fonts/LICENSE-dejavu.txt`), unmodified; DejaVu
+  converted from TTF to WOFF2.

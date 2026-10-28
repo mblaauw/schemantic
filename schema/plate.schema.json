@@ -1,115 +1,1020 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Architecture plate spec",
+  "$id": "https://github.com/mblaauw/schemantic/schema/plate.schema.json",
+  "title": "Schemantic plate spec",
+  "description": "A one-page architecture plate: what is on it, never where. Chromium lays it out; lint checks the result.",
   "type": "object",
-  "required": ["canvas", "title", "archetype", "layout", "panels"],
+  "required": [
+    "canvas",
+    "title",
+    "archetype",
+    "layout",
+    "panels"
+  ],
   "additionalProperties": false,
   "properties": {
+    "spec_version": {
+      "const": 1,
+      "description": "Version of this spec format. Optional; 1 is the current version."
+    },
+    "brief": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The plan behind the plate, written before the YAML and audited against the sources. Not rendered.",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "The one claim the plate makes."
+        },
+        "reader": {
+          "type": "string",
+          "description": "Who reads it and what they must take away."
+        },
+        "why": {
+          "type": "string",
+          "description": "Why this archetype, and what it is not."
+        },
+        "left_out": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What the sources hold that the plate leaves out, and why."
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What is assumed rather than found in a source."
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "description": "Where the content comes from. When given, every card names its source in refs (lint: traceability).",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "ref"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]*$"
+          },
+          "kind": {
+            "enum": [
+              "conversation",
+              "notes",
+              "document",
+              "repository",
+              "process",
+              "other"
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "description": "A path, title or URL."
+          }
+        }
+      }
+    },
     "canvas": {
       "type": "object",
-      "required": ["size", "lang"],
+      "description": "Page size, language and series badge.",
+      "required": [
+        "size",
+        "lang"
+      ],
       "additionalProperties": false,
       "properties": {
-        "size": {"enum": ["landscape-4x3", "landscape-16x9"]},
-        "lang": {"enum": ["nl", "en"]},
-        "series": {"type": "string"},
-        "part": {"type": "integer", "minimum": 1},
-        "of": {"type": "integer", "minimum": 1}
+        "size": {
+          "enum": [
+            "landscape-4x3",
+            "landscape-16x9",
+            "a3-landscape",
+            "a4-landscape"
+          ],
+          "description": "landscape-4x3 is 1600 px wide (the default choice); landscape-16x9 is 1920 x 1080, for slides; a3-landscape and a4-landscape are the paper sizes at 96 px per inch (height fixed by default); --dpi sets the PNG resolution."
+        },
+        "lang": {
+          "enum": [
+            "nl",
+            "en"
+          ],
+          "description": "Language of the fixed labels; follow the user. In nl, technical terms stay English."
+        },
+        "series": {
+          "type": "string",
+          "description": "Name of the series this plate belongs to."
+        },
+        "part": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "This plate's number in the series; give `of` too."
+        },
+        "of": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of plates in the series; give `part` too."
+        },
+        "theme": {
+          "type": "string",
+          "description": "A CSS file, relative to the spec, appended after tokens.css: override colours, add roles. Lint still checks contrast."
+        },
+        "height": {
+          "enum": [
+            "fit",
+            "fixed"
+          ],
+          "description": "fit (default): the canvas takes its content height (at least 9:16 of the width). fixed: the preset height; surplus space goes to the gaps between rows, never into a panel."
+        }
       }
     },
-    "title": {"type": "string", "minLength": 1, "maxLength": 80},
-    "subtitle": {"type": "string", "maxLength": 120},
-    "archetype": {"enum": ["column-flow", "hub-and-spokes", "banded-matrix", "layer-cake", "nested-zones",
-                           "swimlane", "before-after", "roadmap", "landscape-map"]},
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "The one message, as a claim."
+    },
+    "subtitle": {
+      "type": "string",
+      "maxLength": 120,
+      "description": "How the plate makes the title's claim true."
+    },
+    "archetype": {
+      "enum": [
+        "column-flow",
+        "hub-and-spokes",
+        "banded-matrix",
+        "layer-cake",
+        "nested-zones",
+        "swimlane",
+        "before-after",
+        "roadmap",
+        "landscape-map"
+      ],
+      "description": "The body layout. Built: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones; the others are planned and refused by lint."
+    },
     "layout": {
-      "$comment": "Which keys apply depends on the archetype; semantic checks enforce that (platelib.LAYOUT_KEYS).",
       "type": "object",
+      "description": "Where panels go, in terms of the archetype. Which keys apply depends on the archetype.",
       "additionalProperties": false,
       "properties": {
-        "areas": {"type": "array", "minItems": 1, "maxItems": 3, "items": {"type": "string"}},
-        "column_widths": {"type": "array", "items": {"type": "number", "exclusiveMinimum": 0}},
-        "row_heights": {"type": "array", "items": {"enum": ["fill", "auto"]}},
-        "hub": {"type": "string"},
-        "top": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "string"}},
-        "bottom": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "string"}},
-        "layers": {"type": "array", "minItems": 2, "maxItems": 5, "items": {"type": "string"}},
-        "left": {"type": "string"},
-        "right": {"type": "string"}
+        "areas": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "string"
+          },
+          "description": "column-flow: rows of panel ids, like CSS grid-template-areas; '.' is empty; a panel spans a rectangle."
+        },
+        "column_widths": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "description": "column-flow: relative column widths, one per column."
+        },
+        "row_heights": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "fill",
+              "auto"
+            ]
+          },
+          "description": "Deprecated: rows take their content height. Still honoured (fill rows share the preset height) until the next release."
+        },
+        "hub": {
+          "type": "string",
+          "description": "hub-and-spokes: the central panel's id."
+        },
+        "top": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "type": "string"
+          },
+          "description": "hub-and-spokes: spoke ids above the hub, left to right."
+        },
+        "bottom": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "type": "string"
+          },
+          "description": "hub-and-spokes: spoke ids below the hub, left to right."
+        },
+        "layers": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 5,
+          "items": {
+            "type": "string"
+          },
+          "description": "layer-cake: layer ids, top first."
+        },
+        "left": {
+          "type": "string",
+          "description": "hub-and-spokes: a side spoke; layer-cake: a rail spanning every layer."
+        },
+        "right": {
+          "type": "string",
+          "description": "hub-and-spokes: a side spoke; layer-cake: a rail spanning every layer."
+        },
+        "chips_at": {
+          "enum": [
+            "content",
+            "bottom"
+          ],
+          "description": "content (default): chips sit right under the panel's content. bottom: pinned to the panel's bottom, in rows where every panel has chips."
+        },
+        "rail_width": {
+          "enum": [
+            "narrow",
+            "normal",
+            "wide"
+          ],
+          "description": "layer-cake: width of the rails, between 260 px (at 1600 wide) and 30% of the body. normal is the default."
+        },
+        "lanes": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 6,
+          "items": {
+            "type": "string"
+          },
+          "description": "swimlane: lane (panel) ids, top first. A lane's cards are its steps."
+        },
+        "columns": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 8,
+          "items": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "description": "swimlane: phase names over the step columns; a card's col places it in one."
+        },
+        "zones": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/zone"
+          },
+          "description": "nested-zones: the top-level zones, side by side; up to three levels deep."
+        },
+        "outside": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "nested-zones: panels outside every zone, in a column on the right."
+        }
       }
     },
-    "panels": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/panel"}},
+    "panels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/panel"
+      },
+      "description": "The boxes on the plate."
+    },
     "flows": {
       "type": "array",
+      "description": "Connectors between panels or cards; the router draws them around every box.",
       "items": {
-        "type": "object", "required": ["from", "to"], "additionalProperties": false,
-        "properties": {"from": {"type": "string"}, "to": {"type": "string"}, "label": {"type": "string", "maxLength": 28},
-                       "both": {"type": "boolean"}}
+        "type": "object",
+        "required": [
+          "from",
+          "to"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "from": {
+            "type": "string",
+            "description": "A panel id or card id."
+          },
+          "to": {
+            "type": "string",
+            "description": "A panel id or card id."
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 28,
+            "description": "Short label beside the arrow; needs a run with room."
+          },
+          "both": {
+            "type": "boolean",
+            "description": "Arrowheads at both ends."
+          },
+          "style": {
+            "enum": [
+              "sync",
+              "async",
+              "optional"
+            ],
+            "description": "sync: solid (default); async: dashed (event or message); optional: dotted."
+          },
+          "step": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20,
+            "description": "A numbered badge on the arrow, for the order things happen."
+          }
+        }
       }
+    },
+    "flows_mean": {
+      "enum": [
+        "data",
+        "request",
+        "dependency",
+        "control"
+      ],
+      "description": "What every arrow on this plate means; sets the legend label. data: where data goes; request: who calls whom; dependency: what needs what; control: what steers what."
     },
     "footer": {
       "type": "object",
+      "description": "Context, principles, open questions and the legend, under the body.",
       "additionalProperties": false,
       "properties": {
-        "columns": {"type": "array", "items": {"type": "number", "exclusiveMinimum": 0}},
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "description": "Relative widths, one per footer panel present. Optional."
+        },
         "context": {
-          "type": "object", "required": ["title", "cards"], "additionalProperties": false,
-          "properties": {"title": {"type": "string"}, "card_columns": {"type": "integer", "minimum": 1, "maximum": 4},
-                         "cards": {"type": "array", "maxItems": 6, "items": {"$ref": "#/$defs/card"}}}
+          "type": "object",
+          "required": [
+            "title",
+            "cards"
+          ],
+          "additionalProperties": false,
+          "description": "People or roles around the system.",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "card_columns": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4
+            },
+            "cards": {
+              "type": "array",
+              "maxItems": 6,
+              "items": {
+                "$ref": "#/$defs/card"
+              }
+            }
+          }
         },
-        "principles": {"type": "array", "maxItems": 5, "items": {"type": "string"}},
+        "principles": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "type": "string"
+          },
+          "description": "Decisions, each a full sentence a team could check."
+        },
         "open_questions": {
-          "type": "object", "additionalProperties": false,
-          "properties": {"from_chips": {"type": "boolean"}, "extra": {"type": "array", "items": {"type": "string"}}}
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Open questions: warning chips (from_chips) plus extra ones.",
+          "properties": {
+            "from_chips": {
+              "type": "boolean"
+            },
+            "extra": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
         },
-        "legend": {"const": "auto"}
+        "legend": {
+          "const": "auto",
+          "description": "The legend is generated from what the plate uses."
+        }
       }
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "column-flow"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": [
+              "areas"
+            ],
+            "propertyNames": {
+              "enum": [
+                "areas",
+                "column_widths",
+                "row_heights",
+                "chips_at"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "hub-and-spokes"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": [
+              "hub"
+            ],
+            "propertyNames": {
+              "enum": [
+                "hub",
+                "top",
+                "bottom",
+                "left",
+                "right",
+                "row_heights",
+                "chips_at"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "layer-cake"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": [
+              "layers"
+            ],
+            "propertyNames": {
+              "enum": [
+                "layers",
+                "left",
+                "right",
+                "row_heights",
+                "chips_at",
+                "rail_width"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "swimlane"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": [
+              "lanes"
+            ],
+            "propertyNames": {
+              "enum": [
+                "lanes",
+                "columns",
+                "chips_at"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "nested-zones"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": [
+              "zones"
+            ],
+            "propertyNames": {
+              "enum": [
+                "zones",
+                "outside",
+                "chips_at"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
   "$defs": {
     "card": {
-      "type": "object", "required": ["name"], "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "A thing with a name inside a panel.",
       "properties": {
-        "id": {"type": "string"}, "icon": {"type": "string"},
-        "name": {"type": "string", "maxLength": 40}, "qualifier": {"type": "string", "maxLength": 40},
-        "note": {"type": "string", "maxLength": 70},
-        "bullets": {"type": "array", "maxItems": 3, "items": {"type": "string", "maxLength": 60}}
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "description": "Needed only when a flow starts or ends at this card."
+        },
+        "icon": {
+          "$ref": "#/$defs/icon"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 40,
+          "description": "A noun the reader knows."
+        },
+        "qualifier": {
+          "type": "string",
+          "maxLength": 40,
+          "description": "Shown in brackets after the name."
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 70,
+          "description": "What the card does in this story; lowercase start, no full stop."
+        },
+        "bullets": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "maxLength": 60
+          }
+        },
+        "status": {
+          "enum": [
+            "new",
+            "changed",
+            "planned",
+            "deprecated",
+            "removed"
+          ],
+          "description": "Change in this phase: a tag in the corner; planned is dashed, deprecated muted, removed struck through."
+        },
+        "focus": {
+          "type": "boolean",
+          "description": "The one element the plate is about: an accent outline. At most one per plate."
+        },
+        "flag": {
+          "type": "object",
+          "required": [
+            "kind",
+            "text"
+          ],
+          "additionalProperties": false,
+          "description": "A numbered marker on the card; the text goes to the footer under the same number (warning: open questions; info: notes).",
+          "properties": {
+            "kind": {
+              "enum": [
+                "warning",
+                "info"
+              ]
+            },
+            "text": {
+              "type": "string",
+              "maxLength": 90
+            }
+          }
+        },
+        "refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Where this card comes from: '<source id>: <path, line or short quote>'. Not rendered; written to the SVG as data-refs."
+        },
+        "col": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "swimlane: the step column (1 is the first phase) this card sits in."
+        }
       }
     },
     "chip": {
-      "type": "object", "required": ["kind", "text"], "additionalProperties": false,
-      "properties": {"kind": {"enum": ["warning", "info"]}, "text": {"type": "string", "maxLength": 90}}
+      "type": "object",
+      "required": [
+        "kind",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "A warning (open choice, repeated under open questions) or info (assumption) note in a panel.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "warning",
+            "info"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 90
+        }
+      }
     },
     "pattern": {
-      "type": "object", "required": ["type"],
-      "properties": {"type": {"enum": ["tier-strip", "tree", "matrix"]}},
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "description": "A structured block inside a panel: tier strip, process strip, tree or matrix.",
+      "properties": {
+        "type": {
+          "enum": [
+            "tier-strip",
+            "tree",
+            "matrix",
+            "process-strip"
+          ]
+        }
+      },
       "allOf": [
-        {"if": {"properties": {"type": {"const": "tier-strip"}}},
-         "then": {"required": ["tiers"], "properties": {"tiers": {"type": "array", "minItems": 2, "maxItems": 5,
-           "items": {"type": "object", "required": ["tier", "name"], "properties": {
-             "tier": {"enum": ["bronze", "silver", "gold"]}, "name": {"type": "string"}, "note": {"type": "string"}, "icon": {"type": "string"}}}}}}},
-        {"if": {"properties": {"type": {"const": "tree"}}},
-         "then": {"required": ["lines"], "properties": {"caption": {"type": "string"},
-           "lines": {"type": "array", "minItems": 1, "maxItems": 10, "items": {"type": "string"}}}}},
-        {"if": {"properties": {"type": {"const": "matrix"}}},
-         "then": {"required": ["columns", "rows"], "properties": {"caption": {"type": "string"},
-           "columns": {"type": "array", "minItems": 1, "maxItems": 5, "items": {"type": "string"}},
-           "rows": {"type": "array", "minItems": 1, "maxItems": 8, "items": {"type": "object", "required": ["name", "cells"],
-             "properties": {"name": {"type": "string"}, "cells": {"type": "array", "items": {"enum": ["full", "partial", "none"]}}}}}}}}
-      ]
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "tier-strip"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "tiers"
+            ],
+            "properties": {
+              "tiers": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 5,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "tier",
+                    "name"
+                  ],
+                  "properties": {
+                    "tier": {
+                      "enum": [
+                        "bronze",
+                        "silver",
+                        "gold"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "note": {
+                      "type": "string"
+                    },
+                    "icon": {
+                      "$ref": "#/$defs/icon"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "tree"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "lines"
+            ],
+            "properties": {
+              "caption": {
+                "type": "string"
+              },
+              "lines": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 10,
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "matrix"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "columns",
+              "rows"
+            ],
+            "properties": {
+              "caption": {
+                "type": "string"
+              },
+              "columns": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 5,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "rows": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 8,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "name",
+                    "cells"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "cells": {
+                      "type": "array",
+                      "items": {
+                        "enum": [
+                          "full",
+                          "partial",
+                          "none"
+                        ]
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "key": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Labels for the key, when the locale's (full, limited, no access) do not fit what the matrix shows.",
+                "properties": {
+                  "full": {
+                    "type": "string",
+                    "maxLength": 24
+                  },
+                  "partial": {
+                    "type": "string",
+                    "maxLength": 24
+                  },
+                  "none": {
+                    "type": "string",
+                    "maxLength": 24
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "process-strip"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "steps"
+            ],
+            "properties": {
+              "caption": {
+                "type": "string"
+              },
+              "steps": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 7,
+                "description": "Steps in order, left to right.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "name"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "maxLength": 24
+                    },
+                    "note": {
+                      "type": "string",
+                      "maxLength": 40
+                    },
+                    "icon": {
+                      "$ref": "#/$defs/icon"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
     },
     "panel": {
-      "type": "object", "required": ["id", "title", "role"], "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "role"
+      ],
+      "additionalProperties": false,
+      "description": "A box on the plate holding cards, patterns and chips.",
       "properties": {
-        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"},
-        "title": {"type": "string", "maxLength": 48}, "subtitle": {"type": "string", "maxLength": 80},
-        "role": {"enum": ["platform", "storage", "external"]},
-        "arrange": {"enum": ["column", "row"]},
-        "weights": {"type": "array", "maxItems": 3, "items": {"type": "number", "exclusiveMinimum": 0}},
-        "card_columns": {"type": "integer", "minimum": 1, "maximum": 6},
-        "cards": {"type": "array", "maxItems": 6, "items": {"$ref": "#/$defs/card"}},
-        "patterns": {"type": "array", "maxItems": 2, "items": {"$ref": "#/$defs/pattern"}},
-        "chips": {"type": "array", "maxItems": 2, "items": {"$ref": "#/$defs/chip"}}
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "description": "Used in layout and flows."
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 48
+        },
+        "subtitle": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "role": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Colour with a meaning, shown in the legend. Built in: platform (what the team builds or runs), data (data at rest, data platforms), external (systems outside the team's control), actor (people and teams). A theme can add roles. 'storage' is the old name of data."
+        },
+        "arrange": {
+          "enum": [
+            "column",
+            "row"
+          ],
+          "description": "row: blocks side by side instead of stacked."
+        },
+        "weights": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "description": "With arrange: row, relative widths: patterns first, then the cards block."
+        },
+        "card_columns": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6
+        },
+        "cards": {
+          "type": "array",
+          "maxItems": 6,
+          "items": {
+            "$ref": "#/$defs/card"
+          }
+        },
+        "patterns": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/$defs/pattern"
+          }
+        },
+        "chips": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/$defs/chip"
+          }
+        },
+        "status": {
+          "enum": [
+            "new",
+            "changed",
+            "planned",
+            "deprecated",
+            "removed"
+          ],
+          "description": "Change in this phase: a tag in the corner; planned is dashed, deprecated muted, removed struck through."
+        },
+        "focus": {
+          "type": "boolean",
+          "description": "The one element the plate is about: an accent outline. At most one per plate."
+        }
       }
+    },
+    "zone": {
+      "type": "object",
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false,
+      "description": "A labelled frame: an environment, account, cluster or namespace. Holds zones, panels, or both.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*$"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "kind": {
+          "type": "string",
+          "maxLength": 24,
+          "description": "What the zone is, shown before the title: account, cluster, namespace."
+        },
+        "zones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/zone"
+          }
+        },
+        "panels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "icon": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "An icon name from assets/icons (`schemantic icons <word>`): lowercase words joined by hyphens."
     }
   }
 }

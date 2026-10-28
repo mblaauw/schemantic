@@ -1,5 +1,5 @@
 /* Flat default theme. Every colour has one meaning; a project overrides this file, never components.css.
-   Contrast pairs are checked by lint.py (text >= 4.5:1, large text >= 3:1). */
+   Contrast pairs are checked by lint (text >= 4.5:1, large text >= 3:1). */
 :root {
   --font: Inter, "Segoe UI", system-ui, sans-serif;
   --mono: "DejaVu Sans Mono", "JetBrains Mono", Consolas, monospace;
@@ -10,11 +10,14 @@
   --muted: #4F5D6E;      /* notes, qualifiers */
   --accent: #1763C4;     /* subtitle */
   --arrow: #2F7FC6;      /* flow arrows and their heads */
+  --on-head: #FFFFFF;    /* text on a panel's header colour */
 
-  /* Panel roles: header, header subtitle, body tint, border */
+  /* Panel roles: header, header subtitle, body tint, border. A theme may add a role: give it these four tokens and
+     a legend label per language (--<role>-label-en: "..."; --<role>-label-nl: "..."). */
   --platform-head: #0B4F8F; --platform-sub: #D6E7F7; --platform-body: #EEF5FC; --platform-line: #BCD5EC;
-  --storage-head:  #0D6457; --storage-sub:  #D3F0E9; --storage-body:  #ECF7F4; --storage-line:  #A9D6CB;
+  --data-head:     #0D6457; --data-sub:     #D3F0E9; --data-body:     #ECF7F4; --data-line:     #A9D6CB;
   --external-head: #44546A; --external-sub: #E3E9F0; --external-body: #F3F6F9; --external-line: #CBD5E1;
+  --actor-head:    #5B3F8C; --actor-sub:    #E9E2F5; --actor-body:    #F6F3FB; --actor-line:    #D5C9EA;
   --frame-head:    #2B3A4F; --frame-sub:    #E3E9F0; --frame-body:    #F8FAFC; --frame-line:    #CBD5E1;
 
   --card-bg: #FFFFFF; --card-line: #D3E0EC;
@@ -29,6 +32,29 @@
   /* Type ramp (px). 11 is the floor. */
   --t-title: 40px; --t-sub: 22px; --t-badge: 18px; --t-head: 17px;
   --t-name: 14px; --t-body: 12.5px; --t-small: 11px;
+
+  /* Gutters hold the connectors: 48 px fits an arrow with clearance on both sides; a row gutter also holds a
+     one-line label at --label-size. The template, the router and Python all read these. */
+  --gutter-x: 48px; --gutter-y: 44px;
+
+  /* Connectors: stroke, gap to the boxes they join, arrowhead length and half-width, corner radius, the offset
+     of a second lane in one gutter, and labels. */
+  --arrow-width: 2.5px; --arrow-gap: 7px; --arrow-head: 10px; --arrow-wing: 6px; --arrow-radius: 8px; --arrow-lane: 10px;
+  --label-size: 11.5px; --label-weight: 500;
+  /* Dash patterns (SVG stroke-dasharray): async connectors, optional connectors, planned boxes */
+  --dash-async: 7 5; --dash-optional: 0.5 5; --dash-planned: 5 4;
+  /* Swimlanes: width of a lane's name column, and the gap between steps (room for an arrow) */
+  --lane-head: 170px; --step-gap: 40px;
+  /* Nested zones: frame colour and the faint tint that deepens with each level */
+  --zone-line: #94A3B8; --zone-1: #F8FAFC; --zone-2: #F1F5F9; --zone-3: #E9EEF4;
+  --step: #1763C4;       /* step badges: darker than --arrow, so white numbers reach 4.5:1 */
+
+  /* Change status tags and the focus outline */
+  --tag-new-bg: #E3F4E8;     --tag-new-text: #1B5E31;
+  --tag-changed-bg: #EAF3FC; --tag-changed-text: #1D3A5E;
+  --tag-planned-bg: #EEF1F5; --tag-planned-text: #3D4A5C;
+  --tag-deprecated-bg: #FFF2E8; --tag-deprecated-text: #7A2D0E;
+  --tag-removed-bg: #FCE8E8; --tag-removed-text: #8E1B1B;
 
   /* Spacing on a 4 px scale */
   --r-panel: 8px; --r-card: 6px;

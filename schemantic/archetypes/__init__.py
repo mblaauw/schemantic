@@ -1,0 +1,86 @@
+"""Archetype registry: one module per body layout.
+
+An archetype owns everything that differs between layouts: which `layout` keys it takes, its own checks, the
+body grid it derives, defaults for its panels, and hints for the router. Shared code asks the registry and never
+names an archetype. To add one, write a module in this package that defines `ARCHETYPE`, add its `layout` block
+to the schema, a section to references/archetypes.md, and an example with its golden and snapshot.
+"""
+from __future__ import annotations
+
+import importlib
+import pkgutil
+from dataclasses import dataclass, field
+
+# Named in the schema as the planned contract; refused until a module here builds them.
+PLANNED = ["banded-matrix", "before-after", "roadmap", "landscape-map"]
+
+
+@dataclass
+class GridSpec:
+    """The body grid an archetype derives from a spec. Names starting with '_' are groups or bands, never panels."""
+    rows: list[list[str]]       # per row, the panel id or group/band name in each cell; '.' is empty
+    columns: list[str]          # CSS column tracks, gutters excluded
+    groups: dict[str, list[str]] = field(default_factory=dict)  # group name -> the panels inside that cell
+    group_kind: dict[str, str] = field(default_factory=dict)    # group name -> "row" (default), "stack" or "zones"
+    bands: dict[str, list[str]] = field(default_factory=dict)   # band name -> labels of a header row (no panels)
+    zones: list[dict] = field(default_factory=list)             # the zone tree rendered in a "zones" group
+
+
+class Archetype:
+    name: str = ""
+    required: frozenset[str] = frozenset()   # layout keys the archetype needs
+    allowed: frozenset[str] = frozenset()    # layout keys it accepts (chips_at and row_heights apply to every one)
+    router_hints: dict = {}                   # reserved for layouts that prefer certain channels
+
+    def placed(self, spec: dict) -> list[str]:
+        """Panel ids as the layout names them, duplicates kept so they can be reported."""
+        out = []
+        for key in sorted(self.allowed - {"row_heights", "column_widths", "chips_at"}):
+            v = spec["layout"].get(key)
+            out += v if isinstance(v, list) else ([v] if v else [])
+        return out
+
+    def validate(self, spec: dict) -> list[dict]:
+        """Checks of this layout beyond the shared ones (placement, rectangles, row heights)."""
+        return []
+
+    def grid(self, spec: dict) -> GridSpec:
+        raise NotImplementedError
+
+    def panel_defaults(self, spec: dict, panel: dict) -> dict:
+        """Extra render properties for a panel (for example, card columns or the hub frame)."""
+        return {}
+
+
+# Side columns (rails, side spokes) stay readable: at least SIDE_MIN_PX at a 1600 px canvas (scaled with the canvas),
+# at most SIDE_MAX percent of the body.
+SIDE_MIN_PX = 260
+SIDE_MAX = 30
+
+
+def side_track(spec: dict, preferred: str) -> str:
+    """A side column's CSS track: the preferred width, clamped to readable bounds."""
+    from ..config import CANVAS_SIZES
+    min_px = SIDE_MIN_PX * CANVAS_SIZES[spec["canvas"]["size"]][0] / 1600
+    return f"clamp({min_px:.0f}px, {preferred}, {SIDE_MAX}%)"
+
+
+def error(check: str, id_: str, detail: str) -> dict:
+    return {"level": "error", "check": check, "id": id_, "detail": detail}
+
+
+def _discover() -> dict[str, Archetype]:
+    found = {}
+    for mod in pkgutil.iter_modules(__path__):
+        arche = getattr(importlib.import_module(f"{__name__}.{mod.name}"), "ARCHETYPE", None)
+        if arche:
+            found[arche.name] = arche
+    return found
+
+
+REGISTRY: dict[str, Archetype] = _discover()
+BUILT = sorted(REGISTRY)
+
+
+def get(name: str) -> Archetype | None:
+    return REGISTRY.get(name)

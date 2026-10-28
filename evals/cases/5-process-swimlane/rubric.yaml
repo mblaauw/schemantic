@@ -1,0 +1,4 @@
+lang: en
+archetype: [swimlane]
+components: [portal, intake, case handler, welfare committee, team lead]
+steps_min: 4

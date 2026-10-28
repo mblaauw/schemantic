@@ -1,0 +1,75 @@
+"""Repository rules that would otherwise drift: dependencies, design tokens, and the JS/Python boundary."""
+import re
+
+from conftest import ROOT
+
+
+def test_requirements_follow_pyproject():
+    py = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    deps = re.findall(r'^\s*"([^"]+)",?$', py.split("dependencies = [")[1].split("]")[0], re.M)
+    deps += re.findall(r'"(pytest[^"]*)"', py.split("[project.optional-dependencies]")[1].split("\n\n")[0])
+    reqs = [line for line in (ROOT / "requirements.txt").read_text(encoding="utf-8").splitlines()
+            if line and not line.startswith("#")]
+    assert reqs == deps
+
+
+def test_colours_live_in_tokens_only():
+    hexes = re.compile(r"#[0-9a-fA-F]{3,8}\b")
+    files = [ROOT / "templates" / "components.css", ROOT / "templates" / "plate.html.j2",
+             *(ROOT / "schemantic").rglob("*.py"), *(ROOT / "schemantic" / "js").glob("*.js")]
+    found = {str(f.relative_to(ROOT)): hexes.findall(f.read_text(encoding="utf-8")) for f in files}
+    assert {k: v for k, v in found.items() if v} == {}
+
+
+def test_no_javascript_inside_python():
+    js = re.compile(r"=>|document\.|getComputedStyle|querySelector")
+    for f in [*(ROOT / "schemantic").rglob("*.py"), *(ROOT / "scripts").glob("*.py")]:
+        assert not js.search(f.read_text(encoding="utf-8")), f
+
+
+def test_skill_md_stays_small_and_complete():
+    skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+    description = re.search(r"^description: (.*)$", skill, re.M).group(1)
+    assert len(skill.splitlines()) < 500
+    assert len(description) < 1024 and description.startswith("Turns ")
+    for word in ("architecture plate", "C4", "architectuurplaat", "overzichtsplaat"):
+        assert word in description
+    # References are one level deep from SKILL.md, and every one it names exists.
+    for ref in set(re.findall(r"references/[\w-]+\.md", skill)):
+        assert (ROOT / ref).exists(), ref
+    assert set(re.findall(r"references/[\w-]+\.md", skill)) >= {f"references/{p.name}" for p in (ROOT / "references").glob("*.md")}
+
+
+def test_gallery_is_current():
+    """F5: the README images were built from the examples as they are (compared through the structural snapshots)."""
+    import json
+
+    from schemantic.gallery import GALLERY, digest
+    manifest = json.loads((GALLERY / "manifest.json").read_text(encoding="utf-8"))
+    examples = sorted(p.stem for p in (ROOT / "examples").glob("*.yaml"))
+    assert sorted(manifest) == examples, "run: python -m schemantic gallery"
+    for name in examples:
+        snap = json.loads((ROOT / "tests" / "snapshots" / f"{name}.json").read_text(encoding="utf-8"))
+        assert manifest[name] == digest(snap), f"{name}: run python -m schemantic gallery"
+
+
+def test_docs_list_what_is_built():
+    """F7: README, SKILL.md and the archetypes reference name exactly the built archetypes and patterns."""
+    import json
+
+    from schemantic import archetypes
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+    reference = (ROOT / "references" / "archetypes.md").read_text(encoding="utf-8")
+    built_row = next(line for line in readme.splitlines() if line.startswith("| Archetypes:"))
+    built_cell, planned_cell = built_row.split("|")[1:3]
+    for name in archetypes.BUILT:
+        assert name in built_cell and f"`{name}`" in skill and f"## {name}" in reference, name
+    for name in archetypes.PLANNED:
+        assert name in planned_cell and name not in built_cell and f"## {name}" not in reference, name
+    not_built = reference.split("## Not built yet")[1]
+    assert all(f"`{n}`" in not_built for n in archetypes.PLANNED)
+    patterns = json.loads((ROOT / "schema" / "plate.schema.json").read_text())["$defs"]["pattern"]["properties"]["type"]["enum"]
+    pattern_row = next(line for line in readme.splitlines() if line.startswith("| Patterns:"))
+    for p in patterns:
+        assert p.replace("-", " ") in pattern_row.split("|")[1], p

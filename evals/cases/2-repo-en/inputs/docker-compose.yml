@@ -1,0 +1,29 @@
+services:
+  web:
+    image: bookings/web
+    ports: ["8080:80"]
+    environment:
+      API_URL: http://api:8000
+  api:
+    image: bookings/api
+    environment:
+      DATABASE_URL: postgresql://bookings@db/bookings
+      QUEUE_URL: amqp://mq:5672
+      CLINIC_API_URL: https://scheduling.example.test/v2
+    depends_on: [db, mq]
+  notifier:
+    image: bookings/notifier
+    environment:
+      QUEUE_URL: amqp://mq:5672
+      MESSAGING_API_URL: https://messaging.example.test
+    depends_on: [mq]
+  sync:
+    image: bookings/sync
+    command: ["python", "-m", "sync", "--every", "300"]
+    environment:
+      DATABASE_URL: postgresql://bookings@db/bookings
+      CLINIC_API_URL: https://scheduling.example.test/v2
+  db:
+    image: postgres:16
+  mq:
+    image: rabbitmq:3

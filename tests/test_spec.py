@@ -2,12 +2,11 @@
 import json
 
 import pytest
-
-from conftest import EXAMPLES, ROOT, pl
+from conftest import EXAMPLES, ROOT, archetypes, browser, html, images, route, sp  # noqa: F401
 
 
 def errors(spec: dict) -> list[dict]:
-    found = pl.schema_errors(spec) or pl.semantic_errors(spec)
+    found = sp.schema_errors(spec) or sp.semantic_errors(spec)
     return [e for e in found if e["level"] == "error"]
 
 
@@ -17,11 +16,11 @@ def checks(spec: dict) -> set[str]:
 
 @pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.stem)
 def test_examples_are_valid(path):
-    assert errors(pl.load_spec(path)) == []
+    assert errors(sp.load_spec(path)) == []
 
 
 UNBUILT = [a for a in json.loads((ROOT / "schema" / "plate.schema.json").read_text())["properties"]["archetype"]["enum"]
-           if a not in pl.BUILT_ARCHETYPES]
+           if a not in archetypes.BUILT]
 
 
 @pytest.mark.parametrize("archetype", UNBUILT)
@@ -62,6 +61,24 @@ def test_unknown_icon(example):
     assert "icon" in checks(example)
 
 
+# F13: an icon name is a name from the index, never a path
+@pytest.mark.parametrize("name", ["../../pyproject", "a/b", "Shield", "shield.svg"])
+def test_icon_name_is_not_a_path(example, name):
+    example["panels"][0]["cards"][0]["icon"] = name
+    assert checks(example) == {"schema"}
+
+
+# F06: a misspelt field inside a pattern is an error, not silently ignored
+@pytest.mark.parametrize("where", ["pattern", "item"])
+def test_pattern_rejects_unknown_fields(example, where):
+    pattern = next(pt for p in example["panels"] for pt in p.get("patterns", []) if pt["type"] == "tier-strip")
+    if where == "pattern":
+        pattern["capton"] = "Lakehouse"
+    else:
+        pattern["tiers"][0]["nite"] = "raw"
+    assert checks(example) == {"schema"}
+
+
 def test_technical_term_stays_english_inside_compound(example):
     example["panels"][0]["cards"][0]["note"] = "leest de productcatalogus"
     found = errors(example)
@@ -76,31 +93,49 @@ def hub_spec(example, **layout):
 
 def test_hub_layout_is_derived(example):
     spec = hub_spec(example, hub="identity", top=["clients", "gateway", "services"], bottom=["data"], right="x")
-    assert pl.area_tokens(spec) == [
-        ["clients", "gateway", "services", "x"],
-        ["identity", "identity", "identity", "x"],
-        ["data", "data", "data", "x"],
-    ]
-    # The side spoke is as wide as one top spoke; the hub row fills, spoke rows hug their content.
-    assert pl.column_weights(spec, 4) == [1, 1, 1, 1]
-    assert pl.default_row_heights(spec, pl.area_tokens(spec)) == ["auto", "fill", "auto"]
+    # Spoke rows are groups with their own grid; the side spoke spans every row.
+    assert archetypes.get(spec["archetype"]).grid(spec).rows == [["_top", "x"], ["identity", "x"], ["_bottom", "x"]]
+    assert archetypes.get(spec["archetype"]).grid(spec).groups == {"_top": ["clients", "gateway", "services"], "_bottom": ["data"]}
 
 
-def test_hub_spreads_uneven_rows_over_shared_columns(example):
-    spec = hub_spec(example, hub="identity", top=["clients", "gateway", "services"], bottom=["data", "x"])
-    assert pl.area_tokens(spec)[2] == ["data"] * 3 + ["x"] * 3
+def test_side_spoke_track_is_one_spoke_of_the_fuller_row_wide(example):
+    # One side, four bottom spokes: S = H/4 - 36 and S + 48 + H = 100%, so 100% = 5S + 192 and S = 20% - 38.4px = 20% - 0.8 gutters.
+    spec = hub_spec(example, hub="identity", top=["clients"], bottom=["gateway", "services", "data", "x"], left="y")
+    side = "clamp(260px, calc(20.0000% + -0.8000 * var(--gutter-x)), 30%)"
+    assert archetypes.get(spec["archetype"]).grid(spec).columns == [side, "minmax(0, 1fr)"]
 
 
 def test_layer_cake_rails_span_every_layer(example):
     example["archetype"] = "layer-cake"
     example["layout"] = {"layers": ["clients", "gateway"], "left": "identity"}
-    assert pl.area_tokens(example) == [["identity", "clients"], ["identity", "gateway"]]
+    assert archetypes.get(example["archetype"]).grid(example).rows == [["identity", "clients"], ["identity", "gateway"]]
 
 
 def test_layout_key_from_another_archetype(example):
+    # The schema knows each archetype's layout keys, so the mistake is caught there, with the key named.
     example["archetype"] = "hub-and-spokes"
-    # row_heights applies to every archetype; areas and column_widths belong to column-flow alone.
-    assert {e["id"] for e in errors(example)} == {"layout.hub", "layout.areas", "layout.column_widths"}
+    found = errors(example)
+    assert {e["check"] for e in found} == {"schema"} and {e["id"] for e in found} == {"layout"}
+    text = " ".join(e["detail"] for e in found)
+    assert "'hub' is a required property" in text and "'areas'" in text and "'column_widths'" in text
+
+
+# B2 and B6: the registry and the schema agree
+def test_registry_matches_schema():
+    schema = sp.schema()
+    names = schema["properties"]["archetype"]["enum"]
+    assert set(archetypes.REGISTRY) <= set(names)
+    assert set(names) == set(archetypes.REGISTRY) | set(archetypes.PLANNED)
+    blocks = {b["if"]["properties"]["archetype"]["const"]: b["then"]["properties"]["layout"] for b in schema["allOf"]}
+    for name, arche in archetypes.REGISTRY.items():
+        assert set(blocks[name]["required"]) == arche.required, name
+        assert set(blocks[name]["propertyNames"]["enum"]) == arche.allowed, name
+        assert arche.allowed <= set(schema["properties"]["layout"]["properties"]), name
+
+
+def test_examples_declare_the_schema():
+    for path in EXAMPLES:
+        assert path.read_text(encoding="utf-8").startswith("# yaml-language-server: $schema=../schema/plate.schema.json")
 
 
 def test_panel_placed_twice(example):
@@ -111,3 +146,141 @@ def test_panel_placed_twice(example):
 def test_hub_needs_two_spokes(example):
     hub_spec(example, hub="identity", top=["clients"])
     assert [e["id"] for e in errors(example)] == ["layout.hub"]
+
+
+# A1: ids
+def test_duplicate_panel_id(example):
+    example["panels"].append(dict(example["panels"][2]))
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("id", "gateway")]
+
+
+def test_duplicate_card_id(example):
+    example["panels"][0]["cards"][0]["id"] = "x"
+    example["panels"][1]["cards"][0]["id"] = "x"
+    found = errors(example)
+    assert [(e["check"], e["id"]) for e in found] == [("id", "x")]
+    assert "panels/0/cards/0" in found[0]["detail"] and "panels/1/cards/0" in found[0]["detail"]
+
+
+def test_card_id_equal_to_panel_id(example):
+    example["panels"][0]["cards"][0]["id"] = "gateway"
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("id", "gateway")]
+
+
+def test_card_id_equal_to_an_automatic_id(example):
+    example["panels"][0]["cards"][0]["id"] = "gateway.card1"
+    assert [e["check"] for e in errors(example)] == ["schema"]  # a dot is not allowed in an id
+
+
+# A2: footer columns follow the footer panels
+def test_footer_columns_must_match_panels(example):
+    example["footer"]["columns"] = [1, 1]  # context, principles, open questions: three columns
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("layout", "footer.columns")]
+
+
+def test_default_footer_columns_cover_only_present_panels(example):
+    del example["footer"]["context"]
+    assert sp.footer_panels(example) == ["principles", "open_questions", "legend"]
+
+
+# A5: a flow from an element to itself
+def test_self_loop_is_a_flow_error(example):
+    example["flows"].append({"from": "gateway", "to": "gateway"})
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("flow", "flows/6")]
+
+
+# A6: series badge
+def test_part_without_of(example):
+    del example["canvas"]["of"]
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("canvas", "canvas.of")]
+
+
+def test_part_larger_than_of(example):
+    example["canvas"]["part"] = 4
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("canvas", "canvas.part")]
+
+
+# C8: card flags
+def test_flags_are_numbered_and_reach_the_footer(example):
+    assert sp.flags(example) == [{"n": 1, "card": "gateway.card1", "kind": "warning", "text": "Rate limits per tenant of per client?"}]
+    assert {"n": 1, "text": "Rate limits per tenant of per client?"} in sp.open_questions(example)
+
+
+def test_flag_counts_for_the_chip_mirror(example):
+    example["footer"]["open_questions"] = {"extra": ["Payments als eigen service of bij de PSP laten?", "Event bus nu of pas in fase 3?"]}
+    found = errors(example)
+    assert [(e["check"], "Rate limits" in e["detail"]) for e in found] == [("chip-mirror", True)]
+
+
+def test_row_heights_still_work_but_are_deprecated(example):
+    example["layout"]["row_heights"] = ["fill", "auto"]
+    assert [(e["check"], e["level"]) for e in sp.check(example)] == [("deprecated", "warning")]
+
+
+# C13: icons the agent can find
+def test_icon_search_finds_architecture_words():
+    from schemantic import icons
+    assert icons.search(["queue"])[:1] == ["stack-2"]
+    assert "database" in icons.search(["database"])[:3]
+    for word, names in icons.synonyms().items():
+        assert all(n in icons.index() for n in names), word
+
+
+def test_unknown_icon_hint_names_the_closest_ones(example):
+    example["panels"][0]["cards"][0]["icon"] = "kafka"
+    found = [e for e in sp.semantic_errors(example) if e["check"] == "icon"]
+    assert found and found[0]["hint"].startswith("Closest: topology-bus, arrows-exchange, stack-2")
+
+
+# E1: swimlane layout checks
+def swimlane(example, columns=("Detect", "Triage", "Mitigate")):
+    example["archetype"] = "swimlane"
+    example["layout"] = {"lanes": ["clients", "identity", "gateway", "services", "data"], "columns": list(columns)}
+    return example
+
+
+def test_swimlane_step_beyond_the_columns(example):
+    spec = swimlane(example)
+    spec["panels"][0]["cards"][0]["col"] = 4
+    assert ("layout", "clients") in [(e["check"], e["id"]) for e in errors(spec)]
+
+
+def test_swimlane_two_steps_in_one_column(example):
+    spec = swimlane(example)
+    spec["panels"][0]["cards"][0]["col"] = 2
+    spec["panels"][0]["cards"][1]["col"] = 2
+    found = [e for e in errors(spec) if e["check"] == "layout"]
+    assert found and "two steps in column 2" in found[0]["detail"]
+
+
+def test_swimlane_grid_has_a_phase_band(example):
+    g = archetypes.get("swimlane").grid(swimlane(example))
+    assert g.rows[0] == ["_phases"] and g.bands == {"_phases": ["Detect", "Triage", "Mitigate"]}
+
+
+# E2: nested-zones layout checks
+def zones(example, tree, outside=()):
+    example["archetype"] = "nested-zones"
+    example["layout"] = {"zones": tree, **({"outside": list(outside)} if outside else {})}
+    return example
+
+
+def test_zones_place_every_panel(example):
+    spec = zones(example, [{"id": "a", "title": "A", "panels": ["clients", "identity", "gateway", "services"]}], ["data"])
+    assert errors(spec) == []
+    spec = zones(example, [{"id": "a", "title": "A", "panels": ["clients", "identity"]}], ["data"])
+    assert {e["id"] for e in errors(spec)} == {"gateway", "services"}
+
+
+def test_zones_nest_at_most_three_deep(example):
+    deep = {"id": "d4", "title": "4", "panels": ["clients", "identity", "gateway", "services", "data"]}
+    for n in (3, 2, 1):
+        deep = {"id": f"d{n}", "title": str(n), "zones": [deep]}
+    assert [(e["check"], e["id"]) for e in errors(zones(example, [deep]))] == [("layout", "zone.d4")]
+
+
+def test_zones_ids_unique_and_not_empty(example):
+    tree = [{"id": "a", "title": "A", "panels": ["clients", "identity", "gateway", "services", "data"]},
+            {"id": "a", "title": "B"}]
+    details = [e["detail"] for e in errors(zones(example, tree))]
+    assert any("two zones" in d for d in details) and any("empty zone" in d for d in details)

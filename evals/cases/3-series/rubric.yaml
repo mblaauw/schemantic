@@ -1,0 +1,3 @@
+lang: en
+archetype: [column-flow, hub-and-spokes, layer-cake]
+series_min_parts: 2

@@ -1,0 +1,686 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   108
+  ],
+  "body": [
+   40,
+   126,
+   1560,
+   852
+  ],
+  "bus": [
+   40,
+   290,
+   1168,
+   688
+  ],
+  "bus.card0": [
+   54,
+   362,
+   600,
+   418
+  ],
+  "bus.card1": [
+   608,
+   362,
+   1154,
+   418
+  ],
+  "bus.card2": [
+   54,
+   426,
+   600,
+   480
+  ],
+  "dlq": [
+   608,
+   426,
+   1154,
+   480
+  ],
+  "bus.matrix0": [
+   54,
+   490,
+   416,
+   628
+  ],
+  "bus.chip0": [
+   54,
+   638,
+   1154,
+   674
+  ],
+  "ops": [
+   1216,
+   126,
+   1560,
+   852
+  ],
+  "ops.card0": [
+   1230,
+   236,
+   1548,
+   326
+  ],
+  "oncall": [
+   1230,
+   372,
+   1548,
+   464
+  ],
+  "ops.card2": [
+   1230,
+   510,
+   1548,
+   600
+  ],
+  "ops.card3": [
+   1230,
+   648,
+   1548,
+   738
+  ],
+  "ops.chip0": [
+   1230,
+   788,
+   1548,
+   840
+  ],
+  "orders": [
+   40,
+   126,
+   384,
+   246
+  ],
+  "orders.card0": [
+   54,
+   178,
+   372,
+   234
+  ],
+  "payments": [
+   432,
+   126,
+   776,
+   246
+  ],
+  "payments.card0": [
+   446,
+   178,
+   764,
+   234
+  ],
+  "shipping": [
+   824,
+   126,
+   1168,
+   246
+  ],
+  "shipping.card0": [
+   838,
+   178,
+   1156,
+   234
+  ],
+  "search": [
+   40,
+   732,
+   384,
+   852
+  ],
+  "search.card0": [
+   54,
+   784,
+   372,
+   840
+  ],
+  "analytics": [
+   432,
+   732,
+   776,
+   852
+  ],
+  "analytics.card0": [
+   446,
+   784,
+   764,
+   840
+  ],
+  "notify": [
+   824,
+   732,
+   1168,
+   852
+  ],
+  "notify.card0": [
+   838,
+   784,
+   1156,
+   840
+  ],
+  "footer": [
+   40,
+   870,
+   1560,
+   982
+  ],
+  "footer.principles": [
+   40,
+   870,
+   876,
+   952
+  ],
+  "footer.open_questions": [
+   904,
+   870,
+   1560,
+   914
+  ],
+  "footer.legend": [
+   40,
+   962,
+   1560,
+   982
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "Order platform after phase 3 — the event bus"
+  ],
+  [
+   40,
+   100,
+   "Domains publish each fact once; every consumer reads it from the same bus"
+  ],
+  [
+   1452,
+   58,
+   "Part 3 of 3"
+  ],
+  [
+   54,
+   318,
+   "Event bus"
+  ],
+  [
+   54,
+   336,
+   "Managed Kafka, one topic per event type"
+  ],
+  [
+   96,
+   386,
+   "Topics"
+  ],
+  [
+   96,
+   402,
+   "orders.placed, payments.captured, parcels.shipped"
+  ],
+  [
+   652,
+   386,
+   "Schema registry"
+  ],
+  [
+   652,
+   402,
+   "every event has a versioned schema"
+  ],
+  [
+   96,
+   450,
+   "Replay"
+  ],
+  [
+   96,
+   466,
+   "consumers rewind up to 14 days"
+  ],
+  [
+   652,
+   450,
+   "Dead-letter queue"
+  ],
+  [
+   652,
+   466,
+   "events no consumer could handle"
+  ],
+  [
+   68,
+   510,
+   "Who reads which topic"
+  ],
+  [
+   172,
+   530,
+   "orders.*"
+  ],
+  [
+   250,
+   530,
+   "payments.*"
+  ],
+  [
+   342,
+   530,
+   "parcels.*"
+  ],
+  [
+   68,
+   552,
+   "Search"
+  ],
+  [
+   68,
+   572,
+   "Analytics"
+  ],
+  [
+   68,
+   594,
+   "Notifications"
+  ],
+  [
+   82,
+   616,
+   "reads all events"
+  ],
+  [
+   192,
+   616,
+   "reads some"
+  ],
+  [
+   282,
+   616,
+   "does not read"
+  ],
+  [
+   92,
+   658,
+   "Is 14 days of retention enough to rebuild the search index?"
+  ],
+  [
+   1228,
+   152,
+   "Operations"
+  ],
+  [
+   1228,
+   170,
+   "Who keeps the bus healthy"
+  ],
+  [
+   1272,
+   260,
+   "Dashboards"
+  ],
+  [
+   1272,
+   276,
+   "consumer lag per topic"
+  ],
+  [
+   1282,
+   294,
+   "alert when lag passes five minutes"
+  ],
+  [
+   1282,
+   312,
+   "one board per consumer group"
+  ],
+  [
+   1272,
+   396,
+   "On-call"
+  ],
+  [
+   1272,
+   414,
+   "paged on dead letters"
+  ],
+  [
+   1282,
+   432,
+   "first responder replays or skips"
+  ],
+  [
+   1282,
+   448,
+   "fixes go back to the owning domain"
+  ],
+  [
+   1272,
+   534,
+   "Runbooks"
+  ],
+  [
+   1272,
+   550,
+   "next to the bus configuration in Git"
+  ],
+  [
+   1282,
+   568,
+   "replay a topic from a timestamp"
+  ],
+  [
+   1282,
+   586,
+   "skip one poison message"
+  ],
+  [
+   1272,
+   672,
+   "Capacity"
+  ],
+  [
+   1272,
+   688,
+   "partitions and brokers"
+  ],
+  [
+   1282,
+   706,
+   "partition count reviewed every quarter"
+  ],
+  [
+   1282,
+   724,
+   "brokers scale ahead of peak season"
+  ],
+  [
+   1266,
+   808,
+   "Domains run their consumers; operations"
+  ],
+  [
+   1266,
+   826,
+   "runs the bus"
+  ],
+  [
+   52,
+   152,
+   "Orders"
+  ],
+  [
+   96,
+   202,
+   "Order service"
+  ],
+  [
+   96,
+   218,
+   "publishes OrderPlaced and OrderCancelled"
+  ],
+  [
+   444,
+   152,
+   "Payments"
+  ],
+  [
+   488,
+   202,
+   "Payment service"
+  ],
+  [
+   488,
+   218,
+   "publishes PaymentCaptured"
+  ],
+  [
+   836,
+   152,
+   "Shipping"
+  ],
+  [
+   880,
+   202,
+   "Shipping service"
+  ],
+  [
+   880,
+   218,
+   "publishes ParcelShipped"
+  ],
+  [
+   52,
+   758,
+   "Search"
+  ],
+  [
+   96,
+   808,
+   "Search index"
+  ],
+  [
+   96,
+   824,
+   "rebuilt from replay, updated live"
+  ],
+  [
+   444,
+   758,
+   "Analytics"
+  ],
+  [
+   488,
+   808,
+   "Lakehouse ingest"
+  ],
+  [
+   488,
+   824,
+   "lands every event in Bronze"
+  ],
+  [
+   836,
+   758,
+   "Notifications"
+  ],
+  [
+   880,
+   808,
+   "Notification service"
+  ],
+  [
+   880,
+   824,
+   "e-mail and push on status changes"
+  ],
+  [
+   40,
+   884,
+   "Key principles"
+  ],
+  [
+   50,
+   908,
+   "An event is a fact that already happened; it is never changed afterwards."
+  ],
+  [
+   50,
+   928,
+   "The producing domain owns the schema; consumers adapt to new versions."
+  ],
+  [
+   50,
+   948,
+   "No consumer calls a producer directly to fetch what an event already carries."
+  ],
+  [
+   904,
+   884,
+   "Open questions"
+  ],
+  [
+   926,
+   908,
+   "Is 14 days of retention enough to rebuild the search index?"
+  ],
+  [
+   40,
+   978,
+   "Legend"
+  ],
+  [
+   134,
+   974,
+   "Platform component"
+  ],
+  [
+   302,
+   974,
+   "Data and storage"
+  ],
+  [
+   452,
+   974,
+   "People and teams"
+  ],
+  [
+   606,
+   974,
+   "Direction of data"
+  ],
+  [
+   756,
+   974,
+   "Asynchronous: event or message"
+  ],
+  [
+   1000,
+   974,
+   "Open choice or friction"
+  ],
+  [
+   1184,
+   974,
+   "Assumption or note"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "orders",
+   "to": "bus",
+   "points": [
+    [
+     212,
+     254
+    ],
+    [
+     212,
+     284
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 1,
+   "from": "payments",
+   "to": "bus",
+   "points": [
+    [
+     604,
+     254
+    ],
+    [
+     604,
+     284
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 2,
+   "from": "shipping",
+   "to": "bus",
+   "points": [
+    [
+     996,
+     254
+    ],
+    [
+     996,
+     284
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 3,
+   "from": "bus",
+   "to": "search",
+   "points": [
+    [
+     212,
+     694
+    ],
+    [
+     212,
+     724
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 4,
+   "from": "bus",
+   "to": "analytics",
+   "points": [
+    [
+     604,
+     694
+    ],
+    [
+     604,
+     724
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 5,
+   "from": "bus",
+   "to": "notify",
+   "points": [
+    [
+     996,
+     694
+    ],
+    [
+     996,
+     724
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 6,
+   "from": "dlq",
+   "to": "oncall",
+   "points": [
+    [
+     1160,
+     444
+    ],
+    [
+     1222,
+     444
+    ]
+   ],
+   "label": null
+  }
+ ]
+}

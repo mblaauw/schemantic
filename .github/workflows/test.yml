@@ -3,19 +3,76 @@ name: test
 on: [push, pull_request]
 
 jobs:
-  test:
-    # tests/golden/ is rendered on macOS; the runner stays on the same OS so text rasterises the same way.
-    runs-on: macos-latest
+  lint:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.14"
-      - run: pip install -r requirements.txt
-      - run: python -m playwright install chromium
+      - run: pip install ruff
+      - run: ruff check .
+      - run: npx --yes @biomejs/biome@2.3.11 check schemantic/js
+
+  test:
+    # Layout is the same on Linux and macOS (Chromium runs with --font-render-hinting=none); the goldens compare
+    # structurally, so both platforms run the full suite.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: ["3.10", "3.14"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -e ".[dev]"
+      - id: pw
+        run: echo "version=$(python -c 'import importlib.metadata as m; print(m.version("playwright"))')" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            ~/Library/Caches/ms-playwright
+          key: playwright-${{ matrix.os }}-${{ steps.pw.outputs.version }}
+      - run: python -m playwright install --with-deps chromium
+      - run: python -m schemantic doctor --no-install
       - run: python -m pytest -q --basetemp=pytest-tmp
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: render-diffs
-          path: pytest-tmp/**/*.png
+          name: diffs-${{ matrix.os }}-${{ matrix.python }}
+          path: |
+            pytest-tmp/**/*.png
+            pytest-tmp/**/*.json
+
+  offline:
+    # Builds the offline kit, then installs it and runs its smoke test with the network cut off (an empty network
+    # namespace on Linux, a sandbox on macOS): nothing after the kit is built may need the network.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - run: python -m playwright install --with-deps --only-shell chromium
+      - run: python -m schemantic offline "$RUNNER_TEMP/kit"
+      - name: Install with no network (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo unshare --net -- sudo -u "$USER" env "PATH=$PATH" "HOME=$HOME" "SCHEMANTIC_HOME=$RUNNER_TEMP/home" sh -c '
+            if curl -sS -m 5 -o /dev/null https://pypi.org; then echo "the network is reachable" >&2; exit 1; fi
+            sh "$0"' "$RUNNER_TEMP/kit/install.sh"
+      - name: Install with no network (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          PROFILE='(version 1)(allow default)(deny network-outbound (remote ip))'
+          if sandbox-exec -p "$PROFILE" curl -sS -m 5 -o /dev/null https://pypi.org; then echo "the network is reachable" >&2; exit 1; fi
+          SCHEMANTIC_HOME="$RUNNER_TEMP/home" sandbox-exec -p "$PROFILE" sh "$RUNNER_TEMP/kit/install.sh"

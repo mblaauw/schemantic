@@ -1,34 +1,38 @@
-/* Component styles. Export rule: everything visible must be a real element (no ::before/::after,
-   no list markers, no transforms, no shadows, no gradients), because the SVG exporter reads boxes. */
+/* Component styles. The paint contract: everything visible is a real element drawn with backgrounds, solid borders,
+   radii, text and icons (no ::before/::after, list markers, transforms, shadows, gradients, opacity, letter-spacing,
+   text-transform or italics), because the SVG is written from the measured boxes. js/layout.js enforces it as the
+   `paint` check; see docs/architecture.md. */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--paper); }
 
 #plate { position: relative; overflow: hidden; background: var(--paper); font-family: var(--font);
-  color: var(--text); padding: 36px 40px 32px; display: flex; flex-direction: column; gap: 22px; }
+  color: var(--text); padding: 32px 40px 28px; display: flex; flex-direction: column; gap: 18px; }
 
 /* Title block */
 .titleblock { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; flex: 0 0 auto; }
 .title { font-size: var(--t-title); font-weight: 800; color: var(--ink); line-height: 1.1; }
-.subtitle { font-size: var(--t-sub); font-weight: 500; color: var(--accent); margin-top: 6px; line-height: 1.25; }
+.subtitle { font-size: var(--t-sub); font-weight: 500; color: var(--accent); margin-top: 4px; line-height: 1.25; }
 .badge { flex: 0 0 auto; font-size: var(--t-badge); font-weight: 700; color: var(--platform-head);
   background: var(--platform-body); border: 1px solid var(--platform-line); border-radius: 8px;
   padding: 8px 16px; white-space: nowrap; }
 
 /* Body grid: columns, rows and areas come from the spec */
-.body { flex: 1 1 auto; min-height: 0; display: grid; }
+.body { flex: 0 0 auto; min-height: 0; display: grid; }
+.rows-legacy .body { flex: 1 1 auto; }   /* row_heights: fill rows share the preset height (0.1) */
 
 /* Panel */
 .panel { display: flex; flex-direction: column; min-width: 0; min-height: 0; border: 1px solid var(--line);
   border-radius: var(--r-panel); background: var(--body); }
-.role-platform { --head: var(--platform-head); --sub: var(--platform-sub); --body: var(--platform-body); --line: var(--platform-line); }
-.role-storage  { --head: var(--storage-head);  --sub: var(--storage-sub);  --body: var(--storage-body);  --line: var(--storage-line); }
-.role-external { --head: var(--external-head); --sub: var(--external-sub); --body: var(--external-body); --line: var(--external-line); }
-.role-frame    { --head: var(--frame-head);    --sub: var(--frame-sub);    --body: var(--frame-body);    --line: var(--frame-line); }
+/* .role-<name> rules are generated from the role tokens (schemantic/roles.py), so a theme can add roles. */
+/* A row of spokes above or below the hub: its own grid, so the row divides the hub's width evenly */
+.spoke-row { display: grid; column-gap: var(--gutter-x); min-width: 0; min-height: 0; }
+
 /* The hub of a hub-and-spokes plate: same role colours, framed in its header colour */
 .panel-hub { border: 2px solid var(--head); }
 .panel-hub .ph { border-radius: 6px 6px 0 0; }
 .ph { background: var(--head); border-radius: 7px 7px 0 0; padding: 9px 12px 10px; }
-.ph-title { font-size: var(--t-head); font-weight: 700; color: #FFFFFF; line-height: 1.2; }
+.ph-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.ph-title { font-size: var(--t-head); font-weight: 700; color: var(--on-head); line-height: 1.2; }
 .ph-sub { font-size: var(--t-body); color: var(--sub); margin-top: 2px; line-height: 1.3; }
 .pb { flex: 1 1 auto; display: flex; flex-direction: column; gap: 10px; padding: 12px; min-height: 0; }
 .blocks { display: flex; flex-direction: column; gap: 10px; }
@@ -47,8 +51,12 @@ body { background: var(--paper); }
 .li { display: flex; gap: 6px; align-items: baseline; font-size: var(--t-body); line-height: 1.4; color: var(--text); }
 .dot { flex: 0 0 auto; width: 4px; height: 4px; border-radius: 2px; background: var(--head); margin-bottom: 3px; }
 
-/* Chips: pinned to the bottom of their panel */
-.chips { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+/* Chips: right under the content; pinned to the bottom only when a whole row opts in (layout.chips_at) */
+.chips { display: flex; flex-direction: column; gap: 8px; }
+.chips-bottom { margin-top: auto; }
+/* A panel spanning several rows spreads its cards evenly over its height */
+.spread .blocks { flex: 1 1 auto; }
+.spread .blocks > .cards { flex: 1 1 auto; align-content: space-evenly; }
 .chip { display: flex; gap: 8px; align-items: flex-start; border-radius: var(--r-card); padding: 8px 10px;
   font-size: var(--t-body); line-height: 1.35; font-weight: 600; }
 .chip .ic { width: 18px; height: 18px; }
@@ -76,9 +84,11 @@ body { background: var(--paper); }
 .tk { flex: 0 0 auto; width: 9px; height: 9px; margin: 3px 5px 0 0; border-left: 1px solid var(--muted); border-bottom: 1px solid var(--muted); }
 
 /* Panel pattern: matrix */
-.matrix { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card); padding: 8px 10px; }
+/* A matrix is as wide as its content, left-aligned: columns of at least 72 px, never stretched across the panel */
+.matrix { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card); padding: 8px 12px;
+  width: fit-content; max-width: 100%; align-self: flex-start; }
 .mx-cap { font-size: var(--t-small); font-weight: 600; color: var(--muted); margin-bottom: 6px; }
-.mx-grid { display: grid; row-gap: 6px; column-gap: 6px; align-items: center; }
+.mx-grid { display: grid; row-gap: 6px; column-gap: 14px; align-items: center; }
 .mx-col { font-size: var(--t-small); font-weight: 600; color: var(--muted); text-align: center; line-height: 1.25; }
 .mx-row { font-size: var(--t-body); font-weight: 600; color: var(--ink); }
 .mx-cell { display: flex; justify-content: center; }
@@ -88,9 +98,27 @@ body { background: var(--paper); }
 .mx-key { display: flex; gap: 14px; margin-top: 8px; font-size: var(--t-small); color: var(--muted); }
 .mx-key-item { display: flex; gap: 5px; align-items: center; }
 
-/* Footer strip */
-.footer { flex: 0 0 auto; display: grid; gap: 16px; }
-.footer .pb { gap: 6px; }
+/* Footer strip: context, not content. Quiet labels over a hairline instead of header bars; the row takes its
+   content height. Short open questions and notes stack under the principles. */
+.footer { flex: 0 0 auto; display: grid; column-gap: 28px; align-items: start; margin-top: var(--gap-extra, 0px); }
+.fcol { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.footer .panel { border: none; border-radius: 0; background: none; }
+.footer .ph { background: none; border-radius: 0; padding: 0 0 4px; border-bottom: 1px solid var(--frame-line); }
+.footer .ph-title { color: var(--muted); font-size: var(--t-name); font-weight: 600; }
+.footer .pb { padding: 5px 0 0; gap: 3px; }
+.footer .li, .footer .oq, .footer .note, .footer .lg { line-height: 1.3; }
+/* Context cards in the footer are a plain list: no frame, a smaller icon */
+.footer .cards { gap: 3px 14px; }
+.footer .card { border: none; background: none; padding: 1px 0; gap: 8px; }
+.footer .card .ic { width: 18px; height: 18px; }
+.footer .cnote { line-height: 1.3; }
+/* The legend runs as one strip under the other footer columns, its entries flowing across the full width */
+.legend-strip { grid-column: 1 / -1; }
+
+.legend-strip .panel { flex-direction: row; align-items: baseline; gap: 14px; }
+.legend-strip .ph { border-bottom: none; padding: 0; flex: 0 0 auto; }
+.legend-strip .pb { flex-direction: row; flex-wrap: wrap; padding: 0; gap: 0 18px; }
+.footer { row-gap: 10px; }
 .oq { display: flex; gap: 6px; align-items: flex-start; font-size: var(--t-body); line-height: 1.4; }
 .oq .ic { width: 16px; height: 16px; color: var(--warn-icon); margin-top: 1px; }
 .lg { display: flex; gap: 8px; align-items: center; font-size: var(--t-body); line-height: 1.3; }
@@ -99,3 +127,70 @@ body { background: var(--paper); }
 .lg-arrow { color: var(--arrow); }
 .lg-warning { color: var(--warn-icon); }
 .lg-info { color: var(--info-icon); }
+
+/* Change status: a tag after a card's name (wrapping below it when the card is narrow), or at the right of a panel header. Planned boxes get a dashed outline and
+   removed names a strike-through; both are drawn as SVG by js/decorate.js, so the export matches exactly. */
+.tag { flex: 0 0 auto; display: inline-block; font-size: var(--t-small); font-weight: 600; line-height: 1.25;
+  padding: 1px 6px; border-radius: 4px; vertical-align: 1px; white-space: nowrap; }
+.cn .tag { margin-left: 4px; }
+.tag-new { background: var(--tag-new-bg); color: var(--tag-new-text); }
+.tag-changed { background: var(--tag-changed-bg); color: var(--tag-changed-text); }
+.tag-planned { background: var(--tag-planned-bg); color: var(--tag-planned-text); }
+.tag-deprecated { background: var(--tag-deprecated-bg); color: var(--tag-deprecated-text); }
+.tag-removed { background: var(--tag-removed-bg); color: var(--tag-removed-text); }
+.card.status-deprecated, .card.status-removed { background: var(--frame-body); }
+.status-deprecated .cn, .status-deprecated .cnote, .status-removed .cn, .status-removed .cnote { color: var(--muted); }
+.card.status-deprecated .ic, .card.status-removed .ic { color: var(--muted); }
+
+/* Card flags: a numbered marker; the text is in the footer under the same number */
+.flag { display: inline-flex; align-items: center; justify-content: center; min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: 8px; font-size: var(--t-small); font-weight: 700; line-height: 1; color: var(--on-head); vertical-align: 1px; }
+.cn .flag { margin-left: 6px; }
+.flag-warning { background: var(--warn-icon); }
+.flag-info { background: var(--info-icon); }
+.flag-step { background: var(--step); }
+.oq .flag, .note .flag { flex: 0 0 auto; margin-top: 1px; }
+.note { display: flex; gap: 6px; align-items: flex-start; font-size: var(--t-body); line-height: 1.4; }
+
+/* Focus: the one element the plate is about */
+.card.focus { border: 2px solid var(--accent); padding: 8px 9px; }
+.panel.focus { border: 2px solid var(--accent); }
+
+/* Legend samples for line styles (drawn by js/decorate.js) and focus */
+.ls { flex: 0 0 auto; width: 22px; height: 14px; margin: 0 2px; }
+.sw.focus-sw { background: var(--card-bg); border: 2px solid var(--accent); }
+
+/* Swimlane: the lane's name on the left, its steps in columns that line up with the phase band above */
+.panel.lane { flex-direction: row; }
+.lane > .ph { flex: 0 0 var(--lane-head); width: var(--lane-head); border-radius: 7px 0 0 7px; display: flex;
+  flex-direction: column; justify-content: center; }
+.lane > .pb { flex: 1 1 auto; min-width: 0; }
+.lane .cards { column-gap: var(--step-gap); }
+.band { display: grid; column-gap: var(--step-gap); align-items: end; margin-bottom: -28px;  /* sits close to the lanes */
+  padding: 0 13px 0 calc(var(--lane-head) + 13px); }   /* the lane's border and padding, so columns line up */
+.band-label { font-size: var(--t-name); font-weight: 600; color: var(--muted); padding-bottom: 5px;
+  border-bottom: 2px solid var(--frame-line); }
+
+/* Nested zones: dashed frames (drawn by js/decorate.js), side by side at the top level, holding zones and panels */
+.zones { display: flex; gap: var(--gutter-x); align-items: stretch; min-width: 0; }
+.zone { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 10px; padding: 10px 14px 14px;
+  border: 1.5px solid var(--zone-line); border-radius: 10px; }
+.zone-1 { background: var(--zone-1); } .zone-2 { background: var(--zone-2); } .zone-3 { background: var(--zone-3); }
+.zone-label { align-self: flex-start; display: flex; gap: 8px; align-items: baseline; font-size: var(--t-name); font-weight: 700; color: var(--ink); }
+.zone-kind { font-size: var(--t-small); font-weight: 600; color: var(--muted); }
+.zone-body { flex: 1 1 auto; display: flex; flex-wrap: wrap; gap: 16px var(--gutter-x); align-items: stretch;
+  align-content: flex-start; }   /* rows keep their content height; spare height stays in the frame, not in a panel */
+.zone-body > .panel { flex: 1 1 220px; min-width: 0; }
+.zone-body > .zone { flex: 1 1 260px; }
+.stack { display: flex; flex-direction: column; justify-content: space-evenly; gap: var(--gutter-y); min-width: 0; min-height: 0; }
+
+/* Panel pattern: process strip, steps in order with a number */
+.steps-cap { font-size: var(--t-small); font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+.steps-row { display: flex; align-items: stretch; gap: 4px; }
+.step { flex: 1 1 0; min-width: 0; display: flex; gap: 7px; align-items: flex-start; padding: 8px 9px;
+  background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card); }
+.step .ic { width: 18px; height: 18px; }
+.step-n { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px;
+  border-radius: 9px; background: var(--step); color: var(--on-head); font-size: var(--t-small); font-weight: 700; }
+.step-name { font-size: var(--t-name); font-weight: 600; color: var(--ink); line-height: 1.2; }
+.step-note { font-size: var(--t-small); color: var(--muted); line-height: 1.3; }

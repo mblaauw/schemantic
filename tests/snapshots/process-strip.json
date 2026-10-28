@@ -1,0 +1,380 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   108
+  ],
+  "body": [
+   40,
+   126,
+   1560,
+   386
+  ],
+  "teams": [
+   40,
+   126,
+   348,
+   386
+  ],
+  "teams.card0": [
+   54,
+   178,
+   334,
+   234
+  ],
+  "teams.card1": [
+   54,
+   242,
+   334,
+   296
+  ],
+  "delivery": [
+   396,
+   126,
+   1166,
+   386
+  ],
+  "delivery.card0": [
+   408,
+   178,
+   1152,
+   234
+  ],
+  "delivery.process-strip0": [
+   408,
+   244,
+   1152,
+   326
+  ],
+  "delivery.process-strip0.0": [
+   408,
+   264,
+   538,
+   326
+  ],
+  "delivery.process-strip0.1": [
+   562,
+   264,
+   692,
+   326
+  ],
+  "delivery.process-strip0.2": [
+   716,
+   264,
+   846,
+   326
+  ],
+  "delivery.process-strip0.3": [
+   870,
+   264,
+   1000,
+   326
+  ],
+  "delivery.process-strip0.4": [
+   1024,
+   264,
+   1152,
+   326
+  ],
+  "delivery.chip0": [
+   408,
+   336,
+   1152,
+   372
+  ],
+  "runtime": [
+   1214,
+   126,
+   1560,
+   386
+  ],
+  "runtime.card0": [
+   1226,
+   178,
+   1548,
+   234
+  ],
+  "runtime.card1": [
+   1226,
+   242,
+   1548,
+   296
+  ],
+  "footer": [
+   40,
+   404,
+   1560,
+   476
+  ],
+  "footer.principles": [
+   40,
+   404,
+   1560,
+   446
+  ],
+  "footer.legend": [
+   40,
+   456,
+   1560,
+   476
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "A change reaches production in five checked steps"
+  ],
+  [
+   40,
+   100,
+   "Every step is automated; a failed check stops the release"
+  ],
+  [
+   52,
+   152,
+   "Product teams"
+  ],
+  [
+   96,
+   202,
+   "Developers"
+  ],
+  [
+   96,
+   218,
+   "merge to main"
+  ],
+  [
+   96,
+   266,
+   "Release owner"
+  ],
+  [
+   96,
+   282,
+   "approves production"
+  ],
+  [
+   408,
+   152,
+   "Delivery pipeline"
+  ],
+  [
+   452,
+   202,
+   "Pipeline as code"
+  ],
+  [
+   452,
+   218,
+   "one template for every service"
+  ],
+  [
+   408,
+   254,
+   "From merge to production"
+  ],
+  [
+   426,
+   286,
+   "1"
+  ],
+  [
+   468,
+   286,
+   "Build"
+  ],
+  [
+   468,
+   300,
+   "image and"
+  ],
+  [
+   468,
+   314,
+   "SBOM"
+  ],
+  [
+   578,
+   286,
+   "2"
+  ],
+  [
+   622,
+   286,
+   "Test"
+  ],
+  [
+   622,
+   300,
+   "unit and"
+  ],
+  [
+   622,
+   314,
+   "contract"
+  ],
+  [
+   732,
+   286,
+   "3"
+  ],
+  [
+   776,
+   286,
+   "Scan"
+  ],
+  [
+   776,
+   300,
+   "CVEs block"
+  ],
+  [
+   776,
+   314,
+   "release"
+  ],
+  [
+   884,
+   286,
+   "4"
+  ],
+  [
+   930,
+   286,
+   "Stage"
+  ],
+  [
+   930,
+   300,
+   "smoke"
+  ],
+  [
+   930,
+   314,
+   "tests"
+  ],
+  [
+   1038,
+   286,
+   "5"
+  ],
+  [
+   1084,
+   286,
+   "Release"
+  ],
+  [
+   1084,
+   300,
+   "canary,"
+  ],
+  [
+   1084,
+   314,
+   "then all"
+  ],
+  [
+   446,
+   358,
+   "A failed step stops the release; nothing is skipped by hand"
+  ],
+  [
+   1226,
+   152,
+   "Production"
+  ],
+  [
+   1270,
+   202,
+   "Clusters"
+  ],
+  [
+   1270,
+   218,
+   "two regions"
+  ],
+  [
+   1270,
+   266,
+   "Canary analysis"
+  ],
+  [
+   1270,
+   282,
+   "rolls back on errors"
+  ],
+  [
+   40,
+   416,
+   "Key principles"
+  ],
+  [
+   50,
+   442,
+   "Every change to production goes through the pipeline."
+  ],
+  [
+   40,
+   472,
+   "Legend"
+  ],
+  [
+   134,
+   470,
+   "People and teams"
+  ],
+  [
+   288,
+   470,
+   "Platform component"
+  ],
+  [
+   456,
+   470,
+   "Controls"
+  ],
+  [
+   554,
+   470,
+   "Assumption or note"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "teams",
+   "to": "delivery",
+   "points": [
+    [
+     354,
+     256
+    ],
+    [
+     388,
+     256
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 1,
+   "from": "delivery",
+   "to": "runtime",
+   "points": [
+    [
+     1172,
+     256
+    ],
+    [
+     1206,
+     256
+    ]
+   ],
+   "label": null
+  }
+ ]
+}

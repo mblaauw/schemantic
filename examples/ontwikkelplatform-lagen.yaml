@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../schema/plate.schema.json
 # Fictional example: a layer-cake plate in Dutch with English technical terms, rails on both sides,
 # and connectors from a rail card into a layer card.
 canvas: {size: landscape-4x3, lang: nl}
@@ -14,7 +15,7 @@ panels:
   - id: experience
     title: "Developer experience"
     subtitle: "Waar teams beginnen"
-    role: external
+    role: platform
     cards:
       - {icon: browser, name: "Developer portal", note: "één ingang voor alle teams"}
       - {icon: folder, name: "Service catalog", note: "eigenaar en status per service"}
@@ -44,7 +45,7 @@ panels:
   - id: infra
     title: "Infrastructuur"
     subtitle: "Beheerd als code"
-    role: storage
+    role: data
     cards:
       - {icon: cloud, name: "Cloud accounts", note: "per team en omgeving"}
       - {icon: world, name: "Netwerk", note: "private endpoints, geen publieke IP's"}
@@ -70,6 +71,10 @@ panels:
         name: "Scanning"
         note: "images en dependencies"
         bullets: ["blokkeert bij kritieke CVE's", "een SBOM per image"]
+      - icon: test-pipe
+        name: "Pentests"
+        note: "twee keer per jaar, door een externe partij"
+        bullets: ["bevindingen worden tickets bij het team"]
     chips:
       - {kind: info, text: "Uitzonderingen via een pull request"}
 
@@ -84,15 +89,15 @@ panels:
     chips:
       - {kind: info, text: "Golden paths leveren alerts mee"}
 
+flows_mean: control
 flows:
   - {from: experience, to: delivery, label: "scaffolding"}
   - {from: delivery, to: runtime, label: "deploy via GitOps"}
   - {from: runtime, to: infra}
   - {from: policy, to: admission}
-  - {from: runtime, to: observability}
+  - {from: runtime, to: observability, style: async}
 
 footer:
-  columns: [1.6, 1.1, 0.9]
   principles:
     - "Een team komt via de portal binnen, niet via een ticket bij het platformteam."
     - "Alles wat draait, is gedeployed via GitOps; handmatige wijzigingen worden teruggedraaid."

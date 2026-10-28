@@ -1,0 +1,13 @@
+/* Example theme: a warmer palette, and one extra role. A theme is appended after tokens.css, so it only names what
+   it changes. Lint still checks contrast, so a pair that is too pale fails with `contrast`. */
+:root {
+  --ink: #2A1B10;
+  --accent: #A3480F;
+  --arrow: #B5541B;
+  --platform-head: #7A3412; --platform-sub: #F7DFCF; --platform-body: #FCF3EC; --platform-line: #EBC7AE;
+  --data-head: #4F5A1C; --data-sub: #E8EDCB; --data-body: #F7F9EC; --data-line: #CBD39A;
+
+  /* An extra role: four colours and a legend label per language */
+  --security-head: #8A1538; --security-sub: #F6D5DF; --security-body: #FCEFF3; --security-line: #EBB8C7;
+  --security-label-en: "Security controls"; --security-label-nl: "Beveiligingsmaatregelen";
+}

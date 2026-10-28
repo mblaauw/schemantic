@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../schema/plate.schema.json
 # Fictional example: a hub-and-spokes plate in English, with a connector that starts at a card.
 canvas: {size: landscape-4x3, lang: en, series: orderplatform, part: 3, of: 3}
 title: "Order platform after phase 3 — the event bus"
@@ -24,6 +25,7 @@ panels:
     patterns:
       - type: matrix
         caption: "Who reads which topic"
+        key: {full: "reads all events", partial: "reads some", none: "does not read"}
         columns: ["orders.*", "payments.*", "parcels.*"]
         rows:
           - {name: "Search", cells: [full, none, full]}
@@ -50,12 +52,12 @@ panels:
 
   - id: search
     title: "Search"
-    role: storage
+    role: data
     cards:
       - {icon: file-search, name: "Search index", note: "rebuilt from replay, updated live"}
   - id: analytics
     title: "Analytics"
-    role: storage
+    role: data
     cards:
       - {icon: chart-bar, name: "Lakehouse ingest", note: "lands every event in Bronze"}
   - id: notify
@@ -67,7 +69,7 @@ panels:
   - id: ops
     title: "Operations"
     subtitle: "Who keeps the bus healthy"
-    role: external
+    role: actor
     cards:
       - icon: gauge
         name: "Dashboards"
@@ -87,19 +89,19 @@ panels:
         note: "partitions and brokers"
         bullets: ["partition count reviewed every quarter", "brokers scale ahead of peak season"]
     chips:
-      - {kind: info, text: "Domains run their own consumers; operations runs the bus itself"}
+      - {kind: info, text: "Domains run their consumers; operations runs the bus"}
 
+flows_mean: data
 flows:
-  - {from: orders, to: bus}
-  - {from: payments, to: bus}
-  - {from: shipping, to: bus}
-  - {from: bus, to: search}
-  - {from: bus, to: analytics}
-  - {from: bus, to: notify}
+  - {from: orders, to: bus, style: async}
+  - {from: payments, to: bus, style: async}
+  - {from: shipping, to: bus, style: async}
+  - {from: bus, to: search, style: async}
+  - {from: bus, to: analytics, style: async}
+  - {from: bus, to: notify, style: async}
   - {from: dlq, to: oncall}
 
 footer:
-  columns: [1.5, 1.1, 0.9]
   principles:
     - "An event is a fact that already happened; it is never changed afterwards."
     - "The producing domain owns the schema; consumers adapt to new versions."

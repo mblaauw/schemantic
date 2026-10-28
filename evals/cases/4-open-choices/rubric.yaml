@@ -1,0 +1,5 @@
+lang: en
+archetype: [hub-and-spokes, column-flow]
+open_questions_min: 2
+warnings_min: 2
+principles_min: 2
