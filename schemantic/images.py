@@ -1,12 +1,11 @@
 """Compare renders: blurred image diffs judged locally, and structural snapshots that name what changed."""
 from __future__ import annotations
 
+import math
 import re
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageFilter
-
-from .browser import call
 
 # Image comparison (SVG parity in lint, golden renders in tests) is structural, not pixel-perfect: Chromium
 # snaps HTML text and borders to whole pixels while the SVG keeps fractions. A 1.5 px blur absorbs that.
@@ -24,29 +23,35 @@ PARITY_TILE = 32
 PARITY_TILE_PX = 12          # largest allowed number of differing pixels in one tile
 
 
-def snapshot(page, layout: dict, segs: list[dict]) -> dict:
-    """What a plate is made of, rounded to 2 px: every element box by data-id, every text line with its position
-    (from the layout document, and the labels the router drew), every connector's points. OS-independent, and a
+def snapshot(layout: dict, segs: list[dict]) -> dict:
+    """What a plate is made of, rounded to 2 px, all from the layout document: every element's box by id, every text
+    line with its position (the labels the router drew included), every connector's points. OS-independent, and a
     diff names what changed."""
     def r2(v):
         return int(round(float(v) / 2) * 2)
 
+    def r2_up(v):  # halves round up, as the page always rounded boxes
+        return int(math.floor(float(v) / 2 + 0.5) * 2)
+
     def unescape(t):
         return t.replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", '"').replace("&amp;", "&")
+
+    boxes, text = {}, []
 
     def walk(items):
         for it in items:
             if it["kind"] == "group":
-                yield from walk(it["items"])
+                boxes[it["id"]] = [r2_up(v) for v in it["box"]]
+                walk(it["items"])
             elif it["kind"] == "text":
-                yield [r2(it["x"]), r2(it["y"]), it["text"]]
+                text.append([r2(it["x"]), r2(it["y"]), it["text"]])
             elif it["kind"] == "svg":  # connector labels and step numbers, drawn as SVG by the router
-                yield from ([r2(x), r2(y), unescape(t)] for x, y, t in
+                text.extend([r2(x), r2(y), unescape(t)] for x, y, t in
                             re.findall(r'<text[^>]*?\bx="([-\d.]+)" y="([-\d.]+)"[^>]*>(.*?)</text>', it["svg"]))
-    text = list(walk(layout["items"]))
+    walk(layout["items"])
     flows = [{"i": f["i"], "from": f["from"], "to": f["to"], "points": [[r2(x), r2(y)] for x, y in f["points"]],
               "label": (f.get("label") or {}).get("text")} for f in segs]
-    return {"boxes": call(page, "boxes"), "text": text, "flows": flows}
+    return {"boxes": boxes, "text": text, "flows": flows}
 
 
 def snapshot_diff(old: dict, new: dict, tol: int = 2) -> list[str]:

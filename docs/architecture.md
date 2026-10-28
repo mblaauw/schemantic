@@ -24,12 +24,12 @@ to `_work/` and move to the output folder only when the build has no errors. Chr
 | `browser.py` | launch Chromium the same way everywhere, load a plate, size the canvas, call page scripts |
 | `route.py`, `lint.py` | Python sides of the page scripts: problems to findings, lint thresholds |
 | `export.py` | the SVG, written from the layout document; font subsetting; the `font` check |
-| `images.py` | image diffs (blurred, judged locally) and structural snapshots |
+| `images.py` | image diffs (blurred, judged locally) and structural snapshots, read from the layout document |
 | `findings.py` | every check, its meaning, fix and hint; generates `references/lint-fixes.md` |
 | `outline.py`, `glyphs.py`, `icons.py`, `gallery.py` | the text outline, glyph outlines, icon search, README images |
 | `cli.py`, `doctor.py` | the command line; finding a Python and Chromium (standard library only) |
 | `offline.py` | the offline kit: wheels, Chromium, checksums, installer, smoke test |
-| `js/` | page scripts: `common` (helpers), `fit`, `decorate`, `route`, `layout`, `lint`, `snapshot`, `fonts-ready` |
+| `js/` | page scripts: `common` (helpers), `fit`, `decorate`, `route`, `layout`, `lint`, `fonts-ready` |
 
 ## The JavaScript and Python boundary
 
@@ -47,7 +47,7 @@ positions:
 
 | Item | Holds |
 | --- | --- |
-| `group` | `type`, `id`, a label for editors, source `refs`, and its `items` |
+| `group` | `type`, `id`, its `box` (left, top, right, bottom), a label for editors, source `refs`, and its `items` |
 | `rect` | `x`, `y`, `w`, `h`, four corner radii, a `fill`, and a `stroke` with its width when all four borders match |
 | `line` | one border that differs from the others |
 | `text` | one line as Chromium broke it: start `x`, baseline `y`, the text, family, size, weight, colour |
@@ -77,6 +77,14 @@ cheapest candidates that only earlier bent routes block, it takes those up, plac
 keeping the result only if every route still has a place. After all flows are placed, each bent route that crosses
 an arrow is routed once more, now that it can see the routes placed after it, and kept if it crosses fewer. A
 crossing the router cannot avoid is an `arrow-crossing` warning.
+
+## Paper
+
+A print size (`a3-landscape`, `a4-landscape`) lays the plate out at the sheet's width at 96 px per inch and as tall as
+its content, like a screen plate. `config.paper_fit` then centres it on the sheet, scaled down when it is taller; the
+SVG keeps its drawing in CSS px and gets the sheet's size in mm through its root `width`, `height` and `viewBox`, and
+the PNG is the plate rasterised at that scale and placed on an exact sheet at `--dpi`. `print-size` fails a plate whose
+smallest text, from the layout document, would print under 6 pt.
 
 ## Parity and snapshots
 

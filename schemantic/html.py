@@ -1,13 +1,10 @@
 """Build the plate's HTML: the template, the theme, and the grid the archetype derives."""
 from __future__ import annotations
 
-import re
-from functools import cache
-
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from . import archetypes, roles
-from .config import CANVAS_SIZES, ICONS, TEMPLATES
+from . import archetypes, icons, roles
+from .config import CANVAS_SIZES, TEMPLATES
 from .export import font_css
 from .spec import FOOTER_WEIGHTS, flags, footer_layout, load_locale, notes, open_questions
 
@@ -46,12 +43,8 @@ def grid_css(spec: dict) -> dict:
     }
 
 
-@cache
 def icon_markup(name: str) -> str:
-    raw = (ICONS / f"{name}.svg").read_text(encoding="utf-8")
-    inner = raw[raw.index(">", raw.index("<svg")) + 1: raw.rindex("</svg>")]
-    inner = re.sub(r'<path stroke="none" d="M0 0h24v24H0z" fill="none"\s*/>', "", inner)
-    return re.sub(r"\s+", " ", inner).strip()
+    return icons.bodies()[name]
 
 
 def tree_rows(lines: list[str]) -> list[dict]:

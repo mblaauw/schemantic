@@ -82,6 +82,12 @@ def test_render_refuses_unbuilt_archetype(example, tmp_path):
     assert not (tmp_path / "roadmap.svg").exists()
 
 
+def boxes_of(page) -> dict:
+    """Every element's box, rounded to 2 px, from the layout document (as the structural snapshot has them)."""
+    from schemantic import export
+    return images.snapshot(export.measure(page), [])["boxes"]
+
+
 def write(tmp_path, spec, name):
     path = tmp_path / f"{name}.yaml"
     path.write_text(yaml.safe_dump(spec, allow_unicode=True), encoding="utf-8")
@@ -178,7 +184,7 @@ def test_hub_rows_of_any_size_keep_side_spokes_readable():
                 flows = route.draw_flows(page, spec)
                 dom = dom_lint(page, flows["segs"])
                 errs = [f"{x['check']} {x['id']}" for x in flows["problems"] + [i for i in dom["issues"] if i["level"] == "error"]]
-                boxes = browser.call(page, "boxes")
+                boxes = boxes_of(page)
                 page.close()
                 ref = max(spec["layout"]["top"], spec["layout"].get("bottom", []), key=len)  # the fuller row
                 mean = sum(boxes[s][2] - boxes[s][0] for s in ref) / len(ref)
@@ -219,7 +225,7 @@ def test_default_footer_fills_the_width(tmp_path):
     with sync_playwright() as p:
         chromium = browser.launch(p)
         page = browser.open_plate(chromium, html.build_html(spec), spec)
-        boxes = browser.call(page, "boxes")
+        boxes = boxes_of(page)
         chromium.close()
     assert abs(boxes["footer.legend"][2] - boxes["body"][2]) <= 2
 
@@ -322,14 +328,25 @@ def test_matrix_is_as_wide_as_its_content(renders):
 
 # C11: print sizes
 def test_a3_at_300_dpi(tmp_path):
-    # The event bus fits the A3 sheet; the denser toegang plate needs the print model that scales to paper (planned)
-    spec = sp.load_spec(ROOT / "examples" / "orderplatform-eventbus.yaml")
+    # Taller than the sheet, so it is scaled to fit: the SVG is the sheet in mm, the PNG the exact sheet at 300 dpi
+    spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
     spec["canvas"]["size"] = "a3-landscape"
     code, report = run("build", write(tmp_path, spec, "a3"), "--out", tmp_path, "--dpi", 300)
     assert (code, report["errors"]) == (0, [])
     from PIL import Image
     with Image.open(tmp_path / "a3.png") as im:
         assert im.size == (4961, 3508) and round(im.info["dpi"][0]) == 300
+    assert 0.9 < report["paper"]["scale"] < 1
+    assert 'width="420mm" height="297mm"' in (tmp_path / "a3.svg").read_text(encoding="utf-8")[:400]
+
+
+# The A4 sheet is too small for the event bus plate: one finding says how small its text would print
+def test_a4_names_the_print_size(tmp_path):
+    spec = sp.load_spec(ROOT / "examples" / "orderplatform-eventbus.yaml")
+    spec["canvas"]["size"] = "a4-landscape"
+    code, report = run("lint", write(tmp_path, spec, "a4"), "--out", tmp_path)
+    found = [e for e in report["errors"] if e["check"] == "print-size"]
+    assert code == 1 and len(found) == 1 and "pt (the floor is 6 pt)" in found[0]["detail"]
 
 
 # C9: a skip connection goes around, along the row gutter, not through the panels between

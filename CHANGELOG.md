@@ -4,6 +4,19 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Changed (print, one layout document, one icon file)
+- Paper: `a3-landscape` and `a4-landscape` lay the plate out at the sheet's width (96 px per inch, so type prints at
+  its own size) and as tall as its content, then centre it on the sheet and scale it down when it is taller. The SVG
+  is the sheet in mm (its drawing stays in CSS px), and the PNG is the exact sheet at `--dpi`. A new `print-size`
+  error says when the smallest text would print under 6 pt. Before, paper was a fixed pixel canvas: a plate slightly
+  too tall failed with a flood of overflow errors; now the toegang example prints on A3 at 97 %, and on A4 the
+  findings say why it does not fit.
+- The layout document's groups carry their boxes, so the structural snapshot is read entirely from it and
+  `js/snapshot.js` is gone; every stored snapshot still matches.
+- The 4,879 icon files are one `assets/icons/icons.json` (name to drawing): 19 MB and 4,883 files become 1.5 MB and
+  4, which makes clones, skill installs and offline kits smaller and their checksums quicker. Rendered icons are
+  unchanged.
+
 ### Changed (focus and rhythm, from a design review of the 0.2 work)
 - A `topic` line above the title: what the plate is about, quiet and small, so the title is free to be the claim.
   The examples taught the opposite (three of five had a topic as title and the claim in the subtitle); every

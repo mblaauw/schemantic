@@ -9,7 +9,7 @@ from pathlib import Path
 from PIL import Image
 
 from . import archetypes
-from .config import CANVAS_SIZES, JS_DIR, PRINT_SIZES
+from .config import CANVAS_SIZES, JS_DIR
 from .doctor import use_kit_browsers
 
 use_kit_browsers()  # before any Playwright starts: a Chromium installed by an offline kit is found without setup
@@ -29,7 +29,7 @@ REMOTE = re.compile(r"^(https?|wss?|ftp)://", re.IGNORECASE)
 
 
 # common.js first: the other scripts attach their function to the `schemantic` object it creates.
-SCRIPTS = ["common.js", "fit.js", "decorate.js", "route.js", "layout.js", "lint.js", "snapshot.js"]
+SCRIPTS = ["common.js", "fit.js", "decorate.js", "route.js", "layout.js", "lint.js"]
 
 
 def launch(playwright):
@@ -58,8 +58,8 @@ def fonts_ready() -> str:
 def height_mode(spec: dict) -> str:
     if spec["layout"].get("row_heights"):
         return "legacy"
-    # A sheet of paper has a size: print presets default to fixed, screen presets to fit.
-    return spec["canvas"].get("height", "fixed" if spec["canvas"]["size"] in PRINT_SIZES else "fit")
+    # Paper too takes the content's height: the plate is fitted to the sheet afterwards (config.paper_fit).
+    return spec["canvas"].get("height", "fit")
 
 
 def open_plate(browser, html: str, spec: dict, scale: float = 1, refused: list[str] | None = None):
@@ -93,10 +93,8 @@ def svg_size(svg_path: Path) -> tuple[float, float]:
     return float(w), float(h)
 
 
-def rasterise_svg(browser, svg_path: Path, png_path: Path, scale: float = 2, size: tuple[int, int] | None = None,
-                  refused: list[str] | None = None) -> None:
-    """Screenshot the SVG at `scale` (dpi / 96), and record the dpi in the PNG. With `size` (a paper sheet at that
-    dpi), the image is fitted to exactly that many pixels; the difference is a fraction of a pixel per edge."""
+def rasterise_svg(browser, svg_path: Path, png_path: Path, scale: float = 2, refused: list[str] | None = None) -> None:
+    """Screenshot the SVG (in CSS px) at `scale` (dpi / 96), and record the dpi in the PNG."""
     width, height = svg_size(svg_path)
     page = browser.new_page(viewport={"width": math.ceil(width), "height": math.ceil(height)}, device_scale_factor=scale)
     offline(page, refused)
@@ -105,5 +103,14 @@ def rasterise_svg(browser, svg_path: Path, png_path: Path, scale: float = 2, siz
     page.screenshot(path=str(png_path), clip={"x": 0, "y": 0, "width": width, "height": height})
     page.close()
     with Image.open(png_path) as im:
-        img = im.resize(size, Image.Resampling.LANCZOS) if size and im.size != size else im.copy()
+        img = im.copy()
     img.save(png_path, dpi=(96 * scale, 96 * scale))
+
+
+def on_sheet(plate_png: Path, fit: dict, dpi: float) -> None:
+    """Put a plate raster (made at fit['scale'] * dpi / 96) on a white sheet of exactly the paper's size at dpi."""
+    px = lambda mm: round(mm / 25.4 * dpi)  # noqa: E731
+    sheet = Image.new("RGB", (px(fit["sheet_mm"][0]), px(fit["sheet_mm"][1])), "white")
+    with Image.open(plate_png) as im:
+        sheet.paste(im.convert("RGB"), (px(fit["offset_mm"][0]), px(fit["offset_mm"][1])))
+    sheet.save(plate_png, dpi=(dpi, dpi))

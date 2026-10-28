@@ -1,5 +1,5 @@
 // Walk the laid-out plate into a layout document: what to draw and where, as Chromium measured it. Nested groups
-// (one per element with a kind and an id) hold rects, border lines, text lines, icons, and the connectors and
+// (one per element with a kind and an id, with its box: left, top, right, bottom) hold rects, border lines, text lines, icons, and the connectors and
 // decorations already drawn as SVG in the page. Python writes the SVG from it (export.py), so the exporter is a
 // pure function of this document, and the document can be read, saved and tested on its own.
 // Returns { width, height, items, used } where `used` maps each font face to the characters drawn (for subsetting).
@@ -214,11 +214,13 @@ schemantic.layout = () => {
     if (kind && id) {
       const title =
         kind === "panel" ? node.querySelector(".ph-title") : kind === "card" ? node.querySelector(".cn > span") : null;
+      const b = node.getBoundingClientRect();
       const group = {
         kind: "group",
         type: kind,
         id,
         label: `${kind}: ${title ? title.textContent.trim() : id}`,
+        box: [f(b.left - P.left), f(b.top - P.top), f(b.right - P.left), f(b.bottom - P.top)],
         items: [],
       };
       if (node.dataset.refs) group.refs = node.dataset.refs;
