@@ -4,540 +4,560 @@
    40,
    32,
    1560,
-   108
+   132
   ],
   "body": [
    40,
-   126,
+   150,
    1560,
-   784
+   808
   ],
   "zone.dc": [
    40,
-   126,
+   150,
    600,
-   784
+   808
   ],
   "zone.dmz": [
    56,
-   164,
+   188,
    586,
-   400
+   424
   ],
   "proxy": [
    70,
-   202,
+   226,
    570,
-   386
+   410
   ],
   "proxy.card0": [
    84,
-   254,
+   278,
    558,
-   310
+   334
   ],
   "proxy.card1": [
    84,
-   318,
+   342,
    558,
-   372
+   396
   ],
   "zone.internal": [
    56,
-   416,
+   440,
    586,
-   688
+   712
   ],
   "ehr": [
    70,
-   454,
+   478,
    296,
-   674
+   698
   ],
   "ehr.card0": [
    84,
-   526,
+   550,
    284,
-   580
+   604
   ],
   "ehr.card1": [
    84,
-   588,
+   612,
    284,
-   660
+   684
   ],
   "records": [
    344,
-   454,
+   478,
    570,
-   674
+   698
   ],
   "records.card0": [
    358,
-   508,
+   532,
    558,
-   580
+   604
   ],
   "records.card1": [
    358,
-   588,
+   612,
    558,
-   660
+   684
   ],
   "zone.cloud": [
    648,
-   126,
+   150,
    1208,
-   784
+   808
   ],
   "zone.cluster": [
    664,
-   164,
+   188,
    1194,
-   768
+   792
   ],
   "zone.portal-ns": [
    678,
-   202,
+   226,
    1178,
-   438
+   462
   ],
   "portal": [
    694,
-   240,
+   264,
    1164,
-   424
+   448
   ],
   "portal.card0": [
    706,
-   292,
+   316,
    1150,
-   348
+   372
   ],
   "portal.card1": [
    706,
-   356,
+   380,
    1150,
-   410
+   434
   ],
   "zone.integration-ns": [
    678,
-   454,
+   478,
    1178,
-   754
+   778
   ],
   "integration": [
    694,
-   492,
+   516,
    1164,
-   738
+   762
   ],
   "integration.card0": [
    706,
-   546,
+   570,
    1150,
-   600
+   624
   ],
   "integration.card1": [
    706,
-   608,
+   632,
    1150,
-   664
+   688
   ],
   "integration.chip0": [
    706,
-   674,
+   698,
    1150,
-   726
+   750
   ],
   "patients": [
    1256,
-   250,
+   274,
    1560,
-   370
+   394
   ],
   "patients.card0": [
    1270,
-   302,
+   326,
    1548,
-   358
+   382
   ],
   "insurers": [
    1256,
-   538,
+   562,
    1560,
-   660
+   684
   ],
   "insurers.card0": [
    1270,
-   590,
+   614,
    1548,
-   646
+   670
   ],
   "footer": [
    40,
-   802,
+   826,
    1560,
-   894
+   918
   ],
   "footer.principles": [
    40,
-   802,
+   826,
    876,
-   864
+   888
   ],
   "footer.open_questions": [
    904,
-   802,
+   826,
    1560,
-   846
+   870
   ],
   "footer.legend": [
    40,
-   874,
+   898,
    1560,
-   894
+   918
   ]
  },
  "text": [
   [
    40,
-   68,
+   46,
+   "Clinic portal: where everything runs"
+  ],
+  [
+   40,
+   92,
    "Patient data never leaves the clinic's own datacentre"
   ],
   [
    40,
-   100,
+   124,
    "The portal runs in the cloud and reaches the records system only through one integration API"
   ],
   [
    56,
-   150,
+   174,
    "on-premises"
   ],
   [
    130,
-   150,
+   174,
    "Clinic datacentre"
   ],
   [
    70,
-   188,
+   212,
    "network"
   ],
   [
    122,
-   188,
+   212,
    "DMZ"
   ],
   [
    84,
-   228,
+   252,
    "Reverse proxy"
   ],
   [
    126,
-   278,
+   302,
    "mTLS endpoint"
   ],
   [
    126,
-   294,
+   318,
    "only the integration API may connect"
   ],
   [
    126,
-   342,
+   366,
    "Access log"
   ],
   [
    126,
-   358,
+   382,
    "kept for one year"
   ],
   [
    70,
-   442,
+   466,
    "network"
   ],
   [
    122,
-   442,
+   466,
    "Internal network"
   ],
   [
    84,
-   480,
+   504,
    "Records system"
   ],
   [
    84,
-   500,
+   524,
    "Bought, run by the clinic"
   ],
   [
    126,
-   550,
+   574,
    "Patient records"
   ],
   [
    126,
-   566,
+   590,
    "the source of truth"
   ],
   [
    126,
-   612,
+   636,
    "Appointments"
   ],
   [
    126,
-   630,
+   654,
    "booked by staff and the"
   ],
   [
    126,
-   646,
+   670,
    "portal"
   ],
   [
    356,
-   480,
+   504,
    "Records database"
   ],
   [
    400,
-   532,
+   556,
    "PostgreSQL"
   ],
   [
    400,
-   548,
+   572,
    "replicated to a second"
   ],
   [
    400,
-   564,
+   588,
    "room"
   ],
   [
    400,
-   612,
+   636,
    "Nightly backup"
   ],
   [
    400,
-   628,
+   652,
    "kept for 30 days,"
   ],
   [
    400,
-   644,
+   668,
    "encrypted"
   ],
   [
    664,
-   150,
+   174,
    "account"
   ],
   [
    714,
-   150,
+   174,
    "Cloud, production"
   ],
   [
    678,
-   188,
+   212,
    "cluster"
   ],
   [
    722,
-   188,
+   212,
    "Kubernetes"
   ],
   [
    692,
-   226,
+   250,
    "namespace"
   ],
   [
    762,
-   226,
+   250,
    "portal"
   ],
   [
    706,
-   266,
+   290,
    "Patient portal"
   ],
   [
    1122,
-   260,
+   284,
    "new"
   ],
   [
    748,
-   316,
+   340,
    "Web app"
   ],
   [
    748,
-   332,
+   356,
    "appointments and letters"
   ],
   [
    748,
-   380,
+   404,
    "Mobile app"
   ],
   [
    748,
-   396,
+   420,
    "same API as the web app"
   ],
   [
    692,
-   480,
+   504,
    "namespace"
   ],
   [
    762,
-   480,
+   504,
    "integration"
   ],
   [
    706,
-   518,
+   542,
    "Integration API"
   ],
   [
    748,
-   570,
+   594,
    "Records API"
   ],
   [
    748,
-   586,
+   610,
    "reads only what the portal shows"
   ],
   [
    748,
-   632,
+   656,
    "Client certificate"
   ],
   [
    748,
-   648,
+   672,
    "rotated every 90 days"
   ],
   [
-   744,
-   694,
+   720,
+   720,
+   "Q1"
+  ],
+  [
+   746,
+   718,
    "Cache appointments in the cloud, or always ask the records"
   ],
   [
-   744,
-   712,
+   746,
+   736,
    "system?"
   ],
   [
    1268,
-   276,
+   300,
    "Patients"
   ],
   [
    1312,
-   326,
+   350,
    "Patients"
   ],
   [
    1312,
-   342,
+   366,
    "log in with the national e-ID"
   ],
   [
    1268,
-   564,
+   588,
    "Insurers"
   ],
   [
    1312,
-   614,
+   638,
    "Claims API"
   ],
   [
    1312,
-   632,
+   656,
    "receives invoices monthly"
   ],
   [
    40,
-   814,
+   838,
    "Key principles"
   ],
   [
    50,
-   840,
+   864,
    "Patient records are stored only in the clinic's datacentre."
   ],
   [
    50,
-   860,
+   884,
    "The cloud reaches the records system only through the integration API, with a client certificate."
   ],
   [
    904,
-   814,
+   838,
    "Open questions"
   ],
   [
-   926,
-   840,
+   908,
+   864,
+   "Q1"
+  ],
+  [
+   930,
+   864,
    "Cache appointments in the cloud, or always ask the records system?"
   ],
   [
    40,
-   890,
+   914,
    "Legend"
   ],
   [
    134,
-   886,
+   910,
    "Platform component"
   ],
   [
    302,
-   886,
+   910,
    "Clients and external systems"
   ],
   [
    520,
-   886,
+   910,
    "Data and storage"
   ],
   [
    670,
-   886,
+   910,
    "People and teams"
   ],
   [
    822,
-   886,
+   910,
    "Direction of requests"
   ],
   [
    970,
-   886,
+   910,
    "new"
   ],
   [
    1006,
-   886,
+   910,
    "New in this phase"
   ],
   [
-   1160,
-   886,
+   1134,
+   910,
+   "Q1"
+  ],
+  [
+   1158,
+   910,
    "Open choice or friction"
   ]
  ],
@@ -549,11 +569,11 @@
    "points": [
     [
      1248,
-     310
+     334
     ],
     [
      1170,
-     310
+     334
     ]
    ],
    "label": null
@@ -565,11 +585,11 @@
    "points": [
     [
      928,
-     430
+     454
     ],
     [
      928,
-     486
+     510
     ]
    ],
    "label": null
@@ -581,19 +601,19 @@
    "points": [
     [
      686,
-     508
+     532
     ],
     [
      624,
-     508
+     532
     ],
     [
      624,
-     370
+     394
     ],
     [
      576,
-     370
+     394
     ]
    ],
    "label": null
@@ -605,11 +625,11 @@
    "points": [
     [
      268,
-     392
+     416
     ],
     [
      268,
-     448
+     472
     ]
    ],
    "label": null
@@ -621,11 +641,11 @@
    "points": [
     [
      304,
-     564
+     588
     ],
     [
      336,
-     564
+     588
     ]
    ],
    "label": null

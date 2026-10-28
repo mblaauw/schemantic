@@ -4,6 +4,28 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Changed (focus and rhythm, from a design review of the 0.2 work)
+- A `topic` line above the title: what the plate is about, quiet and small, so the title is free to be the claim.
+  The examples taught the opposite (three of five had a topic as title and the claim in the subtitle); every
+  example now has a claim title. SKILL.md says where the subject goes.
+- Open questions get one label in reading order (Q1, Q2; V1 in Dutch) on the card or chip and in the footer, in a
+  small rounded rectangle, so they no longer look like the round step badges, and the footer list reads as a key
+  rather than a repeat. Info flags are notes (N1). A warning flag listed in `extra` now gets its label too.
+- Panels end with their content instead of stretching to the row: empty space inside a frame read as missing
+  content (the judge's most common defect), outside it reads as rhythm. Panels spanning rows, and rows that pin
+  chips to the bottom, still fill.
+- Lint: `footer-share` warns when the footer takes more than 15% of the plate (review question 6); `widow` warns
+  when the topic, title or subtitle leaves one word on its last line; `canvas-fit` names only the outermost element
+  that runs off (one cause was 18 findings), and repeated findings for one element are merged with a count. An
+  arrow between two panels with no route gets a hint about placement, not "connect the panels instead".
+- SKILL.md: when the message names a route through particular parts, connect those cards so it can be traced (the
+  judge failed four plates on paths drawn panel to panel).
+- Python 3.10 or later (3.9 was never tested and is end of life). The doctor reports an older `python3` and builds
+  its venv with the newest `python3.x` it finds.
+- Goldens change for every example and fixture: the topic line, the question labels, and shorter panels in rows.
+  The toegang example no longer fits an A3 sheet with its topic line (22 px over); the A3 test uses the event bus
+  until print sizes scale to paper.
+
 ### Added (Phase C)
 - C5: role `actor` for people and teams; `storage` is now `data` (the old name lints as `deprecated` for one release);
   legend labels say what each role means. A `role` check catches unknown roles and theme roles without a label.

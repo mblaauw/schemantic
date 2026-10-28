@@ -4,345 +4,355 @@
    40,
    32,
    1560,
-   108
+   132
   ],
   "body": [
    40,
-   126,
+   150,
    1560,
-   644
+   668
   ],
   "monitoring": [
    40,
-   170,
+   194,
    1560,
-   268
+   292
   ],
   "alert": [
    224,
-   182,
+   206,
    456,
-   254
+   278
   ],
   "oncall": [
    40,
-   312,
+   336,
    1560,
-   394
+   418
   ],
   "ack": [
    496,
-   324,
+   348,
    728,
-   380
+   404
   ],
   "fix": [
    768,
-   324,
+   348,
    1002,
-   380
+   404
   ],
   "commander": [
    40,
-   438,
+   462,
    1560,
-   518
+   542
   ],
   "declare": [
    496,
-   450,
+   474,
    728,
-   506
+   530
   ],
   "decide": [
    768,
-   450,
+   474,
    1002,
-   506
+   530
   ],
   "review": [
    1314,
-   450,
+   474,
    1548,
-   506
+   530
   ],
   "comms": [
    40,
-   562,
+   586,
    1560,
-   644
+   668
   ],
   "status": [
    1042,
-   576,
+   600,
    1274,
-   630
+   654
   ],
   "band.phases": [
    40,
-   126,
+   150,
    1560,
-   154
+   178
   ],
   "footer": [
    40,
-   662,
+   686,
    1560,
-   754
+   778
   ],
   "footer.principles": [
    40,
-   662,
+   686,
    876,
-   724
+   748
   ],
   "footer.open_questions": [
    904,
-   662,
+   686,
    1560,
-   706
+   730
   ],
   "footer.legend": [
    40,
-   734,
+   758,
    1560,
-   754
+   778
   ]
  },
  "text": [
   [
    40,
-   68,
+   46,
+   "Incident response for customer-facing outages"
+  ],
+  [
+   40,
+   92,
    "A customer-facing incident has one commander and one voice"
   ],
   [
    40,
-   100,
+   124,
    "Monitoring pages on-call; the commander runs the response; communications alone talks to customers"
   ],
   [
    52,
-   214,
+   238,
    "Monitoring"
   ],
   [
    52,
-   234,
+   258,
    "Alerting rules"
   ],
   [
    266,
-   206,
+   230,
    "Alert fires"
   ],
   [
    266,
-   224,
+   248,
    "SLO burn rate over the"
   ],
   [
    266,
-   240,
+   264,
    "threshold"
   ],
   [
    52,
-   358,
+   382,
    "On-call engineer"
   ],
   [
    538,
-   348,
+   372,
    "Acknowledge"
   ],
   [
    538,
-   366,
+   390,
    "within five minutes"
   ],
   [
    812,
-   348,
+   372,
    "Mitigate"
   ],
   [
    812,
-   366,
+   390,
    "roll back or fail over first"
   ],
   [
    52,
-   472,
+   496,
    "Incident"
   ],
   [
    52,
-   494,
+   518,
    "commander"
   ],
   [
    538,
-   474,
+   498,
    "Declare"
   ],
   [
-   602,
-   474,
-   "1"
+   600,
+   498,
+   "Q1"
   ],
   [
    538,
-   490,
+   514,
    "severity, channel, roles"
   ],
   [
    812,
-   474,
+   498,
    "Decide"
   ],
   [
    812,
-   490,
+   514,
    "one decision owner at a time"
   ],
   [
    1358,
-   474,
+   498,
    "Review"
   ],
   [
    1358,
-   490,
+   514,
    "blameless, within five days"
   ],
   [
    52,
-   608,
+   632,
    "Communications"
   ],
   [
    1084,
-   600,
+   624,
    "Status page"
   ],
   [
    1084,
-   616,
+   640,
    "first update within 30 minutes"
   ],
   [
    224,
-   144,
+   168,
    "Detect"
   ],
   [
    496,
-   144,
+   168,
    "Triage"
   ],
   [
    768,
-   144,
+   168,
    "Mitigate"
   ],
   [
    1042,
-   144,
+   168,
    "Communicate"
   ],
   [
    1314,
-   144,
+   168,
    "Learn"
   ],
   [
    40,
-   674,
+   698,
    "Key principles"
   ],
   [
    50,
-   700,
+   724,
    "The commander decides; everyone else executes or advises."
   ],
   [
    50,
-   720,
+   744,
    "Customers hear about an incident from the status page first, never from a support reply."
   ],
   [
    904,
-   674,
+   698,
    "Open questions"
   ],
   [
-   910,
-   702,
-   "1"
+   908,
+   726,
+   "Q1"
   ],
   [
-   926,
-   700,
+   930,
+   724,
    "Who commands at night: on-call or a separate rota?"
   ],
   [
    40,
-   750,
+   774,
    "Legend"
   ],
   [
    134,
-   748,
+   772,
    "Platform component"
   ],
   [
    302,
-   748,
+   772,
    "People and teams"
   ],
   [
    456,
-   748,
+   772,
    "Controls"
   ],
   [
    530,
-   746,
+   770,
    "1"
   ],
   [
-   548,
-   748,
+   550,
+   772,
    "Step in the order things happen"
   ],
   [
+   758,
+   770,
+   "Q1"
+  ],
+  [
    782,
-   748,
+   772,
    "Open choice or friction"
   ],
   [
    440,
-   306,
+   330,
    "1"
   ],
   [
    612,
-   420,
+   444,
    "2"
   ],
   [
    884,
-   420,
+   444,
    "3"
   ],
   [
    986,
-   556,
+   580,
    "4"
   ],
   [
    1170,
-   368,
+   392,
    "5"
   ]
  ],
@@ -354,15 +364,15 @@
    "points": [
     [
      440,
-     262
+     286
     ],
     [
      440,
-     340
+     364
     ],
     [
      488,
-     340
+     364
     ]
    ],
    "label": null
@@ -374,11 +384,11 @@
    "points": [
     [
      612,
-     388
+     412
     ],
     [
      612,
-     444
+     468
     ]
    ],
    "label": null
@@ -390,11 +400,11 @@
    "points": [
     [
      736,
-     478
+     502
     ],
     [
      762,
-     478
+     502
     ]
    ],
    "label": null
@@ -406,11 +416,11 @@
    "points": [
     [
      884,
-     444
+     468
     ],
     [
      884,
-     388
+     412
     ]
    ],
    "label": null
@@ -422,15 +432,15 @@
    "points": [
     [
      986,
-     512
+     536
     ],
     [
      986,
-     592
+     616
     ],
     [
      1034,
-     592
+     616
     ]
    ],
    "label": null
@@ -442,15 +452,15 @@
    "points": [
     [
      1008,
-     364
+     388
     ],
     [
      1330,
-     364
+     388
     ],
     [
      1330,
-     444
+     468
     ]
    ],
    "label": null

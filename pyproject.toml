@@ -9,7 +9,7 @@ description = "From a description of a system to a finished architecture plate (
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 # Tested ranges. requirements.txt is generated from this list (see tests/test_repo.py); the skill's doctor reads it.
 dependencies = [
   "playwright>=1.60,<2",
@@ -42,7 +42,7 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 145
-target-version = "py39"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B"]

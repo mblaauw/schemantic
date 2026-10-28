@@ -39,6 +39,8 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `arrow-routing` | no clear route, or a route crosses a panel or card | connect the panels instead of cards; move the target card to the side of its panel nearest the source; place the two panels next to each other |
 | `arrow-label` | no room for a label, or it touches a box | shorten the label, drop it, or explain the flow in a card note |
 | `arrow-crossing` | an arrow crosses another arrow at a right angle | connect a card instead of its panel, or the other way round; swap the two panels so the arrows run side by side; drop a flow the message does not need |
+| `footer-share` | the footer takes more than 15% of the plate's height (warning) | fewer principles (three that a team could check), shorter open questions, no context panel unless the roles matter to the message; the footer is context for the body |
+| `widow` | the topic, title or subtitle ends with a single word on a line of its own | cut a few words, or rephrase so the line breaks between phrases; a headline reads best on one line |
 | `chip-length` | a chip runs to three lines | shorten it to one clear sentence |
 | `void` | a run of empty space inside a body panel: warning over 96 px, error over 160 px | add real content (bullets, a pattern, an info chip); move the panel next to one of its height; merge it with a neighbour; never filler |
 | `svg-parity` | the SVG differs from the measured layout | a renderer problem, not a spec problem: report it with the `detail` and the files in `out/_work/` |

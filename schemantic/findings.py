@@ -84,6 +84,13 @@ CHECKS: dict[str, Check] = {
                             "connect a card instead of its panel, or the other way round; swap the two panels so the "
                             "arrows run side by side; drop a flow the message does not need",
                             "Swap the two panels, or connect panels instead of cards, so the arrows no longer cross."),
+    "footer-share": Check("layout", "the footer takes more than 15% of the plate's height (warning)",
+                          "fewer principles (three that a team could check), shorter open questions, no context panel "
+                          "unless the roles matter to the message; the footer is context for the body",
+                          "Cut the footer: keep three principles, shorten the questions, or drop the context panel."),
+    "widow": Check("layout", "the topic, title or subtitle ends with a single word on a line of its own",
+                   "cut a few words, or rephrase so the line breaks between phrases; a headline reads best on one line",
+                   "Shorten the title by a few words so its last line is not a single word."),
     "chip-length": Check("layout", "a chip runs to three lines", "shorten it to one clear sentence",
                          "Shorten the chip to one sentence of about 50 characters."),
     "void": Check("layout", "a run of empty space inside a body panel: warning over 96 px, error over 160 px",

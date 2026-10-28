@@ -52,7 +52,7 @@ def snapshot(page, layout: dict, segs: list[dict]) -> dict:
 def snapshot_diff(old: dict, new: dict, tol: int = 2) -> list[str]:
     """Human-readable differences between two snapshots; geometry within tol px counts as equal."""
     out = []
-    near = lambda a, b: len(a) == len(b) and all(abs(x - y) <= tol for x, y in zip(a, b))
+    near = lambda a, b: len(a) == len(b) and all(abs(x - y) <= tol for x, y in zip(a, b, strict=True))
     for k in sorted(set(old["boxes"]) | set(new["boxes"])):
         a, b = old["boxes"].get(k), new["boxes"].get(k)
         if a is None:
@@ -69,9 +69,9 @@ def snapshot_diff(old: dict, new: dict, tol: int = 2) -> list[str]:
         else:
             out.append(f"text {t!r} at ({x}, {y}) is gone or moved")
     out += [f"text {t!r} at ({x}, {y}) is new or moved" for x, y, t in unused]
-    for a, b in zip(old["flows"], new["flows"]):
+    for a, b in zip(old["flows"], new["flows"], strict=False):  # a count change is reported below
         if (a["from"], a["to"], a["label"]) != (b["from"], b["to"], b["label"]) or len(a["points"]) != len(b["points"]) \
-                or not all(near(p, q) for p, q in zip(a["points"], b["points"])):
+                or not all(near(p, q) for p, q in zip(a["points"], b["points"], strict=True)):
             out.append(f"flow {a['i']} ({a['from']} -> {a['to']}) changed: {a['points']} -> {b['points']}")
     if len(old["flows"]) != len(new["flows"]):
         out.append(f"{len(old['flows'])} flows before, {len(new['flows'])} now")

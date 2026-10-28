@@ -8,17 +8,23 @@ Nothing is ever written into the skill folder, which is read-only once installed
 if that fails does it try `playwright install chromium`, which needs network access. Uses the standard library only,
 so any python3 can run it.
 """
+from __future__ import annotations
+
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LAUNCH_ARGS = ["--font-render-hinting=none", "--disable-lcd-text"]  # as schemantic.browser; this module stays stdlib-only
+MIN_PYTHON = (3, 10)
 PROBE = r"""
 import importlib.util, json, sys
+if sys.version_info < (3, 10):
+    print(json.dumps({"deps": False, "old": "{}.{}".format(*sys.version_info[:2])})); sys.exit()
 missing = [m for m in ("yaml", "jsonschema", "jinja2", "PIL", "fontTools", "brotli", "playwright") if importlib.util.find_spec(m) is None]
 if missing:
     print(json.dumps({"deps": False, "missing": missing})); sys.exit()
@@ -65,6 +71,16 @@ def run(cmd: list[str], steps: list[str], what: str) -> bool:
     return proc.returncode == 0
 
 
+def base_python() -> str | None:
+    """A Python to build the venv from: this one if it is new enough, else the newest python3.x on PATH."""
+    if sys.version_info >= MIN_PYTHON:
+        return sys.executable
+    for minor in range(20, MIN_PYTHON[1] - 1, -1):
+        if shutil.which(f"python3.{minor}"):
+            return shutil.which(f"python3.{minor}")
+    return None
+
+
 def diagnose(install: bool = True) -> dict:
     use_kit_browsers()  # the probes run in child processes, which inherit it
     steps: list[str] = []
@@ -73,18 +89,20 @@ def diagnose(install: bool = True) -> dict:
     found = None
     for py in candidates:
         r = probe(py)
-        steps.append(f"{py}: " + ("dependencies missing: " + (", ".join(r.get("missing", [])) or r.get("error", "?")) if not r.get("deps")
+        steps.append(f"{py}: " + (f"Python {r['old']}, older than 3.10" if r.get("old") else
+                                  "dependencies missing: " + (", ".join(r.get("missing", [])) or r.get("error", "?")) if not r.get("deps")
                                   else f"Chromium {r['chromium']}" if r.get("chromium") else f"Chromium did not start ({r.get('error')})"))
         if r.get("deps"):
             found = (py, r)
             if r.get("chromium"):
                 break
 
-    if not found and install:
+    base = base_python()
+    if not found and install and base:
         py = venv_python(venv)
-        if not py.exists():
+        if not py.exists() or probe(py).get("old"):  # none yet, or one an older doctor built from an old Python
             venv.parent.mkdir(parents=True, exist_ok=True)
-            run([sys.executable, "-m", "venv", str(venv)], steps, f"create venv {venv}")
+            run([base, "-m", "venv", "--clear", str(venv)], steps, f"create venv {venv} with {base}")
         if py.exists() and run([str(py), "-m", "pip", "install", "-q", "-r", str(ROOT / "requirements.txt")], steps, "install requirements"):
             r = probe(py)
             found = (py, r) if r.get("deps") else None
@@ -98,7 +116,10 @@ def diagnose(install: bool = True) -> dict:
     report = {"ok": ok, "python": str(found[0]) if ok else None, "chromium": found[1].get("chromium") if found else None,
               "cache": str(home()), "steps": steps}
     if not ok:
-        report["problem"] = ("No Python with the dependencies was found and none could be installed (no network?). "
+        report["problem"] = ("Schemantic needs Python 3.10 or later, and none was found (python3 is older). Install a "
+                             "newer Python (python.org or the system's package manager) and run the doctor again."
+                             if not found and not base else
+                             "No Python with the dependencies was found and none could be installed (no network?). "
                              "Install them with: python3 -m pip install -r requirements.txt" if not found else
                              "The dependencies are there, but Chromium does not start and could not be downloaded. "
                              "Run `python3 -m playwright install chromium` where there is network access, or set "

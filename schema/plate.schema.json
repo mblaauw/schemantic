@@ -134,6 +134,12 @@
         }
       }
     },
+    "topic": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60,
+      "description": "What the plate is about, in a few words (a system, a phase): a quiet line above the title, so the title can be the claim."
+    },
     "title": {
       "type": "string",
       "minLength": 1,

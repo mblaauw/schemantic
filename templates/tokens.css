@@ -30,7 +30,7 @@
   --gold-bg:   #FBF2D0; --gold-line:   #DDBB4F; --gold-icon:   #8A6D0B;
 
   /* Type ramp (px). 11 is the floor. */
-  --t-title: 40px; --t-sub: 22px; --t-badge: 18px; --t-head: 17px;
+  --t-title: 40px; --t-sub: 22px; --t-badge: 18px; --t-topic: 15px; --t-head: 17px;
   --t-name: 14px; --t-body: 12.5px; --t-small: 11px;
 
   /* Gutters hold the connectors: 48 px fits an arrow with clearance on both sides; a row gutter also holds a

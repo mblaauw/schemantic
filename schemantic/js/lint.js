@@ -103,14 +103,30 @@ schemantic.lint = (cfg) => {
         `runs ${Math.round(over)}px outside ${p.dataset.id}; cut content or give the panel more room`,
       );
   }
-  // Canvas fit
+  // Canvas fit: the outermost element past the margin, not everything inside it
   const pin = inner(plate);
-  for (const el of kinds) {
+  const past = kinds.filter((el) => {
     const r = rel(el);
-    if (r.r > pin.r + 1 || r.b > pin.b + 1 || r.l < pin.l - 1 || r.t < pin.t - 1) {
-      const over = Math.max(r.r - pin.r, r.b - pin.b, pin.l - r.l, pin.t - r.t);
-      add("error", "canvas-fit", el.dataset.id, `extends ${Math.round(over)}px past the canvas margin`);
-    }
+    return r.r > pin.r + 1 || r.b > pin.b + 1 || r.l < pin.l - 1 || r.t < pin.t - 1;
+  });
+  for (const el of past) {
+    if (past.some((o) => o !== el && o.contains(el))) continue;
+    const r = rel(el);
+    const over = Math.max(r.r - pin.r, r.b - pin.b, pin.l - r.l, pin.t - r.t);
+    add("error", "canvas-fit", el.dataset.id, `extends ${Math.round(over)}px past the canvas margin`);
+  }
+
+  // Footer: context for the body, so it stays a small share of the plate
+  const footer = plate.querySelector('[data-kind="footer"]');
+  if (footer) {
+    const share = (rel(footer).b - rel(footer).t) / P.height;
+    if (share > cfg.footerShare)
+      add(
+        "warning",
+        "footer-share",
+        "footer",
+        `takes ${Math.round(share * 100)}% of the plate's height; keep it under ${Math.round(cfg.footerShare * 100)}%`,
+      );
   }
 
   // Arrows: every run stays off panels other than the endpoints' own, and off cards other than the endpoints;
@@ -197,5 +213,15 @@ schemantic.lint = (cfg) => {
         `${Math.round(gap)}px of empty space inside the panel; add real content, move it next to a panel of its height, or merge it`,
       );
   }
-  return { issues, density, voids };
+  // One finding per check and element: the first detail, and how many more there were
+  const once = new Map();
+  for (const i of issues) {
+    const k = `${i.level}|${i.check}|${i.id}`;
+    if (once.has(k)) once.get(k).more += 1;
+    else once.set(k, { ...i, more: 0 });
+  }
+  const merged = [...once.values()].map(({ more, ...i }) =>
+    more ? { ...i, detail: `${i.detail} (and ${more} more)` } : i,
+  );
+  return { issues: merged, density, voids };
 };

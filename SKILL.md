@@ -49,7 +49,8 @@ open questions. Then audit the plan against the sources, and fix it before writi
 
 - Every card traces to a source. A card you cannot trace is an assumption or an open question, not a fact.
 - Every uncertainty in the sources is a warning chip, a card flag or an open question.
-- The title is a claim the panels support, not a topic ("Architecture overview" is a topic).
+- The title is a claim the panels support, not a topic ("Architecture overview" is a topic). The subject goes in
+  `topic`, a quiet line above the title.
 
 Settle the reader's language (`nl` or `en`, following the user; in `nl` technical terms stay English) and, if the
 story needs more than one plate, the series (`series`, `part`, `of`).
@@ -76,7 +77,8 @@ Save it where the user keeps their work, for example `plates/<name>.yaml`. Start
 budgets and the writing rules. The short version:
 
 - 3 to 6 panels, 2 to 6 cards each. A card is a thing with a name; its note says what it does in this story.
-- Say once what arrows mean (`flows_mean`). Connect panels by default; connect a card only when it is the point.
+- Say once what arrows mean (`flows_mean`). Connect panels by default; when the message names a route through
+  particular parts, connect those cards, so the reader can trace it.
 - Show change with `status` (new, changed, planned, deprecated, removed) and the one element that matters with
   `focus`.
 - A `warning` chip or card `flag` marks an open choice; it appears again under open questions.
