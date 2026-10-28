@@ -163,7 +163,7 @@
         "roadmap",
         "landscape-map"
       ],
-      "description": "The body layout. Built: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones; the others are planned and refused by lint."
+      "description": "The body layout. Built: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones, before-after; the others are planned and refused by lint."
     },
     "layout": {
       "type": "object",
@@ -285,6 +285,34 @@
             "type": "string"
           },
           "description": "nested-zones: panels outside every zone, in a column on the right."
+        },
+        "before": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "type": "string"
+          },
+          "description": "before-after: panel ids as things are, top first. The panel at the same place in `after` faces it."
+        },
+        "after": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "type": "string"
+          },
+          "description": "before-after: panel ids as they will be; show what changed with status (new, changed, removed)."
+        },
+        "labels": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "description": "before-after: the two column labels (default Before / After, in Dutch Nu / Straks)."
         }
       }
     },
@@ -562,6 +590,36 @@
               "enum": [
                 "zones",
                 "outside",
+                "chips_at"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "before-after"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": [
+              "before",
+              "after"
+            ],
+            "propertyNames": {
+              "enum": [
+                "before",
+                "after",
+                "labels",
                 "chips_at"
               ]
             }

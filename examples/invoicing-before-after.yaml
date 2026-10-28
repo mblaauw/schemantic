@@ -1,0 +1,75 @@
+# yaml-language-server: $schema=../schema/plate.schema.json
+# Fictional example: a before-after plate in English. Each row shows what one part of the process becomes; status on
+# the after side says what is new, changed or removed.
+canvas: {size: landscape-4x3, lang: en}
+topic: "Invoicing: before and after the move off the nightly batch"
+title: "Invoices reach the bank the same day, not the next morning"
+subtitle: "An invoicing service replaces the nightly export, and payments are matched automatically instead of by hand"
+archetype: before-after
+
+layout:
+  before: [erp, batch, matching]
+  after: [invoicing, bankapi, recon]
+
+panels:
+  - id: erp
+    title: "ERP"
+    subtitle: "Raises every invoice"
+    role: platform
+    cards:
+      - {icon: file-invoice, name: "Invoice module", note: "invoices for all customers"}
+      - {icon: database, name: "Ledger", note: "the book of record"}
+  - id: batch
+    title: "Nightly export"
+    subtitle: "One file a day"
+    role: platform
+    cards:
+      - {icon: calendar-time, name: "Batch job", note: "runs at 02:00, files all invoices of the day"}
+      - {icon: cloud-upload, name: "SFTP upload", note: "the file goes to the bank"}
+  - id: matching
+    title: "Matching"
+    subtitle: "Finance, every morning"
+    role: actor
+    cards:
+      - {icon: file-spreadsheet, name: "Bank statement", note: "downloaded and opened in a spreadsheet"}
+      - {icon: user-check, name: "Match by hand", note: "payment to invoice, line by line"}
+
+  - id: invoicing
+    title: "Invoicing service"
+    subtitle: "Raises and sends each invoice"
+    role: platform
+    status: new
+    cards:
+      - {icon: file-invoice, name: "Invoice API", note: "one invoice at a time, when the order ships"}
+      - {icon: database, name: "Ledger", note: "stays in the ERP"}
+  - id: bankapi
+    title: "Bank connection"
+    subtitle: "Per invoice, during the day"
+    role: external
+    status: changed
+    cards:
+      - {icon: api, name: "Payments API", note: "replaces the SFTP file"}
+      - {icon: calendar-time, name: "Batch job", note: "switched off", status: removed}
+  - id: recon
+    title: "Reconciliation"
+    subtitle: "Automatic, with exceptions to finance"
+    role: platform
+    status: new
+    cards:
+      - {icon: checks, name: "Matcher", note: "pairs payments and invoices by reference"}
+      - {icon: users, name: "Finance", note: "only the payments that do not match"}
+    chips:
+      - {kind: warning, text: "Who owns a payment that matches two invoices?"}
+
+flows_mean: data
+flows:
+  - {from: erp, to: batch}
+  - {from: batch, to: matching}
+  - {from: invoicing, to: bankapi}
+  - {from: bankapi, to: recon}
+
+footer:
+  principles:
+    - "An invoice goes to the bank when the order ships, not in tomorrow's file."
+    - "People handle only the payments the matcher cannot pair."
+  open_questions: {from_chips: true}

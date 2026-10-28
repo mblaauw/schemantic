@@ -16,6 +16,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `budget` | more than 5 columns | split the plate or merge panels |
 | `pattern` | a matrix row has the wrong number of cells | one cell per column |
 | `flow` | a flow names an id that does not exist, connects an element to itself, or connects a card to its own panel | use a panel id, or give the card an `id`; connect two different boxes |
+| `series` | parts of one series disagree: numbering, `of`, language, what arrows mean, or one thing drawn in two colours (people in one part, a platform component in another) | make the parts agree: one language, one `flows_mean`, and the same role for a thing wherever it appears (a panel's role, or the role of the panel a card sits in) |
 | `canvas` | `part` without `of` (or the reverse), `part` larger than `of`, or a theme file that does not exist | give both, with `1 ≤ part ≤ of`; check the theme path (relative to the spec) |
 | `role` | a panel role is neither built in nor defined by the theme, or the theme gives it no legend label in the plate's language | use platform, data, external or actor, or define the role and its label in the theme |
 | `deprecated` | an old name that still works for one release (warning) | use the new name in the detail |

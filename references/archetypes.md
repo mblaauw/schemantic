@@ -124,10 +124,28 @@ layout:
 - Flows cross zone frames freely; the gaps between zones are gutters for the router.
 - Example: `examples/kliniek-zones.yaml`.
 
+## before-after
+
+What changes. Two columns under a label each, the plate as it is and as it will be; the panels at the same place in
+`before` and `after` face each other in one row, so the reader sees what became what. The change itself shows as
+`status` on the after side (`new`, `changed`, `removed`), not as arrows: arrows keep the meaning `flows_mean` gives
+them, within each side.
+
+<!-- lint: examples/invoicing-before-after.yaml -->
+```yaml
+archetype: before-after
+layout:
+  before: [erp, batch, matching]          # 1 to 4 panels, top first
+  after: [invoicing, bankapi, recon]      # 1 to 4; row by row, each faces the one before it
+```
+
+- `labels: ["Today", "Phase 2"]` overrides the column labels (default Before / After; in Dutch Nu / Straks).
+- Leave a row's other side empty by giving one side more panels: a part that is new, or gone.
+- The title claims the difference ("Invoices reach the bank the same day"), not the topic.
+- Example: `examples/invoicing-before-after.yaml`.
+
 ## Not built yet
 
-`banded-matrix`, `before-after`, `roadmap`, `landscape-map` are in the schema as
-planned names. Lint refuses them. Until they exist:
+`banded-matrix`, `roadmap`, `landscape-map` are in the schema as planned names. Lint refuses them. Until they exist:
 
 - a roadmap → `swimlane`, with one lane per workstream and the periods as columns;
-- a before/after → a series of two plates (`part: 1` and `part: 2`);

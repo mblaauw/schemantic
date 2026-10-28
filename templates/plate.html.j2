@@ -123,7 +123,7 @@
 {%- endif -%}
 {%- endfor -%}
 {%- for b, labels in grid.bands.items() -%}
-<div class="band" data-kind="band" data-id="band.{{ b[1:] }}" style="grid-area: {{ b }}; grid-template-columns: repeat({{ labels | length }}, minmax(0, 1fr))">
+<div class="band band-{{ b[1:] }}" data-kind="band" data-id="band.{{ b[1:] }}" style="grid-area: {{ b }}; grid-template-columns: repeat({{ labels | length }}, minmax(0, 1fr))">
 {%- for label in labels %}<div class="band-label">{{ label }}</div>{% endfor -%}
 </div>
 {%- endfor -%}

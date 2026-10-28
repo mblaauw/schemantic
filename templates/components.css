@@ -178,6 +178,12 @@ body { background: var(--paper); }
 .band-label { font-size: var(--t-name); font-weight: 600; color: var(--muted); padding-bottom: 5px;
   border-bottom: 2px solid var(--frame-line); }
 
+/* Before-after: a label over each column; the after side in the accent colour, as the side the plate is heading to */
+.band-before, .band-after { padding: 0; margin-bottom: calc(10px - var(--gutter-y)); }
+.band-before .band-label, .band-after .band-label { font-size: var(--t-head); font-weight: 700; color: var(--ink);
+  padding-bottom: 6px; border-bottom-width: 3px; }
+.band-after .band-label { color: var(--accent); border-bottom-color: var(--accent); }
+
 /* Nested zones: dashed frames (drawn by js/decorate.js), side by side at the top level, holding zones and panels */
 .zones { display: flex; gap: var(--gutter-x); align-items: stretch; min-width: 0; }
 .zone { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 10px; padding: 10px 14px 14px;

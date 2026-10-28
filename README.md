@@ -44,7 +44,7 @@ One plate per archetype, each built from a fictional spec in [`examples/`](examp
 | --- | --- |
 | ![column-flow](assets/gallery/orderplatform-toegang.webp) **column-flow**: a path, with status tags, a flag and focus | ![hub-and-spokes](assets/gallery/orderplatform-eventbus.webp) **hub-and-spokes**: one bus, async flows, a card-to-card connector |
 | ![layer-cake](assets/gallery/ontwikkelplatform-lagen.webp) **layer-cake**: layers with security and observability rails | ![swimlane](assets/gallery/incident-swimlane.webp) **swimlane**: actors, phases and numbered handoffs |
-| ![nested-zones](assets/gallery/kliniek-zones.webp) **nested-zones**: where everything runs | |
+| ![nested-zones](assets/gallery/kliniek-zones.webp) **nested-zones**: where everything runs | ![before-after](assets/gallery/invoicing-before-after.webp) **before-after**: what each part becomes, with change status |
 
 ## The spec in one look
 
@@ -84,7 +84,7 @@ Proof of concept, version 0.2 in progress (see [`CHANGELOG.md`](CHANGELOG.md)).
 
 | Built | Planned |
 | --- | --- |
-| Archetypes: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones | Archetypes: before-after, roadmap, banded-matrix, landscape-map |
+| Archetypes: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones, before-after | Archetypes: roadmap, banded-matrix, landscape-map |
 | Patterns: tier strip, process strip, tree, matrix | Patterns: mini sequence, lifecycle loop |
 | Connectors: straight, L, Z and U routes; card endpoints; sync, async, optional; steps | |
 | Roles, themes, change status, card flags, focus; locales `nl` and `en` | |

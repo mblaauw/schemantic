@@ -1,0 +1,564 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   132
+  ],
+  "body": [
+   40,
+   150,
+   1560,
+   934
+  ],
+  "erp": [
+   40,
+   194,
+   776,
+   396
+  ],
+  "erp.card0": [
+   54,
+   264,
+   764,
+   320
+  ],
+  "erp.card1": [
+   54,
+   328,
+   764,
+   382
+  ],
+  "batch": [
+   40,
+   440,
+   776,
+   642
+  ],
+  "batch.card0": [
+   54,
+   510,
+   764,
+   566
+  ],
+  "batch.card1": [
+   54,
+   574,
+   764,
+   630
+  ],
+  "matching": [
+   40,
+   686,
+   776,
+   888
+  ],
+  "matching.card0": [
+   54,
+   758,
+   764,
+   812
+  ],
+  "matching.card1": [
+   54,
+   820,
+   764,
+   876
+  ],
+  "invoicing": [
+   824,
+   194,
+   1560,
+   396
+  ],
+  "invoicing.card0": [
+   838,
+   264,
+   1548,
+   320
+  ],
+  "invoicing.card1": [
+   838,
+   328,
+   1548,
+   382
+  ],
+  "bankapi": [
+   824,
+   440,
+   1560,
+   642
+  ],
+  "bankapi.card0": [
+   838,
+   510,
+   1548,
+   566
+  ],
+  "bankapi.card1": [
+   838,
+   574,
+   1548,
+   630
+  ],
+  "recon": [
+   824,
+   686,
+   1560,
+   934
+  ],
+  "recon.card0": [
+   838,
+   758,
+   1548,
+   812
+  ],
+  "recon.card1": [
+   838,
+   820,
+   1548,
+   876
+  ],
+  "recon.chip0": [
+   838,
+   886,
+   1548,
+   920
+  ],
+  "band.before": [
+   40,
+   150,
+   776,
+   184
+  ],
+  "band.after": [
+   824,
+   150,
+   1560,
+   184
+  ],
+  "footer": [
+   40,
+   952,
+   1560,
+   1044
+  ],
+  "footer.principles": [
+   40,
+   952,
+   876,
+   1014
+  ],
+  "footer.open_questions": [
+   904,
+   952,
+   1560,
+   996
+  ],
+  "footer.legend": [
+   40,
+   1024,
+   1560,
+   1044
+  ]
+ },
+ "text": [
+  [
+   40,
+   46,
+   "Invoicing: before and after the move off the nightly batch"
+  ],
+  [
+   40,
+   92,
+   "Invoices reach the bank the same day, not the next morning"
+  ],
+  [
+   40,
+   124,
+   "An invoicing service replaces the nightly export, and payments are matched automatically instead of by hand"
+  ],
+  [
+   52,
+   220,
+   "ERP"
+  ],
+  [
+   52,
+   238,
+   "Raises every invoice"
+  ],
+  [
+   96,
+   288,
+   "Invoice module"
+  ],
+  [
+   96,
+   304,
+   "invoices for all customers"
+  ],
+  [
+   96,
+   352,
+   "Ledger"
+  ],
+  [
+   96,
+   368,
+   "the book of record"
+  ],
+  [
+   52,
+   466,
+   "Nightly export"
+  ],
+  [
+   52,
+   484,
+   "One file a day"
+  ],
+  [
+   96,
+   534,
+   "Batch job"
+  ],
+  [
+   96,
+   552,
+   "runs at 02:00, files all invoices of the day"
+  ],
+  [
+   96,
+   598,
+   "SFTP upload"
+  ],
+  [
+   96,
+   614,
+   "the file goes to the bank"
+  ],
+  [
+   52,
+   712,
+   "Matching"
+  ],
+  [
+   52,
+   730,
+   "Finance, every morning"
+  ],
+  [
+   96,
+   782,
+   "Bank statement"
+  ],
+  [
+   96,
+   798,
+   "downloaded and opened in a spreadsheet"
+  ],
+  [
+   96,
+   844,
+   "Match by hand"
+  ],
+  [
+   96,
+   862,
+   "payment to invoice, line by line"
+  ],
+  [
+   836,
+   220,
+   "Invoicing service"
+  ],
+  [
+   1518,
+   214,
+   "new"
+  ],
+  [
+   836,
+   238,
+   "Raises and sends each invoice"
+  ],
+  [
+   880,
+   288,
+   "Invoice API"
+  ],
+  [
+   880,
+   304,
+   "one invoice at a time, when the order ships"
+  ],
+  [
+   880,
+   352,
+   "Ledger"
+  ],
+  [
+   880,
+   368,
+   "stays in the ERP"
+  ],
+  [
+   836,
+   466,
+   "Bank connection"
+  ],
+  [
+   1494,
+   460,
+   "changed"
+  ],
+  [
+   836,
+   484,
+   "Per invoice, during the day"
+  ],
+  [
+   880,
+   534,
+   "Payments API"
+  ],
+  [
+   880,
+   552,
+   "replaces the SFTP file"
+  ],
+  [
+   880,
+   598,
+   "Batch job"
+  ],
+  [
+   956,
+   596,
+   "removed"
+  ],
+  [
+   880,
+   614,
+   "switched off"
+  ],
+  [
+   836,
+   712,
+   "Reconciliation"
+  ],
+  [
+   1518,
+   708,
+   "new"
+  ],
+  [
+   836,
+   730,
+   "Automatic, with exceptions to finance"
+  ],
+  [
+   880,
+   782,
+   "Matcher"
+  ],
+  [
+   880,
+   798,
+   "pairs payments and invoices by reference"
+  ],
+  [
+   880,
+   844,
+   "Finance"
+  ],
+  [
+   880,
+   862,
+   "only the payments that do not match"
+  ],
+  [
+   852,
+   908,
+   "Q1"
+  ],
+  [
+   878,
+   906,
+   "Who owns a payment that matches two invoices?"
+  ],
+  [
+   40,
+   170,
+   "Before"
+  ],
+  [
+   824,
+   170,
+   "After"
+  ],
+  [
+   40,
+   964,
+   "Key principles"
+  ],
+  [
+   50,
+   990,
+   "An invoice goes to the bank when the order ships, not in tomorrow's file."
+  ],
+  [
+   50,
+   1010,
+   "People handle only the payments the matcher cannot pair."
+  ],
+  [
+   904,
+   964,
+   "Open questions"
+  ],
+  [
+   908,
+   992,
+   "Q1"
+  ],
+  [
+   930,
+   990,
+   "Who owns a payment that matches two invoices?"
+  ],
+  [
+   40,
+   1040,
+   "Legend"
+  ],
+  [
+   134,
+   1038,
+   "Platform component"
+  ],
+  [
+   302,
+   1038,
+   "People and teams"
+  ],
+  [
+   456,
+   1038,
+   "Clients and external systems"
+  ],
+  [
+   674,
+   1038,
+   "Direction of data"
+  ],
+  [
+   796,
+   1036,
+   "new"
+  ],
+  [
+   832,
+   1038,
+   "New in this phase"
+  ],
+  [
+   960,
+   1036,
+   "changed"
+  ],
+  [
+   1022,
+   1038,
+   "Changed in this phase"
+  ],
+  [
+   1176,
+   1036,
+   "removed"
+  ],
+  [
+   1238,
+   1038,
+   "Removed in this phase"
+  ],
+  [
+   1392,
+   1036,
+   "Q1"
+  ],
+  [
+   1418,
+   1038,
+   "Open choice or friction"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "erp",
+   "to": "batch",
+   "points": [
+    [
+     408,
+     402
+    ],
+    [
+     408,
+     432
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 1,
+   "from": "batch",
+   "to": "matching",
+   "points": [
+    [
+     408,
+     650
+    ],
+    [
+     408,
+     680
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 2,
+   "from": "invoicing",
+   "to": "bankapi",
+   "points": [
+    [
+     1192,
+     402
+    ],
+    [
+     1192,
+     432
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 3,
+   "from": "bankapi",
+   "to": "recon",
+   "points": [
+    [
+     1192,
+     650
+    ],
+    [
+     1192,
+     680
+    ]
+   ],
+   "label": null
+  }
+ ]
+}

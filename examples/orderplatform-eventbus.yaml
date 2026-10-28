@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=../schema/plate.schema.json
 # Fictional example: a hub-and-spokes plate in English, with a connector that starts at a card.
-canvas: {size: landscape-4x3, lang: en, series: orderplatform, part: 3, of: 3}
+canvas: {size: landscape-4x3, lang: en, series: order-platform, part: 3, of: 3}
 topic: "Order platform after phase 3: the event bus"
 title: "Each fact is published once and read from one bus"
 subtitle: "Managed Kafka with one topic per event type; operations keeps it healthy and replays up to 14 days"
