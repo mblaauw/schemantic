@@ -84,6 +84,10 @@ CHECKS: dict[str, Check] = {
                             "connect a card instead of its panel, or the other way round; swap the two panels so the "
                             "arrows run side by side; drop a flow the message does not need",
                             "Swap the two panels, or connect panels instead of cards, so the arrows no longer cross."),
+    "print-size": Check("layout", "on paper the plate is scaled down to fit the sheet, and its smallest text would print below 6 pt",
+                        "print on a3-landscape, or cut content so the plate is shorter; a4-landscape suits a plate of a "
+                        "few panels",
+                        "Print on a3-landscape, or cut content so the plate is shorter."),
     "footer-share": Check("layout", "the footer takes more than 15% of the plate's height (warning)",
                           "fewer principles (three that a team could check), shorter open questions, no context panel "
                           "unless the roles matter to the message; the footer is context for the body",

@@ -11,20 +11,27 @@ ICONS = ROOT / "assets" / "icons"
 FONTS_DIR = ROOT / "assets" / "fonts"
 JS_DIR = Path(__file__).resolve().parent / "js"
 
-# Paper presets in millimetres. The canvas is the sheet at 96 px per inch, rounded to whole CSS px (a fractional
-# canvas makes Chromium resample screenshots); the PNG is then sized to the exact sheet at --dpi.
+# Paper presets in millimetres. A print plate is laid out at the sheet's width at 96 px per inch (whole CSS px), so
+# its type prints at its own size, and takes its content's height like a screen plate. On paper it is centred, and
+# scaled down to fit when it is taller than the sheet; lint fails it when its smallest text would then print below
+# PRINT_FLOOR_PT. The SVG gets the sheet's size in mm; the PNG is the exact sheet at --dpi.
 PAPER_MM = {"a3-landscape": (420, 297), "a4-landscape": (297, 210)}
+MM_PER_PX = 25.4 / 96
+PRINT_FLOOR_PT = 6
 PRINT_SIZES = set(PAPER_MM)
 CANVAS_SIZES = {"landscape-4x3": (1600, 1200), "landscape-16x9": (1920, 1080),
                 **{k: (round(w / 25.4 * 96), round(h / 25.4 * 96)) for k, (w, h) in PAPER_MM.items()}}
 
 
-def png_size(size: str, width: float, height: float, scale: float) -> tuple[int, int]:
-    """Pixel size of the PNG: the exact sheet at scale * 96 dpi for paper, else the canvas times the scale."""
-    if size in PAPER_MM:
-        w, h = PAPER_MM[size]
-        return round(w / 25.4 * 96 * scale), round(h / 25.4 * 96 * scale)
-    return round(width * scale), round(height * scale)
+def paper_fit(size: str, width: float, height: float) -> dict | None:
+    """How a plate of width x height CSS px sits on its sheet: `scale` (1 at 96 px per inch, less when the plate is
+    taller than the sheet), the sheet in mm, and the plate's offset from the sheet's corner in mm, centred."""
+    if size not in PAPER_MM:
+        return None
+    w_mm, h_mm = PAPER_MM[size]
+    scale = min(1.0, w_mm / (width * MM_PER_PX), h_mm / (height * MM_PER_PX))
+    return {"size": size, "scale": scale, "sheet_mm": (w_mm, h_mm),
+            "offset_mm": ((w_mm - width * MM_PER_PX * scale) / 2, (h_mm - height * MM_PER_PX * scale) / 2)}
 TYPE_FLOOR_PX = 11
 
 

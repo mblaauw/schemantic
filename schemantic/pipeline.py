@@ -13,9 +13,9 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 from . import __version__, outline
-from .browser import launch, open_plate, rasterise_svg, svg_size
-from .config import PRINT_SIZES, ROOT, png_size
-from .export import export_svg, font_findings, measure
+from .browser import launch, on_sheet, open_plate, rasterise_svg
+from .config import ROOT, paper_fit
+from .export import export_svg, font_findings, measure, on_paper, print_findings
 from .findings import with_hint
 from .html import build_html
 from .images import image_diff, snapshot
@@ -88,8 +88,12 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 layout = measure(page)
                 (work / f"{name}.layout.json").write_text(json.dumps(layout, ensure_ascii=False), encoding="utf-8")
                 issues += paint_findings(layout["unsupported"]) + font_findings(layout) + widow_findings(layout, spec)
+                fit = paper_fit(spec["canvas"]["size"], layout["width"], layout["height"])
+                if fit:
+                    issues += print_findings(layout, fit)
+                    report["paper"] = {"size": fit["size"], "scale": round(fit["scale"], 3)}
                 svg, fonts = export_svg(layout, spec)
-                snap = snapshot(page, layout, flows["segs"])
+                snap = snapshot(layout, flows["segs"])
                 svg_path = work / f"{name}.svg"
                 # Parity checks the layout with real text. With outline_text the deliverable has glyph paths instead,
                 # and the text version stays in _work/ for the parity check.
@@ -109,10 +113,13 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 if deliver:
                     (work / f"{name}.md").write_text(outline.markdown(spec), encoding="utf-8")
                     (work / f"{name}.build.json").write_text(json.dumps(report["build"], indent=1) + "\n", encoding="utf-8")
-                    size = spec["canvas"]["size"]
-                    rasterise_svg(browser, svg_path, work / f"{name}.png", scale=scale,
-                                  size=png_size(size, *svg_size(svg_path), scale) if size in PRINT_SIZES else None,
-                                  refused=refused)
+                    png = work / f"{name}.png"
+                    if fit:  # the plate at its paper scale, centred on the exact sheet at the requested dpi
+                        rasterise_svg(browser, svg_path, png, scale=fit["scale"] * scale, refused=refused)
+                        on_sheet(png, fit, 96 * scale)
+                        svg_path.write_text(on_paper(svg_path.read_text(encoding="utf-8"), fit), encoding="utf-8")
+                    else:
+                        rasterise_svg(browser, svg_path, png, scale=scale, refused=refused)
                     staged = {k: work / f"{name}.{ext}" for k, ext in
                               (("svg", "svg"), ("png", "png"), ("outline", "md"), ("manifest", "build.json"))}
             finally:

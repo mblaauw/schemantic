@@ -219,6 +219,12 @@ def test_row_heights_still_work_but_are_deprecated(example):
 
 
 # C13: icons the agent can find
+def test_every_indexed_icon_has_a_drawing():
+    from schemantic import icons
+    assert set(icons.index()) == set(icons.bodies()) and len(icons.bodies()) == 4879
+    assert icons.bodies()["shield"].startswith("<path d=")
+
+
 def test_icon_search_finds_architecture_words():
     from schemantic import icons
     assert icons.search(["queue"])[:1] == ["stack-2"]

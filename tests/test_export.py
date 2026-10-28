@@ -1,5 +1,6 @@
 """The SVG writer is a pure function of the layout document: tested on hand-made documents, without Chromium."""
-from schemantic.export import num, svg_items
+from schemantic.config import paper_fit
+from schemantic.export import num, on_paper, print_findings, svg_items
 
 INK = {"color": "#1a2b3c"}
 
@@ -44,3 +45,30 @@ def test_an_icon_is_scaled_from_its_24_px_grid():
     assert svg_items([icon]) == [
         '<g transform="translate(10 20) scale(0.7500)" fill="none" stroke="#1a2b3c" stroke-width="1.75" '
         'stroke-linecap="round" stroke-linejoin="round"><path d="M1 1"/></g>']
+
+
+def test_a_plate_that_fits_its_sheet_prints_at_its_own_size_and_a_taller_one_is_scaled():
+    assert paper_fit("landscape-4x3", 1600, 1200) is None
+    fits = paper_fit("a4-landscape", 1123, 600)
+    # The canvas is whole CSS px (1123), half a pixel wider than A4, so "fits" means 99.96 %
+    assert round(fits["scale"], 3) == 1 and round(fits["offset_mm"][1]) == round((210 - 600 * 25.4 / 96) / 2)
+    tall = paper_fit("a4-landscape", 1123, 1587)
+    assert round(tall["scale"], 3) == round(210 / (1587 * 25.4 / 96), 3) and tall["offset_mm"][1] == 0
+
+
+def test_on_paper_sizes_the_sheet_in_mm_and_keeps_px_coordinates():
+    svg = '<svg xmlns="http://www.w3.org/2000/svg" width="1123" height="1587" viewBox="0 0 1123 1587" role="img">\n<rect/></svg>'
+    fit = paper_fit("a4-landscape", 1123, 1587)
+    head = on_paper(svg, fit).split(">")[0]
+    assert 'width="297mm" height="210mm"' in head and 'viewBox="-' in head and head.endswith('role="img"')
+    assert on_paper(svg, fit).endswith("<rect/></svg>")
+
+
+def test_print_size_measures_the_smallest_text_on_paper():
+    layout = {"width": 1123, "height": 1587, "items": [
+        {"kind": "text", "x": 0, "y": 0, "text": "a", "preserve": False, "fill": None, "font": {"family": "Inter", "size": 11, "weight": "400"}},
+        {"kind": "svg", "svg": '<text x="0" y="0" font-size="10">b</text>'}]}
+    tall = paper_fit("a4-landscape", 1123, 1587)
+    found = print_findings(layout, tall)
+    assert [f["check"] for f in found] == ["print-size"] and "at 3.8 pt" in found[0]["detail"]
+    assert print_findings(layout, paper_fit("a4-landscape", 1123, 700)) == []

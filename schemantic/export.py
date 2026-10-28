@@ -12,7 +12,7 @@ from fontTools.ttLib import TTFont
 
 from . import outline
 from .browser import call
-from .config import FONTS_DIR
+from .config import FONTS_DIR, MM_PER_PX, PRINT_FLOOR_PT
 
 # Bundled faces, loaded through @font-face so layout never depends on installed fonts.
 FONTS = [("Inter", 400, "Inter-Regular.woff2"), ("Inter", 500, "Inter-Medium.woff2"),
@@ -98,6 +98,37 @@ def font_findings(layout: dict) -> list[dict]:
                         "detail": f"{listed} {'is' if len(missing) == 1 else 'are'} not in {family}, so a viewer draws "
                                   f"{'it' if len(missing) == 1 else 'them'} with whatever font it has"})
     return out
+
+
+def on_paper(svg: str, fit: dict) -> str:
+    """The SVG at the sheet's size in mm, the plate centred on it at fit['scale']: only the root's size and viewBox
+    change, so the drawing stays in CSS px and editors keep their coordinates."""
+    unit = MM_PER_PX * fit["scale"]  # mm per CSS px on paper
+    (w_mm, h_mm), (ox, oy) = fit["sheet_mm"], fit["offset_mm"]
+    head = re.match(r'(<svg[^>]*?) width="[\d.]+" height="[\d.]+" viewBox="[^"]*"', svg)
+    return (f'{head.group(1)} width="{num(w_mm)}mm" height="{num(h_mm)}mm" '
+            f'viewBox="{num(-ox / unit)} {num(-oy / unit)} {num(w_mm / unit)} {num(h_mm / unit)}"' + svg[head.end():])
+
+
+def print_findings(layout: dict, fit: dict) -> list[dict]:
+    """On paper, the smallest text must stay at PRINT_FLOOR_PT or more after the plate is scaled to the sheet."""
+    sizes = []
+
+    def walk(items):
+        for it in items:
+            if it["kind"] == "group":
+                walk(it["items"])
+            elif it["kind"] == "text":
+                sizes.append(float(it["font"]["size"]))
+            elif it["kind"] == "svg":
+                sizes.extend(float(s) for s in re.findall(r'<text[^>]*font-size="([\d.]+)"', it["svg"]))
+    walk(layout["items"])
+    smallest = min(sizes, default=0) * MM_PER_PX * fit["scale"] * 72 / 25.4
+    if not sizes or smallest >= PRINT_FLOOR_PT:
+        return []
+    return [{"level": "error", "check": "print-size", "id": "canvas.size",
+             "detail": f"the plate is {num(layout['width'])} x {num(layout['height'])} px, so {fit['size']} prints it at "
+                       f"{fit['scale']:.0%} and its smallest text at {smallest:.1f} pt (the floor is {PRINT_FLOOR_PT} pt)"}]
 
 
 def measure(page) -> dict:

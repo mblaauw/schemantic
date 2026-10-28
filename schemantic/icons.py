@@ -15,6 +15,12 @@ def index() -> dict[str, dict]:
 
 
 @cache
+def bodies() -> dict[str, str]:
+    """Every icon's drawing (what goes inside its 24 x 24 <svg>), by name: one file instead of 4,879."""
+    return json.loads((ICONS / "icons.json").read_text(encoding="utf-8"))
+
+
+@cache
 def synonyms() -> dict[str, list[str]]:
     """Architecture words Tabler does not tag (queue, topic, gateway, ...) mapped to the best-fitting icons."""
     raw = json.loads((ICONS / "synonyms.json").read_text(encoding="utf-8"))
