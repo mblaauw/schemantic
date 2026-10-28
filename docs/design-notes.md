@@ -27,9 +27,10 @@ change in words, and the next build lays everything out again.
   share let through.
 - **Baselines are measured at the real size.** A 100 px probe scaled down drifted by a pixel once Inter replaced the
   system font, enough to fail parity on bold titles.
-- **Linux needs `--font-render-hinting=none`.** Without it Chromium rounds glyph advances to whole pixels on Linux,
-  text runs a few pixels wider than on macOS, and lines wrap differently. With it the layout is identical, and the
-  same goldens pass on both.
+- **Linux needs `--font-render-hinting=none` and `--disable-lcd-text`.** Without the first, Chromium rounds glyph
+  advances to whole pixels on Linux, text runs a few pixels wider than on macOS, and lines wrap differently. Without
+  the second, Linux antialiases text with colour fringes, which a colour-aware image comparison sees on every bold
+  glyph. With both, the layout and the pixels match, and the same goldens pass on both.
 - **Holes are the common defect, and the fix is content.** A density ratio missed panels that looked empty; the
   void check (the largest empty run inside a panel) matches what reviewers see. Most voids came from a fixed canvas
   dumping its spare height into one row, which `canvas.height: fit` removes.

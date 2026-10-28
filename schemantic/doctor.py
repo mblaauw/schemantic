@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LAUNCH_ARGS = ["--font-render-hinting=none"]  # as schemantic.browser; this module stays stdlib-only
+LAUNCH_ARGS = ["--font-render-hinting=none", "--disable-lcd-text"]  # as schemantic.browser; this module stays stdlib-only
 PROBE = r"""
 import importlib.util, json, sys
 missing = [m for m in ("yaml", "jsonschema", "jinja2", "PIL", "fontTools", "brotli", "playwright") if importlib.util.find_spec(m) is None]

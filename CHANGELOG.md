@@ -103,7 +103,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ### Fixed
 - Findings from an outside assessment of the 0.1 code, where still open:
   - F02: image comparisons (goldens and SVG parity) also compare each colour channel, so a role or status colour
-    swapped for one of the same lightness fails; the report counts pixels that differ in colour only.
+    swapped for one of the same lightness fails; the report counts pixels that differ in colour only. Chromium now
+    also runs with `--disable-lcd-text`, so Linux antialiases text in grey like macOS instead of with colour fringes.
   - F03: a missing golden or snapshot fails the test; only `--update-golden` writes one.
   - F04: the router charges two bends for every arrow a candidate crosses, so a slightly longer route that crosses
     nothing wins; a crossing it cannot avoid is an `arrow-crossing` warning. No example's routes change.

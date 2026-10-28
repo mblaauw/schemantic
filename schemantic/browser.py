@@ -14,9 +14,10 @@ from .config import CANVAS_SIZES, JS_DIR, PRINT_SIZES
 # With a fixed canvas, each gap grows by at most this much; the rest of the surplus stays under the footer.
 GAP_CAP = 48
 
-# Without this flag Linux Chromium hints glyphs and rounds their advances to whole pixels, so text runs a few
-# pixels wider than on macOS and lines wrap differently. With it, layout is the same on both.
-LAUNCH_ARGS = ["--font-render-hinting=none"]
+# Without the first flag Linux Chromium hints glyphs and rounds their advances to whole pixels, so text runs a few
+# pixels wider than on macOS and lines wrap differently. Without the second it antialiases text with colour fringes
+# (subpixel, for LCD screens), which macOS headless does not; grey antialiasing makes the pixels match too.
+LAUNCH_ARGS = ["--font-render-hinting=none", "--disable-lcd-text"]
 
 
 # common.js first: the other scripts attach their function to the `schemantic` object it creates.
