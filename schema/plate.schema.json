@@ -579,8 +579,7 @@
           "description": "Needed only when a flow starts or ends at this card."
         },
         "icon": {
-          "type": "string",
-          "description": "An icon name from assets/icons (`schemantic icons <word>`)."
+          "$ref": "#/$defs/icon"
         },
         "name": {
           "type": "string",
@@ -731,9 +730,10 @@
                       "type": "string"
                     },
                     "icon": {
-                      "type": "string"
+                      "$ref": "#/$defs/icon"
                     }
-                  }
+                  },
+                  "additionalProperties": false
                 }
               }
             }
@@ -815,7 +815,8 @@
                         ]
                       }
                     }
-                  }
+                  },
+                  "additionalProperties": false
                 }
               },
               "key": {
@@ -877,7 +878,7 @@
                       "maxLength": 40
                     },
                     "icon": {
-                      "type": "string"
+                      "$ref": "#/$defs/icon"
                     }
                   }
                 }
@@ -885,7 +886,8 @@
             }
           }
         }
-      ]
+      ],
+      "unevaluatedProperties": false
     },
     "panel": {
       "type": "object",
@@ -1008,6 +1010,11 @@
           }
         }
       }
+    },
+    "icon": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "An icon name from assets/icons (`schemantic icons <word>`): lowercase words joined by hyphens."
     }
   }
 }

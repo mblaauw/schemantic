@@ -80,6 +80,10 @@ CHECKS: dict[str, Check] = {
     "arrow-label": Check("layout", "no room for a label, or it touches a box",
                          "shorten the label, drop it, or explain the flow in a card note",
                          "Shorten or drop the label, or explain the flow in a card note."),
+    "arrow-crossing": Check("layout", "an arrow crosses another arrow at a right angle",
+                            "connect a card instead of its panel, or the other way round; swap the two panels so the "
+                            "arrows run side by side; drop a flow the message does not need",
+                            "Swap the two panels, or connect panels instead of cards, so the arrows no longer cross."),
     "chip-length": Check("layout", "a chip runs to three lines", "shorten it to one clear sentence",
                          "Shorten the chip to one sentence of about 50 characters."),
     "void": Check("layout", "a run of empty space inside a body panel: warning over 96 px, error over 160 px",

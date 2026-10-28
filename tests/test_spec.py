@@ -61,6 +61,24 @@ def test_unknown_icon(example):
     assert "icon" in checks(example)
 
 
+# F13: an icon name is a name from the index, never a path
+@pytest.mark.parametrize("name", ["../../pyproject", "a/b", "Shield", "shield.svg"])
+def test_icon_name_is_not_a_path(example, name):
+    example["panels"][0]["cards"][0]["icon"] = name
+    assert checks(example) == {"schema"}
+
+
+# F06: a misspelt field inside a pattern is an error, not silently ignored
+@pytest.mark.parametrize("where", ["pattern", "item"])
+def test_pattern_rejects_unknown_fields(example, where):
+    pattern = next(pt for p in example["panels"] for pt in p.get("patterns", []) if pt["type"] == "tier-strip")
+    if where == "pattern":
+        pattern["capton"] = "Lakehouse"
+    else:
+        pattern["tiers"][0]["nite"] = "raw"
+    assert checks(example) == {"schema"}
+
+
 def test_technical_term_stays_english_inside_compound(example):
     example["panels"][0]["cards"][0]["note"] = "leest de productcatalogus"
     found = errors(example)

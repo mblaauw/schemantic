@@ -147,6 +147,17 @@ schemantic.lint = (cfg) => {
       }
     }
   }
+  // Arrows crossing arrows: the router avoids it where a route allows; what is left is worth a look.
+  cfg.segs.forEach((s, k) => {
+    for (const o of cfg.segs.slice(k + 1))
+      if (S.crossings(s.points, o.points))
+        add(
+          "warning",
+          "arrow-crossing",
+          `flows/${o.i}`,
+          `arrow ${o.from} -> ${o.to} crosses arrow ${s.from} -> ${s.to}`,
+        );
+  });
 
   // Chips: at most two lines
   for (const ch of plate.querySelectorAll('[data-kind="chip"]')) {

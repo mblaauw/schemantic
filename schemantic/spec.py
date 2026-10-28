@@ -10,7 +10,7 @@ import jsonschema
 import yaml
 
 from . import archetypes, icons, roles
-from .config import ICONS, ROOT
+from .config import ROOT
 
 # Default footer widths per column, by its first section, relative to each other.
 FOOTER_WEIGHTS = {"context": 1.5, "principles": 1.4, "open_questions": 1.1, "notes": 1.1, "legend": 0.9}
@@ -198,8 +198,9 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
     if spec.get("flows") and not spec.get("flows_mean"):
         out.append(finding("flows-mean", "flows_mean", "the plate has flows but does not say what an arrow means", level="warning"))
 
+    known = icons.index()  # the allowlist: a name never becomes a path unless the index has it
     for icon in iter_icons(spec):
-        if not (ICONS / f"{icon}.svg").exists():
+        if icon not in known:
             close = icons.suggest(icon)
             out.append({**finding("icon", icon, f"no icon named '{icon}'"),
                         "hint": f"Closest: {', '.join(close)}. Search with: schemantic icons <word>." if close else

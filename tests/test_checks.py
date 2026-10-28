@@ -12,6 +12,7 @@ from schemantic import cli, findings, pipeline
 
 BASE = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
 LAYERS = sp.load_spec(ROOT / "examples" / "ontwikkelplatform-lagen.yaml")
+SKIP = sp.load_spec(ROOT / "tests" / "fixtures" / "skip-connection.yaml")  # its skip arrow must cross a down arrow
 
 
 def panel(spec, pid):
@@ -65,6 +66,7 @@ LAYOUT_TRIGGERS = {
     "contrast": (lambda s: None, ":root { --muted: #C8CDD2; }", BASE),
     "arrow-routing": (admission_last, "", LAYERS),
     "arrow-label": (lambda s: s["flows"][0].update(label="OIDC"), "", BASE),
+    "arrow-crossing": (lambda s: None, "", SKIP),
     "chip-length": (lambda s: panel(s, "security")["chips"][0].update(text=LONG_CHIP),
                     "", LAYERS),
     "void": (lambda s: panel(s, "services").update(cards=panel(s, "services")["cards"][:1], chips=[]), "", BASE),

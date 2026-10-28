@@ -89,7 +89,8 @@ budgets and the writing rules. The short version:
 ```
 
 One command checks the spec, lays the plate out, routes the connectors, lints the result and writes
-`plates/out/<name>.svg`, `.png` and `.md` (the outline). It prints JSON and exits 1 on errors. Each finding has
+`plates/out/<name>.svg`, `.png` and `.md` (the outline). It prints JSON and exits 1 on errors; then it publishes
+nothing, and `preview` in the report names the unpublished files in `plates/out/_work/`. Each finding has
 `check`, `id`, `detail` and `hint` (the first fix to try); `references/lint-fixes.md` has the full table. Fix every
 error in the spec and build again. Treat `void` and `traceability` warnings as real. After five rounds without
 progress, restructure: move cards between panels, change the archetype, or split the plate.

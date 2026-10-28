@@ -26,6 +26,7 @@ schemantic.route = (flows) => {
   const MIN_OVERLAP = 24; // shared span two boxes need for a straight arrow
   const CLEAR = 6; // free space kept around every segment
   const BEND = 60; // price of one bend, in px of route length
+  const CROSS = 2 * BEND; // price of crossing another arrow
   const MIN_RUN = 16; // shortest middle segment
 
   // Boxes an arrow must not cross; panel headers count, so a card's arrow never runs through its own title.
@@ -425,11 +426,23 @@ schemantic.route = (flows) => {
     r.labelBox = null;
     r.label = null;
   };
+  // The cheapest clear candidate, where crossing a route already placed costs as much as two bends. Candidates come
+  // sorted by cost and only a lower total replaces the pick, so a route that crosses nothing is the same as before.
+  const best = (j, labels) => {
+    let pick = null;
+    let total = Number.POSITIVE_INFINITY;
+    for (const c of j.cands) {
+      if (c.cost >= total || !clear(c.pts, j.obstacles, j.fl.both, labels)) continue;
+      const t = c.cost + CROSS * placed.reduce((n, r) => n + S.crossings(c.pts, r.pts), 0);
+      if (t < total) [pick, total] = [c, t];
+    }
+    return pick;
+  };
   const route = (j) => {
-    let pick = j.cands.find((c) => clear(c.pts, j.obstacles, j.fl.both));
+    let pick = best(j, true);
     if (!pick && labelBoxes.length) {
       // Blocked only by labels: take the route, then move the labels it touches to another spot along their arrow.
-      pick = j.cands.find((c) => clear(c.pts, j.obstacles, j.fl.both, false));
+      pick = best(j, false);
       if (pick) {
         const moved = routed.filter(
           (o) => o.labelBox && runs(pick.pts).some(([u, v]) => hits(o.labelBox, segBox(u, v, CLEAR))),

@@ -22,7 +22,8 @@ CI runs both on Ubuntu and macOS with Python 3.10 and 3.14.
 
 A change that alters a render fails the golden and snapshot tests on purpose. When the change is intended:
 
-1. `python -m pytest -q --update-golden` rewrites `tests/golden/` and `tests/snapshots/`.
+1. `python -m pytest -q --update-golden` rewrites `tests/golden/` and `tests/snapshots/`. Without the flag, a missing
+   golden or snapshot fails the test; CI never writes its own baseline.
 2. Open the new PNGs and look at them; a snapshot diff in git shows which elements moved.
 3. `python -m schemantic gallery` rebuilds the README images (a test fails until you do).
 4. Say in the commit message what changed visually.

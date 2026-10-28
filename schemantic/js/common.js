@@ -33,5 +33,22 @@ window.schemantic = (() => {
   S.overlapArea = (a, b) =>
     Math.max(0, Math.min(a.r, b.r) - Math.max(a.l, b.l)) * Math.max(0, Math.min(a.b, b.b) - Math.max(a.t, b.t));
   S.hits = (a, b) => Math.min(a.r, b.r) - Math.max(a.l, b.l) > 0 && Math.min(a.b, b.b) - Math.max(a.t, b.t) > 0;
+  // How often two routes (lists of points with straight, axis-aligned runs) cross at right angles. Touching at an
+  // end, where two arrows meet the same box, is not a crossing.
+  S.crossings = (a, b) => {
+    const inside = (v, x, y) => v > Math.min(x, y) + 2 && v < Math.max(x, y) - 2;
+    let n = 0;
+    for (let i = 1; i < a.length; i++)
+      for (let k = 1; k < b.length; k++) {
+        const [p, q, u, v] = [a[i - 1], a[i], b[k - 1], b[k]];
+        const across = (h, w) =>
+          h[0][1] === h[1][1] &&
+          w[0][0] === w[1][0] &&
+          inside(w[0][0], h[0][0], h[1][0]) &&
+          inside(h[0][1], w[0][1], w[1][1]);
+        if (across([p, q], [u, v]) || across([u, v], [p, q])) n++;
+      }
+    return n;
+  };
   return S;
 })();

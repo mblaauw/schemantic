@@ -101,6 +101,19 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   `schemantic/findings.py`, and every check has a test that triggers it.
 
 ### Fixed
+- Findings from an outside assessment of the 0.1 code, where still open:
+  - F02: image comparisons (goldens and SVG parity) also compare each colour channel, so a role or status colour
+    swapped for one of the same lightness fails; the report counts pixels that differ in colour only.
+  - F03: a missing golden or snapshot fails the test; only `--update-golden` writes one.
+  - F04: the router charges two bends for every arrow a candidate crosses, so a slightly longer route that crosses
+    nothing wins; a crossing it cannot avoid is an `arrow-crossing` warning. No example's routes change.
+  - F05: `build` writes the deliverables to `_work/` and publishes them only when there are no errors; with errors,
+    `preview` in the report names the unpublished files. The deprecated `render` follows the same rule.
+  - F06: pattern blocks and their tiers and rows reject unknown fields, so a misspelt field is a schema error.
+  - F13: icon names must be lowercase words joined by hyphens, and the semantic check looks them up in the icon index
+    rather than as a file path.
+  - F16: a published plate comes with `<name>.build.json`: the Schemantic, spec, Chromium, Playwright and Python
+    versions, and digests of the spec, theme and fonts (also `build` in the report).
 - Wrapped rows inside a zone keep their content height; spare height stays in the zone frame instead of opening
   holes in its panels (found by the evals; the nested-zones golden changes: its panels are shorter).
 - A1: duplicate panel ids, duplicate card ids, and card ids equal to a panel id or an automatic card id are

@@ -66,16 +66,23 @@ def snapshot_diff(old: dict, new: dict, tol: int = 2) -> list[str]:
 def image_diff(a_path: Path, b_path: Path, mask_path: Path) -> dict:
     """Compare two renders after a blur. Writes the difference mask to mask_path and returns the pixel count,
     the failing regions (bounding boxes) and whether the difference is large enough anywhere to fail."""
-    a = Image.open(a_path).convert("L").filter(ImageFilter.GaussianBlur(PARITY_BLUR_PX))
-    b = Image.open(b_path).convert("L").filter(ImageFilter.GaussianBlur(PARITY_BLUR_PX))
+    a = Image.open(a_path).convert("RGB").filter(ImageFilter.GaussianBlur(PARITY_BLUR_PX))
+    b = Image.open(b_path).convert("RGB").filter(ImageFilter.GaussianBlur(PARITY_BLUR_PX))
     if a.size != b.size:
         if max(abs(a.size[0] - b.size[0]), abs(a.size[1] - b.size[1])) > 1:
             return {"count": None, "fail": True, "regions": [], "detail": f"size differs: {a.size} vs {b.size}"}
         # A fractional canvas (a paper size) rounds one way in a screenshot and the other in the raster.
         size = (min(a.size[0], b.size[0]), min(a.size[1], b.size[1]))
         a, b = a.crop((0, 0, *size)), b.crop((0, 0, *size))
-    mask = ImageChops.difference(a, b).point(lambda v: 255 if v > PARITY_DELTA else 0)
+    # Lightness catches moved shapes and text; the largest channel difference also catches a colour swapped for
+    # one of the same lightness (a role or status colour), which a grey comparison misses.
+    over = lambda img: img.point(lambda v: 255 if v > PARITY_DELTA else 0)
+    lum = over(ImageChops.difference(a.convert("L"), b.convert("L")))
+    channels = ImageChops.difference(a, b).split()
+    col = over(ImageChops.lighter(ImageChops.lighter(channels[0], channels[1]), channels[2]))
+    mask = ImageChops.lighter(lum, col)
     mask.save(mask_path)
+    colour_only = sum(1 for v in ImageChops.subtract(col, lum).tobytes() if v)
     box = mask.getbbox()
     if not box:
         return {"count": 0, "fail": False, "regions": [], "detail": f"0 pixels differ after a {PARITY_BLUR_PX} px blur"}
@@ -104,6 +111,8 @@ def image_diff(a_path: Path, b_path: Path, mask_path: Path) -> dict:
     failing += [bbox(t) for t in tiles.values() if len(t) > PARITY_TILE_PX and not any(
         f[0] <= t[0][0] < f[2] and f[1] <= t[0][1] < f[3] for f in failing)]
     detail = f"{len(on)} pixels differ after a {PARITY_BLUR_PX} px blur"
+    if colour_only:
+        detail += f" ({colour_only} in colour only)"
     if failing:
         detail += f"; {len(failing)} region(s) over the limit, first at {failing[0]}"
-    return {"count": len(on), "fail": bool(failing), "regions": failing, "detail": detail}
+    return {"count": len(on), "fail": bool(failing), "regions": failing, "colour_only": colour_only, "detail": detail}

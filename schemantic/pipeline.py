@@ -1,15 +1,20 @@
 """One pipeline, one Chromium: check the spec, lay out, route, lint, export the SVG, check parity against the same
-page, and write the PNG. `lint` is this without the deliverables."""
+page, and write the PNG. `lint` is this without the deliverables. Deliverables are written to <out>/_work/ first and
+move to <out>/ only when the build has no errors, so a failed build never publishes a plate."""
 from __future__ import annotations
 
+import hashlib
 import json
+import os
+import platform
+from importlib.metadata import version
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-from . import outline
+from . import __version__, outline
 from .browser import launch, open_plate, rasterise_svg, svg_size
-from .config import PRINT_SIZES, png_size
+from .config import PRINT_SIZES, ROOT, png_size
 from .export import export_svg
 from .findings import with_hint
 from .html import build_html
@@ -30,15 +35,26 @@ def load_theme(spec: dict, spec_path: Path, theme: str | Path | None) -> tuple[s
     return path.read_text(encoding="utf-8"), []
 
 
+def manifest(spec: dict, spec_path: Path, theme_css: str, chromium: str) -> dict:
+    """What made this plate, so a render can be reproduced: versions, and digests of the spec, theme and fonts."""
+    digest = lambda data: hashlib.sha256(data).hexdigest()[:16]
+    return {"schemantic": __version__, "spec_version": spec.get("spec_version", 1), "spec_sha256": digest(spec_path.read_bytes()),
+            "theme_sha256": digest(theme_css.encode()) if theme_css else None, "chromium": chromium,
+            "playwright": version("playwright"), "python": platform.python_version(), "platform": platform.system().lower(),
+            "fonts": {f.name: digest(f.read_bytes()) for f in sorted((ROOT / "assets" / "fonts").glob("*.woff2"))}}
+
+
 def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale: float = 2,
           theme: str | Path | None = None, theme_css: str = "", outline_text: bool = False) -> dict:
     """Run the whole pipeline. With deliver, writes <out>/<name>.svg and .png; work files go to <out>/_work/.
-    Returns the report: errors and warnings (each with a hint), density, parity, and the paths written."""
+    Returns the report: errors and warnings (each with a hint), density, parity, the build manifest, and the paths
+    published (None when the build has errors; then `preview` names the unpublished files in _work/)."""
     spec_path, out = Path(spec_path), Path(out)
     name, work = spec_path.stem, Path(out) / "_work"
     report = {"spec": str(spec_path), "errors": [], "warnings": [], "density": {}, "voids": {}, "parity": None,
-              "svg": None, "png": None, "outline": None, "snapshot": None, "fonts": [], "flow_problems": []}
+              "svg": None, "png": None, "outline": None, "snapshot": None, "fonts": [], "flow_problems": [], "build": None, "preview": None}
     spec, issues = read_spec(spec_path)
+    staged: dict[str, Path] = {}  # deliverables written to _work/, waiting for a clean report
     if not issues:
         file_css, issues = load_theme(spec, spec_path, theme)
         theme_css = "\n".join(c for c in (file_css, theme_css) if c)
@@ -51,6 +67,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
         with sync_playwright() as p:
             browser = launch(p)
             try:
+                report["build"] = manifest(spec, spec_path, theme_css, browser.version)
                 page = open_plate(browser, html, spec)
                 flows = draw_flows(page, spec)
                 issues += problems_as_findings(flows)
@@ -58,7 +75,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 issues += dom["issues"]
                 svg, fonts = export_svg(page, spec)
                 snap = snapshot(page, svg, flows["segs"])
-                svg_path = (out if deliver else work) / f"{name}.svg"
+                svg_path = work / f"{name}.svg"
                 # Parity checks the layout with real text. With outline_text the deliverable has glyph paths instead,
                 # and the text version stays in _work/ for the parity check.
                 parity_svg = work / f"{name}.text.svg" if outline_text else svg_path
@@ -75,22 +92,32 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 rasterise_svg(browser, parity_svg, work / "svg.png", scale=1)
                 par = image_diff(work / "html.png", work / "svg.png", work / "parity-diff.png")
                 if deliver:
-                    (out / f"{name}.md").write_text(outline.markdown(spec), encoding="utf-8")
-                    report["outline"] = str(out / f"{name}.md")
+                    (work / f"{name}.md").write_text(outline.markdown(spec), encoding="utf-8")
+                    (work / f"{name}.build.json").write_text(json.dumps(report["build"], indent=1) + "\n", encoding="utf-8")
                     size = spec["canvas"]["size"]
-                    rasterise_svg(browser, svg_path, out / f"{name}.png", scale=scale,
+                    rasterise_svg(browser, svg_path, work / f"{name}.png", scale=scale,
                                   size=png_size(size, *svg_size(svg_path), scale) if size in PRINT_SIZES else None)
-                    report["png"] = str(out / f"{name}.png")
+                    staged = {k: work / f"{name}.{ext}" for k, ext in
+                              (("svg", "svg"), ("png", "png"), ("outline", "md"), ("manifest", "build.json"))}
             finally:
                 browser.close()
         if par["fail"]:
             issues.append({"level": "error", "check": "svg-parity", "id": "(plate)", "detail": par["detail"]})
         elif par["count"]:
             issues.append({"level": "warning", "check": "svg-parity", "id": "(plate)", "detail": par["detail"]})
-        report.update(density=dom["density"], voids=dom["voids"], fonts=fonts, svg=str(svg_path) if deliver else None, snapshot=str(snap_path),
+        report.update(density=dom["density"], voids=dom["voids"], fonts=fonts, snapshot=str(snap_path),
                       parity={"pixels": par["count"], "regions": par["regions"], "detail": par["detail"]},
                       flow_problems=[dict(flow=spec["flows"][x["i"]], check=x["check"], problem=x["problem"])
                                      for x in flows["problems"]])
     report["errors"] = [with_hint(i) for i in issues if i["level"] == "error"]
+    if staged:
+        if report["errors"]:
+            report["preview"] = {k: str(v) for k, v in staged.items()}
+        else:
+            out.mkdir(parents=True, exist_ok=True)
+            for k, src in staged.items():
+                os.replace(src, out / src.name)  # atomic per file: a reader sees the old plate or the new one
+                if k != "manifest":
+                    report[k] = str(out / src.name)
     report["warnings"] = [with_hint(i) for i in issues if i["level"] == "warning"]
     return report

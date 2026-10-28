@@ -41,7 +41,9 @@ def renders(tmp_path_factory):
 @pytest.mark.parametrize("path", RENDERED, ids=lambda p: p.stem)
 def test_render_matches_golden(path, renders, tmp_path, update_golden):
     fresh, golden = renders(path) / f"{path.stem}.png", GOLDEN / f"{path.stem}.png"
-    if update_golden or not golden.exists():
+    # F03: a missing baseline fails; only --update-golden writes one, so CI never accepts its own render.
+    assert update_golden or golden.exists(), f"no golden {golden.relative_to(ROOT)}: run pytest --update-golden, review it and commit"
+    if update_golden:
         GOLDEN.mkdir(exist_ok=True)
         shutil.copyfile(fresh, golden)
         pytest.skip(f"wrote {golden.relative_to(ROOT)}; review it and commit")
@@ -55,7 +57,8 @@ def test_render_matches_golden(path, renders, tmp_path, update_golden):
 def test_structure_matches_snapshot(path, renders, update_golden):
     fresh = json.loads((renders(path) / "_work" / f"{path.stem}.snapshot.json").read_text(encoding="utf-8"))
     stored = SNAPSHOTS / f"{path.stem}.json"
-    if update_golden or not stored.exists():
+    assert update_golden or stored.exists(), f"no snapshot {stored.relative_to(ROOT)}: run pytest --update-golden, review it and commit"
+    if update_golden:
         SNAPSHOTS.mkdir(exist_ok=True)
         stored.write_text(json.dumps(fresh, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
         pytest.skip(f"wrote {stored.relative_to(ROOT)}; review it and commit")
@@ -104,9 +107,25 @@ def test_unroutable_card_connector_is_reported(tmp_path):
     spec = sp.load_spec(ROOT / "examples" / "ontwikkelplatform-lagen.yaml")
     runtime = next(p for p in spec["panels"] if p["id"] == "runtime")
     runtime["cards"].append(runtime["cards"].pop(0))
-    code, report = run("render", write(tmp_path, spec, "blocked"), "--out", tmp_path)
+    code, report = run("build", write(tmp_path, spec, "blocked"), "--out", tmp_path)
     assert code == 1
     assert [x["flow"]["to"] for x in report["flow_problems"]] == ["admission"]
+    # F05: a build with errors publishes nothing; the unpublished files stay in _work/ to look at
+    assert report["svg"] is None and report["png"] is None
+    assert not list(tmp_path.glob("blocked.svg")) + list(tmp_path.glob("blocked.png"))
+    assert Path(report["preview"]["png"]).exists() and Path(report["preview"]["png"]).parent.name == "_work"
+
+
+# F05, F16: a clean build publishes the plate with a manifest of what made it
+def test_clean_build_publishes_with_a_manifest(tmp_path):
+    code, report = run("build", ROOT / "examples" / "orderplatform-eventbus.yaml", "--out", tmp_path, "--scale", 1)
+    assert code == 0 and report["preview"] is None
+    names = {p.name for p in tmp_path.iterdir() if p.is_file()}
+    assert names == {f"orderplatform-eventbus.{ext}" for ext in ("svg", "png", "md", "build.json")}
+    made = json.loads((tmp_path / "orderplatform-eventbus.build.json").read_text(encoding="utf-8"))
+    assert made == report["build"]
+    assert {"schemantic", "spec_version", "spec_sha256", "chromium", "playwright", "fonts"} <= set(made)
+    assert "Inter-Regular.woff2" in made["fonts"]
 
 
 def test_two_way_flow_gets_two_heads(tmp_path):
@@ -209,6 +228,20 @@ def test_golden_catches_a_local_text_change(change, tmp_path):
     card = json.loads((tmp_path / "_work" / "changed.snapshot.json").read_text())["boxes"]["gateway.card0"]
     assert diff["fail"]
     assert all(card[0] <= r[0] and r[2] <= card[2] and card[1] <= r[1] and r[3] <= card[3] for r in diff["regions"])
+
+
+# F02: a role colour swapped for one of the same lightness fails, and the report says it is colour only
+def test_image_diff_catches_a_colour_of_equal_lightness(tmp_path):
+    from PIL import Image, ImageDraw
+
+    for name, fill in (("red", (200, 50, 50)), ("green", (50, 120, 83))):  # both lightness 95
+        img = Image.new("RGB", (200, 120), "white")
+        ImageDraw.Draw(img).rectangle((40, 30, 160, 90), fill=fill)
+        img.save(tmp_path / f"{name}.png")
+    assert Image.open(tmp_path / "red.png").convert("L").getpixel((100, 60)) == \
+        Image.open(tmp_path / "green.png").convert("L").getpixel((100, 60))
+    diff = images.image_diff(tmp_path / "red.png", tmp_path / "green.png", tmp_path / "mask.png")
+    assert diff["fail"] and diff["colour_only"] > 0, diff["detail"]
 
 
 # A9: an installed skill folder is read-only; the doctor and a render still work, writing only elsewhere

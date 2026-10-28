@@ -8,7 +8,8 @@ spec.yaml ─► read_spec ─► schema + semantic checks ─► build_html ─
 ```
 
 `schemantic build` runs all of it in one Chromium session (`schemantic/pipeline.py`); `lint` skips writing the
-deliverables. Every step reports findings in one shape (`level`, `check`, `id`, `detail`, `hint`), and a failure
+deliverables. The deliverables (SVG, PNG, outline and a `.build.json` manifest of versions and digests) are written to
+`_work/` and move to the output folder only when the build has no errors. Every step reports findings in one shape (`level`, `check`, `id`, `detail`, `hint`), and a failure
 anywhere is a finding, never a traceback.
 
 ## Module map
@@ -42,12 +43,14 @@ L-shapes (one bend); Z-shapes through a gutter channel (two bends); U-shapes out
 routes along the body's outer edge. A candidate is clear when every run keeps a margin from every box except the
 endpoints and their containers, does not run on top of another route, and does not cross a placed label. The
 cheapest clear candidate wins: length, plus 60 px per bend, plus distance off-centre, plus a premium for U-shapes and
-outer channels. Flows that can run straight are placed first with their labels; bent flows follow.
+outer channels, plus 120 px for every arrow it crosses at a right angle. Flows that can run straight are placed first
+with their labels; bent flows follow. A crossing the router cannot avoid is an `arrow-crossing` warning.
 
 ## Parity and snapshots
 
-`build` screenshots the laid-out page and the rasterised SVG at the same scale and compares them after a 1.5 px blur;
-any connected region over 24 px or any 32 × 32 tile over 12 px fails. The tests compare each example's PNG with
+`build` screenshots the laid-out page and the rasterised SVG at the same scale and compares them after a 1.5 px blur,
+in lightness and in each colour channel, so a colour swapped for one of the same lightness counts; any connected
+region over 24 px or any 32 × 32 tile over 12 px fails. The tests compare each example's PNG with
 `tests/golden/` the same way, and its structure (every element box, text line and connector, rounded to 2 px) with
 `tests/snapshots/`; a snapshot diff names the element that moved.
 

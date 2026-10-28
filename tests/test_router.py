@@ -64,3 +64,16 @@ def test_second_flow_in_a_gutter_takes_another_lane(route):
     out = route(html, [{"from": "a1", "to": "b1"}, {"from": "a2", "to": "b2"}])
     xs = [s["points"][1][0] for s in out["segs"]]
     assert out["problems"] == [] and len(set(xs)) == 2 and abs(xs[0] - xs[1]) >= 10
+
+
+# F04: crossing another arrow costs as much as two bends, so a slightly longer route that crosses nothing wins
+def test_a_route_that_crosses_nothing_beats_a_shorter_one_that_crosses(route):
+    html = page_with({"top": (0, 0, 700, 64), "a": (0, 160, 200, 200), "m": (248, 160, 200, 200),
+                      "b": (496, 160, 200, 200), "low": (0, 424, 700, 100)})
+    alone = route(html, [{"from": "a", "to": "b"}])["segs"][0]["points"]
+    assert min(y for _, y in alone) >= 360  # on its own, a -> b takes the closer gutter below
+    out = route(html, [{"from": "m", "to": "low"}, {"from": "a", "to": "b"}])
+    down, around = (s["points"] for s in out["segs"])
+    assert out["problems"] == []
+    assert max(y for _, y in around) <= 160  # with m -> low in that gutter, the wider one above instead
+    assert down[0][0] == down[-1][0] == 348  # m -> low stays a straight drop
