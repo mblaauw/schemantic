@@ -15,7 +15,7 @@ from playwright.sync_api import sync_playwright
 from . import __version__, outline
 from .browser import launch, open_plate, rasterise_svg, svg_size
 from .config import PRINT_SIZES, ROOT, png_size
-from .export import export_svg
+from .export import export_svg, font_findings, measure
 from .findings import with_hint
 from .html import build_html
 from .images import image_diff, snapshot
@@ -33,6 +33,17 @@ def load_theme(spec: dict, spec_path: Path, theme: str | Path | None) -> tuple[s
     if not path.is_file():
         return "", [{"level": "error", "check": "canvas", "id": "canvas.theme", "detail": f"theme file not found: {path}"}]
     return path.read_text(encoding="utf-8"), []
+
+
+def paint_findings(unsupported: list[dict]) -> list[dict]:
+    """CSS the SVG cannot draw (js/layout.js), one finding per element kind and property, at its first place."""
+    seen: dict[tuple, list[str]] = {}
+    for u in unsupported:
+        seen.setdefault((u["element"], u["property"], u["value"]), []).append(u["id"])
+    return [{"level": "error", "check": "paint", "id": ids[0],
+             "detail": f"{element} uses {prop}: {value}, which the SVG cannot draw"
+                       + (f" ({len(ids)} elements)" if len(ids) > 1 else "")}
+            for (element, prop, value), ids in seen.items()]
 
 
 def manifest(spec: dict, spec_path: Path, theme_css: str, chromium: str) -> dict:
@@ -74,8 +85,11 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 issues += problems_as_findings(flows)
                 dom = dom_lint(page, flows["segs"])
                 issues += dom["issues"]
-                svg, fonts = export_svg(page, spec)
-                snap = snapshot(page, svg, flows["segs"])
+                layout = measure(page)
+                (work / f"{name}.layout.json").write_text(json.dumps(layout, ensure_ascii=False), encoding="utf-8")
+                issues += paint_findings(layout["unsupported"]) + font_findings(layout)
+                svg, fonts = export_svg(layout, spec)
+                snap = snapshot(page, layout, flows["segs"])
                 svg_path = work / f"{name}.svg"
                 # Parity checks the layout with real text. With outline_text the deliverable has glyph paths instead,
                 # and the text version stays in _work/ for the parity check.

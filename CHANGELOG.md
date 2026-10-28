@@ -119,6 +119,19 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   - F06: pattern blocks and their tiers and rows reject unknown fields, so a misspelt field is a schema error.
   - F13: icon names must be lowercase words joined by hyphens, and the semantic check looks them up in the icon index
     rather than as a file path.
+  - A layout document between measuring and writing: `js/layout.js` returns every group, box, border, text line,
+    icon and drawn connector with its measured position (saved as `_work/<name>.layout.json`), and `export.py`
+    writes the SVG from it as a pure function, tested without Chromium. The structural snapshot reads its text from
+    the document instead of parsing the SVG. The SVGs are unchanged apart from five rounded-corner coordinates that
+    move by 0.01 px.
+  - The paint contract is enforced: CSS the SVG cannot draw (shadows, gradients, transforms, opacity,
+    text-transform, letter-spacing, decoration, italics, outlines, non-solid borders, `::before`/`::after`) is a
+    `paint` error naming the element and property, instead of an unexplained `svg-parity` difference.
+  - A `font` error for text in a family that is not bundled, or with characters the bundled fonts lack (CJK, emoji,
+    some symbols): Chromium borrowed a system font for those, so parity passed while other machines drew something
+    else.
+  - The README no longer calls the SVG print-grade, and says who decides what: the agent the content and the
+    composition, Chromium the geometry.
   - Air-gapped use: `schemantic offline <folder>` writes a kit with the runtime, the wheels at the tested versions
     with their hashes (`requirements.lock`), Playwright's Chromium, a manifest and `SHA256SUMS`; its `install.sh`
     installs with no network (`pip --no-index --require-hashes`), checks every file, and runs a smoke test that must

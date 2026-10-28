@@ -92,6 +92,16 @@ CHECKS: dict[str, Check] = {
     "svg-parity": Check("layout", "the SVG differs from the measured layout",
                         "a renderer problem, not a spec problem: report it with the `detail` and the files in `out/_work/`",
                         "Report it with the detail and the files in out/_work/; it is not a spec problem."),
+    "paint": Check("layout", "a theme uses CSS the SVG cannot draw (shadows, gradients, transforms, opacity, text-transform, "
+                   "letter-spacing, decoration, italics, outlines, non-solid borders, ::before/::after content)",
+                   "remove it from the theme: the plate's styles are backgrounds, solid borders, radii, text (family, "
+                   "size, weight, colour) and icons, so the SVG matches the page",
+                   "Remove that property from the theme; plates draw only backgrounds, solid borders, text and icons."),
+    "font": Check("layout", "text uses a font family that is not bundled, or characters the bundled fonts lack (CJK, emoji, "
+                  "some symbols)",
+                  "use Inter (or DejaVu Sans Mono for code) and write the word instead of the symbol or emoji; the SVG "
+                  "embeds only bundled fonts, so anything else looks different on another machine",
+                  "Write the word instead of the symbol, or use a bundled font (Inter, DejaVu Sans Mono)."),
     "network": Check("layout", "the plate tried to load something from the network (a theme with a remote font or image)",
                      "put the file next to the theme and use a relative path, or drop it: a plate loads nothing from the "
                      "network, so it builds the same on a machine without one",

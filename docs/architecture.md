@@ -4,7 +4,7 @@
 
 ```text
 spec.yaml ─► read_spec ─► schema + semantic checks ─► build_html ─► Chromium: fit, decorate, route, lint
-          ─► export SVG ─► parity (page screenshot vs SVG raster) ─► PNG, outline .md, snapshot
+          ─► layout document ─► SVG ─► parity (page screenshot vs SVG raster) ─► PNG, outline .md, snapshot
 ```
 
 `schemantic build` runs all of it in one Chromium session (`schemantic/pipeline.py`); `lint` skips writing the
@@ -22,21 +22,47 @@ to `_work/` and move to the output folder only when the build has no errors. Chr
 | `roles.py` | panel roles: colours from tokens, legend labels, theme roles |
 | `html.py` | the template context: grid CSS, legend entries, footer layout, panels with their defaults |
 | `browser.py` | launch Chromium the same way everywhere, load a plate, size the canvas, call page scripts |
-| `route.py`, `lint.py`, `export.py` | Python sides of the page scripts: problems to findings, lint thresholds, SVG assembly and font subsetting |
+| `route.py`, `lint.py` | Python sides of the page scripts: problems to findings, lint thresholds |
+| `export.py` | the SVG, written from the layout document; font subsetting; the `font` check |
 | `images.py` | image diffs (blurred, judged locally) and structural snapshots |
 | `findings.py` | every check, its meaning, fix and hint; generates `references/lint-fixes.md` |
 | `outline.py`, `glyphs.py`, `icons.py`, `gallery.py` | the text outline, glyph outlines, icon search, README images |
 | `cli.py`, `doctor.py` | the command line; finding a Python and Chromium (standard library only) |
 | `offline.py` | the offline kit: wheels, Chromium, checksums, installer, smoke test |
-| `js/` | page scripts: `common` (helpers), `fit`, `decorate`, `route`, `export`, `lint`, `snapshot`, `fonts-ready` |
+| `js/` | page scripts: `common` (helpers), `fit`, `decorate`, `route`, `layout`, `lint`, `snapshot`, `fonts-ready` |
 
 ## The JavaScript and Python boundary
 
 Everything that needs the laid-out page runs in the page: sizing the canvas (`fit`), drawing dashes and strikes
-(`decorate`), routing connectors (`route`), measuring for lint (`lint`), walking the page into SVG (`export`).
-Python loads the scripts once per page (`browser.open_plate`) and calls each by name with JSON
-(`browser.call(page, "route", flows)`). Visual values come from `templates/tokens.css` on both sides; there is no
-JavaScript in Python strings.
+(`decorate`), routing connectors (`route`), measuring for lint (`lint`), measuring the page into a layout document
+(`layout`). Python loads the scripts once per page (`browser.open_plate`) and calls each by name with JSON
+(`browser.call(page, "route", flows)`), and writes the SVG itself. Visual values come from `templates/tokens.css` on
+both sides; there is no JavaScript in Python strings.
+
+## The layout document and the paint contract
+
+Between Chromium and the SVG sits one JSON document (`js/layout.js`, saved as `_work/<name>.layout.json`): a tree of
+groups, one per element with a kind and an id (panel, card, zone, chip, ...), holding what to draw at the measured
+positions:
+
+| Item | Holds |
+| --- | --- |
+| `group` | `type`, `id`, a label for editors, source `refs`, and its `items` |
+| `rect` | `x`, `y`, `w`, `h`, four corner radii, a `fill`, and a `stroke` with its width when all four borders match |
+| `line` | one border that differs from the others |
+| `text` | one line as Chromium broke it: start `x`, baseline `y`, the text, family, size, weight, colour |
+| `icon` | position, size, stroke colour and the icon's SVG |
+| `svg` | what the page already drew as SVG: connectors with their labels and step numbers, dashes, strike-throughs |
+
+`export.py` turns it into SVG as a pure function; tests feed it hand-made documents. Each text line is one SVG
+`text` element, so the viewer shapes it (kerning, ligatures) with the same embedded font Chromium used.
+
+What a document can describe is the paint contract: backgrounds, solid borders, corner radii, text (family, size,
+weight, colour) and icons. While measuring, `layout.js` reports any visible element whose CSS paints something else
+(shadows, gradients, transforms, opacity, text-transform, letter-spacing, decoration, italics, outlines, non-solid
+borders, `::before`/`::after` content) as a `paint` error, so a theme cannot add what the SVG would drop. Text must
+use a bundled family and characters it has (`font`), because the SVG embeds only bundled fonts. A new visual
+feature is a decision to extend the contract, the document and the writer together, never CSS alone.
 
 ## How the router chooses
 

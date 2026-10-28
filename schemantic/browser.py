@@ -29,7 +29,7 @@ REMOTE = re.compile(r"^(https?|wss?|ftp)://", re.IGNORECASE)
 
 
 # common.js first: the other scripts attach their function to the `schemantic` object it creates.
-SCRIPTS = ["common.js", "fit.js", "decorate.js", "route.js", "export.js", "lint.js", "snapshot.js"]
+SCRIPTS = ["common.js", "fit.js", "decorate.js", "route.js", "layout.js", "lint.js", "snapshot.js"]
 
 
 def launch(playwright):

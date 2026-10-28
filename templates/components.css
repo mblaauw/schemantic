@@ -1,5 +1,7 @@
-/* Component styles. Export rule: everything visible must be a real element (no ::before/::after,
-   no list markers, no transforms, no shadows, no gradients), because the SVG exporter reads boxes. */
+/* Component styles. The paint contract: everything visible is a real element drawn with backgrounds, solid borders,
+   radii, text and icons (no ::before/::after, list markers, transforms, shadows, gradients, opacity, letter-spacing,
+   text-transform or italics), because the SVG is written from the measured boxes. js/layout.js enforces it as the
+   `paint` check; see docs/architecture.md. */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--paper); }
 

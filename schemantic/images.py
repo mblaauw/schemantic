@@ -24,15 +24,26 @@ PARITY_TILE = 32
 PARITY_TILE_PX = 12          # largest allowed number of differing pixels in one tile
 
 
-def snapshot(page, svg: str, segs: list[dict]) -> dict:
-    """What a plate is made of, rounded to 2 px: every element box by data-id, every text line of the SVG with
-    its position, every connector's points. OS-independent, and a diff names what changed."""
+def snapshot(page, layout: dict, segs: list[dict]) -> dict:
+    """What a plate is made of, rounded to 2 px: every element box by data-id, every text line with its position
+    (from the layout document, and the labels the router drew), every connector's points. OS-independent, and a
+    diff names what changed."""
     def r2(v):
         return int(round(float(v) / 2) * 2)
 
     def unescape(t):
         return t.replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", '"').replace("&amp;", "&")
-    text = [[r2(x), r2(y), unescape(t)] for x, y, t in re.findall(r'<text[^>]*?\bx="([-\d.]+)" y="([-\d.]+)"[^>]*>(.*?)</text>', svg)]
+
+    def walk(items):
+        for it in items:
+            if it["kind"] == "group":
+                yield from walk(it["items"])
+            elif it["kind"] == "text":
+                yield [r2(it["x"]), r2(it["y"]), it["text"]]
+            elif it["kind"] == "svg":  # connector labels and step numbers, drawn as SVG by the router
+                yield from ([r2(x), r2(y), unescape(t)] for x, y, t in
+                            re.findall(r'<text[^>]*?\bx="([-\d.]+)" y="([-\d.]+)"[^>]*>(.*?)</text>', it["svg"]))
+    text = list(walk(layout["items"]))
     flows = [{"i": f["i"], "from": f["from"], "to": f["to"], "points": [[r2(x), r2(y)] for x, y in f["points"]],
               "label": (f.get("label") or {}).get("text")} for f in segs]
     return {"boxes": call(page, "boxes"), "text": text, "flows": flows}

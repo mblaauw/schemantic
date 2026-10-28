@@ -67,6 +67,8 @@ LAYOUT_TRIGGERS = {
     "arrow-routing": (admission_last, "", LAYERS),
     "arrow-label": (lambda s: s["flows"][0].update(label="OIDC"), "", BASE),
     "arrow-crossing": (lambda s: None, "", SKIP),
+    "paint": (lambda s: None, ".ph-title { letter-spacing: 2px; }", BASE),
+    "font": (lambda s: s["panels"][0]["cards"][0].update(note="kantoor in 東京"), "", BASE),
     "network": (lambda s: None, '@font-face { font-family: Remote; src: url("https://192.0.2.1/remote.woff2"); } '
                                 '.ph-title { font-family: Remote, Inter; }', BASE),
     "chip-length": (lambda s: panel(s, "security")["chips"][0].update(text=LONG_CHIP),
@@ -108,8 +110,8 @@ def test_yaml_triggers(tmp_path):
 def test_svg_parity_triggers(tmp_path, monkeypatch):
     real = pipeline.export_svg
 
-    def drop_a_name(page, spec):  # an exporter that loses one card name: the SVG no longer matches the page
-        svg, fonts = real(page, spec)
+    def drop_a_name(layout, spec):  # an exporter that loses one card name: the SVG no longer matches the page
+        svg, fonts = real(layout, spec)
         return svg.replace(">Token validatie</text>", "></text>"), fonts
     monkeypatch.setattr(pipeline, "export_svg", drop_a_name)
     report = pipeline.build(write(tmp_path, BASE, "p"), tmp_path, deliver=False)

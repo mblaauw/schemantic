@@ -126,6 +126,14 @@ def test_clean_build_publishes_with_a_manifest(tmp_path):
     assert made == report["build"]
     assert {"schemantic", "spec_version", "spec_sha256", "chromium", "playwright", "fonts"} <= set(made)
     assert "Inter-Regular.woff2" in made["fonts"]
+    # The layout document the SVG was written from stays in _work/ to inspect: groups named by their element
+    layout = json.loads((tmp_path / "_work" / "orderplatform-eventbus.layout.json").read_text(encoding="utf-8"))
+    def groups(items):
+        for it in items:
+            if it["kind"] == "group":
+                yield it["id"]
+                yield from groups(it["items"])
+    assert {"bus", "bus.card0", "footer"} <= set(groups(layout["items"])) and layout["unsupported"] == []
 
 
 def test_two_way_flow_gets_two_heads(tmp_path):

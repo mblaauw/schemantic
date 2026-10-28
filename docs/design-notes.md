@@ -13,11 +13,24 @@ so the two never disagree.
 The SVG embeds a subset of the bundled fonts, so it renders the same in any browser. Tools that ignore `@font-face`
 in SVG (Inkscape, Cairo) need Inter installed, or the `--outline-text` export.
 
+The exporter must not grow into a browser's painter. It reads a layout document, not the page, and the document
+describes a deliberately small vocabulary (backgrounds, solid borders, radii, text, icons); CSS outside it is a lint
+error rather than a new exporter feature. That keeps the exporter small enough to test without a browser, and makes
+every new visual feature a decision rather than a side effect.
+
 ## No coordinates in the spec
 
 The spec says what is on the plate and where in words (columns, a hub, layers, lanes, zones), never in pixels.
 That is what lets an agent converge: lint names a problem by element id (`flows/3`, `services.card2`), the fix is a
 change in words, and the next build lays everything out again.
+
+No coordinates does not mean the layout designs itself. Three parts decide three things:
+
+| Question | Decided by |
+| --- | --- |
+| What belongs on the plate, and its one message | the agent, from the sources |
+| Which composition tells it best: the archetype, and which column, layer, lane or zone each panel goes in | the agent, within the archetype's rules; lint and the review questions judge the result |
+| Where every pixel goes | Chromium (CSS Grid), the router, the exporter |
 
 ## Findings
 

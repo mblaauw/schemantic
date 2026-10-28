@@ -42,5 +42,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `chip-length` | a chip runs to three lines | shorten it to one clear sentence |
 | `void` | a run of empty space inside a body panel: warning over 96 px, error over 160 px | add real content (bullets, a pattern, an info chip); move the panel next to one of its height; merge it with a neighbour; never filler |
 | `svg-parity` | the SVG differs from the measured layout | a renderer problem, not a spec problem: report it with the `detail` and the files in `out/_work/` |
+| `paint` | a theme uses CSS the SVG cannot draw (shadows, gradients, transforms, opacity, text-transform, letter-spacing, decoration, italics, outlines, non-solid borders, ::before/::after content) | remove it from the theme: the plate's styles are backgrounds, solid borders, radii, text (family, size, weight, colour) and icons, so the SVG matches the page |
+| `font` | text uses a font family that is not bundled, or characters the bundled fonts lack (CJK, emoji, some symbols) | use Inter (or DejaVu Sans Mono for code) and write the word instead of the symbol or emoji; the SVG embeds only bundled fonts, so anything else looks different on another machine |
 | `network` | the plate tried to load something from the network (a theme with a remote font or image) | put the file next to the theme and use a relative path, or drop it: a plate loads nothing from the network, so it builds the same on a machine without one |
 | `internal` | Schemantic itself failed | not a spec problem: report the detail and the spec |

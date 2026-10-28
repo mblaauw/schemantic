@@ -1,7 +1,7 @@
 # Schemantic
 
 **From meaning to structure to pixels.** Schemantic turns a description of a system into a finished one-page
-architecture plate: a small YAML spec in, a print-grade SVG, PNG and text outline out.
+architecture plate: a small YAML spec in; a vector SVG, a PNG raster of it, and a text outline out.
 
 ![An access and data-flow plate for a fictional order platform](assets/gallery/orderplatform-toegang.webp)
 
@@ -92,9 +92,13 @@ Proof of concept, version 0.2 in progress (see [`CHANGELOG.md`](CHANGELOG.md)).
 
 ## How it works
 
-Chromium lays the plate out with CSS Grid from the spec; nothing in the spec is a coordinate. Page scripts size the
-canvas, route connectors against the measured boxes and lint the result; the exporter walks the page into native
-SVG with a subset of the bundled fonts, and the PNG is a raster of that SVG. See
+Schemantic works like a compiler. The spec says what the plate holds and how it is composed: the agent picks an
+archetype and places panels in words (columns, a hub, layers, lanes, zones), never in pixels. Chromium computes the
+geometry of that composition with CSS Grid; page scripts size the canvas, route connectors around the measured boxes
+and lint the result. The measured page becomes a layout document (every box, text line, icon and connector, at its
+position), and the SVG is written from that document with a subset of the bundled fonts; the PNG is a raster of the
+SVG. Styles stay within what the SVG can draw, and lint names anything outside it. Print sizes (A3, A4, `--dpi`) are
+there; the SVG is checked against Chromium's own rendering, not yet in other viewers or as PDF. See
 [`docs/architecture.md`](docs/architecture.md) for the pipeline and the router, and
 [`docs/design-notes.md`](docs/design-notes.md) for why it is built this way.
 
