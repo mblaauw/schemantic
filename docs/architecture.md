@@ -44,15 +44,21 @@ routes along the body's outer edge. A candidate is clear when every run keeps a 
 endpoints and their containers, does not run on top of another route, and does not cross a placed label. The
 cheapest clear candidate wins: length, plus 60 px per bend, plus distance off-centre, plus a premium for U-shapes and
 outer channels, plus 120 px for every arrow it crosses at a right angle. Flows that can run straight are placed first
-with their labels; bent flows follow. A crossing the router cannot avoid is an `arrow-crossing` warning.
+with their labels; bent flows follow. When a bent flow finds no clear route, the router repairs: for its three
+cheapest candidates that only earlier bent routes block, it takes those up, places the flow and routes them again,
+keeping the result only if every route still has a place. After all flows are placed, each bent route that crosses
+an arrow is routed once more, now that it can see the routes placed after it, and kept if it crosses fewer. A
+crossing the router cannot avoid is an `arrow-crossing` warning.
 
 ## Parity and snapshots
 
 `build` screenshots the laid-out page and the rasterised SVG at the same scale and compares them after a 1.5 px blur,
-in lightness and in each colour channel, so a colour swapped for one of the same lightness counts; any connected
-region over 24 px or any 32 × 32 tile over 12 px fails. The tests compare each example's PNG with
+in lightness (a difference over 40) and in colour (the Cb and Cr channels, over 12), so a colour swapped for one of
+the same lightness counts; any connected region over 24 px or any 32 × 32 tile over 12 px fails. The tests compare each example's PNG with
 `tests/golden/` the same way, and its structure (every element box, text line and connector, rounded to 2 px) with
-`tests/snapshots/`; a snapshot diff names the element that moved.
+`tests/snapshots/`; a snapshot diff names the element that moved. `tests/test_metamorphic.py` changes one property
+of an example at a time (reverse a flow, add a card, swap two columns, change the language, swap a role colour) and
+checks the one effect it must have.
 
 ## Adding an archetype
 

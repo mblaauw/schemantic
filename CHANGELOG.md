@@ -102,12 +102,18 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 
 ### Fixed
 - Findings from an outside assessment of the 0.1 code, where still open:
-  - F02: image comparisons (goldens and SVG parity) also compare each colour channel, so a role or status colour
-    swapped for one of the same lightness fails; the report counts pixels that differ in colour only. Chromium now
+  - F02: image comparisons (goldens and SVG parity) compare colour (Cb and Cr) apart from lightness, at a finer
+    threshold, so a role or status colour swapped for one of the same lightness fails; the report counts pixels that
+    differ in colour only. Chromium now
     also runs with `--disable-lcd-text`, so Linux antialiases text in grey like macOS instead of with colour fringes.
   - F03: a missing golden or snapshot fails the test; only `--update-golden` writes one.
   - F04: the router charges two bends for every arrow a candidate crosses, so a slightly longer route that crosses
-    nothing wins; a crossing it cannot avoid is an `arrow-crossing` warning. No example's routes change.
+    nothing wins; a crossing it cannot avoid is an `arrow-crossing` warning. A bent flow with no clear route is
+    repaired by taking up the bent routes that block it and routing them again, and a second pass reroutes bent
+    routes that cross arrows. Over 400 random layouts this routed flows that had none in 23 and removed crossings in
+    10, and made none worse. No example's routes change.
+  - Change-one-thing tests (`tests/test_metamorphic.py`): reverse or remove a flow, lengthen a note, add a card, swap
+    two columns, switch the language, add a principle, swap a role colour; each checks the one effect it must have.
   - F05: `build` writes the deliverables to `_work/` and publishes them only when there are no errors; with errors,
     `preview` in the report names the unpublished files. The deprecated `render` follows the same rule.
   - F06: pattern blocks and their tiers and rows reject unknown fields, so a misspelt field is a schema error.

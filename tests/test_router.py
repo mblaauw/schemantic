@@ -77,3 +77,38 @@ def test_a_route_that_crosses_nothing_beats_a_shorter_one_that_crosses(route):
     assert out["problems"] == []
     assert max(y for _, y in around) <= 160  # with m -> low in that gutter, the wider one above instead
     assert down[0][0] == down[-1][0] == 348  # m -> low stays a straight drop
+
+
+def crossings(segs: list[dict]) -> int:
+    """Right-angle crossings between routes, as schemantic.crossings counts them (ends that touch do not count)."""
+    def across(h, w):
+        inside = lambda v, x, y: min(x, y) + 2 < v < max(x, y) - 2  # noqa: E731
+        return h[0][1] == h[1][1] and w[0][0] == w[1][0] and inside(w[0][0], h[0][0], h[1][0]) \
+            and inside(h[0][1], w[0][1], w[1][1])
+    runs = [list(zip(s["points"], s["points"][1:])) for s in segs]
+    return sum(across(p, q) or across(q, p) for i, a in enumerate(runs) for b in runs[i + 1:] for p in a for q in b)
+
+
+# A route that blocks a later one is taken up, the later one placed, and the first routed again (found by a search
+# over random layouts: without the repair, r1 -> l2 has no route here)
+def test_a_blocked_flow_is_repaired_by_moving_an_earlier_route(route):
+    html = page_with({"top": (20, 20, 180, 160), "left": (20, 224, 180, 160), "right": (248, 224, 180, 160)},
+                     {"t1": ("top", (12, 40, 156, 48)), "t2": ("top", (12, 100, 156, 48)),
+                      "l1": ("left", (12, 40, 156, 48)), "l2": ("left", (12, 100, 156, 48)),
+                      "r1": ("right", (12, 40, 156, 48)), "r2": ("right", (12, 100, 156, 48))})
+    flows = [{"from": "l2", "to": "right"}, {"from": "left", "to": "r2"}, {"from": "r1", "to": "l2"},
+             {"from": "right", "to": "t1"}]
+    out = route(html, flows)
+    assert out["problems"] == [] and len(out["segs"]) == 4
+
+
+# After every flow is placed, a route that crosses arrows is routed once more and kept if it crosses fewer
+def test_a_second_pass_removes_a_crossing_the_first_could_not_see(route):
+    html = page_with({"a": (20, 20, 180, 160), "b": (248, 20, 180, 160), "c": (20, 204, 180, 160),
+                      "d": (248, 204, 180, 160)},
+                     {"b1": ("b", (12, 40, 156, 48)), "b2": ("b", (12, 100, 156, 48)),
+                      "d1": ("d", (12, 40, 156, 48)), "d2": ("d", (12, 100, 156, 48))})
+    flows = [{"from": "b1", "to": "b2"}, {"from": "d1", "to": "b2"}, {"from": "b1", "to": "d"},
+             {"from": "d1", "to": "a"}]
+    out = route(html, flows)
+    assert out["problems"] == [] and crossings(out["segs"]) == 1  # 2 without the second pass

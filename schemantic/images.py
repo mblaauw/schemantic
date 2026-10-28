@@ -15,6 +15,10 @@ from .browser import call
 # one 32 x 32 tile, holds more than a few pixels.
 PARITY_BLUR_PX = 1.5
 PARITY_DELTA = 40            # grey-level difference (0-255) after blur
+# Colour is compared apart from lightness (the Cb and Cr channels of YCbCr), at a finer threshold: a role colour
+# swapped for one of the same lightness moves the colour channels by about 25, while the page against its own SVG
+# stays under 12 on every example.
+PARITY_CHROMA = 12
 PARITY_REGION_PX = 24        # largest allowed connected region of differing pixels
 PARITY_TILE = 32
 PARITY_TILE_PX = 12          # largest allowed number of differing pixels in one tile
@@ -74,12 +78,12 @@ def image_diff(a_path: Path, b_path: Path, mask_path: Path) -> dict:
         # A fractional canvas (a paper size) rounds one way in a screenshot and the other in the raster.
         size = (min(a.size[0], b.size[0]), min(a.size[1], b.size[1]))
         a, b = a.crop((0, 0, *size)), b.crop((0, 0, *size))
-    # Lightness catches moved shapes and text; the largest channel difference also catches a colour swapped for
-    # one of the same lightness (a role or status colour), which a grey comparison misses.
-    over = lambda img: img.point(lambda v: 255 if v > PARITY_DELTA else 0)
-    lum = over(ImageChops.difference(a.convert("L"), b.convert("L")))
-    channels = ImageChops.difference(a, b).split()
-    col = over(ImageChops.lighter(ImageChops.lighter(channels[0], channels[1]), channels[2]))
+    # Lightness catches moved shapes and text; colour catches a colour swapped for one of the same lightness (a role
+    # or status colour), which a grey comparison misses.
+    over = lambda img, limit: img.point(lambda v: 255 if v > limit else 0)
+    (ya, cba, cra), (yb, cbb, crb) = a.convert("YCbCr").split(), b.convert("YCbCr").split()
+    lum = over(ImageChops.difference(ya, yb), PARITY_DELTA)
+    col = over(ImageChops.lighter(ImageChops.difference(cba, cbb), ImageChops.difference(cra, crb)), PARITY_CHROMA)
     mask = ImageChops.lighter(lum, col)
     mask.save(mask_path)
     colour_only = sum(1 for v in ImageChops.subtract(col, lum).tobytes() if v)

@@ -78,7 +78,8 @@ schemantic.route = (flows) => {
   };
   const runs = (pts) => pts.slice(1).map((q, k) => [pts[k], q]);
   const placed = [];
-  const clear = (pts, obstacles, both, labels = true) => {
+  // Clear of boxes, labels and the routes already placed, except those in `ignore` (routes that may be moved).
+  const clear = (pts, obstacles, both, labels = true, ignore = []) => {
     const n = pts.length - 1;
     for (let k = 0; k < n; k++) {
       const p = pts[k];
@@ -89,7 +90,7 @@ schemantic.route = (flows) => {
       const sb = segBox(p, q, CLEAR);
       if (sb.l < 0 || sb.t < 0 || sb.r > P.width || sb.b > P.height) return false;
       if (obstacles.some((o) => hits(sb, o)) || (labels && labelBoxes.some((o) => hits(sb, o)))) return false;
-      if (placed.some((r) => runs(r.pts).some(([u, v]) => collinear(p, q, u, v)))) return false;
+      if (placed.some((r) => !ignore.includes(r) && runs(r.pts).some(([u, v]) => collinear(p, q, u, v)))) return false;
     }
     return true;
   };
@@ -438,7 +439,41 @@ schemantic.route = (flows) => {
     }
     return pick;
   };
-  const route = (j) => {
+  // Repair: a bent flow with no clear route may only be blocked by bent routes placed before it. For its three
+  // cheapest candidates that only those routes block, take the blockers up, place this flow, and route the blockers
+  // again; keep that only when every one of them still finds a place, else put everything back.
+  const movable = [];
+  const blocking = (c, rs) =>
+    rs.filter((r) => runs(r.pts).some(([u, v]) => runs(c.pts).some(([p, q]) => collinear(p, q, u, v))));
+  const repair = (j) => {
+    const tries = j.cands.filter((c) => clear(c.pts, j.obstacles, j.fl.both, true, movable)).slice(0, 3);
+    for (const c of tries) {
+      const blockers = blocking(c, movable);
+      const before = blockers.map((b) => b.pts);
+      const r = { ...j, pts: c.pts };
+      const keep = placed.filter((o) => !blockers.includes(o));
+      placed.splice(0, placed.length, ...keep, r);
+      let ok = true;
+      for (const b of blockers) {
+        const pick = ok && best(b, true);
+        if (pick) {
+          b.pts = pick.pts;
+          placed.push(b);
+        } else ok = false;
+      }
+      if (ok) {
+        movable.push(r);
+        routed.push(r);
+        return r;
+      }
+      blockers.forEach((b, k) => {
+        b.pts = before[k];
+      });
+      placed.splice(0, placed.length, ...keep, ...blockers);
+    }
+    return null;
+  };
+  const route = (j, canMove = false) => {
     let pick = best(j, true);
     if (!pick && labelBoxes.length) {
       // Blocked only by labels: take the route, then move the labels it touches to another spot along their arrow.
@@ -453,6 +488,10 @@ schemantic.route = (flows) => {
         placed.pop();
       }
     }
+    if (!pick && canMove) {
+      const r = repair(j);
+      if (r) return r;
+    }
     if (!pick) {
       problems.push({
         i: j.i,
@@ -465,6 +504,7 @@ schemantic.route = (flows) => {
     const r = { ...j, pts: pick.pts };
     placed.push(r);
     routed.push(r);
+    if (canMove) movable.push(r);
     return r;
   };
   const first = jobs
@@ -472,7 +512,23 @@ schemantic.route = (flows) => {
     .map(route)
     .filter(Boolean);
   for (const r of first) placeLabel(r);
-  const later = jobs.filter(bent).map(route).filter(Boolean);
+  const later = jobs
+    .filter(bent)
+    .map((j) => route(j, true))
+    .filter(Boolean);
+  // One more pass over the bent routes, now that every route is placed: a route placed early could not see the ones
+  // placed after it. Route each one that crosses an arrow again, and keep the new route only if it crosses fewer.
+  const crossingsOf = (r) => placed.reduce((n, o) => n + (o === r ? 0 : S.crossings(r.pts, o.pts)), 0);
+  for (const r of later) {
+    const n = crossingsOf(r);
+    if (!n || !placed.includes(r)) continue;
+    const before = r.pts;
+    placed.splice(placed.indexOf(r), 1);
+    const pick = best(r, true);
+    if (pick) r.pts = pick.pts;
+    if (!pick || crossingsOf(r) >= n) r.pts = before;
+    placed.push(r);
+  }
 
   // Step badges: a numbered disc on the longest run with room, before labels so labels keep clear of it.
   const BADGE = 9;
