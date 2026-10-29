@@ -112,9 +112,13 @@ CHECKS: dict[str, Check] = {
     "chip-length": Check("layout", "a chip runs to three lines", "shorten it to one clear sentence",
                          "Shorten the chip to one sentence of about 50 characters."),
     "void": Check("layout", "a run of empty space inside a body panel (warning over 96 px, error over 160 px), below a short "
-                  "panel next to taller ones in its row, or inside a zone frame (warning over 96 px)",
+                  "panel next to taller ones in its row, inside a zone frame, in an empty cell of `layout.areas`, or as a "
+                  "blank band under the footer or around a plate on paper (warning over 96 px); or cards a row-spanning "
+                  "panel spreads apart by most of a card's height",
                   "add real content (bullets, a pattern, an info chip); move the panel next to one of its height; merge it "
-                  "with a neighbour; never filler", "Add real content to the panel, or place it next to a panel of its height."),
+                  "with a neighbour; let a panel span an empty cell; give a spread panel fewer rows; on paper or a fixed "
+                  "height, let the plate grow taller (fewer `card_columns`, another row) or use `height: fit`; never "
+                  "filler", "Add real content to the panel, or place it next to a panel of its height."),
     "svg-parity": Check("layout", "the SVG differs from the measured layout",
                         "a renderer problem, not a spec problem: report it with the `detail` and the files in `out/_work/`",
                         "Report it with the detail and the files in out/_work/; it is not a spec problem."),

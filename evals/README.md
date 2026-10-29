@@ -108,3 +108,21 @@ with the current questions.
 Next targets: the three kinds of hole above as lint, a warning when a flow named in the subtitle ends on a panel
 that holds the named card, and keeping the dotted style for what the legend says it means.
 
+### Haiku after the hole checks (29 October, third run)
+
+Haiku only, with the skill at the hole checks (empty grid cells, spread cards, blank bands; before zone frames
+ended with their content). Judged blind with the same review questions as the second run and its control, so the
+three Haiku rows compare directly.
+
+| Haiku 5.5 plates | Judged | Nothing invented | Plates with holes | Defects per plate |
+| --- | --- | --- | --- | --- |
+| first rerun's, judged again | 0/8 | 5/8 | 3 | 2.25 |
+| second rerun | 0/8 | 6/8 | 6 | 3.5 |
+| after the hole checks | 0/8 | 8/8 | 2 | 2.5 |
+
+- Holes fell from 6 plates to 2: one is two account frames half empty beside a tall one (zone frames now end with
+  their content), the other a gap under 96 px.
+- Nothing was invented on any plate, for the first time on Haiku.
+- Paths are now most of what is left (7 of 20 defects): arrows that end on a panel, and steps that live only in a
+  card note. Colour is next (3): people in a platform panel.
+

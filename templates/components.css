@@ -194,7 +194,8 @@ body { background: var(--paper); }
 .band-after .band-label { color: var(--accent); border-bottom-color: var(--accent); }
 
 /* Nested zones: dashed frames (drawn by js/decorate.js), side by side at the top level, holding zones and panels */
-.zones { display: flex; gap: var(--gutter-x); align-items: stretch; min-width: 0; }
+/* Top-level frames end with their content, as panels do: spare height outside a frame reads as rhythm, inside as a hole */
+.zones { display: flex; gap: var(--gutter-x); align-items: flex-start; min-width: 0; }
 .zone { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 10px; padding: 10px 14px 14px;
   border: 1.5px solid var(--zone-line); border-radius: 10px; }
 .zone-1 { background: var(--zone-1); } .zone-2 { background: var(--zone-2); } .zone-3 { background: var(--zone-3); }

@@ -98,7 +98,7 @@
             "a3-landscape",
             "a4-landscape"
           ],
-          "description": "landscape-4x3 is 1600 px wide (the default choice); landscape-16x9 is 1920 x 1080, for slides; a3-landscape and a4-landscape are the paper sizes at 96 px per inch (height fixed by default); --dpi sets the PNG resolution."
+          "description": "landscape-4x3 is 1600 px wide (the default choice); landscape-16x9 is 1920 x 1080, for slides; a3-landscape and a4-landscape are the paper sizes at 96 px per inch (the plate takes its content height and is centred on the sheet); --dpi sets the PNG resolution."
         },
         "lang": {
           "enum": [

@@ -11,8 +11,9 @@ report what is left.
    jump; so is a step that only a card note mentions.
 3. **Arrows.** Does any arrow point against what `flows_mean` says arrows mean (data where requests are meant)?
 4. **Colour.** Does any panel have a role whose legend label is wrong for it (people marked as a system)?
-5. **Holes.** Is any panel visibly emptier than its neighbours, with a gap a reader would notice? (Lint warns at
-   96 px.)
+5. **Holes.** Is any part of the plate visibly empty: a panel emptier than its neighbours, an empty cell in the
+   grid, cards floating apart in a tall panel, or a blank band above or below? (Lint warns at 96 px; a hole you can
+   see is a defect even when lint is clean.)
 6. **Footer.** Does the footer draw the eye before the body, or take more than about an eighth of the plate?
 7. **Words.** Is any name a term the reader would not know, or any note true of every system rather than this one?
 8. **Truth.** Is any card, flow or principle not traceable to the sources (the brief's assumptions aside)?

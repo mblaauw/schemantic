@@ -30,6 +30,18 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - Evals rerun again (29 October, after those fixes): Sonnet passes the judge on 2 of 8 cases, its first passes, at
   2.1 defects per plate; Haiku rises to 3.5. A blind re-judge of the earlier Haiku plates puts 0.6 of that on the
   stricter review questions; the rest is holes of kinds no check measures yet. See `evals/README.md`.
+- From that rerun's holes, the `void` check measures three more kinds: an empty cell in `layout.areas` (a `.`), a
+  row-spanning panel whose cards are spread apart by more than three quarters of a card's height (rich cards 47 px
+  apart pass, name-only cards 40 px apart do not), and a blank band: under the footer of a fixed canvas the rows
+  cannot fill, or above and below a plate much shorter than its paper sheet. Review question 5 names them, and says
+  a hole you can see is a defect even when lint is clean. On the rerun's plates the check flags the holes the judge
+  named on four of the six Haiku plates with holes (not the two whose gaps are under 96 px); every example stays
+  clean.
+- Zone frames side by side end with their content, as panels do (a Haiku run left two account frames half empty
+  beside a tall one, and could not fill them); a frame far shorter than the one beside it is a `void` warning. The
+  clinic plate's datacentre frame now ends at its content.
+- Haiku rerun after the hole checks: 3.5 to 2.5 defects per plate, holes on 2 plates instead of 6, nothing invented
+  on any plate. Paths are the main defect left. See `evals/README.md`.
 - A test renders the outlined SVG in a second renderer, librsvg (`rsvg-convert`), and holds it to Chromium's PNG;
   CI installs librsvg on Linux. The README now says what holds outside a browser: the outlined SVG renders the same,
   live text depends on the viewer's fonts.

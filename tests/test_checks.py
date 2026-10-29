@@ -157,7 +157,10 @@ def test_examples_have_no_voids_and_a_low_footer(path, mode, tmp_path):
     spec = mutate(lambda s: s["canvas"].update(height=mode), sp.load_spec(path))
     report = pipeline.build(write(tmp_path, spec, path.stem), tmp_path, deliver=False)
     limit = 96 if mode == "fit" else 160
-    assert max(report["voids"].values()) <= limit, report["voids"]
+    # A fixed canvas the rows cannot fill leaves a band under the footer, which is warned about on its own
+    # (test_void_checks_empty_cells_spread_cards_and_a_blank_band); here the holes are those inside the plate.
+    inside = {k: v for k, v in report["voids"].items() if k != "canvas"}
+    assert max(inside.values()) <= limit, inside
     boxes = json.loads(Path(report["snapshot"]).read_text(encoding="utf-8"))["boxes"]
     height = float(re.search(r'height="([\d.]+)"', (tmp_path / "_work" / f"{path.stem}.svg").read_text()[:400]).group(1))
     footer = boxes["footer"][3] - boxes["footer"][1]
