@@ -99,7 +99,7 @@ writing rules. The short version:
 ## 5. Build, fix, repeat
 
 ```bash
-"$PY" "$SKILL/scripts/plate.py" build plates/<name>.yaml --out plates/out
+"$PY" "$SKILL/scripts/plate.py" build plates/<name>.yaml --out plates/out --review
 ```
 
 One command checks the spec, lays the plate out, routes the connectors, lints the result and writes
@@ -111,7 +111,9 @@ progress, restructure: move cards between panels, change the archetype, or split
 
 ## 6. Look at it
 
-Once the build is clean, open the PNG (read the image) and answer the defect questions in `references/review.md`.
+Once the build is clean, read the crops the report lists under `review` (the whole plate first, then the title
+block, each panel and the footer, at a size where every note is legible; a full PNG is scaled down until small text
+blurs) and answer the defect questions in `references/review.md`.
 Every "yes" is a spec change and another build, not a hand edit. Stop after three review rounds; tell the user what
 is still imperfect rather than looping.
 

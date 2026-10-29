@@ -1,6 +1,7 @@
 # Review: defect questions
 
-Answer each question with the rendered PNG in front of you, yes or no. A "yes" is a defect: change the spec and
+Answer each question with the review crops in front of you (`build --review`: the whole plate for paths and holes,
+the part crops for words), yes or no. A "yes" is a defect: change the spec and
 build again. Lint has already checked geometry; these check whether the plate works. Stop after three rounds and
 report what is left.
 

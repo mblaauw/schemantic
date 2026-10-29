@@ -57,6 +57,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - `schemantic new <archetype> <path>`: a starter spec for every built archetype, with a brief, sources, refs, flows,
   a story, a principle and an open question, and TODO wherever the sources must speak. The `placeholder` lint names
   each TODO left by its path; filled in, every starter builds clean.
+- `build --review` (and `lint --review`): crops of the plate a model can read, in `<out>/_work/review/`: the whole
+  plate, the title block, each panel with its gutter, and the footer, at about twice their size; a wide part is cut
+  into overlapping pieces. The report lists each crop with its part and scale.
 
 ### Changed
 - One loud place per plate. Panel headers are quiet by default (their role's tint, the title in the role's colour);

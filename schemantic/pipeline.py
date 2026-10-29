@@ -20,6 +20,7 @@ from .findings import with_hint
 from .html import build_html
 from .images import image_diff, snapshot
 from .lint import dom_lint, widow_findings
+from .review import RASTER_SCALE, write_crops
 from .route import draw_flows, problems_as_findings
 from .spec import check, read_spec
 
@@ -56,14 +57,16 @@ def manifest(spec: dict, spec_path: Path, theme_css: str, chromium: str) -> dict
 
 
 def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale: float = 2,
-          theme: str | Path | None = None, theme_css: str = "", outline_text: bool = False) -> dict:
+          theme: str | Path | None = None, theme_css: str = "", outline_text: bool = False, review: bool = False) -> dict:
     """Run the whole pipeline. With deliver, writes <out>/<name>.svg and .png; work files go to <out>/_work/.
     Returns the report: errors and warnings (each with a hint), density, parity, the build manifest, and the paths
-    published (None when the build has errors; then `preview` names the unpublished files in _work/)."""
+    published (None when the build has errors; then `preview` names the unpublished files in _work/). With review,
+    `review` lists crops of the plate a model can read, in <out>/_work/review/ (also for a build with errors)."""
     spec_path, out = Path(spec_path), Path(out)
     name, work = spec_path.stem, Path(out) / "_work"
     report = {"spec": str(spec_path), "errors": [], "warnings": [], "density": {}, "voids": {}, "parity": None,
-              "svg": None, "png": None, "outline": None, "snapshot": None, "fonts": [], "flow_problems": [], "build": None, "preview": None}
+              "svg": None, "png": None, "outline": None, "snapshot": None, "fonts": [], "flow_problems": [], "build": None, "preview": None,
+              "review": None}
     spec, issues = read_spec(spec_path)
     staged: dict[str, Path] = {}  # deliverables written to _work/, waiting for a clean report
     refused: list[str] = []  # network requests the page tried to make
@@ -110,6 +113,11 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 page.close()
                 rasterise_svg(browser, parity_svg, work / "svg.png", scale=1, refused=refused)
                 par = image_diff(work / "html.png", work / "svg.png", work / "parity-diff.png")
+                if review:
+                    for old in (work / "review").glob("*.png"):
+                        old.unlink()  # a part renamed or cut differently leaves no stale crop behind
+                    rasterise_svg(browser, parity_svg, work / "review.png", scale=RASTER_SCALE, refused=refused)
+                    report["review"] = write_crops(layout, spec, work / "review.png", work / "review")
                 if deliver:
                     (work / f"{name}.md").write_text(outline.markdown(spec), encoding="utf-8")
                     (work / f"{name}.build.json").write_text(json.dumps(report["build"], indent=1) + "\n", encoding="utf-8")

@@ -1,12 +1,13 @@
-"""The skill's own tools: starters (`schemantic new`)."""
+"""The skill's own tools: starters (`schemantic new`) and review crops (`build --review`)."""
 import re
 
 import pytest
 import yaml
 from conftest import ROOT, archetypes, sp
+from PIL import Image
 from test_render import run, write
 
-from schemantic import scaffold
+from schemantic import review, scaffold
 
 
 def filled(v):
@@ -54,3 +55,25 @@ def test_a_placeholder_is_named_by_its_path():
     assert [(f["check"], f["id"]) for f in sp.check(spec) if f["check"] == "placeholder"] == [
         ("placeholder", "panels/1/cards/0/note")]
 
+
+def test_a_long_part_is_cut_into_overlapping_pieces_and_the_title_block_is_not():
+    wide = [40, 600, 1560, 900]  # a panel spanning the plate
+    cut = review.pieces(wide, 1600, 1200)
+    assert len(cut) == 2 and cut[0][0] == wide[0] - review.MARGIN and cut[-1][2] == wide[2] + review.MARGIN
+    assert cut[0][2] - cut[1][0] == pytest.approx(review.OVERLAP)
+    assert all((x1 - x0) * review.MIN_SCALE <= review.LONG_EDGE for x0, _, x1, _ in cut)
+    assert len(review.pieces(wide, 1600, 1200, whole=True)) == 1
+
+
+def test_review_writes_a_readable_crop_of_every_part(tmp_path):
+    path = ROOT / "examples" / "kliniek-zones.yaml"
+    code, report = run("lint", path, "--out", tmp_path, "--review")
+    assert code == 0
+    crops = report["review"]
+    parts = [c["part"].split(",")[0] for c in crops]
+    panels = [p["id"] for p in sp.load_spec(path)["panels"]]
+    assert parts[:2] == ["the whole plate", "titleblock"] and parts[-1] == "footer" and set(panels) <= set(parts)
+    for c in crops:
+        size = Image.open(c["path"]).size
+        assert max(size) <= review.LONG_EDGE
+        assert c["part"] in ("the whole plate", "titleblock") or c["scale"] >= review.MIN_SCALE
