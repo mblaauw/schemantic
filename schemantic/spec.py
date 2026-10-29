@@ -126,12 +126,6 @@ def layout_errors(spec: dict, arche: archetypes.Archetype) -> list[dict]:
         c0, c1 = min(c for _, c in cells), max(c for _, c in cells)
         if len(cells) != (r1 - r0 + 1) * (c1 - c0 + 1):
             out.append(finding("layout", n, "area is not a rectangle"))
-    rh = spec["layout"].get("row_heights")
-    if rh and len(rh) != len(grid.rows):
-        out.append(finding("layout", "layout.row_heights", f"{len(rh)} heights for {len(grid.rows)} rows"))
-    if rh:
-        out.append(finding("deprecated", "layout.row_heights", "rows now take their content height and the canvas fits them "
-                           "(canvas.height); row_heights still works until the next release", level="warning"))
     return out
 
 
@@ -145,7 +139,7 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
     out = id_errors(spec) or layout_errors(spec, arche)
     if any(f["level"] == "error" for f in out):
         return out
-    out += roles.role_findings(spec, theme_css)
+    out += roles.role_findings(spec, theme_css) + roles.role_fit_findings(spec) + slide_findings(spec)
 
     for p in spec["panels"]:
         if p.get("weights"):
@@ -193,6 +187,7 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
 
     focused = [p["id"] for p in spec["panels"] if p.get("focus")]
     focused += [card_id(p, i, c) for p in spec["panels"] for i, c in enumerate(p.get("cards", [])) if c.get("focus")]
+    focused += [f"flows/{i}" for i, f in enumerate(spec.get("flows", [])) if f.get("focus")]
     if len(focused) > 1:
         out.append(finding("focus", focused[1], f"{len(focused)} elements have focus ({', '.join(focused)}); a plate has one point"))
     if spec.get("flows") and not spec.get("flows_mean"):
@@ -239,6 +234,16 @@ def traceability(spec: dict) -> list[dict]:
 def check(spec: dict, theme_css: str = "") -> list[dict]:
     """Schema first; semantic checks only on a spec that has the right shape."""
     return schema_errors(spec) or semantic_errors(spec, theme_css)
+
+
+def slide_findings(spec: dict) -> list[dict]:
+    """A slide holds less than a document plate: past SLIDE_BUDGET it is two slides."""
+    if spec["canvas"].get("profile") != "slide":
+        return []
+    from .config import SLIDE_BUDGET
+    n = {"panels": len(spec["panels"]), "cards": sum(len(p.get("cards", [])) for p in spec["panels"])}
+    over = [f"{n[k]} {k} (a slide holds {v})" for k, v in SLIDE_BUDGET.items() if n[k] > v]
+    return [finding("slide-budget", "canvas.profile", "; ".join(over), level="warning")] if over else []
 
 
 def card_id(panel: dict, i: int, card: dict) -> str:

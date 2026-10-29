@@ -19,7 +19,6 @@ body { background: var(--paper); }
 
 /* Body grid: columns, rows and areas come from the spec */
 .body { flex: 0 0 auto; min-height: 0; display: grid; }
-.rows-legacy .body { flex: 1 1 auto; }   /* row_heights: fill rows share the preset height (0.1) */
 
 /* Panel */
 .panel { display: flex; flex-direction: column; min-width: 0; min-height: 0; border: 1px solid var(--line);
@@ -28,7 +27,6 @@ body { background: var(--paper); }
    as rhythm. Panels spanning several rows (rails, side spokes) still fill them, and so do rows that pin their chips
    to the bottom (layout.chips_at), which only line up in panels of one height. */
 .body > .panel:not(.spread):not(:has(.chips-bottom)), .spoke-row > .panel:not(:has(.chips-bottom)) { align-self: start; }
-#plate.rows-legacy .body > .panel { align-self: stretch; }   /* row_heights: fixed rows, which panels fill (0.1) */
 /* .role-<name> rules are generated from the role tokens (schemantic/roles.py), so a theme can add roles. */
 /* A row of spokes above or below the hub: its own grid, so the row divides the hub's width evenly */
 .spoke-row { display: grid; column-gap: var(--gutter-x); min-width: 0; min-height: 0; }
@@ -83,7 +81,7 @@ body { background: var(--paper); }
 
 /* Panel pattern: tree */
 .tree { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card);
-  padding: 8px 10px; font-family: var(--mono); font-size: 12px; color: var(--text); }
+  padding: 8px 10px; font-family: var(--mono); font-size: var(--t-mono); color: var(--text); }
 .tree-cap { font-family: var(--font); font-size: var(--t-small); font-weight: 600; color: var(--muted); margin-bottom: 4px; }
 .trow { display: flex; align-items: flex-start; line-height: 1.5; }
 .trow > span:last-child { white-space: pre; }
@@ -162,6 +160,11 @@ body { background: var(--paper); }
 /* Focus: the one element the plate is about */
 .card.focus { border: 2px solid var(--accent); padding: 8px 9px; }
 .panel.focus { border: 2px solid var(--accent); }
+/* With a focus on the plate, the other panels' headers go quiet: their role's tint, dark text. The colour still says
+   the role; the full colour is left to what the plate is about. */
+.panel.quiet > .ph { background: var(--sub); }
+.panel.quiet .ph-title { color: var(--head); }
+.panel.quiet .ph-sub { color: var(--muted); }
 
 /* Legend samples for line styles (drawn by js/decorate.js) and focus */
 .ls { flex: 0 0 auto; width: 22px; height: 14px; margin: 0 2px; }
@@ -173,10 +176,16 @@ body { background: var(--paper); }
   flex-direction: column; justify-content: center; }
 .lane > .pb { flex: 1 1 auto; min-width: 0; }
 .lane .cards { column-gap: var(--step-gap); }
-.band { display: grid; column-gap: var(--step-gap); align-items: end; margin-bottom: -28px;  /* sits close to the lanes */
+.band { display: grid; column-gap: var(--step-gap); align-items: end;
+  margin-bottom: calc(-28px - var(--gap-extra, 0px));  /* sits close to the lanes, whatever spare height the gaps take */
   padding: 0 13px 0 calc(var(--lane-head) + 13px); }   /* the lane's border and padding, so columns line up */
 .band-label { font-size: var(--t-name); font-weight: 600; color: var(--muted); padding-bottom: 5px;
   border-bottom: 2px solid var(--frame-line); }
+
+/* Roadmap: the band of periods (as a swimlane's phases), the current one marked in the accent colour */
+.band-label.now { color: var(--accent); border-bottom-color: var(--accent); }
+.now-tag { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 4px; font-size: var(--t-small);
+  font-weight: 700; color: var(--on-head); background: var(--accent); vertical-align: 1px; }
 
 /* Before-after: a label over each column; the after side in the accent colour, as the side the plate is heading to */
 .band-before, .band-after { padding: 0; margin-bottom: calc(10px - var(--gutter-y)); }

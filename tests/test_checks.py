@@ -29,9 +29,9 @@ def mutate(fn, base=BASE):
 SPEC_TRIGGERS = {
     "schema": lambda s: s.update(title="x" * 81),
     "id": lambda s: (s["panels"][0]["cards"][0].update(id="x"), s["panels"][1]["cards"][0].update(id="x")),
-    "archetype": lambda s: s.update(archetype="roadmap"),
+    "archetype": lambda s: s.update(archetype="banded-matrix"),
     "layout": lambda s: s["footer"].update(columns=[1, 1]),
-    "budget": lambda s: s["layout"].update(areas=["clients identity gateway services data data"], row_heights=["fill"]),
+    "budget": lambda s: s["layout"].update(areas=["clients identity gateway services data data"]),
     "pattern": lambda s: panel(s, "identity")["patterns"][0]["rows"][0]["cells"].append("full"),
     "flow": lambda s: s["flows"].append({"from": "gateway", "to": "billing"}),
     "canvas": lambda s: s["canvas"].update(part=4),
@@ -41,7 +41,8 @@ SPEC_TRIGGERS = {
     "focus": lambda s: (panel(s, "gateway").update(focus=True), panel(s, "identity").update(focus=True)),
     "traceability": lambda s: s.update(sources=[{"id": "notes", "kind": "notes", "ref": "review notes"}]),
     "flows-mean": lambda s: s.pop("flows_mean"),
-    "deprecated": lambda s: panel(s, "data").update(role="storage"),
+    "slide-budget": lambda s: s["canvas"].update(profile="slide"),
+    "role-fit": lambda s: panel(s, "services").update(role="actor"),
     "language": lambda s: s["panels"][0]["cards"][0].update(note="leest de productcatalogus"),
 }
 
@@ -56,10 +57,8 @@ def admission_last(s):
 
 LAYOUT_TRIGGERS = {
     "text-overflow": (lambda s: panel(s, "data")["patterns"][0]["tiers"][1].update(note="gestandaardiseerdeproductgegevens"), "", BASE),
-    # Panels grow with their content, so only the old fill rows (row_heights) can squeeze one.
-    "containment": (lambda s: (s["layout"].update(row_heights=["fill", "fill"]),
-                               [c.update(bullets=["een regel tekst die ruimte inneemt"] * 3) for c in panel(s, "clients")["cards"]]),
-                    "", BASE),
+    # Panels grow with their content, so only a theme that caps a panel's height can squeeze one.
+    "containment": (lambda s: None, "#plate .panel { max-height: 160px; }", BASE),
     "canvas-fit": (lambda s: None, ".titleblock { margin-right: -160px; }", BASE),
     "overlap": (lambda s: None, ".card + .card { margin-top: -30px; }", BASE),
     "type-floor": (lambda s: None, ":root { --t-body: 9px; }", BASE),
@@ -68,6 +67,8 @@ LAYOUT_TRIGGERS = {
     "arrow-label": (lambda s: s["flows"][0].update(label="OIDC"), "", BASE),
     "arrow-crossing": (lambda s: None, "", SKIP),
     "print-size": (lambda s: s["canvas"].update(size="a4-landscape"), "", BASE),
+    # Pentests at the infrastructure layer would run past the rail's end: the rail keeps its spread, and says so
+    "rail-layer": (lambda s: panel(s, "security")["cards"][3].update(layer="infra"), "", LAYERS),
     "footer-share": (lambda s: None, "#plate .footer .pb { padding-bottom: 80px; }", BASE),
     "widow": (lambda s: s.update(title="Domains publish each fact once; every consumer reads it from the bus"), "", BASE),
     "paint": (lambda s: None, ".ph-title { letter-spacing: 2px; }", BASE),

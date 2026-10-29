@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=../schema/plate.schema.json
+# Fictional example: a roadmap plate in English. Lanes are workstreams, columns are quarters, `now` marks the current
+# one; an item can span quarters, and arrows say which item depends on which.
+canvas: {size: landscape-4x3, lang: en}
+topic: "Customer portal roadmap, 2027"
+title: "Self-service ships before the new mobile app, on one sign-in"
+subtitle: "Single sign-on comes first; self-service builds on it, and the mobile app reuses both in the second half"
+archetype: roadmap
+
+layout:
+  lanes: [identity, selfservice, mobile, platform]
+  columns: ["Q1 2027", "Q2 2027", "Q3 2027", "Q4 2027"]
+  now: 1
+
+panels:
+  - id: identity
+    title: "Identity"
+    subtitle: "One sign-in for customers"
+    role: platform
+    cards:
+      - {id: sso, icon: login, name: "Single sign-on", note: "one account for portal and app", col: 1, status: changed}
+      - {icon: shield-lock, name: "Two-step login", note: "for changes to bank details", col: 3}
+  - id: selfservice
+    title: "Self-service"
+    subtitle: "What customers no longer phone about"
+    role: platform
+    cards:
+      - {id: profile, icon: address-book, name: "Profile and address", note: "changed by the customer", col: 2}
+      - {id: invoices, icon: file-invoice, name: "Invoices and payments", note: "download, pay, set up a mandate", col: 3, span: 2}
+  - id: mobile
+    title: "Mobile app"
+    subtitle: "Replaces the old app"
+    role: platform
+    cards:
+      - {id: app, icon: device-mobile, name: "New app", note: "the portal's features, on the same sign-in", col: 3, span: 2, status: new}
+    chips:
+      - {kind: warning, text: "Build the app ourselves, or hand it to the agency?"}
+  - id: platform
+    title: "Platform"
+    subtitle: "Underneath all of it"
+    role: data
+    cards:
+      - {icon: database, name: "Customer API", note: "one source for profile and invoices", col: 1, span: 2}
+      - {icon: bell, name: "Notifications", note: "e-mail and push from one service", col: 3}
+      - {icon: chart-line, name: "Usage dashboards", note: "which self-service gets used", col: 4}
+
+flows_mean: dependency      # an arrow points from an item to what it needs first
+flows:
+  - {from: profile, to: sso}
+  - {from: app, to: profile}
+
+footer:
+  principles:
+    - "A feature reaches the app only after it works in the portal."
+    - "Every quarter ends with something a customer can use."
+  open_questions: {from_chips: true}

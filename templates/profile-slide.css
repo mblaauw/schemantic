@@ -1,0 +1,9 @@
+/* The slide profile (canvas.profile: slide): a plate shown on a screen in a meeting is read from across the room,
+   so its type is a step larger everywhere, arrow labels included. Loaded after tokens.css, before a theme. Lint
+   raises the type floor to SLIDE_FLOOR_PX and expects fewer things on the plate. */
+:root {
+  --t-title: 52px; --t-sub: 26px; --t-badge: 20px; --t-topic: 18px; --t-head: 21px;
+  --t-name: 17px; --t-body: 15.5px; --t-small: 13.5px; --t-mono: 14.5px;
+  --label-size: 14px;
+  --lane-head: 210px;
+}

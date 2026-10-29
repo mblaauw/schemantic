@@ -31,7 +31,7 @@ def renders(tmp_path_factory):
 
     def render(path):
         if path not in done:
-            code, report = run("render", path, "--out", out, "--scale", 1)
+            code, report = run("build", path, "--out", out, "--dpi", 96)
             assert code == 0, report
             done[path] = out
         return done[path]
@@ -72,14 +72,14 @@ def test_lint_is_clean(path, tmp_path):
     assert (code, report["errors"]) == (0, [])
 
 
-def test_render_refuses_unbuilt_archetype(example, tmp_path):
-    example["archetype"] = "roadmap"
-    spec = tmp_path / "roadmap.yaml"
+def test_build_refuses_unbuilt_archetype(example, tmp_path):
+    example["archetype"] = "banded-matrix"
+    spec = tmp_path / "matrix.yaml"
     spec.write_text(yaml.safe_dump(example, allow_unicode=True), encoding="utf-8")
-    code, report = run("render", spec, "--out", tmp_path)
-    assert code == 1 and report["rendered"] is False
+    code, report = run("build", spec, "--out", tmp_path)
+    assert code == 1 and report["svg"] is None
     assert [e["check"] for e in report["errors"]] == ["archetype"]
-    assert not (tmp_path / "roadmap.svg").exists()
+    assert not (tmp_path / "matrix.svg").exists()
 
 
 def boxes_of(page) -> dict:
@@ -124,7 +124,7 @@ def test_unroutable_card_connector_is_reported(tmp_path):
 
 # F05, F16: a clean build publishes the plate with a manifest of what made it
 def test_clean_build_publishes_with_a_manifest(tmp_path):
-    code, report = run("build", ROOT / "examples" / "orderplatform-eventbus.yaml", "--out", tmp_path, "--scale", 1)
+    code, report = run("build", ROOT / "examples" / "orderplatform-eventbus.yaml", "--out", tmp_path, "--dpi", 96)
     assert code == 0 and report["preview"] is None
     names = {p.name for p in tmp_path.iterdir() if p.is_file()}
     assert names == {f"orderplatform-eventbus.{ext}" for ext in ("svg", "png", "md", "build.json")}
@@ -146,7 +146,7 @@ def test_two_way_flow_gets_two_heads(tmp_path):
     spec = sp.load_spec(EXAMPLES[0])
     one_way = spec["flows"][0]
     spec["flows"] = [dict(one_way, both=True)]
-    code, _ = run("render", write(tmp_path, spec, "both"), "--out", tmp_path)
+    code, _ = run("build", write(tmp_path, spec, "both"), "--out", tmp_path)
     assert code == 0
     svg = (tmp_path / "both.svg").read_text(encoding="utf-8")
     num = r"-?[\d.]+"
@@ -198,7 +198,7 @@ def test_hub_rows_of_any_size_keep_side_spokes_readable():
 
 
 # A4: unreadable input gives JSON and exit 1, never a traceback
-@pytest.mark.parametrize("script", ["render", "lint", "build"])
+@pytest.mark.parametrize("script", ["lint", "build"])
 @pytest.mark.parametrize("content", ['title: "x\n', "", None], ids=["broken", "empty", "missing"])
 def test_unreadable_spec_gives_json(script, content, tmp_path):
     path = tmp_path / "spec.yaml"
@@ -236,7 +236,7 @@ def test_golden_catches_a_local_text_change(change, tmp_path):
     spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
     gateway = next(p for p in spec["panels"] if p["id"] == "gateway")
     gateway["cards"][0]["note"] = change
-    code, _ = run("render", write(tmp_path, spec, "changed"), "--out", tmp_path, "--scale", 1)
+    code, _ = run("build", write(tmp_path, spec, "changed"), "--out", tmp_path, "--dpi", 96)
     assert code == 0
     diff = images.image_diff(GOLDEN / "orderplatform-toegang.png", tmp_path / "changed.png", tmp_path / "mask.png")
     card = json.loads((tmp_path / "_work" / "changed.snapshot.json").read_text())["boxes"]["gateway.card0"]
@@ -276,7 +276,7 @@ def test_read_only_skill_folder(tmp_path):
                              capture_output=True, text=True, env=env)
         report = json.loads(doc.stdout)
         assert doc.returncode == 0 and report["ok"] and report["python"] == sys.executable, report
-        proc = subprocess.run([report["python"], str(skill / "scripts" / "render.py"),
+        proc = subprocess.run([report["python"], str(skill / "scripts" / "plate.py"), "build",
                                str(skill / "examples" / "orderplatform-toegang.yaml"), "--out", str(tmp_path / "out")],
                               capture_output=True, text=True, env=env)
         assert proc.returncode == 0, proc.stdout + proc.stderr
@@ -404,3 +404,32 @@ def test_refs_reach_the_svg_and_the_outline_is_written(tmp_path):
     assert 'data-refs="adr: section 2"' in (tmp_path / "traced.svg").read_text(encoding="utf-8")
     md = (tmp_path / "traced.md").read_text(encoding="utf-8")
     assert md.startswith("# " + spec["title"]) and "## Open vragen" in md and "Token validatie" in md
+
+
+# A rail card with a layer sits level with that layer's cards, and the arrow it sends there runs straight
+def test_rail_cards_sit_level_with_their_layer(renders):
+    path = ROOT / "examples" / "ontwikkelplatform-lagen.yaml"
+    snap = json.loads((renders(path) / "_work" / f"{path.stem}.snapshot.json").read_text(encoding="utf-8"))
+    boxes = snap["boxes"]
+    assert abs(boxes["policy"][1] - boxes["admission"][1]) <= 2
+    assert abs(boxes["security.card0"][1] - boxes["experience.card0"][1]) <= 2
+    flow = next(f for f in snap["flows"] if f["from"] == "policy")
+    assert len(flow["points"]) == 2  # straight
+
+
+# The slide profile: larger type, a higher floor; a lane header that the larger title outgrows is caught
+def test_slide_profile_scales_type_and_lint_catches_header_overflow(tmp_path):
+    spec = sp.load_spec(ROOT / "examples" / "incident-swimlane.yaml")
+    spec["canvas"].update(size="landscape-16x9", profile="slide")
+    report = pipeline_build(write(tmp_path, spec, "slide"), tmp_path / "a")
+    assert report["errors"] == []
+    layout = json.loads((Path(report["snapshot"]).parent / "slide.layout.json").read_text(encoding="utf-8"))
+    sizes = [it["font"]["size"] for g in layout["items"] for it in g.get("items", []) if it["kind"] == "text"]
+    assert max(sizes) >= 52  # the title
+    narrow = pipeline_build(write(tmp_path, spec, "narrow"), tmp_path / "b", theme_css=":root { --lane-head: 170px; }")
+    assert ("text-overflow", "comms") in [(e["check"], e["id"]) for e in narrow["errors"]]
+
+
+def pipeline_build(path, out, theme_css=""):
+    from schemantic import pipeline
+    return pipeline.build(path, out, deliver=False, theme_css=theme_css)

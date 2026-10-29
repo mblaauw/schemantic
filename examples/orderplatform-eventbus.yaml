@@ -69,8 +69,8 @@ panels:
 
   - id: ops
     title: "Operations"
-    subtitle: "Who keeps the bus healthy"
-    role: actor
+    subtitle: "How the bus is kept healthy"
+    role: platform
     cards:
       - icon: gauge
         name: "Dashboards"

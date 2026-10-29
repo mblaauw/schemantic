@@ -12,7 +12,7 @@ import pkgutil
 from dataclasses import dataclass, field
 
 # Named in the schema as the planned contract; refused until a module here builds them.
-PLANNED = ["banded-matrix", "roadmap", "landscape-map"]
+PLANNED = ["banded-matrix"]
 
 
 @dataclass
@@ -24,18 +24,19 @@ class GridSpec:
     group_kind: dict[str, str] = field(default_factory=dict)    # group name -> "row" (default), "stack" or "zones"
     bands: dict[str, list[str]] = field(default_factory=dict)   # band name -> labels of a header row (no panels)
     zones: list[dict] = field(default_factory=list)             # the zone tree rendered in a "zones" group
+    marks: dict[str, int] = field(default_factory=dict)         # band name -> the label (1-based) to mark, e.g. now
 
 
 class Archetype:
     name: str = ""
     required: frozenset[str] = frozenset()   # layout keys the archetype needs
-    allowed: frozenset[str] = frozenset()    # layout keys it accepts (chips_at and row_heights apply to every one)
+    allowed: frozenset[str] = frozenset()    # layout keys it accepts (chips_at applies to every one)
     router_hints: dict = {}                   # reserved for layouts that prefer certain channels
 
     def placed(self, spec: dict) -> list[str]:
         """Panel ids as the layout names them, duplicates kept so they can be reported."""
         out = []
-        for key in sorted(self.allowed - {"row_heights", "column_widths", "chips_at"}):
+        for key in sorted(self.allowed - {"column_widths", "chips_at"}):
             v = spec["layout"].get(key)
             out += v if isinstance(v, list) else ([v] if v else [])
         return out

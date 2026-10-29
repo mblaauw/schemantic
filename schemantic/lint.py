@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from .browser import call
-from .config import TYPE_FLOOR_PX
+from .config import SLIDE_FLOOR_PX, TYPE_FLOOR_PX
 
 # A run of empty space inside a body panel longer than this reads as a hole in the plate (review question 4).
 VOID_WARN_PX = 96
@@ -35,7 +35,7 @@ def widow_findings(layout: dict, spec: dict) -> list[dict]:
     return out
 
 
-def dom_lint(page, segs: list[dict]) -> dict:
+def dom_lint(page, segs: list[dict], slide: bool = False) -> dict:
     """{issues, density, voids} for the plate in `page`, with the routed connectors in `segs`."""
-    return call(page, "lint", {"floor": TYPE_FLOOR_PX, "segs": segs, "voidWarn": VOID_WARN_PX, "voidError": VOID_ERROR_PX,
-                               "footerShare": FOOTER_SHARE})
+    return call(page, "lint", {"floor": SLIDE_FLOOR_PX if slide else TYPE_FLOOR_PX, "segs": segs,
+                               "voidWarn": VOID_WARN_PX, "voidError": VOID_ERROR_PX, "footerShare": FOOTER_SHARE})

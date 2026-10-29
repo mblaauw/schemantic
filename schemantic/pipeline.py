@@ -83,7 +83,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 page = open_plate(browser, html, spec, refused=refused)
                 flows = draw_flows(page, spec)
                 issues += problems_as_findings(flows)
-                dom = dom_lint(page, flows["segs"])
+                dom = dom_lint(page, flows["segs"], slide=spec["canvas"].get("profile") == "slide")
                 issues += dom["issues"]
                 layout = measure(page)
                 (work / f"{name}.layout.json").write_text(json.dumps(layout, ensure_ascii=False), encoding="utf-8")

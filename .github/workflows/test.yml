@@ -1,10 +1,19 @@
 name: test
 
-on: [push, pull_request]
+# One run per change: pull requests, and main once something lands. (Running on every push and every pull request ran
+# each commit twice and doubled the wait for macOS runners.) A newer push cancels the run it replaces.
+on:
+  push:
+    branches: [main]
+  pull_request:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -23,6 +32,7 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         python: ["3.10", "3.14"]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30   # a job stuck waiting or hanging fails instead of blocking the merge
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -56,6 +66,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30   # a job stuck waiting or hanging fails instead of blocking the merge
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

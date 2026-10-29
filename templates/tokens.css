@@ -31,7 +31,7 @@
 
   /* Type ramp (px). 11 is the floor. */
   --t-title: 40px; --t-sub: 22px; --t-badge: 18px; --t-topic: 15px; --t-head: 17px;
-  --t-name: 14px; --t-body: 12.5px; --t-small: 11px;
+  --t-name: 14px; --t-body: 12.5px; --t-small: 11px; --t-mono: 12px;
 
   /* Gutters hold the connectors: 48 px fits an arrow with clearance on both sides; a row gutter also holds a
      one-line label at --label-size. The template, the router and Python all read these. */

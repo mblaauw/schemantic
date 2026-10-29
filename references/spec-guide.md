@@ -9,6 +9,7 @@ plate readable. Lengths are maximum characters.
 | --- | --- |
 | `canvas.size` | `landscape-4x3` (1600 wide, the default choice), `landscape-16x9` (1920×1080, for slides), or `a3-landscape` / `a4-landscape` for print: laid out at the sheet's width (96 px per inch, so type prints at its own size), as tall as the content, then centred on the sheet and scaled down when taller; lint fails it when the smallest text would print under 6 pt (`print-size`). Build with `--dpi 300`; the SVG is the sheet in mm |
 | `canvas.lang` | `nl` or `en` |
+| `canvas.profile` | `document` (default: read up close) or `slide` (shown in a meeting, usually with `landscape-16x9`): a larger type ramp, a 13 px type floor, and lint warns past 5 panels or 18 cards (`slide-budget`) |
 | `canvas.series`, `part`, `of` | a badge "Part 2 of 3"; give both `part` and `of` |
 | `canvas.height` | `fit` (default: the canvas takes its content height; a 16:9 slide keeps its shape) or `fixed` (the preset size; spare height goes to the gaps) |
 | `canvas.theme` | optional CSS file, relative to the spec, that recolours or adds roles |
@@ -36,8 +37,7 @@ plate readable. Lengths are maximum characters.
 ```
 
 Roles: `platform` for what the team builds or runs, `data` for data at rest and data platforms, `external` for
-systems outside the team's control, `actor` for people and teams. A theme can add roles (see the README). The old
-name `storage` still works for one release and lints as `deprecated`.
+systems outside the team's control, `actor` for people and teams. A theme can add roles (see the README).
 
 ## Cards
 
@@ -83,7 +83,12 @@ flows:
   - {from: services, to: bus, style: async}           # sync (solid, default) | async (dashed) | optional (dotted)
   - {from: orders, to: payments, step: 2}             # a numbered badge, for the order things happen
   - {from: services, to: bus, both: true}             # arrowheads at both ends
+  - {from: integration, to: proxy, focus: true}       # the one arrow the plate is about (one focus per plate)
 ```
+
+With a `focus` (a panel, a card, or an arrow), the panels it is about keep their full colour and the others get a
+quiet header in their role's tint, so the eye goes to the point first. A focused arrow is drawn heavier, in the
+accent colour.
 
 The router draws straight arrows across a gutter where it can, and otherwise turns corners through the
 gutters (one or two bends), or goes around: out of a box and back into the other on the same side, along a gutter

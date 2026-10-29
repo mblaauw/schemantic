@@ -19,7 +19,8 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `series` | parts of one series disagree: numbering, `of`, language, what arrows mean, or one thing drawn in two colours (people in one part, a platform component in another) | make the parts agree: one language, one `flows_mean`, and the same role for a thing wherever it appears (a panel's role, or the role of the panel a card sits in) |
 | `canvas` | `part` without `of` (or the reverse), `part` larger than `of`, or a theme file that does not exist | give both, with `1 ≤ part ≤ of`; check the theme path (relative to the spec) |
 | `role` | a panel role is neither built in nor defined by the theme, or the theme gives it no legend label in the plate's language | use platform, data, external or actor, or define the role and its label in the theme |
-| `deprecated` | an old name that still works for one release (warning) | use the new name in the detail |
+| `slide-budget` | a slide (canvas.profile: slide) holds more than 5 panels or 18 cards (warning) | make it two slides, each with its own message, or cut the cards the message does not need |
+| `role-fit` | a panel's colour says people but its cards look like systems, or the reverse (warning) | give the panel the role of what it holds (actor for people and teams, platform, data or external for systems), or split people and systems into two panels |
 | `focus` | more than one panel or card has `focus: true` | keep focus on the one element the title is about |
 | `flows-mean` | the plate has flows but no `flows_mean` (warning) | say what an arrow means: data, request, dependency or control |
 | `traceability` | the spec declares `sources`, and a card has no `refs` or names an undeclared source (warning) | add `refs: ["<source id>: <path or quote>"]` from the inventory; a card you cannot trace is an assumption or an open question, not a fact |
@@ -32,7 +33,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | check | means | fix |
 | --- | --- | --- |
 | `text-overflow` | a word or line runs outside its box | shorten the text; avoid one long word in a narrow tile; fewer `card_columns`; more `weights` for that block |
-| `containment` | a block is taller or wider than its panel | fewer cards or bullets; move a card to another panel; `row_heights: auto` for that row; split the plate |
+| `containment` | a block is taller or wider than its panel | fewer cards or bullets; move a card to another panel; split the plate |
 | `canvas-fit` | something extends past the canvas margin | cut content; a shorter footer (fewer principles); `landscape-4x3` instead of 16x9 |
 | `overlap` | two boxes overlap | usually follows from containment; fix that first |
 | `type-floor` | text below 11 px | only from theme overrides; restore the type ramp in `tokens.css` |
@@ -41,6 +42,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `arrow-label` | no room for a label, or it touches a box | shorten the label, drop it, or explain the flow in a card note |
 | `arrow-crossing` | an arrow crosses another arrow at a right angle | connect a card instead of its panel, or the other way round; swap the two panels so the arrows run side by side; drop a flow the message does not need |
 | `print-size` | on paper the plate is scaled down to fit the sheet, and its smallest text would print below 6 pt | print on a3-landscape, or cut content so the plate is shorter; a4-landscape suits a plate of a few panels |
+| `rail-layer` | a rail card cannot sit level with the layer it names (warning) | fewer or shorter cards above it in the rail, a later layer for one of them, or no layer for cards that concern every layer |
 | `footer-share` | the footer takes more than 15% of the plate's height (warning) | fewer principles (three that a team could check), shorter open questions, no context panel unless the roles matter to the message; the footer is context for the body |
 | `widow` | the topic, title or subtitle ends with a single word on a line of its own | cut a few words, or rephrase so the line breaks between phrases; a headline reads best on one line |
 | `chip-length` | a chip runs to three lines | shorten it to one clear sentence |

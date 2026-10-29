@@ -2,7 +2,7 @@
 every layer. A layer lays its cards out in one row by default."""
 from __future__ import annotations
 
-from . import Archetype, GridSpec, side_track
+from . import Archetype, GridSpec, error, side_track
 
 # Rail width as a share of the body, per layout.rail_width (clamped by side_track).
 RAIL_SHARE = {"narrow": 15, "normal": 19, "wide": 25}
@@ -11,7 +11,28 @@ RAIL_SHARE = {"narrow": 15, "normal": 19, "wide": 25}
 class LayerCake(Archetype):
     name = "layer-cake"
     required = frozenset({"layers"})
-    allowed = frozenset({"layers", "left", "right", "row_heights", "chips_at", "rail_width"})
+    allowed = frozenset({"layers", "left", "right", "chips_at", "rail_width"})
+
+    def validate(self, spec: dict) -> list[dict]:
+        """A card's `layer` names a layer, sits in a rail, and the rail's layered cards go top to bottom."""
+        lay, out = spec["layout"], []
+        rails = {lay.get("left"), lay.get("right")} - {None}
+        for p in spec["panels"]:
+            order = []
+            for i, c in enumerate(p.get("cards", [])):
+                if not c.get("layer"):
+                    continue
+                where = c.get("id") or f"{p['id']}.card{i}"
+                if p["id"] not in rails:
+                    out.append(error("layout", where, "only a rail's cards take a layer"))
+                elif c["layer"] not in lay["layers"]:
+                    out.append(error("layout", where, f"layer '{c['layer']}' is not one of {', '.join(lay['layers'])}"))
+                else:
+                    order.append((lay["layers"].index(c["layer"]), where))
+            for (a, _), (b, where) in zip(order, order[1:], strict=False):
+                if b < a:
+                    out.append(error("layout", where, "a rail's cards follow the layers top to bottom; move this card up"))
+        return out
 
     def grid(self, spec: dict) -> GridSpec:
         lay = spec["layout"]

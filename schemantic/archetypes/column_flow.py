@@ -10,7 +10,7 @@ MAX_COLUMNS = 5
 class ColumnFlow(Archetype):
     name = "column-flow"
     required = frozenset({"areas"})
-    allowed = frozenset({"areas", "column_widths", "row_heights", "chips_at"})
+    allowed = frozenset({"areas", "column_widths", "chips_at"})
 
     def placed(self, spec: dict) -> list[str]:
         return []  # cells repeat ids on purpose; placement is checked from the grid

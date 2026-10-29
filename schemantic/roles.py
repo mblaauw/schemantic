@@ -5,8 +5,6 @@ from __future__ import annotations
 import re
 
 BUILT_IN = ["platform", "data", "external", "actor"]
-# Old names still accepted for one release, with a `deprecated` warning.
-ALIASES = {"storage": "data"}
 PARTS = ("head", "sub", "body", "line")
 
 
@@ -22,10 +20,6 @@ def theme_roles(theme_css: str) -> dict[str, dict[str, str]]:
     return {n: {k.rsplit("-", 1)[1]: v.strip("\"'") for k, v in toks.items() if k.startswith(f"--{n}-label-")} for n in sorted(names)}
 
 
-def canonical(role: str) -> str:
-    return ALIASES.get(role, role)
-
-
 def role_css(theme_css: str = "") -> str:
     """The .role-<name> rules: each maps the generic --head/--sub/--body/--line to the role's tokens."""
     names = [*BUILT_IN, "frame", *theme_roles(theme_css)]
@@ -33,26 +27,51 @@ def role_css(theme_css: str = "") -> str:
 
 
 def legend_label(role: str, lang: str, locale: dict, theme_css: str = "") -> str | None:
-    role = canonical(role)
     if role in BUILT_IN:
         return locale["legend"][role]
     return theme_roles(theme_css).get(role, {}).get(lang)
 
 
+# Icons that show a person or a group: the cue that a card is people rather than a system.
+PEOPLE_ICONS = {"user", "users", "friends", "man", "woman", "headset", "id-badge", "id-badge-2", "school"}
+
+
+def is_person(icon: str | None) -> bool:
+    return bool(icon) and (icon in PEOPLE_ICONS or icon.startswith(("user-", "users-")))
+
+
+def role_fit_findings(spec: dict) -> list[dict]:
+    """A panel coloured as people whose cards look like systems, or the reverse, judged by the cards' icons: at least
+    two cards, two thirds of them pointing the other way. A warning, since icons are only a hint. Swimlane lanes are
+    left out: their cards are an actor's steps, not things."""
+    if spec["archetype"] == "swimlane":
+        return []
+    out = []
+    for p in spec["panels"]:
+        cards = [c for c in p.get("cards", []) if c.get("icon")]
+        people = sum(is_person(c["icon"]) for c in cards)
+        if len(cards) < 2 or p["role"] not in BUILT_IN:
+            continue
+        if p["role"] == "actor" and len(cards) - people >= 2 * len(cards) / 3:
+            out.append({"level": "warning", "check": "role-fit", "id": p["id"],
+                        "detail": f"coloured as people and teams, but {len(cards) - people} of its {len(cards)} cards "
+                                  "show systems or things"})
+        elif p["role"] != "actor" and people >= 2 * len(cards) / 3:
+            out.append({"level": "warning", "check": "role-fit", "id": p["id"],
+                        "detail": f"coloured as {p['role']}, but {people} of its {len(cards)} cards show people"})
+    return out
+
+
 def role_findings(spec: dict, theme_css: str = "") -> list[dict]:
-    """Unknown roles and theme roles without a legend label are errors; old role names are deprecated."""
-    out, seen = [], set()
+    """Unknown roles and theme roles without a legend label are errors."""
+    out = []
     known = set(BUILT_IN) | set(theme_roles(theme_css))
     for p in spec["panels"]:
         role = p["role"]
-        if role in ALIASES and role not in seen:
-            out.append({"level": "warning", "check": "deprecated", "id": p["id"],
-                        "detail": f"role '{role}' is now '{ALIASES[role]}'; '{role}' works until the next release"})
-        elif canonical(role) not in known:
+        if role not in known:
             out.append({"level": "error", "check": "role", "id": p["id"],
                         "detail": f"role '{role}' is not built in ({', '.join(BUILT_IN)}) and the theme does not define it"})
-        elif canonical(role) not in BUILT_IN and not theme_roles(theme_css)[role].get(spec["canvas"]["lang"]):
+        elif role not in BUILT_IN and not theme_roles(theme_css)[role].get(spec["canvas"]["lang"]):
             out.append({"level": "error", "check": "role", "id": p["id"],
                         "detail": f"the theme defines role '{role}' without --{role}-label-{spec['canvas']['lang']}"})
-        seen.add(role)
     return out

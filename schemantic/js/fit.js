@@ -4,7 +4,6 @@
 // panel.
 schemantic.fit = ({ mode, height, gaps, cap, minHeight }) => {
   const plate = schemantic.plate();
-  if (mode === "legacy") return height; // row_heights given: rows share the preset height as in 0.1
   plate.style.height = "auto";
   const natural = plate.getBoundingClientRect().height;
   if (mode === "fit" && natural >= minHeight) {

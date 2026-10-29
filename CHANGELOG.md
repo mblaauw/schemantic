@@ -4,6 +4,36 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Added
+- Rail cards placed by layer: `layer: runtime` on a rail card puts it level with that layer's cards, so a rail reads
+  across and an arrow to that layer runs straight. Checked (a real layer, rails only, top to bottom); a card that
+  cannot reach its layer is a `rail-layer` warning. The layer plate's rails now name their layers.
+- A stronger focus: with a focus on the plate, the other panels get quiet headers (their role's tint), and the
+  focus can be an arrow (`focus: true` on a flow: twice as heavy, in the accent colour). The clinic plate focuses
+  the one arrow from the cloud into the datacentre.
+- `role-fit` warning: a panel coloured as people whose cards look like systems, or the reverse, judged by the cards'
+  icons. The event bus's Operations panel is now platform (its cards are tools, not people).
+- The slide profile (`canvas.profile: slide`): a larger type ramp, a 13 px type floor, and a `slide-budget` warning
+  past 5 panels or 18 cards. Step badges and tree text follow the type tokens.
+- The `roadmap` archetype: workstreams as lanes, periods as columns with `now` marked, items that `span` periods.
+  Example: `examples/portal-roadmap.yaml`. `landscape-map` is no longer a planned name; `banded-matrix` is the one
+  left.
+
+### Changed
+- CI runs once per change (pull requests, and pushes to main), cancels a run a newer push replaces, and has a time
+  limit per job.
+- Text in a panel header is checked against the header, so a lane title spilling out of its narrow header is a
+  `text-overflow` error. The swimlane phase band stays next to the lanes when a canvas spreads spare height.
+
+### Removed (deprecated in 0.2)
+- The `render` command and its 0.1 report format, and the `scripts/render.py` and `scripts/lint.py` shims: use
+  `build` or `lint` (`scripts/plate.py build` from a skill folder).
+- `--scale`: use `--dpi` (96 is one pixel per CSS pixel).
+- `layout.row_heights` and the fixed-row mode behind it: rows take their content height. It is now a schema error.
+- The role name `storage` (it is `data`), and with it the `deprecated` check, since nothing is deprecated.
+
+## [0.2.0] - 2026-10-29
+
 ### Added (series checks, before-after)
 - `schemantic series <specs>` checks the parts of a series against each other: `of` and numbering, one language,
   one meaning for arrows (a warning: a part may show other flows on purpose), and one colour per thing across parts.

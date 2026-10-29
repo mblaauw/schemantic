@@ -6,7 +6,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from . import archetypes, icons, roles
 from .config import CANVAS_SIZES, TEMPLATES
 from .export import font_css
-from .spec import FOOTER_WEIGHTS, flags, footer_layout, load_locale, notes, open_questions
+from .spec import FOOTER_WEIGHTS, card_id, flags, footer_layout, load_locale, notes, open_questions
 
 
 def grid_css(spec: dict) -> dict:
@@ -32,14 +32,13 @@ def grid_css(spec: dict) -> dict:
                     gap.append(row[c] if same else ".")
             lines.append(gap)
     # Rows take their content height; the canvas fits them (or a fixed canvas spreads its surplus over the gutters,
-    # see js/fit.js). row_heights is the 0.1 way, still honoured: fill rows share the preset height.
-    heights = spec["layout"].get("row_heights") or ["auto"] * m
-    gutter = "var(--gutter-y)" if spec["layout"].get("row_heights") else "calc(var(--gutter-y) + var(--gap-extra, 0px))"
+    # see js/fit.js).
+    gutter = "calc(var(--gutter-y) + var(--gap-extra, 0px))"
     return {
         "columns": " var(--gutter-x) ".join(g.columns),
-        "rows": f" {gutter} ".join("minmax(0, 1fr)" if h == "fill" else "auto" for h in heights),
+        "rows": f" {gutter} ".join(["auto"] * m),
         "areas": " ".join('"' + " ".join(line) + '"' for line in lines),
-        "groups": g.groups, "group_kind": g.group_kind, "bands": g.bands, "zones": g.zones,
+        "groups": g.groups, "group_kind": g.group_kind, "bands": g.bands, "zones": g.zones, "marks": g.marks,
     }
 
 
@@ -66,7 +65,7 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
     lg, lang = loc["legend"], spec["canvas"]["lang"]
     entries, seen = [], []
     for p in spec["panels"]:
-        role = roles.canonical(p["role"])
+        role = p["role"]
         if role not in seen:
             seen.append(role)
             entries.append({"kind": "role", "key": role, "label": roles.legend_label(role, lang, loc, theme_css)})
@@ -83,7 +82,7 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
     for st in ("new", "changed", "planned", "deprecated", "removed"):
         if any(t.get("status") == st for t in things):
             entries.append({"kind": "status", "key": st, "label": lg[f"status_{st}"]})
-    if any(t.get("focus") for t in things):
+    if any(t.get("focus") for t in things + spec.get("flows", [])):
         entries.append({"kind": "focus", "key": "focus", "label": lg["focus"]})
     kinds = [ch["kind"] for p in spec["panels"] for ch in p.get("chips", [])] + [f["kind"] for f in flags(spec)]
     for k in ("warning", "info"):
@@ -99,8 +98,22 @@ def panels_for_render(spec: dict) -> list[dict]:
     rows = arche.grid(spec).rows
     # A panel spanning several rows (a rail, a side spoke) spreads its cards over its height instead of leaving one hole.
     spread = {n for n in {n for r in rows for n in r} if sum(n in r for r in rows) > 1}
-    return [{**p, "role": roles.canonical(p["role"]), "chips_bottom": p["id"] in pinned, "spread": p["id"] in spread,
-             **arche.panel_defaults(spec, p)} for p in spec["panels"]]
+    loud = focal_panels(spec)
+    return [{**p, "role": p["role"], "chips_bottom": p["id"] in pinned, "spread": p["id"] in spread,
+             "quiet": loud is not None and p["id"] not in loud, **arche.panel_defaults(spec, p)} for p in spec["panels"]]
+
+
+def focal_panels(spec: dict) -> set[str] | None:
+    """The panels a plate's focus is about: the focused panel, the panel of a focused card, or the panels at both ends
+    of a focused flow. The other panels get quiet headers so the eye goes there first. None without a focus."""
+    owner = {p["id"]: p["id"] for p in spec["panels"]}
+    owner |= {card_id(p, i, c): p["id"] for p in spec["panels"] for i, c in enumerate(p.get("cards", []))}
+    loud = {p["id"] for p in spec["panels"] if p.get("focus")}
+    loud |= {p["id"] for p in spec["panels"] for c in p.get("cards", []) if c.get("focus")}
+    for f in spec.get("flows", []):
+        if f.get("focus"):
+            loud |= {owner.get(f["from"]), owner.get(f["to"])} - {None}
+    return loud or None
 
 
 def chips_pinned(spec: dict) -> set[str]:
@@ -122,8 +135,9 @@ def build_html(spec: dict, theme_css: str = "") -> str:
     loc = load_locale(spec["canvas"]["lang"])
     width, height = CANVAS_SIZES[spec["canvas"]["size"]]
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=select_autoescape(["j2", "html"]))
-    # Theme after the tokens, so it overrides them; role rules last, so a theme's own roles get theirs.
-    css = "\n".join([font_css(), (TEMPLATES / "tokens.css").read_text(encoding="utf-8"), theme_css,
+    # Theme after the tokens (and the profile's), so it overrides them; role rules last, so a theme's own roles get theirs.
+    profile = (TEMPLATES / "profile-slide.css").read_text(encoding="utf-8") if spec["canvas"].get("profile") == "slide" else ""
+    css = "\n".join([font_css(), (TEMPLATES / "tokens.css").read_text(encoding="utf-8"), profile, theme_css,
                      (TEMPLATES / "components.css").read_text(encoding="utf-8"), roles.role_css(theme_css)])
     canvas = spec["canvas"]
     badge = loc["badge"].format(part=canvas["part"], of=canvas["of"]) if canvas.get("part") and canvas.get("of") else None

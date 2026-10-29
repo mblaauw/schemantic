@@ -213,9 +213,9 @@ def test_flag_counts_for_the_chip_mirror(example):
     assert [(e["check"], "Rate limits" in e["detail"]) for e in found] == [("chip-mirror", True)]
 
 
-def test_row_heights_still_work_but_are_deprecated(example):
-    example["layout"]["row_heights"] = ["fill", "auto"]
-    assert [(e["check"], e["level"]) for e in sp.check(example)] == [("deprecated", "warning")]
+def test_row_heights_are_gone(example):
+    example["layout"]["row_heights"] = ["fill", "auto"]  # removed in 0.3: rows take their content height
+    assert checks(example) == {"schema"}
 
 
 # C13: icons the agent can find
@@ -319,3 +319,72 @@ def test_before_after_places_every_panel_once(example):
 
 def test_before_after_takes_only_its_layout_keys(example):
     assert "schema" in checks(before_after(example, lanes=["clients"]))
+
+
+# A rail card names the layer it concerns
+def test_a_rail_cards_layer_is_a_layer_in_order_and_only_in_rails():
+    spec = sp.load_spec(ROOT / "examples" / "ontwikkelplatform-lagen.yaml")
+    assert errors(spec) == []
+    security = next(p for p in spec["panels"] if p["id"] == "security")
+    security["cards"][0]["layer"] = "basement"
+    assert [(e["check"], e["id"]) for e in errors(spec)] == [("layout", "security.card0")]
+    security["cards"][0]["layer"] = "runtime"  # above Scanning, which sits at delivery
+    assert any("top to bottom" in e["detail"] for e in errors(spec))
+    security["cards"][0]["layer"] = "experience"
+    next(p for p in spec["panels"] if p["id"] == "runtime")["cards"][0]["layer"] = "infra"
+    assert any("only a rail" in e["detail"] for e in errors(spec))
+
+
+# Focus: the panels a plate is about keep their colour; the others go quiet. An arrow can be the focus too.
+def test_focus_leaves_the_other_panels_quiet(example):
+    from schemantic.html import focal_panels
+    assert focal_panels(example) == {"gateway"}  # the example focuses the gateway panel
+    example["panels"][2].pop("focus")
+    example["flows"][1]["focus"] = True  # identity -> gateway
+    assert focal_panels(example) == {"identity", "gateway"}
+    example["flows"][1].pop("focus")
+    assert focal_panels(example) is None
+
+
+def test_one_focus_counts_arrows_too(example):
+    example["flows"][0]["focus"] = True
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("focus", "flows/0")]
+
+
+# Role fit: a panel coloured as people with cards that are things, or the reverse, is worth a look
+def test_role_fit_reads_the_cards_icons(example):
+    from schemantic import roles
+    clients = example["panels"][0]
+    clients["role"] = "actor"  # browser, phone, api, users, chart: four of five are things
+    assert [f["id"] for f in roles.role_fit_findings(example)] == ["clients"]
+    clients["cards"] = [{"icon": "users", "name": "a"}, {"icon": "user-check", "name": "b"}, {"icon": "browser", "name": "c"}]
+    assert roles.role_fit_findings(example) == []  # mostly people: fits
+    clients["role"] = "platform"
+    assert "show people" in roles.role_fit_findings(example)[0]["detail"]
+
+
+# Roadmap: workstreams over periods, with now marked and items that span
+def roadmap(example, now=2):
+    example["archetype"] = "roadmap"
+    example["layout"] = {"lanes": ["clients", "identity", "gateway", "services", "data"], "columns": ["Q1", "Q2", "Q3", "Q4"],
+                         "now": now}
+    for p in example["panels"]:
+        p["cards"] = [{**c, "col": i + 1} for i, c in enumerate(p.get("cards", [])[:4])]
+    return example
+
+
+def test_roadmap_marks_now_and_places_items_by_period(example):
+    spec = roadmap(example)
+    assert errors(spec) == []
+    g = archetypes.get("roadmap").grid(spec)
+    assert g.bands == {"_periods": ["Q1", "Q2", "Q3", "Q4"]} and g.marks == {"_periods": 2}
+
+
+def test_roadmap_items_need_a_period_and_do_not_overlap(example):
+    spec = roadmap(example, now=5)
+    clients = spec["panels"][0]["cards"]
+    clients[0]["span"] = 2  # Q1-Q2, over the item in Q2
+    clients[2].pop("col")
+    details = [e["detail"] for e in errors(spec)]
+    assert any("overlaps" in d for d in details) and any("needs `col`" in d for d in details)
+    assert any("now is period 5" in d for d in details)

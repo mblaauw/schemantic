@@ -47,8 +47,13 @@ CHECKS: dict[str, Check] = {
     "role": Check("spec", "a panel role is neither built in nor defined by the theme, or the theme gives it no legend label in "
                   "the plate's language", "use platform, data, external or actor, or define the role and its label in the theme",
                   "Use a built-in role (platform, data, external, actor), or define it with a legend label in the theme."),
-    "deprecated": Check("spec", "an old name that still works for one release (warning)", "use the new name in the detail",
-                        "Use the new name given in the detail."),
+    "slide-budget": Check("spec", "a slide (canvas.profile: slide) holds more than 5 panels or 18 cards (warning)",
+                          "make it two slides, each with its own message, or cut the cards the message does not need",
+                          "Split it into two slides, or cut the cards the message does not need."),
+    "role-fit": Check("spec", "a panel's colour says people but its cards look like systems, or the reverse (warning)",
+                      "give the panel the role of what it holds (actor for people and teams, platform, data or "
+                      "external for systems), or split people and systems into two panels",
+                      "Give the panel the role of what its cards are, or split people and systems apart."),
     "focus": Check("spec", "more than one panel or card has `focus: true`", "keep focus on the one element the title is about",
                    "Keep focus on the one element the title is about."),
     "flows-mean": Check("spec", "the plate has flows but no `flows_mean` (warning)", "say what an arrow means: data, request, "
@@ -67,8 +72,8 @@ CHECKS: dict[str, Check] = {
                            "shorten the text; avoid one long word in a narrow tile; fewer `card_columns`; more `weights` "
                            "for that block", "Shorten the text, or give its block more width."),
     "containment": Check("layout", "a block is taller or wider than its panel",
-                         "fewer cards or bullets; move a card to another panel; `row_heights: auto` for that row; split "
-                         "the plate", "Cut cards or bullets in that panel, or move one to another panel."),
+                         "fewer cards or bullets; move a card to another panel; split the plate",
+                         "Cut cards or bullets in that panel, or move one to another panel."),
     "canvas-fit": Check("layout", "something extends past the canvas margin",
                         "cut content; a shorter footer (fewer principles); `landscape-4x3` instead of 16x9",
                         "Cut content, or use the taller landscape-4x3 canvas."),
@@ -93,6 +98,10 @@ CHECKS: dict[str, Check] = {
                         "print on a3-landscape, or cut content so the plate is shorter; a4-landscape suits a plate of a "
                         "few panels",
                         "Print on a3-landscape, or cut content so the plate is shorter."),
+    "rail-layer": Check("layout", "a rail card cannot sit level with the layer it names (warning)",
+                        "fewer or shorter cards above it in the rail, a later layer for one of them, or no layer for "
+                        "cards that concern every layer",
+                        "Shorten the rail cards above it, or drop `layer` from a card that concerns every layer."),
     "footer-share": Check("layout", "the footer takes more than 15% of the plate's height (warning)",
                           "fewer principles (three that a team could check), shorter open questions, no context panel "
                           "unless the roles matter to the message; the footer is context for the body",

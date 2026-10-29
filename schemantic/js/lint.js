@@ -55,7 +55,7 @@ schemantic.lint = (cfg) => {
     const rg = document.createRange();
     rg.selectNodeContents(n);
     const tr = rel(rg.getBoundingClientRect());
-    const box = el.closest("[data-kind]") || plate;
+    const box = el.closest(".ph, [data-kind]") || plate; // a header's text stays in its header (a lane's is narrow)
     const ib = el.closest("svg") ? rel(box) : inner(box);
     if (tr.r > ib.r + 0.5 || tr.l < ib.l - 0.5 || tr.b > ib.b + 0.5) {
       const over = Math.round(Math.max(tr.r - ib.r, ib.l - tr.l, tr.b - ib.b));
@@ -115,6 +115,15 @@ schemantic.lint = (cfg) => {
     const over = Math.max(r.r - pin.r, r.b - pin.b, pin.l - r.l, pin.t - r.t);
     add("error", "canvas-fit", el.dataset.id, `extends ${Math.round(over)}px past the canvas margin`);
   }
+
+  // Rail cards that could not sit level with their layer (js/rails.js)
+  for (const c of plate.querySelectorAll("[data-layer-missed]"))
+    add(
+      "warning",
+      "rail-layer",
+      c.dataset.id,
+      `cannot sit level with layer ${c.dataset.layer}: the cards above it take the room`,
+    );
 
   // Footer: context for the body, so it stays a small share of the plate
   const footer = plate.querySelector('[data-kind="footer"]');
@@ -180,8 +189,9 @@ schemantic.lint = (cfg) => {
     if (lines > 2) add("error", "chip-length", ch.dataset.id, `${lines} lines; a chip holds at most 2`);
   }
 
-  // Voids: the largest empty vertical run inside a body panel (between its blocks and chips, or below them). The
-  // content's share of the panel (density) is kept in the report for information.
+  // Voids: the largest empty vertical run inside a body panel (between its blocks and chips, or below them). Space
+  // above a rail card that sits level with its layer is alignment, not a hole. The content's share of the panel
+  // (density) is kept in the report for information.
   const density = {};
   const voids = {};
   for (const p of panels) {
@@ -190,13 +200,13 @@ schemantic.lint = (cfg) => {
     const ib = inner(pb);
     const parts = [
       ...pb.querySelectorAll(":scope > .blocks > .cards > *, :scope > .blocks > :not(.cards), :scope > .chips > *"),
-    ].map((el) => rel(el));
-    const spans = parts.map((r) => [r.t, r.b]).sort((a, b) => a[0] - b[0]);
+    ].map((el) => ({ ...rel(el), placed: el.dataset.layer !== undefined && el.dataset.layerMissed === undefined }));
+    const spans = parts.map((r) => [r.t, r.b, r.placed]).sort((a, b) => a[0] - b[0]);
     let cursor = ib.t + 1;
     let gap = 0;
     let used = 0;
-    for (const [t, b] of spans) {
-      if (t > cursor) gap = Math.max(gap, t - cursor);
+    for (const [t, b, placed] of spans) {
+      if (t > cursor && !placed) gap = Math.max(gap, t - cursor);
       if (b > cursor) {
         used += b - Math.max(t, cursor);
         cursor = b;

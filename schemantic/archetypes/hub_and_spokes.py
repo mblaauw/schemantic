@@ -10,7 +10,7 @@ from . import Archetype, GridSpec, error, side_track
 class HubAndSpokes(Archetype):
     name = "hub-and-spokes"
     required = frozenset({"hub"})
-    allowed = frozenset({"hub", "top", "bottom", "left", "right", "row_heights", "chips_at"})
+    allowed = frozenset({"hub", "top", "bottom", "left", "right", "chips_at"})
 
     def validate(self, spec: dict) -> list[dict]:
         if len(self.placed(spec)) < 3:

@@ -535,7 +535,8 @@ schemantic.route = (flows) => {
   }
 
   // Step badges: a numbered disc on the longest run with room, before labels so labels keep clear of it.
-  const BADGE = 9;
+  const STEP_TEXT = S.px("--t-small");
+  const BADGE = Math.round(STEP_TEXT * 0.82); // 9 at the document's 11 px
   for (const r of routed) {
     if (!r.fl.step) continue;
     // Centred on a long run; on a short one (a single gutter) next to its start, clear of the arrowhead.
@@ -566,20 +567,20 @@ schemantic.route = (flows) => {
     r.svg =
       (r.svg || "") +
       `<circle cx="${r2(x)}" cy="${r2(y)}" r="${BADGE}" fill="${S.token("--step")}"/>` +
-      `<text x="${r2(x)}" y="${r2(y + 4)}" text-anchor="middle" font-family="${font}" font-size="11" font-weight="700" fill="${onHead}">${r.fl.step}</text>`;
+      `<text x="${r2(x)}" y="${r2(y + STEP_TEXT * 0.36)}" text-anchor="middle" font-family="${font}" font-size="${STEP_TEXT}" font-weight="700" fill="${onHead}">${r.fl.step}</text>`;
     r.step = { x, y, n: r.fl.step };
   }
   for (const r of later) placeLabel(r);
 
   // Draw: straight arrows as a line, bent ones as a path with rounded corners; heads are filled triangles.
-  const head = (tip, from) => {
+  const head = (tip, from, fill) => {
     const len = Math.hypot(tip[0] - from[0], tip[1] - from[1]);
     const dx = (tip[0] - from[0]) / len;
     const dy = (tip[1] - from[1]) / len;
     const bx = tip[0] - dx * HEAD;
     const by = tip[1] - dy * HEAD;
     const d = `M${r2(tip[0])} ${r2(tip[1])}L${r2(bx - dy * WING)} ${r2(by + dx * WING)}L${r2(bx + dy * WING)} ${r2(by - dx * WING)}Z`;
-    return { base: [bx, by], svg: `<path d="${d}" fill="${col}"/>` };
+    return { base: [bx, by], svg: `<path d="${d}" fill="${fill}"/>` };
   };
   const rounded = (pts) => {
     let d = `M${r2(pts[0][0])} ${r2(pts[0][1])}`;
@@ -598,20 +599,23 @@ schemantic.route = (flows) => {
   const art = {};
   for (const r of routed) {
     const pts = r.pts.map((p) => [...p]);
+    // The focused arrow: heavier, in the accent colour
+    const ink = r.fl.focus ? S.token("--accent") : col;
+    const width = r.fl.focus ? r2(stroke * 2) : stroke;
     const n = pts.length - 1;
-    const end = head(pts[n], pts[n - 1]);
+    const end = head(pts[n], pts[n - 1], ink);
     pts[n] = end.base;
     let heads = end.svg;
     if (r.fl.both) {
-      const start = head(pts[0], pts[1]);
+      const start = head(pts[0], pts[1], ink);
       pts[0] = start.base;
       heads = start.svg + heads;
     }
     const dash = dashes[r.fl.style] ? ` stroke-dasharray="${dashes[r.fl.style]}"` : "";
     const line =
       pts.length === 2
-        ? `<line x1="${r2(pts[0][0])}" y1="${r2(pts[0][1])}" x2="${r2(pts[1][0])}" y2="${r2(pts[1][1])}" stroke="${col}" stroke-width="${stroke}" stroke-linecap="round"${dash}/>`
-        : `<path d="${rounded(pts)}" fill="none" stroke="${col}" stroke-width="${stroke}" stroke-linecap="round" stroke-linejoin="round"${dash}/>`;
+        ? `<line x1="${r2(pts[0][0])}" y1="${r2(pts[0][1])}" x2="${r2(pts[1][0])}" y2="${r2(pts[1][1])}" stroke="${ink}" stroke-width="${width}" stroke-linecap="round"${dash}/>`
+        : `<path d="${rounded(pts)}" fill="none" stroke="${ink}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round"${dash}/>`;
     const name = S.esc(`flow: ${r.fl.from} -> ${r.fl.to}`);
     art[r.i] = `<g id="flow-${r.i}" data-flow="${r.i}" inkscape:label="${name}">${line}${heads}${r.svg || ""}</g>`;
   }

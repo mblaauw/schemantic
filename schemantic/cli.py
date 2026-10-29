@@ -1,4 +1,4 @@
-"""Command line: `schemantic build | lint | series | render | doctor | icons | gallery | docs | offline | verify | smoke`.
+"""Command line: `schemantic build | lint | series | doctor | icons | gallery | docs | offline | verify | smoke`.
 Every command prints JSON and exits 1 on errors; an unexpected failure is an `internal` finding, never a traceback,
 because an agent reads the output."""
 
@@ -16,7 +16,6 @@ def _spec_command(sub, name: str, help_: str, scale: bool):
     p.add_argument("--theme", help="a CSS file appended after tokens.css (overrides canvas.theme)")
     if scale:
         p.add_argument("--dpi", type=float, default=192, help="PNG resolution: 96 is 1 px per CSS px (default 192)")
-        p.add_argument("--scale", type=float, help="PNG pixel ratio; overrides --dpi (kept from 0.1)")
         p.add_argument("--outline-text", action="store_true", help="write text as glyph outlines (needs uharfbuzz)")
     return p
 
@@ -26,7 +25,6 @@ def parser() -> argparse.ArgumentParser:
     sub = ap.add_subparsers(dest="cmd", required=True)
     _spec_command(sub, "build", "check, lay out, lint and write <name>.svg and <name>.png", scale=True)
     _spec_command(sub, "lint", "build without writing deliverables; report only", scale=False)
-    _spec_command(sub, "render", "build, reporting in the 0.1 render format (deprecated)", scale=True)
     r = sub.add_parser("series", help="check the parts of a series against each other: numbering, language, arrows, colours")
     r.add_argument("specs", nargs="+")
     d = sub.add_parser("doctor", help="find a Python with the dependencies and prove Chromium starts")
@@ -88,12 +86,7 @@ def run(a) -> tuple[dict, int]:
         r = build(a.spec, a.out, deliver=False, theme=a.theme)
         keep = ("spec", "errors", "warnings", "density", "voids", "parity")
         return {k: r[k] for k in keep}, 1 if r["errors"] else 0
-    r = build(a.spec, a.out, scale=a.scale or a.dpi / 96, theme=a.theme, outline_text=a.outline_text)
-    if a.cmd == "render":
-        if r["svg"] is None:
-            return {"rendered": False, "errors": r["errors"]}, 1
-        legacy = {"rendered": True, "svg": r["svg"], "png": r["png"], "fonts": r["fonts"], "flow_problems": r["flow_problems"]}
-        return legacy, 1 if r["flow_problems"] else 0
+    r = build(a.spec, a.out, scale=a.dpi / 96, theme=a.theme, outline_text=a.outline_text)
     return r, 1 if r["errors"] else 0
 
 

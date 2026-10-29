@@ -29,7 +29,7 @@ REMOTE = re.compile(r"^(https?|wss?|ftp)://", re.IGNORECASE)
 
 
 # common.js first: the other scripts attach their function to the `schemantic` object it creates.
-SCRIPTS = ["common.js", "fit.js", "decorate.js", "route.js", "layout.js", "lint.js"]
+SCRIPTS = ["common.js", "fit.js", "rails.js", "decorate.js", "route.js", "layout.js", "lint.js"]
 
 
 def launch(playwright):
@@ -56,8 +56,6 @@ def fonts_ready() -> str:
 
 
 def height_mode(spec: dict) -> str:
-    if spec["layout"].get("row_heights"):
-        return "legacy"
     # Paper too takes the content's height: the plate is fitted to the sheet afterwards (config.paper_fit).
     return spec["canvas"].get("height", "fit")
 
@@ -77,6 +75,7 @@ def open_plate(browser, html: str, spec: dict, scale: float = 1, refused: list[s
     h = call(page, "fit", {"mode": height_mode(spec), "height": height, "gaps": gaps, "cap": GAP_CAP,
                            "minHeight": min_height})
     page.set_viewport_size({"width": math.ceil(width), "height": math.ceil(h)})
+    call(page, "rails")
     call(page, "decorate")
     return page
 
