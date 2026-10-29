@@ -16,11 +16,11 @@ from playwright.sync_api import sync_playwright
 from . import __version__, outline
 from .browser import launch, on_sheet, open_plate, rasterise_svg
 from .config import FONTS_DIR, paper_fit
-from .export import export_svg, font_findings, measure, on_paper, print_findings
+from .export import export_svg, measure, on_paper
 from .findings import finding, with_hint
 from .html import build_html
 from .images import image_diff, snapshot
-from .lint import dom_lint, widow_findings
+from .lint import dom_lint, layout_findings
 from .review import RASTER_SCALE, write_crops
 from .route import draw_flows, problems_as_findings
 from .spec import check, read_spec
@@ -35,16 +35,6 @@ def load_theme(spec: dict, spec_path: Path, theme: str | Path | None) -> tuple[s
     if not path.is_file():
         return "", [finding("canvas", "canvas.theme", f"theme file not found: {path}")]
     return path.read_text(encoding="utf-8"), []
-
-
-def paint_findings(unsupported: list[dict]) -> list[dict]:
-    """CSS the SVG cannot draw (js/layout.js), one finding per element kind and property, at its first place."""
-    seen: dict[tuple, list[str]] = {}
-    for u in unsupported:
-        seen.setdefault((u["element"], u["property"], u["value"]), []).append(u["id"])
-    return [finding("paint", ids[0], f"{element} uses {prop}: {value}, which the SVG cannot draw"
-                    + (f" ({len(ids)} elements)" if len(ids) > 1 else ""))
-            for (element, prop, value), ids in seen.items()]
 
 
 def manifest(spec: dict, spec_path: Path, theme_css: str, chromium: str) -> dict:
@@ -75,8 +65,7 @@ def lay_out(page, spec: dict, work: Path, name: str) -> dict:
     layout = measure(page)
     (work / f"{name}.layout.json").write_text(json.dumps(layout, ensure_ascii=False), encoding="utf-8")
     fit = paper_fit(spec["canvas"]["size"], layout["width"], layout["height"])
-    issues = problems_as_findings(flows) + dom["issues"] + paint_findings(layout["unsupported"]) + font_findings(layout) \
-        + widow_findings(layout, spec) + (print_findings(layout, fit) if fit else [])
+    issues = problems_as_findings(flows) + dom["issues"] + layout_findings(layout, spec, fit)
     return {"layout": layout, "flows": flows, "dom": dom, "fit": fit, "issues": issues}
 
 

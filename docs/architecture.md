@@ -28,8 +28,9 @@ to `_work/` and move to the output folder only when the build has no errors. Chr
 | `roles.py` | panel roles: colours from tokens, legend labels, theme roles |
 | `html.py` | the template context: grid CSS, legend entries, footer layout, panels with their defaults |
 | `browser.py` | launch Chromium the same way everywhere, load a plate, size the canvas, call page scripts |
-| `route.py`, `lint.py` | Python sides of the page scripts: problems to findings, lint thresholds |
-| `export.py` | the SVG, written from the layout document; font subsetting; the `font` check |
+| `route.py` | the Python side of the router: its problems as findings |
+| `lint.py` | lint thresholds for the page scripts, and every check on the layout document alone (paint, fonts, widows, print size) |
+| `export.py` | the SVG, written from the layout document; font subsetting |
 | `images.py` | image diffs (blurred, judged locally) and structural snapshots, read from the layout document |
 | `findings.py` | every check, its meaning, fix and hint, and `finding()`, the one way to make a finding; generates `references/lint-fixes.md` |
 | `outline.py`, `glyphs.py`, `icons.py`, `gallery.py` | the text outline, glyph outlines, icon search, README images |

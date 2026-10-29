@@ -4,7 +4,6 @@ from __future__ import annotations
 import base64
 import io
 import re
-import unicodedata
 from functools import cache
 
 from fontTools import subset
@@ -12,9 +11,7 @@ from fontTools.ttLib import TTFont
 
 from . import outline
 from .browser import call
-from .config import FONTS_DIR, MM_PER_PX, PRINT_FLOOR_PT
-from .findings import finding
-from .lint import VOID_WARN_PX
+from .config import FONTS_DIR, MM_PER_PX
 
 # Bundled faces, loaded through @font-face so layout never depends on installed fonts.
 FONTS = [("Inter", 400, "Inter-Regular.woff2"), ("Inter", 500, "Inter-Medium.woff2"),
@@ -60,46 +57,6 @@ def covered(file: str) -> frozenset[int]:
     return frozenset(TTFont(str(FONTS_DIR / file)).getBestCmap())
 
 
-def font_findings(layout: dict) -> list[dict]:
-    """Text the SVG cannot carry with it: a family that is not bundled, or characters the bundled face lacks (CJK,
-    emoji, some symbols). Chromium would borrow a system font for both, so the page and its SVG raster agree here
-    and parity cannot see it, but another machine or viewer draws something else. Named by the group the text is in."""
-    first: dict[str, str] = {}  # family -> the group of its first text line
-    chars: dict[tuple[str, str], str] = {}  # (family, group) -> its characters
-
-    def walk(items, group):
-        for it in items:
-            if it["kind"] == "group":
-                walk(it["items"], it["id"])
-            elif it["kind"] == "text":
-                add(it["font"]["family"], group, it["text"])
-            elif it["kind"] == "svg":  # connector labels and step numbers, drawn by the router in each flow's group
-                for i, body in re.findall(r'<g id="flow-(\d+)"[^>]*>(.*?)</g>', it["svg"], re.S):
-                    for family, text in re.findall(r'<text[^>]*font-family="([^"]*)"[^>]*>(.*?)</text>', body):
-                        add(family, f"flows/{i}", text.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&"))
-
-    def add(family, group, text):
-        family = family.split(",")[0].strip().strip("'\"")
-        first.setdefault(family, group)
-        chars[family, group] = chars.get((family, group), "") + text
-    walk(layout["items"], "(plate)")
-    files = {fam: [f for f in FONTS if f[0] == fam] for fam in first}
-    out = [finding("font", group, f"text set in {family}, which is not bundled, so the SVG cannot embed it")
-           for family, group in first.items() if not files[family]]
-    for (family, group), text in chars.items():
-        if not files[family]:
-            continue
-        # Every bundled weight of a family covers the same characters; check against the regular face.
-        file = min(files[family], key=lambda f: abs(f[1] - 400))[2]
-        missing = sorted({ch for ch in text if ord(ch) not in covered(file) and not ch.isspace()
-                          and unicodedata.category(ch) not in ("Cc", "Cf")})
-        if missing:
-            listed = ", ".join(f"'{ch}' (U+{ord(ch):04X})" for ch in missing)
-            out.append(finding("font", group, f"{listed} {'is' if len(missing) == 1 else 'are'} not in {family}, so a viewer "
-                               f"draws {'it' if len(missing) == 1 else 'them'} with whatever font it has"))
-    return out
-
-
 def on_paper(svg: str, fit: dict) -> str:
     """The SVG at the sheet's size in mm, the plate centred on it at fit['scale']: only the root's size and viewBox
     change, so the drawing stays in CSS px and editors keep their coordinates."""
@@ -108,36 +65,6 @@ def on_paper(svg: str, fit: dict) -> str:
     head = re.match(r'(<svg[^>]*?) width="[\d.]+" height="[\d.]+" viewBox="[^"]*"', svg)
     return (f'{head.group(1)} width="{num(w_mm)}mm" height="{num(h_mm)}mm" '
             f'viewBox="{num(-ox / unit)} {num(-oy / unit)} {num(w_mm / unit)} {num(h_mm / unit)}"' + svg[head.end():])
-
-
-def print_findings(layout: dict, fit: dict) -> list[dict]:
-    """On paper, the smallest text must stay at PRINT_FLOOR_PT or more after the plate is scaled to the sheet, and a
-    plate much shorter than its sheet leaves blank bands above and below it."""
-    out = []
-    band = fit["offset_mm"][1] / MM_PER_PX
-    if band > VOID_WARN_PX:
-        out.append(finding("void", "canvas.size",
-                           f"the plate fills {1 - 2 * band / (fit['sheet_mm'][1] / MM_PER_PX):.0%} of the "
-                           f"{fit['size']} sheet's height, leaving {band:.0f}px blank above and below it; let it grow "
-                           f"taller (fewer card_columns, another row) or use a screen size", level="warning"))
-    sizes = []
-
-    def walk(items):
-        for it in items:
-            if it["kind"] == "group":
-                walk(it["items"])
-            elif it["kind"] == "text":
-                sizes.append(float(it["font"]["size"]))
-            elif it["kind"] == "svg":
-                sizes.extend(float(s) for s in re.findall(r'<text[^>]*font-size="([\d.]+)"', it["svg"]))
-    walk(layout["items"])
-    smallest = min(sizes, default=0) * MM_PER_PX * fit["scale"] * 72 / 25.4
-    if not sizes or smallest >= PRINT_FLOOR_PT:
-        return out
-    return out + [finding("print-size", "canvas.size",
-                          f"the plate is {num(layout['width'])} x {num(layout['height'])} px, so {fit['size']} prints "
-                          f"it at {fit['scale']:.0%} and its smallest text at {smallest:.1f} pt (the floor is "
-                          f"{PRINT_FLOOR_PT} pt)")]
 
 
 def measure(page) -> dict:

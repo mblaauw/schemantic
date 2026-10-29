@@ -1,8 +1,14 @@
-"""Layout checks on the measured page (js/lint.js): text, overlap, containment, canvas fit, arrows, chips, density."""
+"""Layout checks, in two kinds. On the measured page (js/lint.js): text, overlap, containment, canvas fit, arrows,
+chips, density. On the layout document alone, no page needed: paint the SVG cannot draw, fonts it cannot carry,
+widowed title lines, and print size on paper."""
 from __future__ import annotations
 
+import re
+import unicodedata
+
 from .browser import call
-from .config import SLIDE_FLOOR_PX, TYPE_FLOOR_PX
+from .config import MM_PER_PX, PRINT_FLOOR_PT, SLIDE_FLOOR_PX, TYPE_FLOOR_PX
+from .export import FONTS, covered, num
 from .findings import finding
 
 # A run of empty space inside a body panel longer than this reads as a hole in the plate (review question 4).
@@ -14,6 +20,92 @@ SPREAD_SHARE = 0.75
 SPREAD_FLOOR_PX = 32
 # The footer is context; above this share of the plate's height it competes with the body (review question 6).
 FOOTER_SHARE = 0.15
+
+
+def layout_findings(layout: dict, spec: dict, fit: dict | None) -> list[dict]:
+    """Every check on the layout document: paint, fonts, widows, and print size when the plate goes on paper."""
+    return (paint_findings(layout["unsupported"]) + font_findings(layout) + widow_findings(layout, spec)
+            + (print_findings(layout, fit) if fit else []))
+
+
+def paint_findings(unsupported: list[dict]) -> list[dict]:
+    """CSS the SVG cannot draw (js/layout.js), one finding per element kind and property, at its first place."""
+    seen: dict[tuple, list[str]] = {}
+    for u in unsupported:
+        seen.setdefault((u["element"], u["property"], u["value"]), []).append(u["id"])
+    return [finding("paint", ids[0], f"{element} uses {prop}: {value}, which the SVG cannot draw"
+                    + (f" ({len(ids)} elements)" if len(ids) > 1 else ""))
+            for (element, prop, value), ids in seen.items()]
+
+
+def font_findings(layout: dict) -> list[dict]:
+    """Text the SVG cannot carry with it: a family that is not bundled, or characters the bundled face lacks (CJK,
+    emoji, some symbols). Chromium would borrow a system font for both, so the page and its SVG raster agree here
+    and parity cannot see it, but another machine or viewer draws something else. Named by the group the text is in."""
+    first: dict[str, str] = {}  # family -> the group of its first text line
+    chars: dict[tuple[str, str], str] = {}  # (family, group) -> its characters
+
+    def walk(items, group):
+        for it in items:
+            if it["kind"] == "group":
+                walk(it["items"], it["id"])
+            elif it["kind"] == "text":
+                add(it["font"]["family"], group, it["text"])
+            elif it["kind"] == "svg":  # connector labels and step numbers, drawn by the router in each flow's group
+                for i, body in re.findall(r'<g id="flow-(\d+)"[^>]*>(.*?)</g>', it["svg"], re.S):
+                    for family, text in re.findall(r'<text[^>]*font-family="([^"]*)"[^>]*>(.*?)</text>', body):
+                        add(family, f"flows/{i}", text.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&"))
+
+    def add(family, group, text):
+        family = family.split(",")[0].strip().strip("'\"")
+        first.setdefault(family, group)
+        chars[family, group] = chars.get((family, group), "") + text
+    walk(layout["items"], "(plate)")
+    files = {fam: [f for f in FONTS if f[0] == fam] for fam in first}
+    out = [finding("font", group, f"text set in {family}, which is not bundled, so the SVG cannot embed it")
+           for family, group in first.items() if not files[family]]
+    for (family, group), text in chars.items():
+        if not files[family]:
+            continue
+        # Every bundled weight of a family covers the same characters; check against the regular face.
+        file = min(files[family], key=lambda f: abs(f[1] - 400))[2]
+        missing = sorted({ch for ch in text if ord(ch) not in covered(file) and not ch.isspace()
+                          and unicodedata.category(ch) not in ("Cc", "Cf")})
+        if missing:
+            listed = ", ".join(f"'{ch}' (U+{ord(ch):04X})" for ch in missing)
+            out.append(finding("font", group, f"{listed} {'is' if len(missing) == 1 else 'are'} not in {family}, so a viewer "
+                               f"draws {'it' if len(missing) == 1 else 'them'} with whatever font it has"))
+    return out
+
+
+def print_findings(layout: dict, fit: dict) -> list[dict]:
+    """On paper, the smallest text must stay at PRINT_FLOOR_PT or more after the plate is scaled to the sheet, and a
+    plate much shorter than its sheet leaves blank bands above and below it."""
+    out = []
+    band = fit["offset_mm"][1] / MM_PER_PX
+    if band > VOID_WARN_PX:
+        out.append(finding("void", "canvas.size",
+                           f"the plate fills {1 - 2 * band / (fit['sheet_mm'][1] / MM_PER_PX):.0%} of the "
+                           f"{fit['size']} sheet's height, leaving {band:.0f}px blank above and below it; let it grow "
+                           f"taller (fewer card_columns, another row) or use a screen size", level="warning"))
+    sizes = []
+
+    def walk(items):
+        for it in items:
+            if it["kind"] == "group":
+                walk(it["items"])
+            elif it["kind"] == "text":
+                sizes.append(float(it["font"]["size"]))
+            elif it["kind"] == "svg":
+                sizes.extend(float(s) for s in re.findall(r'<text[^>]*font-size="([\d.]+)"', it["svg"]))
+    walk(layout["items"])
+    smallest = min(sizes, default=0) * MM_PER_PX * fit["scale"] * 72 / 25.4
+    if not sizes or smallest >= PRINT_FLOOR_PT:
+        return out
+    return out + [finding("print-size", "canvas.size",
+                          f"the plate is {num(layout['width'])} x {num(layout['height'])} px, so {fit['size']} prints "
+                          f"it at {fit['scale']:.0%} and its smallest text at {smallest:.1f} pt (the floor is "
+                          f"{PRINT_FLOOR_PT} pt)")]
 
 
 def widow_findings(layout: dict, spec: dict) -> list[dict]:
