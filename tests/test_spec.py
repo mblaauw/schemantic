@@ -441,3 +441,12 @@ def test_roadmap_lanes_tint_now_and_arrows_run_forward():
     assert [f for f in sp.check(spec) if f["check"] == "timeline"] == []
     del spec["layout"]["now"]
     assert 'class="now-cell"' not in html.build_html(spec)
+
+
+def test_before_after_marks_each_pair_that_faces_each_other():
+    spec = sp.load_spec(ROOT / "examples" / "invoicing-before-after.yaml")
+    assert html.build_html(spec).count('class="becomes"') == 3
+    spec["layout"]["after"] = spec["layout"]["after"][:2]  # the third before panel is gone, with nothing facing it
+    spec["panels"] = [p for p in spec["panels"] if p["id"] != "recon"]
+    spec["flows"] = [f for f in spec["flows"] if "recon" not in (f["from"], f["to"])]
+    assert html.build_html(spec).count('class="becomes"') == 2

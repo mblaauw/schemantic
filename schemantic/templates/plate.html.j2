@@ -90,6 +90,7 @@
 {%- for pt in p.patterns or [] %}{{ pattern(pt, p.id, loop.index0, ('; flex: ' ~ w[loop.index0] ~ ' 1 0') if p.arrange == 'row' and w | length > loop.index0 else '') }}{% endfor -%}
 {%- if p.arrange == 'row' and p.cards %}{{ cards_block(p, ('; flex: ' ~ w[npat] ~ ' 1 0') if w | length > npat else '') }}{% endif -%}
 </div>
+{%- if p.becomes %}<div class="becomes">{{ icon('chevron-right') }}</div>{% endif -%}
 {%- if p.chips -%}
 <div class="chips{% if p.chips_bottom %} chips-bottom{% endif %}">{% for ch in p.chips %}{% set ql = question_at.get(p.id ~ '.chip' ~ loop.index0) %}<div class="chip chip-{{ ch.kind }}" data-kind="chip" data-id="{{ p.id }}.chip{{ loop.index0 }}">{% if ql %}<span class="flag flag-warning">{{ ql }}</span>{% else %}{{ icon('alert-triangle' if ch.kind == 'warning' else 'info-circle') }}{% endif %}<div>{{ ch.text }}</div></div>{% endfor %}</div>
 {%- endif -%}
