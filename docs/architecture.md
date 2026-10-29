@@ -12,8 +12,9 @@ spec.yaml ─► read_spec ─► schema + semantic checks ─► build_html ─
           ─► layout document ─► SVG ─► parity (page screenshot vs SVG raster) ─► PNG, outline .md, snapshot
 ```
 
-`schemantic build` runs all of it in one Chromium session (`schemantic/pipeline.py`); `lint` skips writing the
-deliverables. The deliverables (SVG, PNG, outline and a `.build.json` manifest of versions and digests) are written
+`schemantic build` runs all of it in one Chromium session (`schemantic/pipeline.py`), one function per stage:
+`prepare`, `lay_out`, `write_svg`, `parity`, `deliverables` and `publish` (`review_crops` with `--review`); `lint` skips
+writing the deliverables. The deliverables (SVG, PNG, outline and a `.build.json` manifest of versions and digests) are written
 to `_work/` and move to the output folder only when the build has no errors. Chromium runs with the network refused
 (see [`offline.md`](offline.md)). Every step reports findings in one shape (`level`, `check`, `id`, `detail`,
 `hint`), and a failure anywhere is a finding, never a traceback.
@@ -30,7 +31,7 @@ to `_work/` and move to the output folder only when the build has no errors. Chr
 | `route.py`, `lint.py` | Python sides of the page scripts: problems to findings, lint thresholds |
 | `export.py` | the SVG, written from the layout document; font subsetting; the `font` check |
 | `images.py` | image diffs (blurred, judged locally) and structural snapshots, read from the layout document |
-| `findings.py` | every check, its meaning, fix and hint; generates `references/lint-fixes.md` |
+| `findings.py` | every check, its meaning, fix and hint, and `finding()`, the one way to make a finding; generates `references/lint-fixes.md` |
 | `outline.py`, `glyphs.py`, `icons.py`, `gallery.py` | the text outline, glyph outlines, icon search, README images |
 | `scaffold.py`, `starters/`, `review.py` | for the skill: starter specs per archetype (`new`), and review crops (`--review`) |
 | `cli.py`, `doctor.py` | the command line; finding a Python and Chromium (standard library only) |

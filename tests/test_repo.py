@@ -79,14 +79,10 @@ def test_docs_list_what_is_built():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
     reference = (ROOT / "references" / "archetypes.md").read_text(encoding="utf-8")
-    built_row = next(line for line in readme.splitlines() if line.startswith("| Archetypes:"))
-    built_cell, planned_cell = built_row.split("|")[1:3]
+    built_cell = next(line for line in readme.splitlines() if line.startswith("| Archetypes:")).split("|")[1]
     for name in archetypes.BUILT:
         assert name in built_cell and f"`{name}`" in skill and f"## {name}" in reference, name
-    for name in archetypes.PLANNED:
-        assert name in planned_cell and name not in built_cell and f"## {name}" not in reference, name
-    not_built = reference.split("## Not built yet")[1]
-    assert all(f"`{n}`" in not_built for n in archetypes.PLANNED)
+    assert sorted(line[3:] for line in reference.splitlines() if line.startswith("## ")) == archetypes.BUILT
     patterns = json.loads((ROOT / "schemantic" / "schema" / "plate.schema.json").read_text())["$defs"]["pattern"]["properties"]["type"]["enum"]
     pattern_row = next(line for line in readme.splitlines() if line.startswith("| Patterns:"))
     for p in patterns:
@@ -100,3 +96,13 @@ def test_the_wheel_carries_every_file_a_render_reads():
     pkg = ROOT / "schemantic"
     data = [p for p in pkg.rglob("*") if p.is_file() and p.suffix not in (".py", ".pyc") and "__pycache__" not in p.parts]
     assert data and [p for p in data if not any(p.relative_to(pkg).match(g) for g in globs)] == []
+
+
+def test_the_doctor_imports_only_the_standard_library():
+    """It runs on any python3 to find one with the dependencies, so it may share config but nothing that needs them."""
+    import subprocess
+    import sys
+    code = "import sys, schemantic.doctor; print(sorted({m.split('.')[0] for m in sys.modules}))"
+    loaded = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, cwd=ROOT, check=True).stdout
+    for dep in ("yaml", "jsonschema", "jinja2", "PIL", "fontTools", "playwright"):
+        assert f"'{dep}'" not in loaded, dep

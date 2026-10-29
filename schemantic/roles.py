@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import re
 
+from .findings import finding
+
 BUILT_IN = ["platform", "data", "external", "actor"]
 PARTS = ("head", "sub", "body", "line")
 
@@ -53,12 +55,11 @@ def role_fit_findings(spec: dict) -> list[dict]:
         if len(cards) < 2 or p["role"] not in BUILT_IN:
             continue
         if p["role"] == "actor" and len(cards) - people >= 2 * len(cards) / 3:
-            out.append({"level": "warning", "check": "role-fit", "id": p["id"],
-                        "detail": f"coloured as people and teams, but {len(cards) - people} of its {len(cards)} cards "
-                                  "show systems or things"})
+            out.append(finding("role-fit", p["id"], f"coloured as people and teams, but {len(cards) - people} of its "
+                               f"{len(cards)} cards show systems or things", level="warning"))
         elif p["role"] != "actor" and people >= 2 * len(cards) / 3:
-            out.append({"level": "warning", "check": "role-fit", "id": p["id"],
-                        "detail": f"coloured as {p['role']}, but {people} of its {len(cards)} cards show people"})
+            out.append(finding("role-fit", p["id"], f"coloured as {p['role']}, but {people} of its {len(cards)} cards show "
+                               "people", level="warning"))
     return out
 
 
@@ -69,9 +70,9 @@ def role_findings(spec: dict, theme_css: str = "") -> list[dict]:
     for p in spec["panels"]:
         role = p["role"]
         if role not in known:
-            out.append({"level": "error", "check": "role", "id": p["id"],
-                        "detail": f"role '{role}' is not built in ({', '.join(BUILT_IN)}) and the theme does not define it"})
+            out.append(finding("role", p["id"],
+                               f"role '{role}' is not built in ({', '.join(BUILT_IN)}) and the theme does not define it"))
         elif role not in BUILT_IN and not theme_roles(theme_css)[role].get(spec["canvas"]["lang"]):
-            out.append({"level": "error", "check": "role", "id": p["id"],
-                        "detail": f"the theme defines role '{role}' without --{role}-label-{spec['canvas']['lang']}"})
+            out.append(finding("role", p["id"],
+                               f"the theme defines role '{role}' without --{role}-label-{spec['canvas']['lang']}"))
     return out

@@ -18,8 +18,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-LAUNCH_ARGS = ["--font-render-hinting=none", "--disable-lcd-text"]  # as schemantic.browser; this module stays stdlib-only
+from .config import LAUNCH_ARGS, ROOT  # config is standard library only, as this module must be
+
 MIN_PYTHON = (3, 10)
 PROBE = r"""
 import importlib.util, json, sys

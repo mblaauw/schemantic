@@ -2,7 +2,8 @@
 to three levels, holding panels; panels outside every zone stand in a column beside them."""
 from __future__ import annotations
 
-from . import Archetype, GridSpec, error, side_track
+from ..findings import finding
+from . import Archetype, GridSpec, side_track
 
 MAX_DEPTH = 3
 
@@ -27,13 +28,13 @@ class NestedZones(Archetype):
         out, seen = [], set()
         for z, depth in walk(spec["layout"]["zones"]):
             if depth > MAX_DEPTH:
-                out.append(error("layout", f"zone.{z['id']}",
+                out.append(finding("layout", f"zone.{z['id']}",
                                  f"zones nest {depth} deep; at most {MAX_DEPTH} (an account, a cluster, a namespace)"))
             if z["id"] in seen:
-                out.append(error("layout", f"zone.{z['id']}", f"two zones have id '{z['id']}'"))
+                out.append(finding("layout", f"zone.{z['id']}", f"two zones have id '{z['id']}'"))
             seen.add(z["id"])
             if not z.get("zones") and not z.get("panels"):
-                out.append(error("layout", f"zone.{z['id']}", "an empty zone; give it panels or zones, or leave it out"))
+                out.append(finding("layout", f"zone.{z['id']}", "an empty zone; give it panels or zones, or leave it out"))
         return out
 
     def grid(self, spec: dict) -> GridSpec:

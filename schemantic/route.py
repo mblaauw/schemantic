@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from .browser import call
+from .findings import finding
 
 # Router problem kinds and the lint check each belongs to.
 FLOW_CHECKS = {"route": "arrow-routing", "label": "arrow-label", "endpoint": "flow", "self": "flow", "nested": "flow"}
@@ -20,6 +21,6 @@ PANELS_HINT = "Place the two panels in neighbouring columns or rows so they shar
 
 
 def problems_as_findings(flows: dict) -> list[dict]:
-    return [{"level": "error", "check": x["check"], "id": f"flows/{x['i']}", "detail": x["problem"],
-             **({"hint": PANELS_HINT} if x["kind"] == "route" and not x.get("cards") else {})}
+    return [finding(x["check"], f"flows/{x['i']}", x["problem"],
+                    **({"hint": PANELS_HINT} if x["kind"] == "route" and not x.get("cards") else {}))
             for x in flows["problems"]]

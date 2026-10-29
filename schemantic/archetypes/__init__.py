@@ -11,9 +11,6 @@ import importlib
 import pkgutil
 from dataclasses import dataclass, field
 
-# Named in the schema as the planned contract; refused until a module here builds them.
-PLANNED = ["banded-matrix"]
-
 
 @dataclass
 class GridSpec:
@@ -72,10 +69,6 @@ def side_track(spec: dict, preferred: str) -> str:
     from ..config import CANVAS_SIZES
     min_px = SIDE_MIN_PX * CANVAS_SIZES[spec["canvas"]["size"]][0] / 1600
     return f"clamp({min_px:.0f}px, {preferred}, {SIDE_MAX}%)"
-
-
-def error(check: str, id_: str, detail: str) -> dict:
-    return {"level": "error", "check": check, "id": id_, "detail": detail}
 
 
 def _discover() -> dict[str, Archetype]:

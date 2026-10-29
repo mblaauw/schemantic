@@ -9,7 +9,7 @@ from pathlib import Path
 from PIL import Image
 
 from . import archetypes
-from .config import CANVAS_SIZES, JS_DIR
+from .config import CANVAS_SIZES, JS_DIR, LAUNCH_ARGS
 from .doctor import use_kit_browsers
 
 use_kit_browsers()  # before any Playwright starts: a Chromium installed by an offline kit is found without setup
@@ -17,10 +17,6 @@ use_kit_browsers()  # before any Playwright starts: a Chromium installed by an o
 # With a fixed canvas, each gap grows by at most this much; the rest of the surplus stays under the footer.
 GAP_CAP = 48
 
-# Without the first flag Linux Chromium hints glyphs and rounds their advances to whole pixels, so text runs a few
-# pixels wider than on macOS and lines wrap differently. Without the second it antialiases text with colour fringes
-# (subpixel, for LCD screens), which macOS headless does not; grey antialiasing makes the pixels match too.
-LAUNCH_ARGS = ["--font-render-hinting=none", "--disable-lcd-text"]
 # A plate loads nothing from the network: fonts, icons and styles are bundled, so a build gives the same result on a
 # machine without one. Page requests that would leave the machine are refused and reported (see `offline`); anything
 # else Chromium tries goes to a proxy that is not there, so not even a DNS lookup leaves.

@@ -12,6 +12,7 @@ import yaml
 
 from . import archetypes, icons, roles
 from .config import LOCALES, SCHEMA
+from .findings import finding
 
 # Default footer widths per column, by its first section, relative to each other.
 FOOTER_WEIGHTS = {"context": 1.5, "principles": 1.4, "open_questions": 1.1, "notes": 1.1, "legend": 0.9}
@@ -21,10 +22,6 @@ FOOTER_MAX_COLUMNS = 3
 FOOTER_STACK_MAX = 2
 # What a starter spec marks for the author to fill in.
 PLACEHOLDER = re.compile(r"\bTODO\b")
-
-
-def finding(check: str, id_: str, detail: str, level: str = "error") -> dict:
-    return {"level": level, "check": check, "id": id_, "detail": detail}
 
 
 def load_spec(path: str | Path) -> dict:
@@ -133,11 +130,8 @@ def layout_errors(spec: dict, arche: archetypes.Archetype) -> list[dict]:
 
 
 def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
-    """Checks the schema cannot express: archetype, ids, placement, roles, flows, footer, chips, icons, language."""
-    arche = archetypes.get(spec["archetype"])
-    if not arche:
-        return [finding("archetype", "archetype",
-                        f"'{spec['archetype']}' is not built yet; use one of {', '.join(archetypes.BUILT)}")]
+    """Checks the schema cannot express: ids, placement, roles, flows, footer, chips, icons, language."""
+    arche = archetypes.REGISTRY[spec["archetype"]]  # the schema names only built archetypes
     # Ids first: a colliding id makes every later check (and the router) look in the wrong place.
     out = id_errors(spec) or layout_errors(spec, arche)
     if any(f["level"] == "error" for f in out):
@@ -202,9 +196,9 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
     for icon in iter_icons(spec):
         if icon not in known:
             close = icons.suggest(icon)
-            out.append({**finding("icon", icon, f"no icon named '{icon}'"),
-                        "hint": f"Closest: {', '.join(close)}. Search with: schemantic icons <word>." if close else
-                                "Search with: schemantic icons <word>."})
+            out.append(finding("icon", icon, f"no icon named '{icon}'",
+                               hint=f"Closest: {', '.join(close)}. Search with: schemantic icons <word>." if close else
+                                    "Search with: schemantic icons <word>."))
 
     loc = load_locale(spec["canvas"]["lang"])
     text = "\n".join(iter_strings(spec)).lower()

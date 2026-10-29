@@ -1,4 +1,5 @@
-"""Paths, canvas presets, and the design tokens Python needs (read from tokens.css, so they live in one place)."""
+"""Paths, canvas presets, Chromium's flags, and the design tokens Python needs (read from tokens.css, so they live in one
+place). Standard library only: the doctor imports it on a Python that has no dependencies yet."""
 from __future__ import annotations
 
 import re
@@ -16,6 +17,11 @@ LOCALES = PACKAGE / "locales"
 SCHEMA = PACKAGE / "schema" / "plate.schema.json"
 STARTERS = PACKAGE / "starters"
 JS_DIR = PACKAGE / "js"
+
+# Without the first flag Linux Chromium hints glyphs and rounds their advances to whole pixels, so text runs a few
+# pixels wider than on macOS and lines wrap differently. Without the second it antialiases text with colour fringes
+# (subpixel, for LCD screens), which macOS headless does not; grey antialiasing makes the pixels match too.
+LAUNCH_ARGS = ["--font-render-hinting=none", "--disable-lcd-text"]
 
 # Paper presets in millimetres. A print plate is laid out at the sheet's width at 96 px per inch (whole CSS px), so
 # its type prints at its own size, and takes its content's height like a screen plate. On paper it is centred, and

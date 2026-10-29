@@ -29,7 +29,6 @@ def mutate(fn, base=BASE):
 SPEC_TRIGGERS = {
     "schema": lambda s: s.update(title="x" * 81),
     "id": lambda s: (s["panels"][0]["cards"][0].update(id="x"), s["panels"][1]["cards"][0].update(id="x")),
-    "archetype": lambda s: s.update(archetype="banded-matrix"),
     "layout": lambda s: s["footer"].update(columns=[1, 1]),
     "budget": lambda s: s["layout"].update(areas=["clients identity gateway services data data"]),
     "pattern": lambda s: panel(s, "identity")["patterns"][0]["rows"][0]["cells"].append("full"),
@@ -84,7 +83,7 @@ LAYOUT_TRIGGERS = {
     "void": (lambda s: panel(s, "security").update(cards=[c for c in panel(s, "security")["cards"] if c.get("id") == "policy"],
                                                    chips=[]), "", LAYERS),
 }
-OTHER = {"yaml", "svg-parity", "internal", "series"}  # series: tests/test_series.py
+OTHER = {"yaml", "svg-parity", "internal", "series", "archetype"}  # series: test_series.py; archetype: test_scaffold.py
 
 
 def test_every_check_is_triggered_and_documented():

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from .findings import finding
 from .spec import check, read_spec
 
 
@@ -26,13 +27,11 @@ def series_findings(paths: list[str | Path]) -> list[dict]:
     for path in paths:
         spec, issues = read_spec(path)
         if spec is None or any(i["level"] == "error" for i in issues + check(spec)):
-            out.append({"level": "error", "check": "series", "id": f"{Path(path).name}: (file)",
-                        "detail": "the spec does not pass its own checks; build it first"})
+            out.append(finding("series", f"{Path(path).name}: (file)", "the spec does not pass its own checks; build it first"))
             continue
         canvas = spec["canvas"]
         if not canvas.get("series"):
-            out.append({"level": "error", "check": "series", "id": f"{Path(path).name}: canvas.series",
-                        "detail": "not part of a series: give canvas.series, part and of"})
+            out.append(finding("series", f"{Path(path).name}: canvas.series", "not part of a series: give canvas.series, part and of"))
             continue
         parts.setdefault(canvas["series"], []).append((Path(path).name, spec))
 
@@ -43,7 +42,7 @@ def series_findings(paths: list[str | Path]) -> list[dict]:
 
     def add(level, name, where, detail):
         hint = hints.get(where, "Give the thing the same role wherever it appears: the role of its panel.")
-        out.append({"level": level, "check": "series", "id": f"{name}: {where}", "detail": detail, "hint": hint})
+        out.append(finding("series", f"{name}: {where}", detail, level=level, hint=hint))
 
     for series, members in parts.items():
         first_name, first = members[0]

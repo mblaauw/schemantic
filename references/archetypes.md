@@ -165,8 +165,3 @@ layout:
 - With `flows_mean: dependency`, an arrow points from an item to what it needs first.
 - The title claims the order that matters ("Self-service ships before the new mobile app"), not the year.
 - Example: `examples/portal-roadmap.yaml`.
-
-## Not built yet
-
-`banded-matrix` is in the schema as a planned name. Lint refuses it. Until it exists, a capability or ownership
-matrix fits in a panel as a `matrix` pattern.

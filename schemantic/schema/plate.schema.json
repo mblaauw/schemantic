@@ -162,14 +162,13 @@
       "enum": [
         "column-flow",
         "hub-and-spokes",
-        "banded-matrix",
         "layer-cake",
         "nested-zones",
         "swimlane",
         "before-after",
         "roadmap"
       ],
-      "description": "The body layout. Built: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones, before-after, roadmap; banded-matrix is planned and refused by lint."
+      "description": "The body layout; references/archetypes.md says when to use each."
     },
     "layout": {
       "type": "object",

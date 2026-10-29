@@ -12,7 +12,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `placeholder` | text a starter left (`schemantic new`): a string with TODO in it | write what the sources say in its place, or drop the field or element; the id is its path |
 | `schema` | a field is missing, misspelled, too long or of the wrong type | the `id` is the path to the field; shorten text or correct the key |
 | `id` | two panels share an id, two cards share an id, or a card id equals a panel id or a card's automatic id | rename one; the detail names both places |
-| `archetype` | the archetype is planned but not built | pick a built one (`archetypes.md`, "Not built yet") |
+| `archetype` | `schemantic new` names an archetype there is no starter for | use one of the names in the detail; `references/archetypes.md` says when to use each |
 | `layout` | layout keys do not fit the archetype, a panel is placed twice or not at all, an area is not a rectangle, widths/heights do not match the grid, or `footer.columns` does not match the footer panels | follow the detail; every panel id appears in the layout exactly once |
 | `budget` | more than 5 columns | split the plate or merge panels |
 | `pattern` | a matrix row has the wrong number of cells | one cell per column |

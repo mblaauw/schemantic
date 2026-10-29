@@ -124,8 +124,7 @@ def test_layout_key_from_another_archetype(example):
 def test_registry_matches_schema():
     schema = sp.schema()
     names = schema["properties"]["archetype"]["enum"]
-    assert set(archetypes.REGISTRY) <= set(names)
-    assert set(names) == set(archetypes.REGISTRY) | set(archetypes.PLANNED)
+    assert set(names) == set(archetypes.REGISTRY)
     blocks = {b["if"]["properties"]["archetype"]["const"]: b["then"]["properties"]["layout"] for b in schema["allOf"]}
     for name, arche in archetypes.REGISTRY.items():
         assert set(blocks[name]["required"]) == arche.required, name
