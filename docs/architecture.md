@@ -12,8 +12,9 @@ spec.yaml ─► read_spec ─► schema + semantic checks ─► build_html ─
           ─► layout document ─► SVG ─► parity (page screenshot vs SVG raster) ─► PNG, outline .md, snapshot
 ```
 
-`schemantic build` runs all of it in one Chromium session (`schemantic/pipeline.py`); `lint` skips writing the
-deliverables. The deliverables (SVG, PNG, outline and a `.build.json` manifest of versions and digests) are written
+`schemantic build` runs all of it in one Chromium session (`schemantic/pipeline.py`), one function per stage:
+`prepare`, `lay_out`, `write_svg`, `parity`, `deliverables` and `publish` (`review_crops` with `--review`); `lint` skips
+writing the deliverables. The deliverables (SVG, PNG, outline and a `.build.json` manifest of versions and digests) are written
 to `_work/` and move to the output folder only when the build has no errors. Chromium runs with the network refused
 (see [`offline.md`](offline.md)). Every step reports findings in one shape (`level`, `check`, `id`, `detail`,
 `hint`), and a failure anywhere is a finding, never a traceback.

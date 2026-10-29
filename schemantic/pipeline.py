@@ -1,6 +1,7 @@
-"""One pipeline, one Chromium: check the spec, lay out, route, lint, export the SVG, check parity against the same
-page, and write the PNG. `lint` is this without the deliverables. Deliverables are written to <out>/_work/ first and
-move to <out>/ only when the build has no errors, so a failed build never publishes a plate."""
+"""One pipeline, one Chromium, in stages: prepare (read, theme, check), lay out (route, lint, measure), write the SVG,
+check parity against the same page, write the deliverables, publish. `lint` is this without the deliverables.
+Deliverables are written to <out>/_work/ first and move to <out>/ only when the build has no errors, so a failed build
+never publishes a plate."""
 from __future__ import annotations
 
 import hashlib
@@ -55,6 +56,104 @@ def manifest(spec: dict, spec_path: Path, theme_css: str, chromium: str) -> dict
             "fonts": {f.name: digest(f.read_bytes()) for f in sorted(FONTS_DIR.glob("*.woff2"))}}
 
 
+def prepare(spec_path: Path, theme: str | Path | None, theme_css: str) -> tuple[dict | None, str, list[dict]]:
+    """Stage 1, no browser: read the spec, load its theme, and check it. Returns the spec, the theme CSS and findings."""
+    spec, issues = read_spec(spec_path)
+    if not issues:
+        file_css, issues = load_theme(spec, spec_path, theme)
+        theme_css = "\n".join(c for c in (file_css, theme_css) if c)
+    if not issues:
+        issues = check(spec, theme_css)
+    return spec, theme_css, issues
+
+
+def lay_out(page, spec: dict, work: Path, name: str) -> dict:
+    """Stage 2, in the page: route the connectors, lint the layout, measure it into the layout document (written to
+    _work/) and fit it to paper. Returns the layout, flows, DOM lint, paper fit and their findings."""
+    flows = draw_flows(page, spec)
+    dom = dom_lint(page, flows["segs"], slide=spec["canvas"].get("profile") == "slide")
+    layout = measure(page)
+    (work / f"{name}.layout.json").write_text(json.dumps(layout, ensure_ascii=False), encoding="utf-8")
+    fit = paper_fit(spec["canvas"]["size"], layout["width"], layout["height"])
+    issues = problems_as_findings(flows) + dom["issues"] + paint_findings(layout["unsupported"]) + font_findings(layout) \
+        + widow_findings(layout, spec) + (print_findings(layout, fit) if fit else [])
+    return {"layout": layout, "flows": flows, "dom": dom, "fit": fit, "issues": issues}
+
+
+def write_svg(plate: dict, spec: dict, work: Path, name: str, outline_text: bool) -> dict:
+    """Stage 3: the SVG and the structural snapshot, both from the layout document; parity checks the layout with real
+    text, so with outline_text the deliverable has glyph paths and a text version stays in _work/ for the check."""
+    svg, fonts = export_svg(plate["layout"], spec)
+    svg_path = work / f"{name}.svg"
+    parity_svg = work / f"{name}.text.svg" if outline_text else svg_path
+    parity_svg.write_text(svg, encoding="utf-8")
+    if outline_text:
+        from .glyphs import outline_text as to_paths
+        svg_path.write_text(to_paths(svg), encoding="utf-8")
+    snap_path = work / f"{name}.snapshot.json"
+    snap_path.write_text(json.dumps(snapshot(plate["layout"], plate["flows"]["segs"]), indent=1, ensure_ascii=False),
+                         encoding="utf-8")
+    return {"svg": svg_path, "parity_svg": parity_svg, "fonts": fonts, "snapshot": snap_path}
+
+
+def parity(page, browser, parity_svg: Path, work: Path, refused: list[str]) -> dict:
+    """Stage 4: the page as laid out (connectors included) against the SVG rasterised at the same scale. Closes the
+    page: nothing after this reads it."""
+    page.locator("#plate").screenshot(path=str(work / "html.png"))
+    page.close()
+    rasterise_svg(browser, parity_svg, work / "svg.png", scale=1, refused=refused)
+    return image_diff(work / "html.png", work / "svg.png", work / "parity-diff.png")
+
+
+def review_crops(browser, layout: dict, spec: dict, parity_svg: Path, work: Path, refused: list[str]) -> list[dict]:
+    """Optional: crops of the plate a model can read, in _work/review/."""
+    for old in (work / "review").glob("*.png"):
+        old.unlink()  # a part renamed or cut differently leaves no stale crop behind
+    rasterise_svg(browser, parity_svg, work / "review.png", scale=RASTER_SCALE, refused=refused)
+    return write_crops(layout, spec, work / "review.png", work / "review")
+
+
+def deliverables(browser, spec: dict, made: dict, svg_path: Path, fit: dict | None, scale: float, work: Path, name: str,
+                 refused: list[str]) -> dict[str, Path]:
+    """Stage 5: the outline, the manifest and the PNG, next to the SVG in _work/. A paper plate is rasterised at its
+    paper scale and centred on the exact sheet at the requested dpi, and its SVG gets the sheet's size in mm. Returns
+    the staged files, which publish() moves to <out>/ when the report is clean."""
+    (work / f"{name}.md").write_text(outline.markdown(spec), encoding="utf-8")
+    (work / f"{name}.build.json").write_text(json.dumps(made, indent=1) + "\n", encoding="utf-8")
+    png = work / f"{name}.png"
+    if fit:
+        rasterise_svg(browser, svg_path, png, scale=fit["scale"] * scale, refused=refused)
+        on_sheet(png, fit, 96 * scale)
+        svg_path.write_text(on_paper(svg_path.read_text(encoding="utf-8"), fit), encoding="utf-8")
+    else:
+        rasterise_svg(browser, svg_path, png, scale=scale, refused=refused)
+    return {k: work / f"{name}.{ext}" for k, ext in (("svg", "svg"), ("png", "png"), ("outline", "md"), ("manifest", "build.json"))}
+
+
+def page_findings(refused: list[str], par: dict) -> list[dict]:
+    """What the browser saw: requests that would have left the machine, and the parity verdict."""
+    out = [finding("network", "(plate)", f"tried to load {url}") for url in dict.fromkeys(refused)]
+    if par["fail"]:
+        out.append(finding("svg-parity", "(plate)", par["detail"]))
+    elif par["count"]:
+        out.append(finding("svg-parity", "(plate)", par["detail"], level="warning"))
+    return out
+
+
+def publish(staged: dict[str, Path], report: dict, out: Path) -> None:
+    """Move the staged deliverables to <out>/ when the report has no errors; otherwise name them under `preview`."""
+    if not staged:
+        return
+    if report["errors"]:
+        report["preview"] = {k: str(v) for k, v in staged.items()}
+        return
+    out.mkdir(parents=True, exist_ok=True)
+    for k, src in staged.items():
+        os.replace(src, out / src.name)  # atomic per file: a reader sees the old plate or the new one
+        if k != "manifest":
+            report[k] = str(out / src.name)
+
+
 def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale: float = 2,
           theme: str | Path | None = None, theme_css: str = "", outline_text: bool = False, review: bool = False) -> dict:
     """Run the whole pipeline. With deliver, writes <out>/<name>.svg and .png; work files go to <out>/_work/.
@@ -66,14 +165,9 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
     report = {"spec": str(spec_path), "errors": [], "warnings": [], "density": {}, "voids": {}, "parity": None,
               "svg": None, "png": None, "outline": None, "snapshot": None, "fonts": [], "flow_problems": [], "build": None, "preview": None,
               "review": None}
-    spec, issues = read_spec(spec_path)
+    spec, theme_css, issues = prepare(spec_path, theme, theme_css)
     staged: dict[str, Path] = {}  # deliverables written to _work/, waiting for a clean report
     refused: list[str] = []  # network requests the page tried to make
-    if not issues:
-        file_css, issues = load_theme(spec, spec_path, theme)
-        theme_css = "\n".join(c for c in (file_css, theme_css) if c)
-    if not issues:
-        issues = check(spec, theme_css)
     if not any(i["level"] == "error" for i in issues):
         work.mkdir(parents=True, exist_ok=True)
         html = build_html(spec, theme_css)
@@ -83,73 +177,23 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
             try:
                 report["build"] = manifest(spec, spec_path, theme_css, browser.version)
                 page = open_plate(browser, html, spec, refused=refused)
-                flows = draw_flows(page, spec)
-                issues += problems_as_findings(flows)
-                dom = dom_lint(page, flows["segs"], slide=spec["canvas"].get("profile") == "slide")
-                issues += dom["issues"]
-                layout = measure(page)
-                (work / f"{name}.layout.json").write_text(json.dumps(layout, ensure_ascii=False), encoding="utf-8")
-                issues += paint_findings(layout["unsupported"]) + font_findings(layout) + widow_findings(layout, spec)
-                fit = paper_fit(spec["canvas"]["size"], layout["width"], layout["height"])
-                if fit:
-                    issues += print_findings(layout, fit)
-                    report["paper"] = {"size": fit["size"], "scale": round(fit["scale"], 3)}
-                svg, fonts = export_svg(layout, spec)
-                snap = snapshot(layout, flows["segs"])
-                svg_path = work / f"{name}.svg"
-                # Parity checks the layout with real text. With outline_text the deliverable has glyph paths instead,
-                # and the text version stays in _work/ for the parity check.
-                parity_svg = work / f"{name}.text.svg" if outline_text else svg_path
-                parity_svg.write_text(svg, encoding="utf-8")
-                if outline_text:
-                    from .glyphs import outline_text as to_paths
-                    svg_path.write_text(to_paths(svg), encoding="utf-8")
-                snap_path = work / f"{name}.snapshot.json"
-                snap_path.write_text(json.dumps(snap, indent=1, ensure_ascii=False),
-                                     encoding="utf-8")
-                # Parity: the page as laid out (connectors included) against the SVG rasterised at the same scale.
-                page.locator("#plate").screenshot(path=str(work / "html.png"))
-                page.close()
-                rasterise_svg(browser, parity_svg, work / "svg.png", scale=1, refused=refused)
-                par = image_diff(work / "html.png", work / "svg.png", work / "parity-diff.png")
+                plate = lay_out(page, spec, work, name)
+                svg = write_svg(plate, spec, work, name, outline_text)
+                par = parity(page, browser, svg["parity_svg"], work, refused)
                 if review:
-                    for old in (work / "review").glob("*.png"):
-                        old.unlink()  # a part renamed or cut differently leaves no stale crop behind
-                    rasterise_svg(browser, parity_svg, work / "review.png", scale=RASTER_SCALE, refused=refused)
-                    report["review"] = write_crops(layout, spec, work / "review.png", work / "review")
+                    report["review"] = review_crops(browser, plate["layout"], spec, svg["parity_svg"], work, refused)
                 if deliver:
-                    (work / f"{name}.md").write_text(outline.markdown(spec), encoding="utf-8")
-                    (work / f"{name}.build.json").write_text(json.dumps(report["build"], indent=1) + "\n", encoding="utf-8")
-                    png = work / f"{name}.png"
-                    if fit:  # the plate at its paper scale, centred on the exact sheet at the requested dpi
-                        rasterise_svg(browser, svg_path, png, scale=fit["scale"] * scale, refused=refused)
-                        on_sheet(png, fit, 96 * scale)
-                        svg_path.write_text(on_paper(svg_path.read_text(encoding="utf-8"), fit), encoding="utf-8")
-                    else:
-                        rasterise_svg(browser, svg_path, png, scale=scale, refused=refused)
-                    staged = {k: work / f"{name}.{ext}" for k, ext in
-                              (("svg", "svg"), ("png", "png"), ("outline", "md"), ("manifest", "build.json"))}
+                    staged = deliverables(browser, spec, report["build"], svg["svg"], plate["fit"], scale, work, name, refused)
             finally:
                 browser.close()
-        for url in dict.fromkeys(refused):
-            issues.append(finding("network", "(plate)", f"tried to load {url}"))
-        if par["fail"]:
-            issues.append(finding("svg-parity", "(plate)", par["detail"]))
-        elif par["count"]:
-            issues.append(finding("svg-parity", "(plate)", par["detail"], level="warning"))
-        report.update(density=dom["density"], voids=dom["voids"], fonts=fonts, snapshot=str(snap_path),
+        issues += plate["issues"] + page_findings(refused, par)
+        if plate["fit"]:
+            report["paper"] = {"size": plate["fit"]["size"], "scale": round(plate["fit"]["scale"], 3)}
+        report.update(density=plate["dom"]["density"], voids=plate["dom"]["voids"], fonts=svg["fonts"], snapshot=str(svg["snapshot"]),
                       parity={"pixels": par["count"], "regions": par["regions"], "detail": par["detail"]},
                       flow_problems=[dict(flow=spec["flows"][x["i"]], check=x["check"], problem=x["problem"])
-                                     for x in flows["problems"]])
+                                     for x in plate["flows"]["problems"]])
     report["errors"] = [with_hint(i) for i in issues if i["level"] == "error"]
-    if staged:
-        if report["errors"]:
-            report["preview"] = {k: str(v) for k, v in staged.items()}
-        else:
-            out.mkdir(parents=True, exist_ok=True)
-            for k, src in staged.items():
-                os.replace(src, out / src.name)  # atomic per file: a reader sees the old plate or the new one
-                if k != "manifest":
-                    report[k] = str(out / src.name)
+    publish(staged, report, out)
     report["warnings"] = [with_hint(i) for i in issues if i["level"] == "warning"]
     return report
