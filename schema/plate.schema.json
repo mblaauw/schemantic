@@ -702,6 +702,10 @@
           "minimum": 1,
           "maximum": 8,
           "description": "swimlane: the step column (1 is the first phase) this card sits in."
+        },
+        "layer": {
+          "type": "string",
+          "description": "layer-cake, a card in a rail: the layer it concerns. The card sits level with that layer's cards."
         }
       }
     },

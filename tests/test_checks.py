@@ -65,6 +65,8 @@ LAYOUT_TRIGGERS = {
     "arrow-label": (lambda s: s["flows"][0].update(label="OIDC"), "", BASE),
     "arrow-crossing": (lambda s: None, "", SKIP),
     "print-size": (lambda s: s["canvas"].update(size="a4-landscape"), "", BASE),
+    # Pentests at the infrastructure layer would run past the rail's end: the rail keeps its spread, and says so
+    "rail-layer": (lambda s: panel(s, "security")["cards"][3].update(layer="infra"), "", LAYERS),
     "footer-share": (lambda s: None, "#plate .footer .pb { padding-bottom: 80px; }", BASE),
     "widow": (lambda s: s.update(title="Domains publish each fact once; every consumer reads it from the bus"), "", BASE),
     "paint": (lambda s: None, ".ph-title { letter-spacing: 2px; }", BASE),

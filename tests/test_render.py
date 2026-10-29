@@ -404,3 +404,14 @@ def test_refs_reach_the_svg_and_the_outline_is_written(tmp_path):
     assert 'data-refs="adr: section 2"' in (tmp_path / "traced.svg").read_text(encoding="utf-8")
     md = (tmp_path / "traced.md").read_text(encoding="utf-8")
     assert md.startswith("# " + spec["title"]) and "## Open vragen" in md and "Token validatie" in md
+
+
+# A rail card with a layer sits level with that layer's cards, and the arrow it sends there runs straight
+def test_rail_cards_sit_level_with_their_layer(renders):
+    path = ROOT / "examples" / "ontwikkelplatform-lagen.yaml"
+    snap = json.loads((renders(path) / "_work" / f"{path.stem}.snapshot.json").read_text(encoding="utf-8"))
+    boxes = snap["boxes"]
+    assert abs(boxes["policy"][1] - boxes["admission"][1]) <= 2
+    assert abs(boxes["security.card0"][1] - boxes["experience.card0"][1]) <= 2
+    flow = next(f for f in snap["flows"] if f["from"] == "policy")
+    assert len(flow["points"]) == 2  # straight

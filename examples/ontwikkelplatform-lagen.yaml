@@ -63,15 +63,18 @@ panels:
         name: "Identity"
         note: "SSO voor mensen en pipelines"
         bullets: ["workload identity in plaats van keys", "rollen per team, beheerd in de portal"]
+        layer: experience
+      - icon: shield-lock
+        name: "Scanning"
+        note: "images en dependencies"
+        bullets: ["blokkeert bij kritieke CVE's", "een SBOM per image"]
+        layer: delivery
       - icon: certificate
         id: policy
         name: "Policy as code"
         note: "regels in Git"
         bullets: ["getest in CI, net als code", "afgedwongen bij admission"]
-      - icon: shield-lock
-        name: "Scanning"
-        note: "images en dependencies"
-        bullets: ["blokkeert bij kritieke CVE's", "een SBOM per image"]
+        layer: runtime
       - icon: test-pipe
         name: "Pentests"
         note: "twee keer per jaar, door een externe partij"
@@ -83,10 +86,10 @@ panels:
     title: "Observability"
     role: platform
     cards:
-      - {icon: file-search, name: "Logs", note: "centraal, 30 dagen", bullets: ["gestructureerd, met trace-id"]}
-      - {icon: chart-bar, name: "Metrics", note: "SLO's per service", bullets: ["error budget zichtbaar in de portal"]}
-      - {icon: route, name: "Traces", note: "door de mesh heen", bullets: ["10% sampling, fouten altijd"]}
-      - {icon: bell, name: "Alerting", note: "naar het team dat eigenaar is", bullets: ["routing via de service catalog"]}
+      - {icon: bell, name: "Alerting", note: "naar het team dat eigenaar is", bullets: ["routing via de service catalog"], layer: experience}
+      - {icon: chart-bar, name: "Metrics", note: "SLO's per service", bullets: ["een op error budget houdt de deploy tegen"], layer: delivery}
+      - {icon: route, name: "Traces", note: "door de mesh heen", bullets: ["10% sampling, fouten altijd"], layer: runtime}
+      - {icon: file-search, name: "Logs", note: "centraal, 30 dagen, met trace-id", layer: infra}
     chips:
       - {kind: info, text: "Golden paths leveren alerts mee"}
 

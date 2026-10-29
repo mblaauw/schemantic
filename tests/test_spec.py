@@ -319,3 +319,17 @@ def test_before_after_places_every_panel_once(example):
 
 def test_before_after_takes_only_its_layout_keys(example):
     assert "schema" in checks(before_after(example, lanes=["clients"]))
+
+
+# A rail card names the layer it concerns
+def test_a_rail_cards_layer_is_a_layer_in_order_and_only_in_rails():
+    spec = sp.load_spec(ROOT / "examples" / "ontwikkelplatform-lagen.yaml")
+    assert errors(spec) == []
+    security = next(p for p in spec["panels"] if p["id"] == "security")
+    security["cards"][0]["layer"] = "basement"
+    assert [(e["check"], e["id"]) for e in errors(spec)] == [("layout", "security.card0")]
+    security["cards"][0]["layer"] = "runtime"  # above Scanning, which sits at delivery
+    assert any("top to bottom" in e["detail"] for e in errors(spec))
+    security["cards"][0]["layer"] = "experience"
+    next(p for p in spec["panels"] if p["id"] == "runtime")["cards"][0]["layer"] = "infra"
+    assert any("only a rail" in e["detail"] for e in errors(spec))

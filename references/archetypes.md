@@ -67,6 +67,9 @@ layout:
 - Flows between layers run straight down. A flow from a rail card to a layer card turns corners through
   the gutter; put the target card at the end of its layer nearest the rail, or the route is blocked.
 - Rails are tall and narrow: short notes, bullets, and an info chip keep them from looking empty.
+- A rail card may name the layer it concerns (`layer: runtime`): it then sits level with that layer's cards, and an
+  arrow from it to that layer runs straight. Cards without a layer follow the one before; layered cards go top to
+  bottom. Lint warns (`rail-layer`) when the cards above leave no room to reach the layer.
 - Example: `examples/ontwikkelplatform-lagen.yaml`.
 
 ## swimlane

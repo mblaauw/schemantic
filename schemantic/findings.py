@@ -91,6 +91,10 @@ CHECKS: dict[str, Check] = {
                         "print on a3-landscape, or cut content so the plate is shorter; a4-landscape suits a plate of a "
                         "few panels",
                         "Print on a3-landscape, or cut content so the plate is shorter."),
+    "rail-layer": Check("layout", "a rail card cannot sit level with the layer it names (warning)",
+                        "fewer or shorter cards above it in the rail, a later layer for one of them, or no layer for "
+                        "cards that concern every layer",
+                        "Shorten the rail cards above it, or drop `layer` from a card that concerns every layer."),
     "footer-share": Check("layout", "the footer takes more than 15% of the plate's height (warning)",
                           "fewer principles (three that a team could check), shorter open questions, no context panel "
                           "unless the roles matter to the message; the footer is context for the body",

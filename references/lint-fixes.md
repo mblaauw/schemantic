@@ -40,6 +40,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `arrow-label` | no room for a label, or it touches a box | shorten the label, drop it, or explain the flow in a card note |
 | `arrow-crossing` | an arrow crosses another arrow at a right angle | connect a card instead of its panel, or the other way round; swap the two panels so the arrows run side by side; drop a flow the message does not need |
 | `print-size` | on paper the plate is scaled down to fit the sheet, and its smallest text would print below 6 pt | print on a3-landscape, or cut content so the plate is shorter; a4-landscape suits a plate of a few panels |
+| `rail-layer` | a rail card cannot sit level with the layer it names (warning) | fewer or shorter cards above it in the rail, a later layer for one of them, or no layer for cards that concern every layer |
 | `footer-share` | the footer takes more than 15% of the plate's height (warning) | fewer principles (three that a team could check), shorter open questions, no context panel unless the roles matter to the message; the footer is context for the body |
 | `widow` | the topic, title or subtitle ends with a single word on a line of its own | cut a few words, or rephrase so the line breaks between phrases; a headline reads best on one line |
 | `chip-length` | a chip runs to three lines | shorten it to one clear sentence |
