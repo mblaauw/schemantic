@@ -9,6 +9,7 @@
   --text: #1E293B;       /* body text */
   --muted: #4F5D6E;      /* notes, qualifiers */
   --accent: #1763C4;     /* the focus: its outline, its arrow */
+  --now-bg: #DDE8F7;     /* a roadmap's current period, down through the lanes */
   --arrow: #2F7FC6;      /* flow arrows and their heads */
   --on-head: #FFFFFF;    /* text on a panel's header colour */
 

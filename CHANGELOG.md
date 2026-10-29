@@ -60,8 +60,16 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - `build --review` (and `lint --review`): crops of the plate a model can read, in `<out>/_work/review/`: the whole
   plate, the title block, each panel with its gutter, and the footer, at about twice their size; a wide part is cut
   into overlapping pieces. The report lists each crop with its part and scale.
+- `flows_mean: sequence` ("Comes before"): arrows that run forward in time, from what comes first to what builds on
+  it. On a roadmap, the `timeline` warning names an arrow that points back in time; the roadmap example and starter
+  now use sequence, so their arrows run left to right instead of back against the periods.
 
 ### Changed
+- A roadmap's `now` period is tinted down through every lane, not only marked in the band on top.
+- Before-after: a quiet grey chevron in the gutter between two facing panels reads "becomes", so the pairs read as
+  what turned into what. It is not an arrow; arrows keep the meaning `flows_mean` gives them.
+- The event bus example puts its matrix beside the hub's cards (`arrange: row`), closing the empty half next to it;
+  the plate is 130 px shorter and the Operations spoke spreads its cards half as far.
 - One loud place per plate. Panel headers are quiet by default (their role's tint, the title in the role's colour);
   only the panels a `focus` is about get a filled header, and without a focus the hub of a hub-and-spokes plate.
   Plates that were a wall of navy headers now lead the eye; the legend's role swatches show the tint they explain.

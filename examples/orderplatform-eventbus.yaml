@@ -18,6 +18,8 @@ panels:
     subtitle: "Managed Kafka, one topic per event type"
     role: platform
     card_columns: 2
+    arrange: row                  # the matrix beside the cards, not under them with an empty half beside it
+    weights: [1, 2]
     cards:
       - {icon: stack-2, name: "Topics", note: "orders.placed, payments.captured, parcels.shipped"}
       - {icon: file-text, name: "Schema registry", note: "every event has a versioned schema"}

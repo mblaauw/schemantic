@@ -186,6 +186,8 @@ body { background: var(--paper); }
 
 /* Roadmap: the band of periods (as a swimlane's phases), the current one marked in the accent colour */
 .band-label.now { color: var(--accent); border-bottom-color: var(--accent); }
+/* The current period, tinted in every lane: as wide as its column, under its cards, from the lane's top edge to its bottom */
+.now-cell { background: var(--now-bg); margin: -12px 0; }
 .now-tag { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 4px; font-size: var(--t-small);
   font-weight: 700; color: var(--on-head); background: var(--accent); vertical-align: 1px; }
 
@@ -194,6 +196,12 @@ body { background: var(--paper); }
 .band-before .band-label, .band-after .band-label { font-size: var(--t-head); font-weight: 700; color: var(--ink);
   padding-bottom: 6px; border-bottom-width: 3px; }
 .band-after .band-label { color: var(--accent); border-bottom-color: var(--accent); }
+/* "Becomes": a quiet chevron in the gutter, level with the middle of the before panel, pointing at the panel it turns
+   into. Not an arrow: arrows keep the meaning flows_mean gives them. */
+.panel:has(> .pb > .becomes) { position: relative; }
+.becomes { position: absolute; left: 100%; top: calc(50% - 14px); width: var(--gutter-x); height: 28px; display: flex;
+  align-items: center; justify-content: center; color: var(--muted); }
+.becomes .ic { width: 28px; height: 28px; color: var(--muted); }
 
 /* Nested zones: dashed frames (drawn by js/decorate.js), side by side at the top level, holding zones and panels */
 /* Top-level frames end with their content, as panels do: spare height outside a frame reads as rhythm, inside as a hole */

@@ -44,10 +44,12 @@ panels:
       - {icon: bell, name: "Notifications", note: "e-mail and push from one service", col: 3}
       - {icon: chart-line, name: "Usage dashboards", note: "which self-service gets used", col: 4}
 
-flows_mean: dependency      # an arrow points from an item to what it needs first
+flows_mean: sequence        # an arrow runs forward in time, from what comes first to what builds on it
 flows:
-  - {from: profile, to: sso}
-  - {from: app, to: profile}
+  - {from: sso, to: profile}
+  - {from: profile, to: app}
+stories:
+  - {name: "Sign-on first, then self-service, then the app", path: [sso, profile, app]}
 
 footer:
   principles:

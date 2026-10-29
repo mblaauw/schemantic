@@ -20,7 +20,7 @@ lint (`placeholder`) names each TODO left.
 | `title` (80) | the one message, as a claim. Not "Architecture overview": that is a topic. Lint warns when its last line is one word |
 | `subtitle` (120) | how the plate makes that claim true |
 | `archetype`, `layout` | see `archetypes.md`; `layout.chips_at: bottom` lines chips up at the bottom of a row |
-| `flows_mean` | what every arrow means: `data`, `request`, `dependency` or `control`; sets the legend (lint warns without it) |
+| `flows_mean` | what every arrow means: `data`, `request`, `dependency`, `control` or `sequence` (what comes before what, for a roadmap); sets the legend (lint warns without it) |
 
 ## Panels
 
@@ -78,7 +78,7 @@ A note says what the card does in this story, not what the product is in general
 ## Flows
 
 ```yaml
-flows_mean: request                                   # data | request | dependency | control: what an arrow means
+flows_mean: request                                   # data | request | dependency | control | sequence
 flows:
   - {from: clients, to: identity}                     # panel to panel: the default
   - {from: clients, to: data, label: "BI and notebooks"}   # label 28; needs room beside the arrow

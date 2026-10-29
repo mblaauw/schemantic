@@ -22,6 +22,7 @@ legend:
   mean_request: "Direction of requests"
   mean_dependency: "Depends on"
   mean_control: "Controls"
+  mean_sequence: "Comes before"
   style_sync: "Synchronous call"
   style_async: "Asynchronous: event or message"
   style_optional: "Optional or occasional"
