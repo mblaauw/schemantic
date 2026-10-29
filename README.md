@@ -80,7 +80,7 @@ field guide is [`references/spec-guide.md`](references/spec-guide.md).
 
 ## Status
 
-Proof of concept, version 0.2 in progress (see [`CHANGELOG.md`](CHANGELOG.md)).
+Proof of concept, version 0.2.0 (see [`CHANGELOG.md`](CHANGELOG.md)).
 
 | Built | Planned |
 | --- | --- |
