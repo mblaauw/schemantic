@@ -68,6 +68,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - A roadmap's `now` period is tinted down through every lane, not only marked in the band on top.
 - Before-after: a quiet grey chevron in the gutter between two facing panels reads "becomes", so the pairs read as
   what turned into what. It is not an arrow; arrows keep the meaning `flows_mean` gives them.
+- The event bus example puts its matrix beside the hub's cards (`arrange: row`), closing the empty half next to it;
+  the plate is 130 px shorter and the Operations spoke spreads its cards half as far.
 - One loud place per plate. Panel headers are quiet by default (their role's tint, the title in the role's colour);
   only the panels a `focus` is about get a filled header, and without a focus the hub of a hub-and-spokes plate.
   Plates that were a wall of navy headers now lead the eye; the legend's role swatches show the tint they explain.

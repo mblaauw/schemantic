@@ -159,6 +159,8 @@ def hub_variant(top: int, bottom: int) -> dict:
     """The eventbus plate with `top` producers and `bottom` consumers (spokes cloned when it needs more)."""
     spec = sp.load_spec(ROOT / "examples" / "orderplatform-eventbus.yaml")
     by_id = {p["id"]: p for p in spec["panels"]}
+    for key in ("arrange", "weights"):  # a narrower hub has no room for its matrix beside the cards
+        by_id["bus"].pop(key, None)
     pool = ["orders", "payments", "shipping", "search", "analytics", "notify"]
     for k in range(top + bottom - len(pool)):
         clone = dict(by_id["notify"], id=f"extra{k}", title=f"Consumer {k + 1}")
