@@ -3,7 +3,7 @@ import pytest
 from conftest import ROOT, browser
 from playwright.sync_api import sync_playwright
 
-TOKENS = (ROOT / "templates" / "tokens.css").read_text(encoding="utf-8")
+TOKENS = (ROOT / "schemantic" / "templates" / "tokens.css").read_text(encoding="utf-8")
 
 
 def page_with(boxes: dict[str, tuple], cards: dict[str, tuple[str, tuple]] | None = None) -> str:

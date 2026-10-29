@@ -34,7 +34,7 @@ from . import __version__
 from .config import ROOT
 
 RUNTIME = ["SKILL.md", "README.md", "LICENSE", "CHANGELOG.md", "pyproject.toml", "requirements.txt", "schemantic",
-           "scripts", "templates", "schema", "locales", "assets/fonts", "assets/icons", "references", "examples", "docs"]
+           "scripts", "references", "examples", "docs"]
 SMOKE_SPEC = "examples/orderplatform-toegang.yaml"
 SUMS = "SHA256SUMS"
 SKIP = ("__pycache__", ".DS_Store")

@@ -19,7 +19,7 @@ def test_examples_are_valid(path):
     assert errors(sp.load_spec(path)) == []
 
 
-UNBUILT = [a for a in json.loads((ROOT / "schema" / "plate.schema.json").read_text())["properties"]["archetype"]["enum"]
+UNBUILT = [a for a in json.loads((ROOT / "schemantic" / "schema" / "plate.schema.json").read_text())["properties"]["archetype"]["enum"]
            if a not in archetypes.BUILT]
 
 
@@ -135,7 +135,7 @@ def test_registry_matches_schema():
 
 def test_examples_declare_the_schema():
     for path in EXAMPLES:
-        assert path.read_text(encoding="utf-8").startswith("# yaml-language-server: $schema=../schema/plate.schema.json")
+        assert path.read_text(encoding="utf-8").startswith("# yaml-language-server: $schema=../schemantic/schema/plate.schema.json")
 
 
 def test_panel_placed_twice(example):
@@ -398,3 +398,4 @@ def test_roadmap_items_need_a_period_and_do_not_overlap(example):
     details = [e["detail"] for e in errors(spec)]
     assert any("overlaps" in d for d in details) and any("needs `col`" in d for d in details)
     assert any("now is period 5" in d for d in details)
+

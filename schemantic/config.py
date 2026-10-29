@@ -5,11 +5,16 @@ import re
 from functools import cache
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-TEMPLATES = ROOT / "templates"
-ICONS = ROOT / "assets" / "icons"
-FONTS_DIR = ROOT / "assets" / "fonts"
-JS_DIR = Path(__file__).resolve().parent / "js"
+# Everything a render needs ships inside the package, so an installed wheel works; ROOT is the repository (the skill
+# folder), for what only a checkout has: examples, references, the gallery.
+PACKAGE = Path(__file__).resolve().parent
+ROOT = PACKAGE.parent
+TEMPLATES = PACKAGE / "templates"
+ICONS = PACKAGE / "icons"
+FONTS_DIR = PACKAGE / "fonts"
+LOCALES = PACKAGE / "locales"
+SCHEMA = PACKAGE / "schema" / "plate.schema.json"
+JS_DIR = PACKAGE / "js"
 
 # Paper presets in millimetres. A print plate is laid out at the sheet's width at 96 px per inch (whole CSS px), so
 # its type prints at its own size, and takes its content's height like a screen plate. On paper it is centred, and
@@ -39,7 +44,7 @@ SLIDE_BUDGET = {"panels": 5, "cards": 18}  # more than this is two slides
 
 @cache
 def tokens() -> dict[str, str]:
-    """Custom properties declared in templates/tokens.css, by name (with the leading dashes)."""
+    """Custom properties declared in tokens.css, by name (with the leading dashes)."""
     css = (TEMPLATES / "tokens.css").read_text(encoding="utf-8")
     css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
     return {m.group(1): m.group(2).strip() for m in re.finditer(r"(--[\w-]+)\s*:\s*([^;]+);", css)}

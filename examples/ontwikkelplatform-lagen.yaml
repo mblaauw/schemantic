@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schema/plate.schema.json
+# yaml-language-server: $schema=../schemantic/schema/plate.schema.json
 # Fictional example: a layer-cake plate in Dutch with English technical terms, rails on both sides,
 # and connectors from a rail card into a layer card.
 canvas: {size: landscape-4x3, lang: nl}

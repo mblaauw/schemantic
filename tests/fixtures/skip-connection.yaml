@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../schema/plate.schema.json
+# yaml-language-server: $schema=../../schemantic/schema/plate.schema.json
 # C9 fixture: the toegang plate plus a skip connection (clients -> services) that can only route as a U through
 # the row gutter, moving a label out of its way.
 # Fictional example: a column-flow plate in Dutch with English technical terms.

@@ -41,7 +41,7 @@ to `_work/` and move to the output folder only when the build has no errors. Chr
 Everything that needs the laid-out page runs in the page: sizing the canvas (`fit`), drawing dashes and strikes
 (`decorate`), routing connectors (`route`), measuring for lint (`lint`), measuring the page into a layout document
 (`layout`). Python loads the scripts once per page (`browser.open_plate`) and calls each by name with JSON
-(`browser.call(page, "route", flows)`), and writes the SVG itself. Visual values come from `templates/tokens.css` on
+(`browser.call(page, "route", flows)`), and writes the SVG itself. Visual values come from `schemantic/templates/tokens.css` on
 both sides; there is no JavaScript in Python strings.
 
 ## The layout document and the paint contract
@@ -107,8 +107,8 @@ checks the one effect it must have.
 2. Add `schemantic/archetypes/<name>.py` defining `ARCHETYPE`: its `name`, `required` and `allowed` layout keys,
    `validate` (its own checks), `grid` (a `GridSpec`: rows of panel ids or group names, column tracks, and any
    groups, bands or zones) and `panel_defaults`. The registry finds it; no shared code changes.
-3. Add its `layout` keys and an `if/then` block to `schema/plate.schema.json`; `tests/test_spec.py` checks that the
+3. Add its `layout` keys and an `if/then` block to `schemantic/schema/plate.schema.json`; `tests/test_spec.py` checks that the
    schema and the registry agree.
-4. Render CSS in `templates/components.css` (and template markup only if it needs a new kind of group).
+4. Render CSS in `schemantic/templates/components.css` (and template markup only if it needs a new kind of group).
 5. Run `python -m pytest -q --update-golden` for the new example's golden and snapshot, add one negative test per
    layout check, and move the name from planned to built in `SKILL.md` and the README.

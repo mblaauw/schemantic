@@ -16,8 +16,8 @@ def test_requirements_follow_pyproject():
 def test_colours_live_in_tokens_only():
     hexes = re.compile(r"#[0-9a-fA-F]{3,8}\b")
     files = [
-        ROOT / "templates" / "components.css",
-        ROOT / "templates" / "plate.html.j2",
+        ROOT / "schemantic" / "templates" / "components.css",
+        ROOT / "schemantic" / "templates" / "plate.html.j2",
         *(ROOT / "schemantic").rglob("*.py"),
         *(ROOT / "schemantic" / "js").glob("*.js"),
     ]
@@ -52,7 +52,7 @@ def test_licence_is_declared_and_present():
     assert licence.startswith("MIT License") and "Permission is hereby granted" in licence
     assert "Copyright (c) 2026" in licence
     assert "**Code:** MIT, see [`LICENSE`](LICENSE)." in (ROOT / "README.md").read_text(encoding="utf-8")
-    for notice in ("assets/icons/LICENSE-tabler-icons.txt", "assets/fonts/LICENSE-inter.txt", "assets/fonts/LICENSE-dejavu.txt"):
+    for notice in ("schemantic/icons/LICENSE-tabler-icons.txt", "schemantic/fonts/LICENSE-inter.txt", "schemantic/fonts/LICENSE-dejavu.txt"):
         assert (ROOT / notice).exists(), notice
 
 
@@ -87,7 +87,16 @@ def test_docs_list_what_is_built():
         assert name in planned_cell and name not in built_cell and f"## {name}" not in reference, name
     not_built = reference.split("## Not built yet")[1]
     assert all(f"`{n}`" in not_built for n in archetypes.PLANNED)
-    patterns = json.loads((ROOT / "schema" / "plate.schema.json").read_text())["$defs"]["pattern"]["properties"]["type"]["enum"]
+    patterns = json.loads((ROOT / "schemantic" / "schema" / "plate.schema.json").read_text())["$defs"]["pattern"]["properties"]["type"]["enum"]
     pattern_row = next(line for line in readme.splitlines() if line.startswith("| Patterns:"))
     for p in patterns:
         assert p.replace("-", " ") in pattern_row.split("|")[1], p
+
+
+def test_the_wheel_carries_every_file_a_render_reads():
+    """An installed wheel has only what package-data names; every non-Python file in the package must match it."""
+    py = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    globs = re.findall(r'"([^"]+)"', py.split("[tool.setuptools.package-data]")[1].split("]")[0])
+    pkg = ROOT / "schemantic"
+    data = [p for p in pkg.rglob("*") if p.is_file() and p.suffix not in (".py", ".pyc") and "__pycache__" not in p.parts]
+    assert data and [p for p in data if not any(p.relative_to(pkg).match(g) for g in globs)] == []

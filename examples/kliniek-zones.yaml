@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schema/plate.schema.json
+# yaml-language-server: $schema=../schemantic/schema/plate.schema.json
 # Fictional example: a nested-zones plate in English. Zones are where things run; panels sit inside them.
 canvas: {size: landscape-4x3, lang: en}
 topic: "Clinic portal: where everything runs"
