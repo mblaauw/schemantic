@@ -12,6 +12,10 @@ class Roadmap(Swimlane):
     required = frozenset({"lanes", "columns"})
     allowed = frozenset({"lanes", "columns", "now", "chips_at"})
 
+    def standalone(self, spec: dict) -> set[str]:
+        """A workstream with no dependency is still on the roadmap: its period columns are the relation."""
+        return set(spec["layout"]["lanes"])
+
     def validate(self, spec: dict) -> list[dict]:
         lay, out = spec["layout"], []
         ncols = len(lay["columns"])

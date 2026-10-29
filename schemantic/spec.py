@@ -165,6 +165,8 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
         if f["from"] == f["to"]:
             out.append(finding("flow", f"flows/{i}", f"from and to are the same element ('{f['from']}')"))
 
+    out += orphans(spec, arche)
+
     canvas = spec["canvas"]
     if ("part" in canvas) != ("of" in canvas):
         missing = "canvas.part" if "part" not in canvas else "canvas.of"
@@ -209,6 +211,18 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
             if re.search(re.escape(b.lower()), text):
                 out.append(finding("language", term, f"'{b}' found; keep the technical term '{term}' in English"))
     return out
+
+
+def orphans(spec: dict, arche: archetypes.Archetype) -> list[dict]:
+    """On a plate with flows, a panel that no flow touches (neither it nor one of its cards) reads as left over."""
+    ends = {f[end] for f in spec.get("flows", []) for end in ("from", "to")}
+    if not ends:
+        return []
+    free = arche.standalone(spec)
+    return [finding("orphan", p["id"], f"no flow reaches panel '{p['id']}' or its cards, while the rest of the plate is connected",
+                    level="warning")
+            for p in spec["panels"]
+            if p["id"] not in free and not ends & ({p["id"]} | {card_id(p, i, c) for i, c in enumerate(p.get("cards", []))})]
 
 
 def traceability(spec: dict) -> list[dict]:

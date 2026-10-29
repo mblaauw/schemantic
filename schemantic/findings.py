@@ -36,6 +36,11 @@ CHECKS: dict[str, Check] = {
     "flow": Check("spec", "a flow names an id that does not exist, connects an element to itself, or connects a card "
                   "to its own panel", "use a panel id, or give the card an `id`; connect two different boxes",
                   "Point the flow at an existing panel or card id, and at two different boxes."),
+    "orphan": Check("spec", "no flow reaches a panel or any of its cards on a plate whose other panels connect (warning; "
+                    "roadmap lanes and layer-cake rails are exempt)",
+                    "add the flow the sources describe; if the sources name none, the panel may not belong on this plate, "
+                    "or the relation is an open question",
+                    "Add the flow the sources name for this panel, or drop the panel if nothing connects it."),
     "series": Check("spec", "parts of one series disagree: numbering, `of`, language, what arrows mean, or one thing drawn in "
                     "two colours (people in one part, a platform component in another)",
                     "make the parts agree: one language, one `flows_mean`, and the same role for a thing wherever it "

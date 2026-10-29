@@ -13,6 +13,10 @@ class LayerCake(Archetype):
     required = frozenset({"layers"})
     allowed = frozenset({"layers", "left", "right", "chips_at", "rail_width"})
 
+    def standalone(self, spec: dict) -> set[str]:
+        """A rail touches every layer by where it stands; an arrow is optional."""
+        return {spec["layout"].get("left"), spec["layout"].get("right")} - {None}
+
     def validate(self, spec: dict) -> list[dict]:
         """A card's `layer` names a layer, sits in a rail, and the rail's layered cards go top to bottom."""
         lay, out = spec["layout"], []

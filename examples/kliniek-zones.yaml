@@ -76,11 +76,12 @@ panels:
     title: "Insurers"
     role: external
     cards:
-      - {icon: building-bank, name: "Claims API", note: "receives invoices monthly"}
+      - {icon: building-bank, name: "Claims portal", note: "checks claim status"}
 
 flows_mean: request
 flows:
   - {from: patients, to: portal}
+  - {from: insurers, to: integration}
   - {from: portal, to: integration}
   - {from: integration, to: proxy, focus: true}   # the one way from the cloud into the datacentre
   - {from: proxy, to: ehr}

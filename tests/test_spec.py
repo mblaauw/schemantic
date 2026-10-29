@@ -399,3 +399,13 @@ def test_roadmap_items_need_a_period_and_do_not_overlap(example):
     assert any("overlaps" in d for d in details) and any("needs `col`" in d for d in details)
     assert any("now is period 5" in d for d in details)
 
+
+def test_rails_and_roadmap_lanes_may_stand_without_a_flow():
+    """A rail touches every layer and a roadmap lane sits in time by where it is placed: neither is an orphan."""
+    layers = sp.load_spec(ROOT / "examples" / "ontwikkelplatform-lagen.yaml")
+    rails = {layers["layout"]["left"], layers["layout"]["right"]}
+    layers["flows"] = [f for f in layers["flows"] if not {f["from"], f["to"]} & rails]
+    roadmap = sp.load_spec(ROOT / "examples" / "portal-roadmap.yaml")
+    assert [f for f in sp.check(layers) + sp.check(roadmap) if f["check"] == "orphan"] == []
+    # Without the exemption the rail left without flows (observability) would be an orphan
+    assert [f["id"] for f in sp.orphans(layers, archetypes.Archetype())] == ["observability"]

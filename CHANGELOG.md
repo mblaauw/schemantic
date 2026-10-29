@@ -47,6 +47,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   live text depends on the viewer's fonts.
 - Schemantic's own pipeline as a plate, from `docs/architecture.md`: the spec in `docs/plates/`, the image at the top
   of that page, and linted with the examples.
+- `orphan` warning: on a plate with flows, a panel that no flow reaches (neither it nor one of its cards) reads as
+  left over. Roadmap lanes and layer-cake rails are exempt; their place already says how they relate. The clinic
+  plate had one: its insurers now check claim status through the integration API.
 
 ### Changed
 - A wheel could not render: templates, fonts, icons, locales and the schema sat outside the package, so only a
