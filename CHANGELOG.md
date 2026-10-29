@@ -70,6 +70,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ### Changed
 - Arrows and step badges are slate ink instead of blue, so a blue arrow means the focus. Blue is left to the platform
   role and the focus; every plate's arrows change colour.
+- Tests run in parallel (`pytest -n auto`, pytest-xdist), locally and in CI: about 3 minutes become 1.4 on an 8-core
+  machine. CI runs Python 3.10 on Linux only (3.14 on Linux and macOS), so a pull request waits for three test jobs
+  instead of four, and for one macOS runner instead of two.
 - The checks that read only the layout document (paint, fonts, widowed title lines, print size) live together in
   `lint.py`; `export.py` only writes the SVG.
 - `schemantic gallery` also rebuilds the plates in `docs/plates/` into `docs/img/`; the architecture page's image had
