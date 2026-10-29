@@ -80,8 +80,8 @@ Save it where the user keeps their work, for example `plates/<name>.yaml`. Start
 budgets and the writing rules. The short version:
 
 - 3 to 6 panels, 2 to 6 cards each. A card is a thing with a name; its note says what it does in this story.
-- Say once what arrows mean (`flows_mean`). Connect panels by default; when the message names a route through
-  particular parts, connect those cards, so the reader can trace it.
+- Say once what arrows mean (`flows_mean`). Connect panels by default; when the title or subtitle names a route
+  ("A via B to C"), give those cards ids and connect them card to card, every step, so a finger can follow it.
 - Show change with `status` (new, changed, planned, deprecated, removed) and the one element that matters with
   `focus`.
 - A `warning` chip or card `flag` marks an open choice; it appears again under open questions.

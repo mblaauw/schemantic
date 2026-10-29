@@ -1,0 +1,689 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   132
+  ],
+  "body": [
+   40,
+   150,
+   1560,
+   1090
+  ],
+  "applicant": [
+   40,
+   194,
+   1560,
+   310
+  ],
+  "application": [
+   224,
+   206,
+   410,
+   296
+  ],
+  "documents": [
+   450,
+   206,
+   638,
+   296
+  ],
+  "decision": [
+   1360,
+   206,
+   1546,
+   296
+  ],
+  "portal": [
+   40,
+   992,
+   1560,
+   1090
+  ],
+  "publish": [
+   1360,
+   1004,
+   1546,
+   1076
+  ],
+  "intake": [
+   40,
+   354,
+   1560,
+   486
+  ],
+  "check": [
+   450,
+   366,
+   638,
+   472
+  ],
+  "case": [
+   40,
+   530,
+   1560,
+   646
+  ],
+  "assess": [
+   678,
+   542,
+   864,
+   632
+  ],
+  "draft": [
+   1132,
+   542,
+   1320,
+   632
+  ],
+  "welfare": [
+   40,
+   690,
+   1560,
+   804
+  ],
+  "advice": [
+   906,
+   702,
+   1092,
+   792
+  ],
+  "lead": [
+   40,
+   848,
+   1560,
+   948
+  ],
+  "sign": [
+   1132,
+   862,
+   1320,
+   934
+  ],
+  "band.phases": [
+   40,
+   150,
+   1560,
+   178
+  ],
+  "footer": [
+   40,
+   1108,
+   1560,
+   1240
+  ],
+  "footer.principles": [
+   40,
+   1108,
+   876,
+   1188
+  ],
+  "footer.open_questions": [
+   904,
+   1108,
+   1560,
+   1212
+  ],
+  "footer.legend": [
+   40,
+   1222,
+   1560,
+   1240
+  ]
+ },
+ "text": [
+  [
+   40,
+   46,
+   "Building permit application, from submission to decision"
+  ],
+  [
+   40,
+   92,
+   "Each permit passes four desks in one order, and two steps have time limits"
+  ],
+  [
+   40,
+   124,
+   "Intake, assessment and sign-off run in the case management system; the committee advises within three weeks"
+  ],
+  [
+   52,
+   256,
+   "Applicant"
+  ],
+  [
+   266,
+   230,
+   "Application"
+  ],
+  [
+   266,
+   248,
+   "submitted in the"
+  ],
+  [
+   266,
+   264,
+   "online portal"
+  ],
+  [
+   494,
+   230,
+   "Missing documents"
+  ],
+  [
+   504,
+   248,
+   "Q1"
+  ],
+  [
+   494,
+   264,
+   "two weeks to add"
+  ],
+  [
+   494,
+   282,
+   "them"
+  ],
+  [
+   1402,
+   230,
+   "Decision"
+  ],
+  [
+   1402,
+   248,
+   "sent to them by the"
+  ],
+  [
+   1402,
+   264,
+   "portal"
+  ],
+  [
+   52,
+   1046,
+   "Online portal"
+  ],
+  [
+   1402,
+   1028,
+   "Published decision"
+  ],
+  [
+   1402,
+   1044,
+   "sent to the applicant"
+  ],
+  [
+   1402,
+   1062,
+   "and published"
+  ],
+  [
+   52,
+   424,
+   "Intake officer"
+  ],
+  [
+   494,
+   390,
+   "Completeness"
+  ],
+  [
+   494,
+   408,
+   "check"
+  ],
+  [
+   494,
+   424,
+   "in the case system; if"
+  ],
+  [
+   494,
+   442,
+   "incomplete, two"
+  ],
+  [
+   494,
+   458,
+   "weeks"
+  ],
+  [
+   52,
+   592,
+   "Case handler"
+  ],
+  [
+   720,
+   566,
+   "Zoning assessment"
+  ],
+  [
+   720,
+   584,
+   "plan against the"
+  ],
+  [
+   720,
+   600,
+   "zoning plan; asks for"
+  ],
+  [
+   720,
+   618,
+   "advice"
+  ],
+  [
+   1176,
+   566,
+   "Draft decision"
+  ],
+  [
+   1176,
+   584,
+   "for the team lead to"
+  ],
+  [
+   1176,
+   600,
+   "sign"
+  ],
+  [
+   52,
+   742,
+   "Welfare"
+  ],
+  [
+   52,
+   762,
+   "committee"
+  ],
+  [
+   948,
+   726,
+   "Committee advice"
+  ],
+  [
+   958,
+   742,
+   "Q2"
+  ],
+  [
+   948,
+   760,
+   "given within three"
+  ],
+  [
+   948,
+   776,
+   "weeks"
+  ],
+  [
+   52,
+   904,
+   "Team lead"
+  ],
+  [
+   1176,
+   886,
+   "Signed decision"
+  ],
+  [
+   1176,
+   902,
+   "the team lead signs"
+  ],
+  [
+   1176,
+   920,
+   "the draft"
+  ],
+  [
+   224,
+   168,
+   "Submit"
+  ],
+  [
+   450,
+   168,
+   "Check"
+  ],
+  [
+   678,
+   168,
+   "Assess"
+  ],
+  [
+   904,
+   168,
+   "Advise"
+  ],
+  [
+   1132,
+   168,
+   "Decide"
+  ],
+  [
+   1360,
+   168,
+   "Publish"
+  ],
+  [
+   40,
+   1120,
+   "Key principles"
+  ],
+  [
+   50,
+   1146,
+   "The committee gives its advice before the case handler drafts the decision."
+  ],
+  [
+   50,
+   1166,
+   "The team lead signs every decision before the portal publishes it."
+  ],
+  [
+   50,
+   1184,
+   "The portal sends each decision to the applicant and publishes it."
+  ],
+  [
+   904,
+   1120,
+   "Open questions"
+  ],
+  [
+   908,
+   1146,
+   "Q1"
+  ],
+  [
+   930,
+   1146,
+   "After documents arrive, is the check repeated?"
+  ],
+  [
+   908,
+   1166,
+   "Q2"
+  ],
+  [
+   932,
+   1166,
+   "Is the advice binding, and what if it comes late?"
+  ],
+  [
+   908,
+   1186,
+   "Q3"
+  ],
+  [
+   934,
+   1186,
+   "What happens if documents are still missing after two weeks?"
+  ],
+  [
+   908,
+   1206,
+   "Q4"
+  ],
+  [
+   934,
+   1206,
+   "Which step uses the document archive?"
+  ],
+  [
+   40,
+   1238,
+   "Legend"
+  ],
+  [
+   134,
+   1234,
+   "People and teams"
+  ],
+  [
+   288,
+   1234,
+   "Platform component"
+  ],
+  [
+   456,
+   1234,
+   "Controls"
+  ],
+  [
+   558,
+   1234,
+   "Optional or occasional"
+  ],
+  [
+   714,
+   1234,
+   "1"
+  ],
+  [
+   734,
+   1234,
+   "Step in the order things happen"
+  ],
+  [
+   942,
+   1234,
+   "Q1"
+  ],
+  [
+   966,
+   1234,
+   "Open choice or friction"
+  ],
+  [
+   394,
+   346,
+   "1"
+  ],
+  [
+   622,
+   524,
+   "2"
+  ],
+  [
+   920,
+   660,
+   "3"
+  ],
+  [
+   1076,
+   660,
+   "4"
+  ],
+  [
+   1580,
+   750,
+   "5"
+  ],
+  [
+   1304,
+   984,
+   "6"
+  ],
+  [
+   1590,
+   654,
+   "7"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "application",
+   "to": "check",
+   "points": [
+    [
+     394,
+     304
+    ],
+    [
+     394,
+     382
+    ],
+    [
+     444,
+     382
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 1,
+   "from": "check",
+   "to": "assess",
+   "points": [
+    [
+     622,
+     480
+    ],
+    [
+     622,
+     558
+    ],
+    [
+     670,
+     558
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 2,
+   "from": "assess",
+   "to": "advice",
+   "points": [
+    [
+     872,
+     616
+    ],
+    [
+     920,
+     616
+    ],
+    [
+     920,
+     696
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 3,
+   "from": "advice",
+   "to": "draft",
+   "points": [
+    [
+     1076,
+     696
+    ],
+    [
+     1076,
+     616
+    ],
+    [
+     1126,
+     616
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 4,
+   "from": "draft",
+   "to": "sign",
+   "points": [
+    [
+     1326,
+     616
+    ],
+    [
+     1580,
+     616
+    ],
+    [
+     1580,
+     878
+    ],
+    [
+     1326,
+     878
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 5,
+   "from": "sign",
+   "to": "publish",
+   "points": [
+    [
+     1304,
+     940
+    ],
+    [
+     1304,
+     1020
+    ],
+    [
+     1352,
+     1020
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 6,
+   "from": "check",
+   "to": "documents",
+   "points": [
+    [
+     544,
+     360
+    ],
+    [
+     544,
+     304
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 7,
+   "from": "publish",
+   "to": "decision",
+   "points": [
+    [
+     1554,
+     1020
+    ],
+    [
+     1590,
+     1020
+    ],
+    [
+     1590,
+     280
+    ],
+    [
+     1554,
+     280
+    ]
+   ],
+   "label": null
+  }
+ ]
+}

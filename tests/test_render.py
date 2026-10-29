@@ -433,3 +433,26 @@ def test_slide_profile_scales_type_and_lint_catches_header_overflow(tmp_path):
 def pipeline_build(path, out, theme_css=""):
     from schemantic import pipeline
     return pipeline.build(path, out, deliver=False, theme_css=theme_css)
+
+
+# A long handoff back up a swimlane goes round the edge in a second outer lane, past one that already uses the first
+def test_a_return_arrow_up_a_swimlane_takes_the_second_outer_lane(renders):
+    path = ROOT / "tests" / "fixtures" / "swimlane-return.yaml"
+    snap = json.loads((renders(path) / "_work" / f"{path.stem}.snapshot.json").read_text(encoding="utf-8"))
+    edge = snap["boxes"]["body"][2]
+    around = {f["i"]: max(x for x, _ in f["points"]) for f in snap["flows"] if max(x for x, _ in f["points"]) > edge}
+    assert len(around) == 2 and len(set(around.values())) == 2  # both round the right edge, each in its own lane
+
+
+# Holes outside panels: a short panel next to taller ones in its row, and an empty run inside a zone frame
+def test_void_checks_space_beside_short_panels_and_inside_zones(tmp_path):
+    from schemantic import pipeline
+    spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
+    clients = next(p for p in spec["panels"] if p["id"] == "clients")
+    clients["cards"], clients["chips"] = clients["cards"][:1], []
+    found = pipeline.build(write(tmp_path, spec, "short"), tmp_path / "a", deliver=False)["warnings"]
+    assert any(w["check"] == "void" and w["id"] == "clients" and "in its row" in w["detail"] for w in found)
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    next(p for p in spec["panels"] if p["id"] == "proxy")["cards"] = spec["panels"][0]["cards"][:1]
+    found = pipeline.build(write(tmp_path, spec, "zone"), tmp_path / "b", deliver=False)["warnings"]
+    assert any(w["check"] == "void" and w["id"].startswith("zone.") and "zone frame" in w["detail"] for w in found), found

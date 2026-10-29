@@ -223,6 +223,49 @@ schemantic.lint = (cfg) => {
         `${Math.round(gap)}px of empty space inside the panel; add real content, move it next to a panel of its height, or merge it`,
       );
   }
+  // Holes outside panels, which a reader sees as well: a panel that ends far above the tallest panel beside it in its
+  // row (panels end with their content), and an empty run inside a zone frame.
+  const outside = (id, gap, where) => {
+    if (gap > cfg.voidWarn)
+      add(
+        "warning",
+        "void",
+        id,
+        `${Math.round(gap)}px of empty space ${where}; add real content, or move it next to a panel of its height`,
+      );
+  };
+  const rowmates = panels.filter(
+    (p) =>
+      !p.classList.contains("spread") &&
+      (p.parentElement.id === "body" || p.parentElement.classList.contains("spoke-row")),
+  );
+  for (const p of rowmates) {
+    const r = rel(p);
+    const beside = rowmates.filter(
+      (o) => o !== p && o.parentElement === p.parentElement && Math.abs(rel(o).t - r.t) < 2,
+    );
+    if (beside.length)
+      outside(
+        p.dataset.id,
+        Math.max(...beside.map((o) => rel(o).b)) - r.b,
+        "below it, next to the tallest panel in its row",
+      );
+  }
+  for (const z of plate.querySelectorAll('[data-kind="zone"]')) {
+    const ib = inner(z);
+    const spans = [...z.querySelectorAll(":scope > .zone-label, :scope > .zone-body > *")]
+      .map((el) => rel(el))
+      .map((r) => [r.t, r.b])
+      .sort((a, b) => a[0] - b[0]);
+    let cursor = ib.t + 1;
+    let gap = 0;
+    for (const [t, b] of spans) {
+      gap = Math.max(gap, t - cursor);
+      cursor = Math.max(cursor, b);
+    }
+    outside(z.dataset.id, Math.max(gap, ib.b - 1 - cursor), "inside the zone frame");
+  }
+
   // One finding per check and element: the first detail, and how many more there were
   const once = new Map();
   for (const i of issues) {

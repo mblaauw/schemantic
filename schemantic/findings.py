@@ -111,7 +111,8 @@ CHECKS: dict[str, Check] = {
                    "Shorten the title by a few words so its last line is not a single word."),
     "chip-length": Check("layout", "a chip runs to three lines", "shorten it to one clear sentence",
                          "Shorten the chip to one sentence of about 50 characters."),
-    "void": Check("layout", "a run of empty space inside a body panel: warning over 96 px, error over 160 px",
+    "void": Check("layout", "a run of empty space inside a body panel (warning over 96 px, error over 160 px), below a short "
+                  "panel next to taller ones in its row, or inside a zone frame (warning over 96 px)",
                   "add real content (bullets, a pattern, an info chip); move the panel next to one of its height; merge it "
                   "with a neighbour; never filler", "Add real content to the panel, or place it next to a panel of its height."),
     "svg-parity": Check("layout", "the SVG differs from the measured layout",
