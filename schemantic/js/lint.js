@@ -265,6 +265,62 @@ schemantic.lint = (cfg) => {
     }
     outside(z.dataset.id, Math.max(gap, ib.b - 1 - cursor), "inside the zone frame");
   }
+  // An empty cell in layout.areas (a "." on a content track; the odd tracks are gutters), sized from the grid's
+  // resolved tracks.
+  const body = plate.querySelector("#body");
+  const bcs = body ? getComputedStyle(body) : null;
+  if (bcs && bcs.gridTemplateAreas !== "none") {
+    const cells = [...bcs.gridTemplateAreas.matchAll(/"([^"]*)"/g)].map((m) => m[1].trim().split(/\s+/));
+    const hs = bcs.gridTemplateRows.split(/\s+/).map(num);
+    const ws = bcs.gridTemplateColumns.split(/\s+/).map(num);
+    for (const [r, row] of cells.entries())
+      for (const [c, name] of row.entries()) {
+        if (name !== "." || r % 2 || c % 2) continue;
+        const [w, h] = [ws[c], hs[r]].map(Math.round);
+        voids[`layout.areas.r${r / 2 + 1}c${c / 2 + 1}`] = Math.min(w, h);
+        if (Math.min(w, h) > cfg.voidWarn)
+          add(
+            "warning",
+            "void",
+            "layout.areas",
+            `an empty ${w} × ${h}px cell in row ${r / 2 + 1}, column ${c / 2 + 1}; let a panel beside it span it, or rearrange the rows`,
+          );
+      }
+  }
+  // A panel spanning rows spreads its cards over its height; cards spread most of a card's height apart float, and
+  // read as holes. Cards placed level with their layer are aligned, not spread.
+  for (const p of panels.filter((x) => x.classList.contains("spread"))) {
+    const cards = [...p.querySelectorAll(":scope > .pb > .blocks > .cards > *")];
+    if (cards.some((el) => el.dataset.layer !== undefined)) continue;
+    const rows = new Map();
+    for (const el of cards) {
+      const r = rel(el);
+      const t = Math.round(r.t);
+      rows.set(t, Math.max(rows.get(t) || 0, r.b));
+    }
+    const tops = [...rows.keys()].sort((a, b) => a - b);
+    const gap = Math.max(0, ...tops.slice(1).map((t, i) => t - rows.get(tops[i])));
+    const tall = tops.reduce((s, t) => s + rows.get(t) - t, 0) / (tops.length || 1);
+    voids[`${p.dataset.id}.spread`] = Math.round(gap);
+    if (gap > Math.max(tall * cfg.spreadShare, cfg.spreadFloor))
+      add(
+        "warning",
+        "void",
+        p.dataset.id,
+        `its cards are spread ${Math.round(gap)}px apart to fill the rows it spans; give it fewer rows, or more cards`,
+      );
+  }
+  // A fixed canvas the rows cannot fill leaves the rest under the footer.
+  const last = [body, plate.querySelector(".footer")].filter(Boolean).map((el) => rel(el).b);
+  const band = inner(plate).b - 1 - Math.max(...last);
+  voids.canvas = Math.round(band);
+  if (band > cfg.voidWarn)
+    add(
+      "warning",
+      "void",
+      "canvas",
+      `${Math.round(band)}px of blank canvas below the footer: the rows cannot fill the fixed height; use height: fit, or give the rows more content`,
+    );
 
   // One finding per check and element: the first detail, and how many more there were
   const once = new Map();

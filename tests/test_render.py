@@ -471,3 +471,22 @@ def test_void_checks_space_beside_short_panels_and_inside_zones(tmp_path):
     next(p for p in spec["panels"] if p["id"] == "proxy")["cards"] = spec["panels"][0]["cards"][:1]
     found = pipeline.build(write(tmp_path, spec, "zone"), tmp_path / "b", deliver=False)["warnings"]
     assert any(w["check"] == "void" and w["id"].startswith("zone.") and "zone frame" in w["detail"] for w in found), found
+
+
+def test_void_checks_empty_cells_spread_cards_and_a_blank_band(tmp_path):
+    from schemantic import pipeline
+    voids = lambda report: [w["id"] for w in report["warnings"] if w["check"] == "void"]  # noqa: E731
+    spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
+    spec["layout"]["areas"][1] = "data data data ."
+    report = pipeline.build(write(tmp_path, spec, "cell"), tmp_path / "a", deliver=False)
+    assert "layout.areas" in voids(report) and report["voids"]["layout.areas.r2c4"] > 96
+    # The bus's operations cards are spread 47 px apart, under half their height; with names only they float.
+    spec = sp.load_spec(ROOT / "examples" / "orderplatform-eventbus.yaml")
+    ops = next(p for p in spec["panels"] if p["id"] == "ops")
+    assert "ops" not in voids(pipeline.build(write(tmp_path, spec, "rich"), tmp_path / "b", deliver=False))
+    ops["cards"] = [{k: c[k] for k in ("id", "icon", "name") if k in c} for c in ops["cards"]]
+    assert "ops" in voids(pipeline.build(write(tmp_path, spec, "bare"), tmp_path / "c", deliver=False))
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    spec["canvas"].update(size="landscape-16x9", height="fixed")
+    report = pipeline.build(write(tmp_path, spec, "band"), tmp_path / "d", deliver=False)
+    assert "canvas" in voids(report) and report["voids"]["canvas"] > 96

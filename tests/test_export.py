@@ -72,3 +72,10 @@ def test_print_size_measures_the_smallest_text_on_paper():
     found = print_findings(layout, tall)
     assert [f["check"] for f in found] == ["print-size"] and "at 3.8 pt" in found[0]["detail"]
     assert print_findings(layout, paper_fit("a4-landscape", 1123, 700)) == []
+
+
+def test_a_plate_much_shorter_than_its_sheet_leaves_blank_bands():
+    layout = {"width": 1587, "height": 800, "items": []}
+    found = print_findings(layout, paper_fit("a3-landscape", 1587, 800))
+    assert [(f["check"], f["id"]) for f in found] == [("void", "canvas.size")] and "161px blank" in found[0]["detail"]
+    assert print_findings(dict(layout, height=1000), paper_fit("a3-landscape", 1587, 1000)) == []
