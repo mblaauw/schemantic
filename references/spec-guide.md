@@ -86,9 +86,10 @@ flows:
   - {from: integration, to: proxy, focus: true}       # the one arrow the plate is about (one focus per plate)
 ```
 
-With a `focus` (a panel, a card, or an arrow), the panels it is about keep their full colour and the others get a
-quiet header in their role's tint, so the eye goes to the point first. A focused arrow is drawn heavier, in the
-accent colour.
+Panel headers are quiet: their role's tint, with the title in the role's colour. Only the panels a `focus` is about
+(a panel, a card, or the two ends of an arrow) get a filled header, so a plate has one loud place and the eye goes
+there first; without a focus, a hub-and-spokes hub is that place. A focused arrow is drawn heavier, in the accent
+colour.
 
 The router draws straight arrows across a gutter where it can, and otherwise turns corners through the
 gutters (one or two bends), or goes around: out of a box and back into the other on the same side, along a gutter

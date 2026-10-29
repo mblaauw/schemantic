@@ -162,7 +162,7 @@ body { background: var(--paper); }
 /* Focus: the one element the plate is about */
 .card.focus { border: 2px solid var(--accent); padding: 8px 9px; }
 .panel.focus { border: 2px solid var(--accent); }
-/* With a focus on the plate, the other panels' headers go quiet: their role's tint, dark text. The colour still says
+/* One header is filled: the focus (or a hub). Every other header is quiet: its role's tint, dark text. The colour still says
    the role; the full colour is left to what the plate is about. */
 .panel.quiet > .ph { background: var(--sub); }
 .panel.quiet .ph-title { color: var(--head); }

@@ -52,6 +52,10 @@ class Archetype:
         """Extra render properties for a panel (for example, card columns or the hub frame)."""
         return {}
 
+    def loud(self, spec: dict) -> set[str]:
+        """Panels with a filled header when the plate has no focus: the layout's own centre, if it has one."""
+        return set()
+
     def standalone(self, spec: dict) -> set[str]:
         """Panels that may stand without a flow: their place on the plate already says how they relate."""
         return set()

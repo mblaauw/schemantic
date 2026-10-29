@@ -145,7 +145,7 @@
 <section class="panel role-frame" data-kind="panel" data-id="footer.legend"><div class="ph"><div class="ph-title">{{ L.footer.legend }}</div></div>
 <div class="pb">
 {%- for e in legend -%}
-{%- if e.kind == 'role' %}<div class="lg"><span class="sw" style="background: var(--{{ e.key }}-head)"></span><span>{{ e.label }}</span></div>
+{%- if e.kind == 'role' %}<div class="lg"><span class="sw" style="background: var(--{{ e.key }}-sub); border: 1.5px solid var(--{{ e.key }}-head)"></span><span>{{ e.label }}</span></div>
 {%- elif e.kind == 'arrow' %}<div class="lg">{{ icon('arrow-right', 'ic', ' lg-arrow') }}<span>{{ e.label }}</span></div>
 {%- elif e.kind == 'line' %}<div class="lg"><span class="ls" data-line="{{ e.key }}"></span><span>{{ e.label }}</span></div>
 {%- elif e.kind == 'step' %}<div class="lg"><span class="flag flag-step">1</span><span>{{ e.label }}</span></div>

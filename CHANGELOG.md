@@ -52,6 +52,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   plate had one: its insurers now check claim status through the integration API.
 
 ### Changed
+- One loud place per plate. Panel headers are quiet by default (their role's tint, the title in the role's colour);
+  only the panels a `focus` is about get a filled header, and without a focus the hub of a hub-and-spokes plate.
+  Plates that were a wall of navy headers now lead the eye; the legend's role swatches show the tint they explain.
 - A wheel could not render: templates, fonts, icons, locales and the schema sat outside the package, so only a
   checkout worked. They now live in `schemantic/` (`schemantic/templates/tokens.css`,
   `schemantic/schema/plate.schema.json`, …) and travel as package data; a test keeps that list complete. Specs that

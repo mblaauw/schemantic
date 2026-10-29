@@ -55,6 +55,10 @@ No coordinates does not mean the layout designs itself. Three parts decide three
   dumping its spare height into one row, which `canvas.height: fit` removes.
 - **A footer is context.** Dark header bars on footer panels drew the eye away from the body and took 17–18% of the
   canvas; quiet labels and a legend strip bring it under 13%, and lint warns above 15% (`footer-share`).
+- **One loud place.** With every header filled in its role's dark colour, four of seven plates were a wall of navy
+  and nothing led the eye; the focus only stood out because setting it quietened the rest. Quiet headers are now the
+  default and a filled header is what a focus (or a hub) earns. The same review moved the subtitle out of accent
+  blue and the info chips to slate, so blue no longer means five things.
 - **Connectors are routed, not drawn.** Every route is checked against the measured boxes. A rail card connected to
   the card at the far end of a layer had no clear route; lint said so, and the fix was card order in the spec.
   Straight arrows and their labels are placed first; bent routes then avoid them, and may move a label along its
