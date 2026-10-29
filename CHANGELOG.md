@@ -21,6 +21,12 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 
 - Evals rerun with the skill (29 October): defects per plate 2.8 to 2.2 (Sonnet) and 2.0 to 1.6 (Haiku); no footer
   defects left; holes and paths are the next targets. See `evals/README.md`.
+- From the eval rerun's top defects: the void check also measures the space below a short panel next to taller
+  ones in its row, and empty runs inside zone frames (same 96 px); the router has a second lane in each outer
+  margin, so a long swimlane handoff back to the top lane can go round past one already there (two runs had
+  dropped a step for it); and the skill and review question make a route named in the title something to trace
+  card by card. A lint for routes named in the title was tried on the eval plates and left out: matching card names
+  in titles flagged plates with no route at all.
 
 ### Changed
 - CI runs once per change (pull requests, and pushes to main), cancels a run a newer push replaces, and has a time

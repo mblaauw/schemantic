@@ -6,6 +6,9 @@ report what is left.
 
 1. **Message.** With the subtitle covered, does the picture fail to support the title's claim?
 2. **Path.** Is there a jump where a reader cannot follow the arrows from where the story starts to where it ends?
+   Test it: for each route the title or subtitle describes ("webshop via Kafka to Bronze"), put a finger on its first
+   card and follow arrows to its last. An arrow that ends on a panel instead of the card the route goes through is a
+   jump; so is a step that only a card note mentions.
 3. **Arrows.** Does any arrow point against what `flows_mean` says arrows mean (data where requests are meant)?
 4. **Colour.** Does any panel have a role whose legend label is wrong for it (people marked as a system)?
 5. **Holes.** Is any panel visibly emptier than its neighbours, with a gap a reader would notice? (Lint warns at
