@@ -378,9 +378,10 @@
         "data",
         "request",
         "dependency",
-        "control"
+        "control",
+        "sequence"
       ],
-      "description": "What every arrow on this plate means; sets the legend label. data: where data goes; request: who calls whom; dependency: what needs what; control: what steers what."
+      "description": "What every arrow on this plate means; sets the legend label. data: where data goes; request: who calls whom; dependency: what needs what; control: what steers what; sequence: what comes before what (a roadmap's arrows, forward in time)."
     },
     "stories": {
       "type": "array",

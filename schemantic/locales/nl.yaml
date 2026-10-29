@@ -22,6 +22,7 @@ legend:
   mean_request: "Richting van requests"
   mean_dependency: "Is afhankelijk van"
   mean_control: "Stuurt aan"
+  mean_sequence: "Gaat vooraf aan"
   style_sync: "Synchrone call"
   style_async: "Asynchroon: event of bericht"
   style_optional: "Optioneel of af en toe"

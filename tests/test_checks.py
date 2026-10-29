@@ -13,6 +13,7 @@ from schemantic import cli, findings, pipeline
 BASE = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
 LAYERS = sp.load_spec(ROOT / "examples" / "ontwikkelplatform-lagen.yaml")
 SKIP = sp.load_spec(ROOT / "tests" / "fixtures" / "skip-connection.yaml")  # its skip arrow must cross a down arrow
+ROADMAP = sp.load_spec(ROOT / "examples" / "portal-roadmap.yaml")
 
 
 def panel(spec, pid):
@@ -25,8 +26,9 @@ def mutate(fn, base=BASE):
     return spec
 
 
-# check -> (spec, theme css) that must produce it. Spec-stage checks need no browser.
+# check -> the change to BASE that must produce it, or (change, other base). Spec-stage checks need no browser.
 SPEC_TRIGGERS = {
+    "timeline": (lambda s: s.update(flows=[{"from": f["to"], "to": f["from"]} for f in s["flows"]], stories=[]), ROADMAP),
     "schema": lambda s: s.update(title="x" * 81),
     "id": lambda s: (s["panels"][0]["cards"][0].update(id="x"), s["panels"][1]["cards"][0].update(id="x")),
     "layout": lambda s: s["footer"].update(columns=[1, 1]),
@@ -97,7 +99,8 @@ def test_lint_fixes_doc_is_generated_from_the_table():
 
 @pytest.mark.parametrize("check", sorted(SPEC_TRIGGERS))
 def test_spec_check_triggers(check):
-    found = sp.check(mutate(SPEC_TRIGGERS[check]))
+    trigger = SPEC_TRIGGERS[check]
+    found = sp.check(mutate(*trigger) if isinstance(trigger, tuple) else mutate(trigger))
     assert check in {f["check"] for f in found}
 
 

@@ -360,35 +360,35 @@
   [
    452,
    802,
-   "Depends on"
+   "Comes before"
   ],
   [
-   546,
+   558,
    802,
    "new"
   ],
   [
-   584,
+   596,
    802,
    "New in this phase"
   ],
   [
-   712,
+   724,
    802,
    "changed"
   ],
   [
-   772,
+   784,
    802,
    "Changed in this phase"
   ],
   [
-   926,
+   938,
    802,
    "Q1"
   ],
   [
-   952,
+   964,
    802,
    "Open choice or friction"
   ]
@@ -396,40 +396,40 @@
  "flows": [
   {
    "i": 0,
-   "from": "profile",
-   "to": "sso",
+   "from": "sso",
+   "to": "profile",
    "points": [
-    [
-     556,
-     350
-    ],
-    [
-     508,
-     350
-    ],
     [
      508,
      272
+    ],
+    [
+     508,
+     350
+    ],
+    [
+     556,
+     350
     ]
    ],
    "label": null
   },
   {
    "i": 1,
-   "from": "app",
-   "to": "profile",
+   "from": "profile",
+   "to": "app",
    "points": [
-    [
-     898,
-     476
-    ],
-    [
-     848,
-     476
-    ],
     [
      848,
      396
+    ],
+    [
+     848,
+     476
+    ],
+    [
+     898,
+     476
     ]
    ],
    "label": null

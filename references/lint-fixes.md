@@ -25,7 +25,8 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `slide-budget` | a slide (canvas.profile: slide) holds more than 5 panels or 18 cards (warning) | make it two slides, each with its own message, or cut the cards the message does not need |
 | `role-fit` | a panel's colour says people but its cards look like systems, or the reverse (warning) | give the panel the role of what it holds (actor for people and teams, platform, data or external for systems), or split people and systems into two panels |
 | `focus` | more than one panel or card has `focus: true` | keep focus on the one element the title is about |
-| `flows-mean` | the plate has flows but no `flows_mean` (warning) | say what an arrow means: data, request, dependency or control |
+| `flows-mean` | the plate has flows but no `flows_mean` (warning) | say what an arrow means: data, request, dependency, control or sequence |
+| `timeline` | on a roadmap, an arrow ends at an item that starts before the item it comes from, so it reads back in time (warning) | point each arrow from what comes first to what builds on it, and say `flows_mean: sequence` |
 | `traceability` | the spec declares `sources`, and a card has no `refs` or names an undeclared source (warning) | add `refs: ["<source id>: <path or quote>"]` from the inventory; a card you cannot trace is an assumption or an open question, not a fact |
 | `chip-mirror` | a warning chip or warning flag is not under open questions | `open_questions: {from_chips: true}` |
 | `icon` | unknown icon | use one of the closest names in the hint, or search: `schemantic icons <word>` |

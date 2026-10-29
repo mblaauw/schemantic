@@ -39,7 +39,22 @@ class Roadmap(Swimlane):
                         out.append(finding("layout", where, f"overlaps {taken[n]} in period {n}; one item per period per lane"))
                         break
                     taken[n] = where
-        return out
+        return out + self.backwards(spec)
+
+    def backwards(self, spec: dict) -> list[dict]:
+        """Time runs left to right, so an arrow that ends at an item starting earlier than its own reads backwards,
+        whatever flows_mean says. Lanes (panels) have no period and are not judged."""
+        start = {c.get("id") or f"{p['id']}.card{i}": c.get("col") for p in spec["panels"] if p["id"] in spec["layout"]["lanes"]
+                 for i, c in enumerate(p.get("cards", []))}
+        return [finding("timeline", f"flows/{i}", f"the arrow from '{f['from']}' (period {start[f['from']]}) to '{f['to']}' "
+                        f"(period {start[f['to']]}) points back in time", level="warning")
+                for i, f in enumerate(spec.get("flows", []))
+                if start.get(f["from"]) and start.get(f["to"]) and start[f["to"]] < start[f["from"]]]
+
+    def panel_defaults(self, spec: dict, panel: dict) -> dict:
+        """A lane also carries the current period, which it tints, so `now` runs down through every workstream."""
+        out = super().panel_defaults(spec, panel)
+        return {**out, "now": spec["layout"]["now"]} if out and spec["layout"].get("now") else out
 
     def grid(self, spec: dict) -> GridSpec:
         lay = spec["layout"]

@@ -162,6 +162,7 @@ layout:
 ```
 
 - Every item has a `col`; items in one lane do not overlap. Use status for what is new or changed.
-- With `flows_mean: dependency`, an arrow points from an item to what it needs first.
+- Say `flows_mean: sequence` and point each arrow from what comes first to what builds on it, so arrows run forward
+  in time; lint warns (`timeline`) when one points back. The `now` period is tinted down through every lane.
 - The title claims the order that matters ("Self-service ships before the new mobile app"), not the year.
 - Example: `examples/portal-roadmap.yaml`.

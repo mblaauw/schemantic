@@ -20,6 +20,8 @@ panels:
     chips:
       - {kind: warning, text: "TODO: an open choice the sources leave"}
 
-flows_mean: dependency
+flows_mean: sequence
 flows:
-  - {from: next, to: base}
+  - {from: base, to: next}
+stories:
+  - {name: "TODO: the order the title tells", path: [base, next]}

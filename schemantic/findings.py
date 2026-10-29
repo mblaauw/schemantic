@@ -75,7 +75,10 @@ CHECKS: dict[str, Check] = {
     "focus": Check("spec", "more than one panel or card has `focus: true`", "keep focus on the one element the title is about",
                    "Keep focus on the one element the title is about."),
     "flows-mean": Check("spec", "the plate has flows but no `flows_mean` (warning)", "say what an arrow means: data, request, "
-                        "dependency or control", "Add flows_mean: data, request, dependency or control."),
+                        "dependency, control or sequence", "Add flows_mean: data, request, dependency, control or sequence."),
+    "timeline": Check("spec", "on a roadmap, an arrow ends at an item that starts before the item it comes from, so it reads "
+                      "back in time (warning)", "point each arrow from what comes first to what builds on it, and say "
+                      "`flows_mean: sequence`", "Reverse the arrow so it runs forward in time, with flows_mean: sequence."),
     "traceability": Check("spec", "the spec declares `sources`, and a card has no `refs` or names an undeclared source (warning)",
                           "add `refs: [\"<source id>: <path or quote>\"]` from the inventory; a card you cannot trace is an "
                           "assumption or an open question, not a fact", "Add refs naming the source; untraceable content goes to "
