@@ -52,6 +52,10 @@ class Archetype:
         """Extra render properties for a panel (for example, card columns or the hub frame)."""
         return {}
 
+    def standalone(self, spec: dict) -> set[str]:
+        """Panels that may stand without a flow: their place on the plate already says how they relate."""
+        return set()
+
 
 # Side columns (rails, side spokes) stay readable: at least SIDE_MIN_PX at a 1600 px canvas (scaled with the canvas),
 # at most SIDE_MAX percent of the body.

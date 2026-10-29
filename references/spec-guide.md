@@ -1,6 +1,6 @@
 # Spec guide
 
-The full contract is `schema/plate.schema.json`; this guide adds the budgets and writing rules that make a
+The full contract is `schemantic/schema/plate.schema.json`; this guide adds the budgets and writing rules that make a
 plate readable. Lengths are maximum characters.
 
 ## Top level
@@ -116,7 +116,7 @@ footer:
 
 - Sentence case everywhere. No marketing words, no abbreviations the reader has not seen before.
 - Names are nouns; notes are short clauses; principles are full sentences.
-- In `nl` plates, prose is Dutch and technical terms stay English (see `locales/nl.yaml`).
+- In `nl` plates, prose is Dutch and technical terms stay English (see `schemantic/locales/nl.yaml`).
 - Same thing, same word, on every plate of a series.
 
 ## Icons

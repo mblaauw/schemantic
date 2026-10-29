@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../schema/plate.schema.json
+# yaml-language-server: $schema=../../schemantic/schema/plate.schema.json
 # Fixture: the process-strip pattern inside a panel, next to cards and a tier strip.
 canvas: {size: landscape-4x3, lang: en}
 title: "A change reaches production in five checked steps"

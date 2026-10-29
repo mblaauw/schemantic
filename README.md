@@ -76,7 +76,7 @@ footer:
 ```
 
 The sample is completed against `examples/orderplatform-toegang.yaml` and linted by the tests. The contract is
-[`schema/plate.schema.json`](schema/plate.schema.json) (with editor completion through `yaml-language-server`); the
+[`schemantic/schema/plate.schema.json`](schemantic/schema/plate.schema.json) (with editor completion through `yaml-language-server`); the
 field guide is [`references/spec-guide.md`](references/spec-guide.md).
 
 ## Status
@@ -114,7 +114,7 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md): setup, tests, the golden and gallery p
 ## Licences
 
 - **Code:** MIT, see [`LICENSE`](LICENSE).
-- **Icons:** [Tabler Icons](https://tabler.io/icons) 3.19, MIT (`assets/icons/LICENSE-tabler-icons.txt`).
-- **Fonts:** [Inter](https://rsms.me/inter/) 4.1, SIL Open Font License (`assets/fonts/LICENSE-inter.txt`), and
-  [DejaVu Sans Mono](https://dejavu-fonts.github.io/) 2.37 (`assets/fonts/LICENSE-dejavu.txt`), unmodified; DejaVu
+- **Icons:** [Tabler Icons](https://tabler.io/icons) 3.19, MIT (`schemantic/icons/LICENSE-tabler-icons.txt`).
+- **Fonts:** [Inter](https://rsms.me/inter/) 4.1, SIL Open Font License (`schemantic/fonts/LICENSE-inter.txt`), and
+  [DejaVu Sans Mono](https://dejavu-fonts.github.io/) 2.37 (`schemantic/fonts/LICENSE-dejavu.txt`), unmodified; DejaVu
   converted from TTF to WOFF2.

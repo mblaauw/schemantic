@@ -10,7 +10,7 @@ import jsonschema
 import yaml
 
 from . import archetypes, icons, roles
-from .config import ROOT
+from .config import LOCALES, SCHEMA
 
 # Default footer widths per column, by its first section, relative to each other.
 FOOTER_WEIGHTS = {"context": 1.5, "principles": 1.4, "open_questions": 1.1, "notes": 1.1, "legend": 0.9}
@@ -55,13 +55,13 @@ def internal_error(exc: Exception) -> dict:
 
 @cache
 def load_locale(lang: str) -> dict:
-    with open(ROOT / "locales" / f"{lang}.yaml", encoding="utf-8") as fh:
+    with open(LOCALES / f"{lang}.yaml", encoding="utf-8") as fh:
         return yaml.safe_load(fh)
 
 
 @cache
 def schema() -> dict:
-    return json.loads((ROOT / "schema" / "plate.schema.json").read_text(encoding="utf-8"))
+    return json.loads(SCHEMA.read_text(encoding="utf-8"))
 
 
 def schema_errors(spec: dict) -> list[dict]:
@@ -165,6 +165,8 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
         if f["from"] == f["to"]:
             out.append(finding("flow", f"flows/{i}", f"from and to are the same element ('{f['from']}')"))
 
+    out += orphans(spec, arche)
+
     canvas = spec["canvas"]
     if ("part" in canvas) != ("of" in canvas):
         missing = "canvas.part" if "part" not in canvas else "canvas.of"
@@ -209,6 +211,18 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
             if re.search(re.escape(b.lower()), text):
                 out.append(finding("language", term, f"'{b}' found; keep the technical term '{term}' in English"))
     return out
+
+
+def orphans(spec: dict, arche: archetypes.Archetype) -> list[dict]:
+    """On a plate with flows, a panel that no flow touches (neither it nor one of its cards) reads as left over."""
+    ends = {f[end] for f in spec.get("flows", []) for end in ("from", "to")}
+    if not ends:
+        return []
+    free = arche.standalone(spec)
+    return [finding("orphan", p["id"], f"no flow reaches panel '{p['id']}' or its cards, while the rest of the plate is connected",
+                    level="warning")
+            for p in spec["panels"]
+            if p["id"] not in free and not ends & ({p["id"]} | {card_id(p, i, c) for i, c in enumerate(p.get("cards", []))})]
 
 
 def traceability(spec: dict) -> list[dict]:

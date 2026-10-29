@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../schema/plate.schema.json
+# yaml-language-server: $schema=../../schemantic/schema/plate.schema.json
 # Schemantic drawn by itself, from docs/architecture.md: one build, from spec to deliverables.
 canvas: {size: landscape-4x3, lang: en}
 topic: "Schemantic: how one build runs"

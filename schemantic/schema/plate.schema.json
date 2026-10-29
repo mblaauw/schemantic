@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/mblaauw/schemantic/schema/plate.schema.json",
+  "$id": "https://github.com/mblaauw/schemantic/schemantic/schema/plate.schema.json",
   "title": "Schemantic plate spec",
   "description": "A one-page architecture plate: what is on it, never where. Chromium lays it out; lint checks the result.",
   "type": "object",
@@ -1120,7 +1120,7 @@
     "icon": {
       "type": "string",
       "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
-      "description": "An icon name from assets/icons (`schemantic icons <word>`): lowercase words joined by hyphens."
+      "description": "An icon name from the bundled set (`schemantic icons <word>`): lowercase words joined by hyphens."
     }
   }
 }

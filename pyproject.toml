@@ -35,7 +35,8 @@ version = {attr = "schemantic.__version__"}
 include = ["schemantic*"]
 
 [tool.setuptools.package-data]
-schemantic = ["js/*.js"]
+# The render's data: templates, fonts, icons, locales and the spec schema travel with the code.
+schemantic = ["js/*.js", "templates/*", "fonts/*", "icons/*", "locales/*.yaml", "schema/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

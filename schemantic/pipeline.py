@@ -14,7 +14,7 @@ from playwright.sync_api import sync_playwright
 
 from . import __version__, outline
 from .browser import launch, on_sheet, open_plate, rasterise_svg
-from .config import ROOT, paper_fit
+from .config import FONTS_DIR, paper_fit
 from .export import export_svg, font_findings, measure, on_paper, print_findings
 from .findings import with_hint
 from .html import build_html
@@ -52,7 +52,7 @@ def manifest(spec: dict, spec_path: Path, theme_css: str, chromium: str) -> dict
     return {"schemantic": __version__, "spec_version": spec.get("spec_version", 1), "spec_sha256": digest(spec_path.read_bytes()),
             "theme_sha256": digest(theme_css.encode()) if theme_css else None, "chromium": chromium,
             "playwright": version("playwright"), "python": platform.python_version(), "platform": platform.system().lower(),
-            "fonts": {f.name: digest(f.read_bytes()) for f in sorted((ROOT / "assets" / "fonts").glob("*.woff2"))}}
+            "fonts": {f.name: digest(f.read_bytes()) for f in sorted(FONTS_DIR.glob("*.woff2"))}}
 
 
 def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale: float = 2,

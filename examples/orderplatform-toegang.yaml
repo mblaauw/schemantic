@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schema/plate.schema.json
+# yaml-language-server: $schema=../schemantic/schema/plate.schema.json
 # Fictional example: a column-flow plate in Dutch with English technical terms.
 canvas: {size: landscape-4x3, lang: nl, series: orderplatform, part: 2, of: 3}
 topic: "Orderplatform na fase 2: toegang en data flow"

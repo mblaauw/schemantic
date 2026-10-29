@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schema/plate.schema.json
+# yaml-language-server: $schema=../schemantic/schema/plate.schema.json
 # Fictional example: a before-after plate in English. Each row shows what one part of the process becomes; status on
 # the after side says what is new, changed or removed.
 canvas: {size: landscape-4x3, lang: en}

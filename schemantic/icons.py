@@ -1,4 +1,4 @@
-"""The bundled Tabler outline icons, searchable by name, tag and category (assets/icons/index.json)."""
+"""The bundled Tabler outline icons, searchable by name, tag and category (icons/index.json)."""
 from __future__ import annotations
 
 import difflib

@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schema/plate.schema.json
+# yaml-language-server: $schema=../schemantic/schema/plate.schema.json
 # Fictional example: a roadmap plate in English. Lanes are workstreams, columns are quarters, `now` marks the current
 # one; an item can span quarters, and arrows say which item depends on which.
 canvas: {size: landscape-4x3, lang: en}

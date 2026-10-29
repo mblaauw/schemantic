@@ -7,3 +7,5 @@ out/
 pytest-tmp/
 evals/runs/
 dist/
+build/
+*.egg-info/
