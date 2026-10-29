@@ -40,6 +40,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - Zone frames side by side end with their content, as panels do (a Haiku run left two account frames half empty
   beside a tall one, and could not fill them); a frame far shorter than the one beside it is a `void` warning. The
   clinic plate's datacentre frame now ends at its content.
+- Haiku rerun after the hole checks: 3.5 to 2.5 defects per plate, holes on 2 plates instead of 6, nothing invented
+  on any plate. Paths are the main defect left. See `evals/README.md`.
 - A test renders the outlined SVG in a second renderer, librsvg (`rsvg-convert`), and holds it to Chromium's PNG;
   CI installs librsvg on Linux. The README now says what holds outside a browser: the outlined SVG renders the same,
   live text depends on the viewer's fonts.
