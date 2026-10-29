@@ -1,4 +1,4 @@
-"""The plate as text: the claim, panels with their cards, flows, open questions and principles. Used as the SVG's
+"""The plate as text: the claim, panels with their cards, flows, stories, open questions and principles. Used as the SVG's
 <desc>, as the <name>.md written next to the images, and as review input. The focus element comes first."""
 from __future__ import annotations
 
@@ -46,6 +46,7 @@ def lines(spec: dict) -> list[str]:
         label = f" ({f['label']})" if f.get("label") else ""
         arrow = "<->" if f.get("both") else "->"
         out.append(f"{names.get(f['from'], f['from'])} {arrow} {names.get(f['to'], f['to'])}{label}")
+    out += [f"{s['name']}: {' -> '.join(names.get(step, step) for step in s['path'])}" for s in spec.get("stories", [])]
     return out
 
 
@@ -55,7 +56,7 @@ def desc(spec: dict) -> str:
 
 
 def markdown(spec: dict) -> str:
-    """<name>.md: the title as heading, the claim, panels and cards, flows, open questions, principles."""
+    """<name>.md: the title as heading, the claim, panels and cards, flows, stories, open questions, principles."""
     loc = load_locale(spec["canvas"]["lang"])
     flag_of = {f["card"]: f for f in flags(spec)}
     names = {p["id"]: p["title"] for p in spec["panels"]}
@@ -84,6 +85,10 @@ def markdown(spec: dict) -> str:
         for f in spec["flows"]:
             label = f" — {f['label']}" if f.get("label") else ""
             md.append(f"- {names.get(f['from'], f['from'])} → {names.get(f['to'], f['to'])}{label}")
+        md.append("")
+    if spec.get("stories"):
+        md += [f"## {loc['footer']['stories']}", ""]
+        md += [f"- {s['name']}: {' → '.join(names.get(step, step) for step in s['path'])}" for s in spec["stories"]]
         md.append("")
     questions = open_questions(spec)
     if questions:

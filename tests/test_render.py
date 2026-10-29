@@ -146,6 +146,7 @@ def test_two_way_flow_gets_two_heads(tmp_path):
     spec = sp.load_spec(EXAMPLES[0])
     one_way = spec["flows"][0]
     spec["flows"] = [dict(one_way, both=True)]
+    spec.pop("stories", None)  # they follow flows this test removes
     code, _ = run("build", write(tmp_path, spec, "both"), "--out", tmp_path)
     assert code == 0
     svg = (tmp_path / "both.svg").read_text(encoding="utf-8")

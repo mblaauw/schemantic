@@ -9,6 +9,7 @@ footer:
   legend: "Legend"
   notes: "Notes"
   flows: "Flows"
+  stories: "Routes"
 legend:
   platform: "Platform component"
   data: "Data and storage"

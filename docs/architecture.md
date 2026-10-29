@@ -22,7 +22,7 @@ to `_work/` and move to the output folder only when the build has no errors. Chr
 
 | Module | Does |
 | --- | --- |
-| `spec.py` | load the YAML, schema check, semantic checks (ids, placement, flows, footer, chips, icons, language, traceability) |
+| `spec.py` | load the YAML, schema check, semantic checks (ids, placement, flows, stories, footer, chips, icons, language, traceability) |
 | `archetypes/` | one module per body layout; the registry finds them; each knows its layout keys, checks, grid and panel defaults |
 | `roles.py` | panel roles: colours from tokens, legend labels, theme roles |
 | `html.py` | the template context: grid CSS, legend entries, footer layout, panels with their defaults |

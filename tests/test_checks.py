@@ -43,6 +43,7 @@ SPEC_TRIGGERS = {
     "flows-mean": lambda s: s.pop("flows_mean"),
     "slide-budget": lambda s: s["canvas"].update(profile="slide"),
     "role-fit": lambda s: panel(s, "services").update(role="actor"),
+    "story": lambda s: s.update(stories=[{"name": "Straight to the services", "path": ["clients", "gateway"]}]),
     "orphan": lambda s: s.update(flows=[f for f in s["flows"] if "services" not in (f["from"], f["to"])]),
     "language": lambda s: s["panels"][0]["cards"][0].update(note="leest de productcatalogus"),
 }

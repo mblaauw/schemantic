@@ -41,6 +41,10 @@ CHECKS: dict[str, Check] = {
                     "add the flow the sources describe; if the sources name none, the panel may not belong on this plate, "
                     "or the relation is an open question",
                     "Add the flow the sources name for this panel, or drop the panel if nothing connects it."),
+    "story": Check("spec", "a story names an id that does not exist, or no flow runs from one of its steps to the next",
+                   "add the flow between the two steps the detail names, card to card when the route goes through cards "
+                   "(give both cards an id); if the sources name no such step, the story claims too much",
+                   "Add a flow from the first named step to the second, card to card."),
     "series": Check("spec", "parts of one series disagree: numbering, `of`, language, what arrows mean, or one thing drawn in "
                     "two colours (people in one part, a platform component in another)",
                     "make the parts agree: one language, one `flows_mean`, and the same role for a thing wherever it "
