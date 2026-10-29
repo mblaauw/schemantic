@@ -96,3 +96,13 @@ def test_the_wheel_carries_every_file_a_render_reads():
     pkg = ROOT / "schemantic"
     data = [p for p in pkg.rglob("*") if p.is_file() and p.suffix not in (".py", ".pyc") and "__pycache__" not in p.parts]
     assert data and [p for p in data if not any(p.relative_to(pkg).match(g) for g in globs)] == []
+
+
+def test_the_doctor_imports_only_the_standard_library():
+    """It runs on any python3 to find one with the dependencies, so it may share config but nothing that needs them."""
+    import subprocess
+    import sys
+    code = "import sys, schemantic.doctor; print(sorted({m.split('.')[0] for m in sys.modules}))"
+    loaded = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, cwd=ROOT, check=True).stdout
+    for dep in ("yaml", "jsonschema", "jinja2", "PIL", "fontTools", "playwright"):
+        assert f"'{dep}'" not in loaded, dep
