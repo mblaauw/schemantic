@@ -80,7 +80,7 @@ LAYOUT_TRIGGERS = {
     "void": (lambda s: panel(s, "security").update(cards=[c for c in panel(s, "security")["cards"] if c.get("id") == "policy"],
                                                    chips=[]), "", LAYERS),
 }
-OTHER = {"yaml", "svg-parity", "internal"}
+OTHER = {"yaml", "svg-parity", "internal", "series"}  # series: tests/test_series.py
 
 
 def test_every_check_is_triggered_and_documented():

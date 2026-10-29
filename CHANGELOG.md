@@ -4,6 +4,16 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Added (series checks, before-after)
+- `schemantic series <specs>` checks the parts of a series against each other: `of` and numbering, one language,
+  one meaning for arrows (a warning: a part may show other flows on purpose), and one colour per thing across parts.
+  On the series the evals produced it finds exactly what the judge reported: channels drawn as people in part 1
+  and as a platform component in part 2, and arrows meaning requests in one part and data in the other. Two
+  examples had claimed to be parts of one series in two languages; the event bus is now its own series.
+- The `before-after` archetype: two columns under a label each (Before / After, Nu / Straks, or `layout.labels`),
+  panels facing each other row by row, the change shown as status on the after side. The after label is in the
+  accent colour. Example: `examples/invoicing-before-after.yaml`.
+
 ### Changed (print, one layout document, one icon file)
 - Paper: `a3-landscape` and `a4-landscape` lay the plate out at the sheet's width (96 px per inch, so type prints at
   its own size) and as tall as its content, then centre it on the sheet and scale it down when it is taller. The SVG

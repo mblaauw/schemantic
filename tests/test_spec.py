@@ -291,3 +291,31 @@ def test_zones_ids_unique_and_not_empty(example):
             {"id": "a", "title": "B"}]
     details = [e["detail"] for e in errors(zones(example, tree))]
     assert any("two zones" in d for d in details) and any("empty zone" in d for d in details)
+
+
+# Tier 3: before-after
+def before_after(example, before=("clients", "identity"), after=("gateway", "services", "data"), **extra):
+    example["archetype"] = "before-after"
+    example["layout"] = {"before": list(before), "after": list(after), **extra}
+    return example
+
+
+def test_before_after_faces_panels_row_by_row_under_two_labels(example):
+    spec = before_after(example)
+    assert errors(spec) == []
+    g = archetypes.get("before-after").grid(spec)
+    assert g.rows == [["_before", "_after"], ["clients", "gateway"], ["identity", "services"], [".", "data"]]
+    assert g.bands == {"_before": ["Nu"], "_after": ["Straks"]}  # Dutch example: the locale's labels
+    g = archetypes.get("before-after").grid(before_after(example, labels=["Fase 1", "Fase 2"]))
+    assert g.bands == {"_before": ["Fase 1"], "_after": ["Fase 2"]}
+
+
+def test_before_after_places_every_panel_once(example):
+    assert [(e["check"], e["id"]) for e in errors(before_after(example, after=("gateway", "services")))] == \
+        [("layout", "data")]  # not placed
+    assert [(e["check"], e["id"]) for e in errors(before_after(example, after=("gateway", "services", "clients")))] == \
+        [("layout", "clients")]  # placed twice
+
+
+def test_before_after_takes_only_its_layout_keys(example):
+    assert "schema" in checks(before_after(example, lanes=["clients"]))

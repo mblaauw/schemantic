@@ -1,4 +1,4 @@
-"""Command line: `schemantic build | lint | render | doctor | icons | gallery | docs | offline | verify | smoke`.
+"""Command line: `schemantic build | lint | series | render | doctor | icons | gallery | docs | offline | verify | smoke`.
 Every command prints JSON and exits 1 on errors; an unexpected failure is an `internal` finding, never a traceback,
 because an agent reads the output."""
 
@@ -27,6 +27,8 @@ def parser() -> argparse.ArgumentParser:
     _spec_command(sub, "build", "check, lay out, lint and write <name>.svg and <name>.png", scale=True)
     _spec_command(sub, "lint", "build without writing deliverables; report only", scale=False)
     _spec_command(sub, "render", "build, reporting in the 0.1 render format (deprecated)", scale=True)
+    r = sub.add_parser("series", help="check the parts of a series against each other: numbering, language, arrows, colours")
+    r.add_argument("specs", nargs="+")
     d = sub.add_parser("doctor", help="find a Python with the dependencies and prove Chromium starts")
     d.add_argument("--no-install", action="store_true")
     i = sub.add_parser("icons", help="search the icons by name, tag and category: icons [search] <words>")
@@ -55,6 +57,12 @@ def run(a) -> tuple[dict, int]:
         # All the words must match; if none does, any word is better than an empty answer for "identity provider".
         found = (icons.search(words, limit=40) or icons.search(words, limit=40, every=False)) if words else sorted(icons.index())
         return {"icons": found, "count": len(found)}, 0
+    if a.cmd == "series":
+        from .findings import with_hint
+        from .series import series_findings
+        found = [with_hint(f) for f in series_findings(a.specs)]
+        errors = [f for f in found if f["level"] == "error"]
+        return {"errors": errors, "warnings": [f for f in found if f["level"] == "warning"]}, 1 if errors else 0
     if a.cmd in ("offline", "verify", "smoke"):
         from . import offline
         r = offline.bundle(a.dest) if a.cmd == "offline" else offline.verify(a.kit) if a.cmd == "verify" else \

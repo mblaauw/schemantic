@@ -36,6 +36,11 @@ CHECKS: dict[str, Check] = {
     "flow": Check("spec", "a flow names an id that does not exist, connects an element to itself, or connects a card "
                   "to its own panel", "use a panel id, or give the card an `id`; connect two different boxes",
                   "Point the flow at an existing panel or card id, and at two different boxes."),
+    "series": Check("spec", "parts of one series disagree: numbering, `of`, language, what arrows mean, or one thing drawn in "
+                    "two colours (people in one part, a platform component in another)",
+                    "make the parts agree: one language, one `flows_mean`, and the same role for a thing wherever it "
+                    "appears (a panel's role, or the role of the panel a card sits in)",
+                    "Give the thing the same role in every part, and the parts one language and one flows_mean."),
     "canvas": Check("spec", "`part` without `of` (or the reverse), `part` larger than `of`, or a theme file that does not exist",
                     "give both, with `1 ≤ part ≤ of`; check the theme path (relative to the spec)",
                     "Give both canvas.part and canvas.of, with part no larger than of."),

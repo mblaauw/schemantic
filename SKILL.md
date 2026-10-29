@@ -53,7 +53,8 @@ open questions. Then audit the plan against the sources, and fix it before writi
   `topic`, a quiet line above the title.
 
 Settle the reader's language (`nl` or `en`, following the user; in `nl` technical terms stay English) and, if the
-story needs more than one plate, the series (`series`, `part`, `of`).
+story needs more than one plate, the series (`series`, `part`, `of`); once every part builds, run
+`"$PY" "$SKILL/scripts/plate.py" series plates/*.yaml` so the parts agree (language, arrows, one colour per thing).
 
 ## 3. Choose the layout
 
@@ -66,6 +67,7 @@ Route on the reader's question. When unsure, use `column-flow`.
 | "What builds on what, and what cuts across all of it?" | `layer-cake` | layers talk sideways more than up and down: column-flow |
 | "Who does what, in which order, and where does work change hands?" | `swimlane` | it is about systems, not people: column-flow |
 | "Where does everything run, and what is inside what?" | `nested-zones` | the question is how things talk, not where they live: column-flow |
+| "What changes, and what does each part become?" | `before-after` | the change has more than about four parts: a series of plates |
 
 Series rule: more than 6 panels or 30 cards is two plates, each with its own message. Read
 `references/archetypes.md` for each layout's keys, limits and a skeleton; lint refuses names that are not built.
