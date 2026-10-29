@@ -66,7 +66,7 @@ def test_structure_matches_snapshot(path, renders, update_golden):
     assert not changes, "\n".join(changes[:20]) + "\nIf intended, run pytest --update-golden and commit."
 
 
-@pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.stem)
+@pytest.mark.parametrize("path", EXAMPLES + sorted((ROOT / "docs" / "plates").glob("*.yaml")), ids=lambda p: p.stem)
 def test_lint_is_clean(path, tmp_path):
     code, report = run("lint", path, "--out", tmp_path)
     assert (code, report["errors"]) == (0, [])

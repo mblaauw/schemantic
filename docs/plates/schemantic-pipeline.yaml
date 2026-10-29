@@ -1,0 +1,77 @@
+# yaml-language-server: $schema=../../schema/plate.schema.json
+# Schemantic drawn by itself, from docs/architecture.md: one build, from spec to deliverables.
+canvas: {size: landscape-4x3, lang: en}
+topic: "Schemantic: how one build runs"
+title: "Chromium lays the plate out once; the SVG is written from what it measured"
+subtitle: "Python checks the spec and writes the files; the page scripts size, route and lint the plate in between"
+archetype: column-flow
+
+layout:
+  areas:
+    - "spec checks page writer"
+    - "out  out    out  out"
+  column_widths: [0.8, 1.1, 1.2, 1.1]
+
+panels:
+  - id: spec
+    title: "Spec"
+    subtitle: "What the plate holds, in words"
+    role: external
+    cards:
+      - {icon: robot, name: "Agent", note: "picks an archetype and places panels"}
+      - {icon: file-text, name: "spec.yaml", note: "panels, cards, flows, footer"}
+    chips:
+      - {kind: info, text: "Placed in words, never in pixels"}
+
+  - id: checks
+    title: "Read and check"
+    subtitle: "Python, before any layout"
+    role: platform
+    cards:
+      - {icon: checks, name: "Schema and semantics", note: "spec.py: ids, placement, flows, language"}
+      - {icon: layout-grid, name: "Archetype", note: "its layout keys, checks and grid"}
+      - {icon: code, name: "Plate HTML", note: "html.py and the Jinja templates"}
+
+  - id: page
+    focus: true
+    title: "Lay out in Chromium"
+    subtitle: "Page scripts on the laid-out page, network refused"
+    role: platform
+    cards:
+      - {icon: arrows-maximize, name: "fit", note: "sizes the canvas to its content"}
+      - {icon: route, name: "route", note: "connectors around the measured boxes"}
+      - {icon: alert-triangle, name: "lint", note: "holes, overflow, crossings, contrast"}
+      - {icon: ruler-measure, name: "layout", note: "every box, line and icon at its position"}
+
+  - id: writer
+    title: "Write and compare"
+    subtitle: "Python, from the layout document alone"
+    role: platform
+    cards:
+      - {icon: vector, name: "SVG", note: "export.py, with a subset of the fonts"}
+      - {icon: photo, name: "Parity", note: "page screenshot against the SVG raster"}
+      - {icon: list-details, name: "Outline and snapshot", note: "text for review, structure for tests"}
+
+  - id: out
+    title: "Deliverables"
+    subtitle: "Moved from _work/ to the output folder only when the build has no errors"
+    role: data
+    card_columns: 4
+    cards:
+      - {icon: file-vector, name: "SVG", note: "editable, on paper sizes in mm"}
+      - {icon: photo, name: "PNG", note: "a raster of that same SVG"}
+      - {icon: file-text, name: "Outline", note: "the plate as Markdown"}
+      - {icon: file-certificate, name: "Manifest", note: "versions and digests"}
+
+flows_mean: data
+flows:
+  - {from: spec, to: checks}
+  - {from: checks, to: page}
+  - {from: page, to: writer}
+  - {from: writer, to: out, label: "no errors"}
+
+footer:
+  principles:
+    - "Every step reports findings in one shape; a failure anywhere is a finding, never a traceback."
+    - "The SVG is a pure function of the layout document, so it is tested without a browser."
+  legend: auto

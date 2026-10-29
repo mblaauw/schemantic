@@ -30,6 +30,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - A test renders the outlined SVG in a second renderer, librsvg (`rsvg-convert`), and holds it to Chromium's PNG;
   CI installs librsvg on Linux. The README now says what holds outside a browser: the outlined SVG renders the same,
   live text depends on the viewer's fonts.
+- Schemantic's own pipeline as a plate, from `docs/architecture.md`: the spec in `docs/plates/`, the image at the top
+  of that page, and linted with the examples.
 
 ### Changed
 - CI runs once per change (pull requests, and pushes to main), cancels a run a newer push replaces, and has a time
