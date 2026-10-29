@@ -58,4 +58,6 @@
 
   /* Spacing on a 4 px scale */
   --r-panel: 8px; --r-card: 6px;
+  /* Without card_columns, a panel's cards take as many columns of at least this width as fit */
+  --card-min: 280px;
 }

@@ -20,7 +20,7 @@
 {%- endmacro -%}
 
 {%- macro cards_block(p, flex='') -%}
-<div class="blk cards" style="grid-template-columns: repeat({{ p.card_columns or 1 }}, minmax(0, 1fr)){{ flex }}">
+<div class="blk cards" style="grid-template-columns: {% if p.card_columns %}repeat({{ p.card_columns }}, minmax(0, 1fr)){% else %}repeat(auto-fit, minmax(min(var(--card-min), 100%), 1fr)){% endif %}{{ flex }}">
 {%- for c in p.cards %}{{ card(c, c.id or (p.id ~ '.card' ~ loop.index0)) }}{% endfor -%}
 </div>
 {%- endmacro -%}

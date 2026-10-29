@@ -59,6 +59,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   of competing with it in accent blue.
 - One meaning per colour: info chips (assumptions, notes) are neutral slate, so blue is the arrows, the focus and the
   platform role.
+- Without `card_columns`, a panel's cards take as many columns of at least 280 px (`--card-min`) as fit, instead of
+  stretching one short line across a wide panel; the before-after plate is a fifth shorter.
 - A wheel could not render: templates, fonts, icons, locales and the schema sat outside the package, so only a
   checkout worked. They now live in `schemantic/` (`schemantic/templates/tokens.css`,
   `schemantic/schema/plate.schema.json`, …) and travel as package data; a test keeps that list complete. Specs that

@@ -26,7 +26,7 @@ plate readable. Lengths are maximum characters.
   title: "API gateway"            # 48
   subtitle: "Authentication, rate limiting and routing"   # 80, optional
   role: platform                  # platform | data | external | actor — colour has meaning, see the legend
-  card_columns: 2                 # optional, 1–6
+  card_columns: 2                 # optional, 1–6; without it, as many columns of 280 px as fit
   arrange: row                    # optional: blocks side by side instead of stacked
   weights: [1.35, 0.8, 1]         # with arrange: row — patterns first, then the cards block
   status: new                     # optional: new | changed | planned | deprecated | removed
