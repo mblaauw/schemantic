@@ -392,6 +392,21 @@ def test_outline_text_replaces_text_with_paths(tmp_path):
     assert diff["count"] < 0.0005 * width * height, diff["detail"]
 
 
+@pytest.mark.skipif(not shutil.which("rsvg-convert"), reason="needs rsvg-convert (librsvg)")
+def test_outlined_svg_looks_the_same_outside_chromium(tmp_path):
+    """librsvg ignores the embedded fonts and sets live text in a system font, so only the outlined SVG is the same
+    plate there; shapes, connectors and icons must match Chromium's PNG either way."""
+    pytest.importorskip("uharfbuzz")
+    code, report = run("build", ROOT / "examples" / "portal-roadmap.yaml", "--out", tmp_path, "--outline-text")
+    assert (code, report["errors"]) == (0, [])
+    png = tmp_path / "portal-roadmap.png"
+    width, height = images.Image.open(png).size
+    subprocess.run(["rsvg-convert", "-w", str(width), "-h", str(height), "-b", "white", "-o", tmp_path / "rsvg.png",
+                    tmp_path / "portal-roadmap.svg"], check=True)
+    diff = images.image_diff(png, tmp_path / "rsvg.png", tmp_path / "mask.png")
+    assert not diff["fail"] and diff["count"] < 0.0005 * width * height, diff["detail"]
+
+
 # D2 and D7: sources travel with the cards; build writes an outline next to the images
 def test_refs_reach_the_svg_and_the_outline_is_written(tmp_path):
     spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")

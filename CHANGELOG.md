@@ -27,6 +27,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   dropped a step for it); and the skill and review question make a route named in the title something to trace
   card by card. A lint for routes named in the title was tried on the eval plates and left out: matching card names
   in titles flagged plates with no route at all.
+- A test renders the outlined SVG in a second renderer, librsvg (`rsvg-convert`), and holds it to Chromium's PNG;
+  CI installs librsvg on Linux. The README now says what holds outside a browser: the outlined SVG renders the same,
+  live text depends on the viewer's fonts.
 
 ### Changed
 - CI runs once per change (pull requests, and pushes to main), cancels a run a newer push replaces, and has a time

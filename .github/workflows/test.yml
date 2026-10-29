@@ -48,6 +48,9 @@ jobs:
             ~/Library/Caches/ms-playwright
           key: playwright-${{ matrix.os }}-${{ steps.pw.outputs.version }}
       - run: python -m playwright install --with-deps chromium
+      - name: A second SVG renderer for the viewer test (librsvg)
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y --no-install-recommends librsvg2-bin
       - run: python -m schemantic doctor --no-install
       - run: python -m pytest -q --basetemp=pytest-tmp
       - uses: actions/upload-artifact@v4
