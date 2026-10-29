@@ -30,6 +30,18 @@ window.schemantic = (() => {
       .slice(0, 3)
       .map((v) => Math.round(v).toString(16).padStart(2, "0"))
       .join("")}`;
+  // A dash pattern fitted to a round-capped run through pts: whole dashes at both ends and at least two, so a
+  // short async arrow reads as dashed, not solid or dotted. A round cap adds half the stroke width to each end of a
+  // dash, so the drawn dash is that much shorter and the gap that much longer. Dots (dash under the width) stay.
+  S.fitDash = (pattern, pts, width) => {
+    const [d, g] = pattern.split(/\s+/).map(Number);
+    if (!(d > width)) return pattern;
+    let len = 0;
+    for (let k = 1; k < pts.length; k++) len += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]);
+    const n = Math.max(2, Math.round((len + g) / (d + g)));
+    const unit = len / (n * d + (n - 1) * g);
+    return `${S.r2(Math.max(d * unit - width, 0.5))} ${S.r2(g * unit + width)}`;
+  };
   S.overlapArea = (a, b) =>
     Math.max(0, Math.min(a.r, b.r) - Math.max(a.l, b.l)) * Math.max(0, Math.min(a.b, b.b) - Math.max(a.t, b.t));
   S.hits = (a, b) => Math.min(a.r, b.r) - Math.max(a.l, b.l) > 0 && Math.min(a.b, b.b) - Math.max(a.t, b.t) > 0;

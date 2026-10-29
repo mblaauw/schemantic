@@ -294,8 +294,11 @@ def test_read_only_skill_folder(tmp_path):
 # C6, C7, C14: line styles, status tags, focus, in the exported SVG
 def test_async_flows_are_dashed_and_in_the_legend(renders):
     svg = (renders(ROOT / "examples" / "orderplatform-eventbus.yaml") / "orderplatform-eventbus.svg").read_text(encoding="utf-8")
-    dashes = config.tokens()["--dash-async"]
-    assert svg.count(f'stroke-dasharray="{dashes}"') >= 7  # six async arrows and the legend sample
+    # Patterns are fitted to each run and allow for the round caps; what shows is the dash plus the width and the gap
+    # minus it. Even the short arrows into the bus show a clear gap, so they read as dashed rather than solid.
+    seen = [(float(d) + float(w), float(g) - float(w)) for w, d, g in
+            re.findall(r'stroke-width="([\d.]+)" stroke-linecap="round" stroke-dasharray="([\d.]+) ([\d.]+)"', svg)]
+    assert len(seen) >= 7 and all(dash >= 4 and gap >= 4 for dash, gap in seen), seen  # six arrows and the legend
     assert "Asynchronous: event or message" in svg and "Direction of data" in svg
 
 

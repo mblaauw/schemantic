@@ -36,9 +36,15 @@ schemantic.decorate = () => {
   for (const el of plate.querySelectorAll("[data-line]")) {
     const r = S.rel(el, P);
     const y = (r.t + r.b) / 2;
-    const dash = dashOf[el.dataset.line];
+    const [x1, x2, w] = [r.l + 2, r.r - 2, S.px("--arrow-width")];
+    const pattern = dashOf[el.dataset.line];
+    const run = [
+      [x1, y],
+      [x2, y],
+    ];
+    const dash = pattern && S.fitDash(pattern, run, w);
     items.push(
-      `<line x1="${r2(r.l + 2)}" y1="${r2(y)}" x2="${r2(r.r - 2)}" y2="${r2(y)}" stroke="${S.token("--arrow")}" stroke-width="${S.px("--arrow-width")}" stroke-linecap="round"${dash ? ` stroke-dasharray="${dash}"` : ""}/>`,
+      `<line x1="${r2(x1)}" y1="${r2(y)}" x2="${r2(x2)}" y2="${r2(y)}" stroke="${S.token("--arrow")}" stroke-width="${w}" stroke-linecap="round"${dash ? ` stroke-dasharray="${dash}"` : ""}/>`,
     );
   }
 

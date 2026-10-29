@@ -635,7 +635,7 @@ schemantic.route = (flows) => {
       pts[0] = start.base;
       heads = start.svg + heads;
     }
-    const dash = dashes[r.fl.style] ? ` stroke-dasharray="${dashes[r.fl.style]}"` : "";
+    const dash = dashes[r.fl.style] ? ` stroke-dasharray="${S.fitDash(dashes[r.fl.style], pts, width)}"` : "";
     const line =
       pts.length === 2
         ? `<line x1="${r2(pts[0][0])}" y1="${r2(pts[0][1])}" x2="${r2(pts[1][0])}" y2="${r2(pts[1][1])}" stroke="${ink}" stroke-width="${width}" stroke-linecap="round"${dash}/>`

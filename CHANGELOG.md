@@ -56,6 +56,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   checkout worked. They now live in `schemantic/` (`schemantic/templates/tokens.css`,
   `schemantic/schema/plate.schema.json`, …) and travel as package data; a test keeps that list complete. Specs that
   point `yaml-language-server` at the schema need the new path.
+- Async arrows on a short run read as solid: round caps ate half of every gap. Dash patterns are now fitted to their
+  run, with whole dashes at both ends, at least two of them, and the caps allowed for; the legend sample too.
 - A flag on a footer context card was dropped without a word: not drawn, not asked, not in the outline. It now
   shows its label and joins the open questions after the body's; the outline lists the context cards.
 - CI runs once per change (pull requests, and pushes to main), cancels a run a newer push replaces, and has a time
