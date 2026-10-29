@@ -234,11 +234,14 @@ schemantic.lint = (cfg) => {
         `${Math.round(gap)}px of empty space ${where}; add real content, or move it next to a panel of its height`,
       );
   };
-  const rowmates = panels.filter(
-    (p) =>
-      !p.classList.contains("spread") &&
-      (p.parentElement.id === "body" || p.parentElement.classList.contains("spoke-row")),
-  );
+  const rowmates = [
+    ...panels.filter(
+      (p) =>
+        !p.classList.contains("spread") &&
+        (p.parentElement.id === "body" || p.parentElement.classList.contains("spoke-row")),
+    ),
+    ...plate.querySelectorAll(".zones > .zone"),
+  ];
   for (const p of rowmates) {
     const r = rel(p);
     const beside = rowmates.filter(
@@ -248,7 +251,7 @@ schemantic.lint = (cfg) => {
       outside(
         p.dataset.id,
         Math.max(...beside.map((o) => rel(o).b)) - r.b,
-        "below it, next to the tallest panel in its row",
+        `below it, next to the tallest ${p.dataset.kind} in its row`,
       );
   }
   for (const z of plate.querySelectorAll('[data-kind="zone"]')) {

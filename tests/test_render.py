@@ -470,7 +470,9 @@ def test_void_checks_space_beside_short_panels_and_inside_zones(tmp_path):
     spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
     next(p for p in spec["panels"] if p["id"] == "proxy")["cards"] = spec["panels"][0]["cards"][:1]
     found = pipeline.build(write(tmp_path, spec, "zone"), tmp_path / "b", deliver=False)["warnings"]
-    assert any(w["check"] == "void" and w["id"].startswith("zone.") and "zone frame" in w["detail"] for w in found), found
+    # Top-level frames end with their content, so the hole is inside a frame or below a short one beside a tall one
+    assert any(w["check"] == "void" and w["id"].startswith("zone.") and ("zone frame" in w["detail"] or "tallest zone"
+               in w["detail"]) for w in found), found
 
 
 def test_void_checks_empty_cells_spread_cards_and_a_blank_band(tmp_path):
