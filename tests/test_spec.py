@@ -207,6 +207,16 @@ def test_flags_are_numbered_and_reach_the_footer(example):
     assert sp.open_questions(example)[0] == {"label": "V1", "text": "Rate limits per tenant of per client?", "id": "gateway.card1"}
 
 
+def test_a_flag_on_a_footer_context_card_is_shown_and_asked(example):
+    from schemantic.outline import markdown
+    example["footer"]["context"]["cards"][3]["flag"] = {"kind": "warning", "text": "Wie beheert de lakehouse catalog?"}
+    assert sp.flags(example)[-1] == {"card": "footer.context.card3", "kind": "warning",
+                                     "text": "Wie beheert de lakehouse catalog?", "label": "V3"}
+    assert sp.open_questions(example)[2]["id"] == "footer.context.card3"  # after the body's questions, before extra
+    assert "- Platformteam — beheert gateway en lakehouse [V3]" in markdown(example)
+    assert errors(example) == []
+
+
 def test_flag_counts_for_the_chip_mirror(example):
     example["footer"]["open_questions"] = {"extra": ["Payments als eigen service of bij de PSP laten?", "Event bus nu of pas in fase 3?"]}
     found = errors(example)

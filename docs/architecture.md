@@ -2,6 +2,11 @@
 
 ## The pipeline
 
+![Schemantic's own pipeline as a plate: spec, read and check, lay out in Chromium, write and compare, deliverables](img/schemantic-pipeline.webp)
+
+The plate above is Schemantic drawn by itself, from this page ([`plates/schemantic-pipeline.yaml`](plates/schemantic-pipeline.yaml));
+the tests lint it with the examples.
+
 ```text
 spec.yaml ─► read_spec ─► schema + semantic checks ─► build_html ─► Chromium: fit, decorate, route, lint
           ─► layout document ─► SVG ─► parity (page screenshot vs SVG raster) ─► PNG, outline .md, snapshot

@@ -100,7 +100,10 @@ geometry of that composition with CSS Grid; page scripts size the canvas, route 
 and lint the result. The measured page becomes a layout document (every box, text line, icon and connector, at its
 position), and the SVG is written from that document with a subset of the bundled fonts; the PNG is a raster of the
 SVG. Styles stay within what the SVG can draw, and lint names anything outside it. Print sizes (A3, A4, `--dpi`) are
-there; the SVG is checked against Chromium's own rendering, not yet in other viewers or as PDF. See
+there. Every build checks the SVG against Chromium's own rendering, and the tests check it in a second renderer,
+librsvg: with `--outline-text` the plate renders the same there, on screen sizes and on paper. Viewers that ignore
+fonts embedded in an SVG (librsvg among them, and some design tools) set live text in a system font, so lines can
+run longer or shorter; hand those the outlined SVG. PDF export is not there yet. See
 [`docs/architecture.md`](docs/architecture.md) for the pipeline and the router, and
 [`docs/design-notes.md`](docs/design-notes.md) for why it is built this way.
 

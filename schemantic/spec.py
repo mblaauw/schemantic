@@ -250,6 +250,12 @@ def card_id(panel: dict, i: int, card: dict) -> str:
     return card.get("id") or f"{panel['id']}.card{i}"
 
 
+def card_panels(spec: dict) -> list[dict]:
+    """The panels whose cards can carry a flag, in reading order: the body's, then the footer's context cards."""
+    context = (spec.get("footer") or {}).get("context")
+    return spec["panels"] + ([{"id": "footer.context", "cards": context["cards"]}] if context else [])
+
+
 def open_questions(spec: dict) -> list[dict]:
     """Open questions in reading order, labelled Q1, Q2, ... (V1 in Dutch): panel by panel, its warning flags and then
     its warning chips (with from_chips, or when listed in extra), then the other extra questions. `id` is the card
@@ -258,7 +264,7 @@ def open_questions(spec: dict) -> list[dict]:
     extra = oq.get("extra", [])
     shown = lambda text: oq.get("from_chips") or text in extra  # noqa: E731
     items = []
-    for p in spec["panels"]:
+    for p in card_panels(spec):
         for i, c in enumerate(p.get("cards", [])):
             if (c.get("flag") or {}).get("kind") == "warning" and shown(c["flag"]["text"]):
                 items.append((c["flag"]["text"], card_id(p, i, c)))
@@ -276,7 +282,7 @@ def flags(spec: dict) -> list[dict]:
     asked = {q["id"]: q["label"] for q in open_questions(spec) if q["id"]}
     prefix = load_locale(spec["canvas"]["lang"])["markers"]["note"]
     out, n = [], 0
-    for p in spec["panels"]:
+    for p in card_panels(spec):
         for i, c in enumerate(p.get("cards", [])):
             if c.get("flag"):
                 cid = card_id(p, i, c)

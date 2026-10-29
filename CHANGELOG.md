@@ -27,8 +27,18 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   dropped a step for it); and the skill and review question make a route named in the title something to trace
   card by card. A lint for routes named in the title was tried on the eval plates and left out: matching card names
   in titles flagged plates with no route at all.
+- Evals rerun again (29 October, after those fixes): Sonnet passes the judge on 2 of 8 cases, its first passes, at
+  2.1 defects per plate; Haiku rises to 3.5. A blind re-judge of the earlier Haiku plates puts 0.6 of that on the
+  stricter review questions; the rest is holes of kinds no check measures yet. See `evals/README.md`.
+- A test renders the outlined SVG in a second renderer, librsvg (`rsvg-convert`), and holds it to Chromium's PNG;
+  CI installs librsvg on Linux. The README now says what holds outside a browser: the outlined SVG renders the same,
+  live text depends on the viewer's fonts.
+- Schemantic's own pipeline as a plate, from `docs/architecture.md`: the spec in `docs/plates/`, the image at the top
+  of that page, and linted with the examples.
 
 ### Changed
+- A flag on a footer context card was dropped without a word: not drawn, not asked, not in the outline. It now
+  shows its label and joins the open questions after the body's; the outline lists the context cards.
 - CI runs once per change (pull requests, and pushes to main), cancels a run a newer push replaces, and has a time
   limit per job.
 - Text in a panel header is checked against the header, so a lane title spilling out of its narrow header is a

@@ -66,7 +66,7 @@ def test_structure_matches_snapshot(path, renders, update_golden):
     assert not changes, "\n".join(changes[:20]) + "\nIf intended, run pytest --update-golden and commit."
 
 
-@pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.stem)
+@pytest.mark.parametrize("path", EXAMPLES + sorted((ROOT / "docs" / "plates").glob("*.yaml")), ids=lambda p: p.stem)
 def test_lint_is_clean(path, tmp_path):
     code, report = run("lint", path, "--out", tmp_path)
     assert (code, report["errors"]) == (0, [])
@@ -390,6 +390,21 @@ def test_outline_text_replaces_text_with_paths(tmp_path):
     diff = images.image_diff(tmp_path / "_work" / "svg.png", tmp_path / "outlined.png", tmp_path / "mask.png")
     width, height = browser.svg_size(tmp_path / "orderplatform-eventbus.svg")
     assert diff["count"] < 0.0005 * width * height, diff["detail"]
+
+
+@pytest.mark.skipif(not shutil.which("rsvg-convert"), reason="needs rsvg-convert (librsvg)")
+def test_outlined_svg_looks_the_same_outside_chromium(tmp_path):
+    """librsvg ignores the embedded fonts and sets live text in a system font, so only the outlined SVG is the same
+    plate there; shapes, connectors and icons must match Chromium's PNG either way."""
+    pytest.importorskip("uharfbuzz")
+    code, report = run("build", ROOT / "examples" / "portal-roadmap.yaml", "--out", tmp_path, "--outline-text")
+    assert (code, report["errors"]) == (0, [])
+    png = tmp_path / "portal-roadmap.png"
+    width, height = images.Image.open(png).size
+    subprocess.run(["rsvg-convert", "-w", str(width), "-h", str(height), "-b", "white", "-o", tmp_path / "rsvg.png",
+                    tmp_path / "portal-roadmap.svg"], check=True)
+    diff = images.image_diff(png, tmp_path / "rsvg.png", tmp_path / "mask.png")
+    assert not diff["fail"] and diff["count"] < 0.0005 * width * height, diff["detail"]
 
 
 # D2 and D7: sources travel with the cards; build writes an outline next to the images

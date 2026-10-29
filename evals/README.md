@@ -80,3 +80,31 @@ now), since the judge fails a plate on any single defect and one run per case is
 
 The next targets: a hole check for rows and zones, card-to-card routes when the message names a path, and the
 router's long upward arrows in a swimlane.
+
+### Rerun of 29 October 2026, second (after the hole, router and path fixes)
+
+The same eight cases with the skill, after the hole check for rows and zones, the second outer lane and the rule
+that a route named in the title is traced card by card. The review questions gained the finger test, so the judge
+reads paths more strictly than before; to measure that, the first rerun's Haiku plates were judged again, blind,
+with the current questions.
+
+| Model | Automated | Judged | Claim title | Nothing invented | Layout fits | Defects per plate |
+| --- | --- | --- | --- | --- | --- | --- |
+| Sonnet 5.5 | 8/8 | 2/8 | 8/8 | 7/8 | 8/8 | 2.1 |
+| Haiku 5.5 | 8/8 | 0/8 | 8/8 | 6/8 | 8/8 | 3.5 |
+| Haiku 5.5, first rerun's plates judged again | | 0/8 | 8/8 | 5/8 | 8/8 | 2.25 (1.6 then) |
+
+- Sonnet passes the judged half for the first time (the swimlane and the deployment zones) and holds its defect
+  rate under the stricter judge.
+- The stricter judge alone adds about 0.6 defects per Haiku plate (1.6 to 2.25 on the same plates). Today's Haiku
+  plates are worse than that, at 3.5: holes on 6 plates against 3. The holes are of kinds no check measures: an
+  empty grid cell left by `areas`, cards spread apart inside a panel, and a blank band on a fixed or paper canvas.
+  Two Haiku agents saw a hole and left it, because lint was clean.
+- Paths are the most frequent defect on both models (16 of 45): arrows that end on a panel where the title names
+  a card, and routes in the subtitle with no arrow at all.
+- Two Haiku plates added small facts in card notes ("the decision becomes final"); one Sonnet series called a
+  read optional by drawing it dotted.
+
+Next targets: the three kinds of hole above as lint, a warning when a flow named in the subtitle ends on a panel
+that holds the named card, and keeping the dotted style for what the legend says it means.
+

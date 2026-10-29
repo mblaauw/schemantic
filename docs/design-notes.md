@@ -11,7 +11,10 @@ SVG of native `rect`, `path`, `text` and `line` elements a designer can edit. Th
 so the two never disagree.
 
 The SVG embeds a subset of the bundled fonts, so it renders the same in any browser. Tools that ignore `@font-face`
-in SVG (Inkscape, Cairo) need Inter installed, or the `--outline-text` export.
+in SVG (librsvg, Inkscape, Cairo) need Inter installed, or the `--outline-text` export. The tests hold librsvg to
+that: the outlined SVG, rendered by `rsvg-convert`, must match Chromium's PNG (it does to the pixel after the parity
+blur, on paper sizes too). With live text, librsvg draws every box, connector and icon in the same place, but its
+text is set in whatever Inter or sans-serif the system has, so line lengths can differ.
 
 The exporter must not grow into a browser's painter. It reads a layout document, not the page, and the document
 describes a deliberately small vocabulary (backgrounds, solid borders, radii, text, icons); CSS outside it is a lint
