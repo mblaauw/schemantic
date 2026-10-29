@@ -349,3 +349,15 @@ def test_focus_leaves_the_other_panels_quiet(example):
 def test_one_focus_counts_arrows_too(example):
     example["flows"][0]["focus"] = True
     assert [(e["check"], e["id"]) for e in errors(example)] == [("focus", "flows/0")]
+
+
+# Role fit: a panel coloured as people with cards that are things, or the reverse, is worth a look
+def test_role_fit_reads_the_cards_icons(example):
+    from schemantic import roles
+    clients = example["panels"][0]
+    clients["role"] = "actor"  # browser, phone, api, users, chart: four of five are things
+    assert [f["id"] for f in roles.role_fit_findings(example)] == ["clients"]
+    clients["cards"] = [{"icon": "users", "name": "a"}, {"icon": "user-check", "name": "b"}, {"icon": "browser", "name": "c"}]
+    assert roles.role_fit_findings(example) == []  # mostly people: fits
+    clients["role"] = "platform"
+    assert "show people" in roles.role_fit_findings(example)[0]["detail"]

@@ -41,6 +41,7 @@ SPEC_TRIGGERS = {
     "focus": lambda s: (panel(s, "gateway").update(focus=True), panel(s, "identity").update(focus=True)),
     "traceability": lambda s: s.update(sources=[{"id": "notes", "kind": "notes", "ref": "review notes"}]),
     "flows-mean": lambda s: s.pop("flows_mean"),
+    "role-fit": lambda s: panel(s, "services").update(role="actor"),
     "language": lambda s: s["panels"][0]["cards"][0].update(note="leest de productcatalogus"),
 }
 

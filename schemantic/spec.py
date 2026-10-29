@@ -139,7 +139,7 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
     out = id_errors(spec) or layout_errors(spec, arche)
     if any(f["level"] == "error" for f in out):
         return out
-    out += roles.role_findings(spec, theme_css)
+    out += roles.role_findings(spec, theme_css) + roles.role_fit_findings(spec)
 
     for p in spec["panels"]:
         if p.get("weights"):

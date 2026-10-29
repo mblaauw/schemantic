@@ -47,6 +47,10 @@ CHECKS: dict[str, Check] = {
     "role": Check("spec", "a panel role is neither built in nor defined by the theme, or the theme gives it no legend label in "
                   "the plate's language", "use platform, data, external or actor, or define the role and its label in the theme",
                   "Use a built-in role (platform, data, external, actor), or define it with a legend label in the theme."),
+    "role-fit": Check("spec", "a panel's colour says people but its cards look like systems, or the reverse (warning)",
+                      "give the panel the role of what it holds (actor for people and teams, platform, data or "
+                      "external for systems), or split people and systems into two panels",
+                      "Give the panel the role of what its cards are, or split people and systems apart."),
     "focus": Check("spec", "more than one panel or card has `focus: true`", "keep focus on the one element the title is about",
                    "Keep focus on the one element the title is about."),
     "flows-mean": Check("spec", "the plate has flows but no `flows_mean` (warning)", "say what an arrow means: data, request, "

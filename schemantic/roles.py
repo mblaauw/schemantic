@@ -32,6 +32,36 @@ def legend_label(role: str, lang: str, locale: dict, theme_css: str = "") -> str
     return theme_roles(theme_css).get(role, {}).get(lang)
 
 
+# Icons that show a person or a group: the cue that a card is people rather than a system.
+PEOPLE_ICONS = {"user", "users", "friends", "man", "woman", "headset", "id-badge", "id-badge-2", "school"}
+
+
+def is_person(icon: str | None) -> bool:
+    return bool(icon) and (icon in PEOPLE_ICONS or icon.startswith(("user-", "users-")))
+
+
+def role_fit_findings(spec: dict) -> list[dict]:
+    """A panel coloured as people whose cards look like systems, or the reverse, judged by the cards' icons: at least
+    two cards, two thirds of them pointing the other way. A warning, since icons are only a hint. Swimlane lanes are
+    left out: their cards are an actor's steps, not things."""
+    if spec["archetype"] == "swimlane":
+        return []
+    out = []
+    for p in spec["panels"]:
+        cards = [c for c in p.get("cards", []) if c.get("icon")]
+        people = sum(is_person(c["icon"]) for c in cards)
+        if len(cards) < 2 or p["role"] not in BUILT_IN:
+            continue
+        if p["role"] == "actor" and len(cards) - people >= 2 * len(cards) / 3:
+            out.append({"level": "warning", "check": "role-fit", "id": p["id"],
+                        "detail": f"coloured as people and teams, but {len(cards) - people} of its {len(cards)} cards "
+                                  "show systems or things"})
+        elif p["role"] != "actor" and people >= 2 * len(cards) / 3:
+            out.append({"level": "warning", "check": "role-fit", "id": p["id"],
+                        "detail": f"coloured as {p['role']}, but {people} of its {len(cards)} cards show people"})
+    return out
+
+
 def role_findings(spec: dict, theme_css: str = "") -> list[dict]:
     """Unknown roles and theme roles without a legend label are errors."""
     out = []
