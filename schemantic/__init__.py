@@ -8,4 +8,4 @@ This module imports nothing beyond the standard library, so `scripts/doctor.py` 
 Python that does not have the dependencies yet.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.3.0.dev0"
