@@ -60,6 +60,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - `build --review` (and `lint --review`): crops of the plate a model can read, in `<out>/_work/review/`: the whole
   plate, the title block, each panel with its gutter, and the footer, at about twice their size; a wide part is cut
   into overlapping pieces. The report lists each crop with its part and scale.
+- `card-width` warning: a wide panel that stacks its cards in one column while their text fills less than half of each
+  (the long, thin cards with an empty right half that `card_columns: 1` makes). Cards flow into columns by default,
+  so this names the spec that holds them back.
 - `flows_mean: sequence` ("Comes before"): arrows that run forward in time, from what comes first to what builds on
   it. On a roadmap, the `timeline` warning names an arrow that points back in time; the roadmap example and starter
   now use sequence, so their arrows run left to right instead of back against the periods.

@@ -20,6 +20,10 @@ SPREAD_SHARE = 0.75
 SPREAD_FLOOR_PX = 32
 # The footer is context; above this share of the plate's height it competes with the body (review question 6).
 FOOTER_SHARE = 0.15
+# Cards stacked in one column at least this wide, whose text fills less than this share of them, leave half a card
+# empty: they should flow into columns.
+WIDE_CARD_PX = 560
+CARD_FILL = 0.5
 
 
 def layout_findings(layout: dict, spec: dict, fit: dict | None) -> list[dict]:
@@ -136,4 +140,5 @@ def dom_lint(page, segs: list[dict], slide: bool = False) -> dict:
     """{issues, density, voids} for the plate in `page`, with the routed connectors in `segs`."""
     return call(page, "lint", {"floor": SLIDE_FLOOR_PX if slide else TYPE_FLOOR_PX, "segs": segs,
                                "voidWarn": VOID_WARN_PX, "voidError": VOID_ERROR_PX, "spreadShare": SPREAD_SHARE,
-                               "spreadFloor": SPREAD_FLOOR_PX, "footerShare": FOOTER_SHARE})
+                               "spreadFloor": SPREAD_FLOOR_PX, "footerShare": FOOTER_SHARE,
+                               "wideCard": WIDE_CARD_PX, "cardFill": CARD_FILL})
