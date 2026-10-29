@@ -146,27 +146,27 @@
   ],
   "security.card0": [
    54,
-   252,
+   220,
    316,
-   378
+   346
+  ],
+  "security.card1": [
+   54,
+   420,
+   316,
+   510
   ],
   "policy": [
    54,
-   436,
+   620,
    316,
-   526
-  ],
-  "security.card2": [
-   54,
-   584,
-   316,
-   676
+   710
   ],
   "security.card3": [
    54,
-   734,
+   718,
    316,
-   840
+   826
   ],
   "security.chip0": [
    54,
@@ -182,27 +182,27 @@
   ],
   "observability.card0": [
    1284,
-   274,
+   220,
    1548,
-   346
+   294
   ],
   "observability.card1": [
    1284,
-   426,
+   420,
    1548,
-   516
+   510
   ],
   "observability.card2": [
    1284,
-   594,
+   620,
    1548,
-   668
+   692
   ],
   "observability.card3": [
    1284,
-   746,
+   820,
    1548,
-   820
+   876
   ],
   "observability.chip0": [
    1284,
@@ -523,97 +523,97 @@
   ],
   [
    96,
-   276,
+   244,
    "Identity"
   ],
   [
    96,
-   292,
+   260,
    "SSO voor mensen en pipelines"
   ],
   [
    106,
-   310,
+   278,
    "workload identity in plaats van"
   ],
   [
    106,
-   328,
+   296,
    "keys"
   ],
   [
    106,
-   346,
+   314,
    "rollen per team, beheerd in de"
   ],
   [
    106,
-   364,
+   332,
    "portal"
   ],
   [
    96,
-   460,
-   "Policy as code"
-  ],
-  [
-   96,
-   476,
-   "regels in Git"
-  ],
-  [
-   106,
-   494,
-   "getest in CI, net als code"
-  ],
-  [
-   106,
-   512,
-   "afgedwongen bij admission"
-  ],
-  [
-   96,
-   608,
+   444,
    "Scanning"
   ],
   [
    96,
-   626,
+   460,
    "images en dependencies"
   ],
   [
    106,
-   644,
+   478,
    "blokkeert bij kritieke CVE's"
   ],
   [
    106,
-   660,
+   496,
    "een SBOM per image"
   ],
   [
    96,
-   758,
+   644,
+   "Policy as code"
+  ],
+  [
+   96,
+   660,
+   "regels in Git"
+  ],
+  [
+   106,
+   678,
+   "getest in CI, net als code"
+  ],
+  [
+   106,
+   696,
+   "afgedwongen bij admission"
+  ],
+  [
+   96,
+   742,
    "Pentests"
   ],
   [
    96,
-   774,
+   758,
    "twee keer per jaar, door een"
   ],
   [
    96,
-   790,
+   776,
    "externe partij"
   ],
   [
    106,
-   808,
+   794,
    "bevindingen worden tickets bij"
   ],
   [
    106,
-   826,
+   812,
    "het team"
   ],
   [
@@ -628,68 +628,63 @@
   ],
   [
    1328,
-   298,
-   "Logs"
-  ],
-  [
-   1328,
-   314,
-   "centraal, 30 dagen"
-  ],
-  [
-   1338,
-   332,
-   "gestructureerd, met trace-id"
-  ],
-  [
-   1328,
-   450,
-   "Metrics"
-  ],
-  [
-   1328,
-   466,
-   "SLO's per service"
-  ],
-  [
-   1338,
-   484,
-   "error budget zichtbaar in de"
-  ],
-  [
-   1338,
-   502,
-   "portal"
-  ],
-  [
-   1328,
-   618,
-   "Traces"
-  ],
-  [
-   1328,
-   636,
-   "door de mesh heen"
-  ],
-  [
-   1338,
-   654,
-   "10% sampling, fouten altijd"
-  ],
-  [
-   1328,
-   770,
+   244,
    "Alerting"
   ],
   [
    1328,
-   788,
+   260,
    "naar het team dat eigenaar is"
   ],
   [
    1338,
-   806,
+   278,
    "routing via de service catalog"
+  ],
+  [
+   1328,
+   444,
+   "Metrics"
+  ],
+  [
+   1328,
+   460,
+   "SLO's per service"
+  ],
+  [
+   1338,
+   478,
+   "een op error budget houdt de"
+  ],
+  [
+   1338,
+   496,
+   "deploy tegen"
+  ],
+  [
+   1328,
+   644,
+   "Traces"
+  ],
+  [
+   1328,
+   660,
+   "door de mesh heen"
+  ],
+  [
+   1338,
+   678,
+   "10% sampling, fouten altijd"
+  ],
+  [
+   1328,
+   844,
+   "Logs"
+  ],
+  [
+   1328,
+   860,
+   "centraal, 30 dagen, met trace-id"
   ],
   [
    1322,
@@ -838,19 +833,11 @@
    "points": [
     [
      322,
-     510
-    ],
-    [
-     352,
-     510
-    ],
-    [
-     352,
-     636
+     656
     ],
     [
      382,
-     636
+     656
     ]
    ],
    "label": null

@@ -38,7 +38,7 @@ def grid_css(spec: dict) -> dict:
         "columns": " var(--gutter-x) ".join(g.columns),
         "rows": f" {gutter} ".join(["auto"] * m),
         "areas": " ".join('"' + " ".join(line) + '"' for line in lines),
-        "groups": g.groups, "group_kind": g.group_kind, "bands": g.bands, "zones": g.zones,
+        "groups": g.groups, "group_kind": g.group_kind, "bands": g.bands, "zones": g.zones, "marks": g.marks,
     }
 
 

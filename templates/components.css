@@ -182,6 +182,11 @@ body { background: var(--paper); }
 .band-label { font-size: var(--t-name); font-weight: 600; color: var(--muted); padding-bottom: 5px;
   border-bottom: 2px solid var(--frame-line); }
 
+/* Roadmap: the band of periods (as a swimlane's phases), the current one marked in the accent colour */
+.band-label.now { color: var(--accent); border-bottom-color: var(--accent); }
+.now-tag { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 4px; font-size: var(--t-small);
+  font-weight: 700; color: var(--on-head); background: var(--accent); vertical-align: 1px; }
+
 /* Before-after: a label over each column; the after side in the accent colour, as the side the plate is heading to */
 .band-before, .band-after { padding: 0; margin-bottom: calc(10px - var(--gutter-y)); }
 .band-before .band-label, .band-after .band-label { font-size: var(--t-head); font-weight: 700; color: var(--ink);

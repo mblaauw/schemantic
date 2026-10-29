@@ -361,3 +361,30 @@ def test_role_fit_reads_the_cards_icons(example):
     assert roles.role_fit_findings(example) == []  # mostly people: fits
     clients["role"] = "platform"
     assert "show people" in roles.role_fit_findings(example)[0]["detail"]
+
+
+# Roadmap: workstreams over periods, with now marked and items that span
+def roadmap(example, now=2):
+    example["archetype"] = "roadmap"
+    example["layout"] = {"lanes": ["clients", "identity", "gateway", "services", "data"], "columns": ["Q1", "Q2", "Q3", "Q4"],
+                         "now": now}
+    for p in example["panels"]:
+        p["cards"] = [{**c, "col": i + 1} for i, c in enumerate(p.get("cards", [])[:4])]
+    return example
+
+
+def test_roadmap_marks_now_and_places_items_by_period(example):
+    spec = roadmap(example)
+    assert errors(spec) == []
+    g = archetypes.get("roadmap").grid(spec)
+    assert g.bands == {"_periods": ["Q1", "Q2", "Q3", "Q4"]} and g.marks == {"_periods": 2}
+
+
+def test_roadmap_items_need_a_period_and_do_not_overlap(example):
+    spec = roadmap(example, now=5)
+    clients = spec["panels"][0]["cards"]
+    clients[0]["span"] = 2  # Q1-Q2, over the item in Q2
+    clients[2].pop("col")
+    details = [e["detail"] for e in errors(spec)]
+    assert any("overlaps" in d for d in details) and any("needs `col`" in d for d in details)
+    assert any("now is period 5" in d for d in details)

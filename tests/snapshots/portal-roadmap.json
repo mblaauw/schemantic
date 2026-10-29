@@ -1,0 +1,438 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   132
+  ],
+  "body": [
+   40,
+   150,
+   1560,
+   696
+  ],
+  "identity": [
+   40,
+   194,
+   1560,
+   276
+  ],
+  "sso": [
+   224,
+   206,
+   524,
+   262
+  ],
+  "identity.card1": [
+   906,
+   206,
+   1206,
+   262
+  ],
+  "selfservice": [
+   40,
+   320,
+   1560,
+   400
+  ],
+  "profile": [
+   564,
+   332,
+   866,
+   388
+  ],
+  "invoices": [
+   906,
+   332,
+   1548,
+   388
+  ],
+  "mobile": [
+   40,
+   444,
+   1560,
+   572
+  ],
+  "app": [
+   906,
+   458,
+   1548,
+   514
+  ],
+  "mobile.chip0": [
+   224,
+   524,
+   1548,
+   558
+  ],
+  "platform": [
+   40,
+   616,
+   1560,
+   696
+  ],
+  "platform.card0": [
+   224,
+   628,
+   866,
+   684
+  ],
+  "platform.card1": [
+   906,
+   628,
+   1206,
+   684
+  ],
+  "platform.card2": [
+   1246,
+   628,
+   1548,
+   684
+  ],
+  "band.periods": [
+   40,
+   150,
+   1560,
+   178
+  ],
+  "footer": [
+   40,
+   714,
+   1560,
+   806
+  ],
+  "footer.principles": [
+   40,
+   714,
+   876,
+   776
+  ],
+  "footer.open_questions": [
+   904,
+   714,
+   1560,
+   758
+  ],
+  "footer.legend": [
+   40,
+   786,
+   1560,
+   806
+  ]
+ },
+ "text": [
+  [
+   40,
+   46,
+   "Customer portal roadmap, 2027"
+  ],
+  [
+   40,
+   92,
+   "Self-service ships before the new mobile app, on one sign-in"
+  ],
+  [
+   40,
+   124,
+   "Single sign-on comes first; self-service builds on it, and the mobile app reuses both in the second half"
+  ],
+  [
+   52,
+   222,
+   "Identity"
+  ],
+  [
+   52,
+   240,
+   "One sign-in for"
+  ],
+  [
+   52,
+   256,
+   "customers"
+  ],
+  [
+   266,
+   230,
+   "Single sign-on"
+  ],
+  [
+   378,
+   230,
+   "changed"
+  ],
+  [
+   266,
+   248,
+   "one account for portal and app"
+  ],
+  [
+   948,
+   230,
+   "Two-step login"
+  ],
+  [
+   948,
+   248,
+   "for changes to bank details"
+  ],
+  [
+   52,
+   348,
+   "Self-service"
+  ],
+  [
+   52,
+   366,
+   "What customers no"
+  ],
+  [
+   52,
+   382,
+   "longer phone about"
+  ],
+  [
+   608,
+   356,
+   "Profile and address"
+  ],
+  [
+   608,
+   372,
+   "changed by the customer"
+  ],
+  [
+   948,
+   356,
+   "Invoices and payments"
+  ],
+  [
+   948,
+   372,
+   "download, pay, set up a mandate"
+  ],
+  [
+   52,
+   504,
+   "Mobile app"
+  ],
+  [
+   52,
+   522,
+   "Replaces the old app"
+  ],
+  [
+   948,
+   482,
+   "New app"
+  ],
+  [
+   1022,
+   480,
+   "new"
+  ],
+  [
+   948,
+   498,
+   "the portal's features, on the same sign-in"
+  ],
+  [
+   238,
+   544,
+   "Q1"
+  ],
+  [
+   264,
+   544,
+   "Build the app ourselves, or hand it to the agency?"
+  ],
+  [
+   52,
+   652,
+   "Platform"
+  ],
+  [
+   52,
+   670,
+   "Underneath all of it"
+  ],
+  [
+   266,
+   652,
+   "Customer API"
+  ],
+  [
+   266,
+   668,
+   "one source for profile and invoices"
+  ],
+  [
+   948,
+   652,
+   "Notifications"
+  ],
+  [
+   948,
+   668,
+   "e-mail and push from one service"
+  ],
+  [
+   1288,
+   652,
+   "Usage dashboards"
+  ],
+  [
+   1288,
+   668,
+   "which self-service gets used"
+  ],
+  [
+   224,
+   168,
+   "Q1 2027"
+  ],
+  [
+   294,
+   166,
+   "now"
+  ],
+  [
+   564,
+   168,
+   "Q2 2027"
+  ],
+  [
+   904,
+   168,
+   "Q3 2027"
+  ],
+  [
+   1246,
+   168,
+   "Q4 2027"
+  ],
+  [
+   40,
+   728,
+   "Key principles"
+  ],
+  [
+   50,
+   754,
+   "A feature reaches the app only after it works in the portal."
+  ],
+  [
+   50,
+   772,
+   "Every quarter ends with something a customer can use."
+  ],
+  [
+   904,
+   728,
+   "Open questions"
+  ],
+  [
+   908,
+   754,
+   "Q1"
+  ],
+  [
+   930,
+   754,
+   "Build the app ourselves, or hand it to the agency?"
+  ],
+  [
+   40,
+   802,
+   "Legend"
+  ],
+  [
+   134,
+   800,
+   "Platform component"
+  ],
+  [
+   302,
+   800,
+   "Data and storage"
+  ],
+  [
+   452,
+   800,
+   "Depends on"
+  ],
+  [
+   546,
+   798,
+   "new"
+  ],
+  [
+   584,
+   800,
+   "New in this phase"
+  ],
+  [
+   712,
+   798,
+   "changed"
+  ],
+  [
+   772,
+   800,
+   "Changed in this phase"
+  ],
+  [
+   926,
+   800,
+   "Q1"
+  ],
+  [
+   952,
+   800,
+   "Open choice or friction"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "profile",
+   "to": "sso",
+   "points": [
+    [
+     556,
+     348
+    ],
+    [
+     508,
+     348
+    ],
+    [
+     508,
+     270
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 1,
+   "from": "app",
+   "to": "profile",
+   "points": [
+    [
+     898,
+     474
+    ],
+    [
+     848,
+     474
+    ],
+    [
+     848,
+     394
+    ]
+   ],
+   "label": null
+  }
+ ]
+}

@@ -146,8 +146,27 @@ layout:
 - The title claims the difference ("Invoices reach the bank the same day"), not the topic.
 - Example: `examples/invoicing-before-after.yaml`.
 
+## roadmap
+
+What comes when, per workstream, and where we are now. One lane per workstream, items as cards in period columns
+(a card's `col`, and `span` for an item that runs over several periods), and a band of periods on top with `now`
+marked in the accent colour. Built on the swimlane.
+
+<!-- lint: examples/portal-roadmap.yaml -->
+```yaml
+archetype: roadmap
+layout:
+  lanes: [identity, selfservice, mobile, platform]       # one per workstream, top first
+  columns: ["Q1 2027", "Q2 2027", "Q3 2027", "Q4 2027"]  # the periods
+  now: 1                                                 # optional: the current period
+```
+
+- Every item has a `col`; items in one lane do not overlap. Use status for what is new or changed.
+- With `flows_mean: dependency`, an arrow points from an item to what it needs first.
+- The title claims the order that matters ("Self-service ships before the new mobile app"), not the year.
+- Example: `examples/portal-roadmap.yaml`.
+
 ## Not built yet
 
-`banded-matrix`, `roadmap`, `landscape-map` are in the schema as planned names. Lint refuses them. Until they exist:
-
-- a roadmap → `swimlane`, with one lane per workstream and the periods as columns;
+`banded-matrix` is in the schema as a planned name. Lint refuses it. Until it exists, a capability or ownership
+matrix fits in a panel as a `matrix` pattern.

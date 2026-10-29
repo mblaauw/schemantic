@@ -326,7 +326,7 @@
   [
    1228,
    194,
-   "Who keeps the bus healthy"
+   "How the bus is kept healthy"
   ],
   [
    1272,
@@ -561,30 +561,25 @@
   [
    452,
    998,
-   "People and teams"
-  ],
-  [
-   606,
-   998,
    "Direction of data"
   ],
   [
-   756,
+   602,
    998,
    "Asynchronous: event or message"
   ],
   [
-   974,
+   820,
    998,
    "Q1"
   ],
   [
-   1000,
+   846,
    998,
    "Open choice or friction"
   ],
   [
-   1184,
+   1030,
    998,
    "Assumption or note"
   ]

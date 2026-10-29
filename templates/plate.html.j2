@@ -13,7 +13,7 @@
 
 {%- macro card(c, cid) -%}
 {%- set fl = flag_of.get(cid) -%}
-<div class="card{% if c.status %} status-{{ c.status }}{% endif %}{% if c.focus %} focus{% endif %}" data-kind="card" data-id="{{ cid }}"{% if c.col %} style="grid-column: {{ c.col }}; grid-row: 1"{% endif %}{% if c.layer %} data-layer="{{ c.layer }}"{% endif %}{% if c.refs %} data-refs="{{ c.refs | join(' | ') }}"{% endif %}{% if c.status == 'planned' %} data-dash{% endif %}>{{ icon(c.icon or 'box') }}<div class="ct"><div class="cn"><span{% if c.status == 'removed' %} data-strike{% endif %}>{{ c.name }}</span>{% if c.qualifier %} <span class="cq">({{ c.qualifier }})</span>{% endif %}{% if fl %}<span class="flag flag-{{ fl.kind }}">{{ fl.label }}</span>{% endif %}{% if c.status %} {{ tag(c.status) }}{% endif %}</div>
+<div class="card{% if c.status %} status-{{ c.status }}{% endif %}{% if c.focus %} focus{% endif %}" data-kind="card" data-id="{{ cid }}"{% if c.col %} style="grid-column: {{ c.col }}{% if c.span %} / span {{ c.span }}{% endif %}; grid-row: 1"{% endif %}{% if c.layer %} data-layer="{{ c.layer }}"{% endif %}{% if c.refs %} data-refs="{{ c.refs | join(' | ') }}"{% endif %}{% if c.status == 'planned' %} data-dash{% endif %}>{{ icon(c.icon or 'box') }}<div class="ct"><div class="cn"><span{% if c.status == 'removed' %} data-strike{% endif %}>{{ c.name }}</span>{% if c.qualifier %} <span class="cq">({{ c.qualifier }})</span>{% endif %}{% if fl %}<span class="flag flag-{{ fl.kind }}">{{ fl.label }}</span>{% endif %}{% if c.status %} {{ tag(c.status) }}{% endif %}</div>
 {%- if c.note %}<div class="cnote">{{ c.note }}</div>{% endif -%}
 {%- if c.bullets %}<div class="cb">{{ bullets(c.bullets) }}</div>{% endif -%}
 </div></div>
@@ -124,7 +124,7 @@
 {%- endfor -%}
 {%- for b, labels in grid.bands.items() -%}
 <div class="band band-{{ b[1:] }}" data-kind="band" data-id="band.{{ b[1:] }}" style="grid-area: {{ b }}; grid-template-columns: repeat({{ labels | length }}, minmax(0, 1fr))">
-{%- for label in labels %}<div class="band-label">{{ label }}</div>{% endfor -%}
+{%- for label in labels %}{% set now = grid.marks.get(b) == loop.index %}<div class="band-label{% if now %} now{% endif %}">{{ label }}{% if now %} <span class="now-tag">{{ L.now }}</span>{% endif %}</div>{% endfor -%}
 </div>
 {%- endfor -%}
 </main>

@@ -12,7 +12,7 @@ import pkgutil
 from dataclasses import dataclass, field
 
 # Named in the schema as the planned contract; refused until a module here builds them.
-PLANNED = ["banded-matrix", "roadmap", "landscape-map"]
+PLANNED = ["banded-matrix"]
 
 
 @dataclass
@@ -24,6 +24,7 @@ class GridSpec:
     group_kind: dict[str, str] = field(default_factory=dict)    # group name -> "row" (default), "stack" or "zones"
     bands: dict[str, list[str]] = field(default_factory=dict)   # band name -> labels of a header row (no panels)
     zones: list[dict] = field(default_factory=list)             # the zone tree rendered in a "zones" group
+    marks: dict[str, int] = field(default_factory=dict)         # band name -> the label (1-based) to mark, e.g. now
 
 
 class Archetype:

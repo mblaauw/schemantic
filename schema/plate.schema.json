@@ -167,10 +167,9 @@
         "nested-zones",
         "swimlane",
         "before-after",
-        "roadmap",
-        "landscape-map"
+        "roadmap"
       ],
-      "description": "The body layout. Built: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones, before-after; the others are planned and refused by lint."
+      "description": "The body layout. Built: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones, before-after, roadmap; banded-matrix is planned and refused by lint."
     },
     "layout": {
       "type": "object",
@@ -255,7 +254,7 @@
           "items": {
             "type": "string"
           },
-          "description": "swimlane: lane (panel) ids, top first. A lane's cards are its steps."
+          "description": "swimlane: lane (panel) ids, top first; a lane's cards are its steps. roadmap: one lane per workstream; its cards are items."
         },
         "columns": {
           "type": "array",
@@ -265,7 +264,7 @@
             "type": "string",
             "maxLength": 32
           },
-          "description": "swimlane: phase names over the step columns; a card's col places it in one."
+          "description": "swimlane: phase names over the step columns. roadmap: the periods. A card's col places it in one."
         },
         "zones": {
           "type": "array",
@@ -310,6 +309,11 @@
             "maxLength": 32
           },
           "description": "before-after: the two column labels (default Before / After, in Dutch Nu / Straks)."
+        },
+        "now": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "roadmap: the current period (1 is the first column), marked in the band."
         }
       }
     },
@@ -624,6 +628,36 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "roadmap"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": [
+              "lanes",
+              "columns"
+            ],
+            "propertyNames": {
+              "enum": [
+                "lanes",
+                "columns",
+                "now",
+                "chips_at"
+              ]
+            }
+          }
+        }
+      }
     }
   ],
   "$defs": {
@@ -717,6 +751,12 @@
         "layer": {
           "type": "string",
           "description": "layer-cake, a card in a rail: the layer it concerns. The card sits level with that layer's cards."
+        },
+        "span": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "roadmap: the number of periods an item runs over, from its col (default 1)."
         }
       }
     },

@@ -68,6 +68,7 @@ Route on the reader's question. When unsure, use `column-flow`.
 | "Who does what, in which order, and where does work change hands?" | `swimlane` | it is about systems, not people: column-flow |
 | "Where does everything run, and what is inside what?" | `nested-zones` | the question is how things talk, not where they live: column-flow |
 | "What changes, and what does each part become?" | `before-after` | the change has more than about four parts: a series of plates |
+| "What comes when, and where are we now?" | `roadmap` | it is who hands work to whom: swimlane |
 
 Series rule: more than 6 panels or 30 cards is two plates, each with its own message. Read
 `references/archetypes.md` for each layout's keys, limits and a skeleton; lint refuses names that are not built.

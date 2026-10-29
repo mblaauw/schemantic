@@ -2,6 +2,7 @@
 badge: "Deel {part} van {of}"
 markers: {question: "V", note: "N"}   # open vraag V1, noot N1
 before_after: ["Nu", "Straks"]
+now: "nu"
 footer:
   principles: "Belangrijke uitgangspunten"
   open_questions: "Open vragen"
