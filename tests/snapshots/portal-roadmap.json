@@ -4,121 +4,121 @@
    40,
    32,
    1560,
-   132
+   134
   ],
   "body": [
    40,
-   150,
+   152,
    1560,
-   696
+   698
   ],
   "identity": [
    40,
-   194,
+   196,
    1560,
-   276
+   278
   ],
   "sso": [
    224,
-   206,
+   208,
    524,
-   262
+   264
   ],
   "identity.card1": [
    906,
-   206,
+   208,
    1206,
-   262
+   264
   ],
   "selfservice": [
    40,
-   320,
+   322,
    1560,
-   400
+   402
   ],
   "profile": [
    564,
-   332,
+   334,
    866,
-   388
+   390
   ],
   "invoices": [
    906,
-   332,
+   334,
    1548,
-   388
+   390
   ],
   "mobile": [
    40,
-   444,
+   446,
    1560,
-   572
+   574
   ],
   "app": [
    906,
-   458,
+   460,
    1548,
-   514
+   516
   ],
   "mobile.chip0": [
    224,
-   524,
+   526,
    1548,
-   558
+   560
   ],
   "platform": [
    40,
-   616,
+   618,
    1560,
-   696
+   698
   ],
   "platform.card0": [
    224,
-   628,
+   630,
    866,
-   684
+   686
   ],
   "platform.card1": [
    906,
-   628,
+   630,
    1206,
-   684
+   686
   ],
   "platform.card2": [
    1246,
-   628,
+   630,
    1548,
-   684
+   686
   ],
   "band.periods": [
    40,
-   150,
+   152,
    1560,
-   178
+   180
   ],
   "footer": [
    40,
-   714,
+   716,
    1560,
-   806
+   808
   ],
   "footer.principles": [
    40,
-   714,
+   716,
    876,
-   776
+   778
   ],
   "footer.open_questions": [
    904,
-   714,
+   716,
    1560,
-   758
+   760
   ],
   "footer.legend": [
    40,
-   786,
+   788,
    1560,
-   806
+   808
   ]
  },
  "text": [
@@ -134,42 +134,42 @@
   ],
   [
    40,
-   124,
+   128,
    "Single sign-on comes first; self-service builds on it, and the mobile app reuses both in the second half"
   ],
   [
    52,
-   222,
+   224,
    "Identity"
   ],
   [
    52,
-   240,
+   242,
    "One sign-in for"
   ],
   [
    52,
-   256,
+   260,
    "customers"
   ],
   [
    266,
-   230,
+   232,
    "Single sign-on"
   ],
   [
    378,
-   230,
+   232,
    "changed"
   ],
   [
    266,
-   248,
+   250,
    "one account for portal and app"
   ],
   [
    948,
-   230,
+   232,
    "Two-step login"
   ],
   [
@@ -179,217 +179,217 @@
   ],
   [
    52,
-   348,
+   350,
    "Self-service"
   ],
   [
    52,
-   366,
+   368,
    "What customers no"
   ],
   [
    52,
-   382,
+   384,
    "longer phone about"
   ],
   [
    608,
-   356,
+   358,
    "Profile and address"
   ],
   [
    608,
-   372,
+   374,
    "changed by the customer"
   ],
   [
    948,
-   356,
+   358,
    "Invoices and payments"
   ],
   [
    948,
-   372,
+   374,
    "download, pay, set up a mandate"
   ],
   [
    52,
-   504,
+   506,
    "Mobile app"
   ],
   [
    52,
-   522,
+   524,
    "Replaces the old app"
   ],
   [
    948,
-   482,
+   484,
    "New app"
   ],
   [
    1022,
-   480,
+   482,
    "new"
   ],
   [
    948,
-   498,
+   500,
    "the portal's features, on the same sign-in"
   ],
   [
    238,
-   544,
+   546,
    "Q1"
   ],
   [
    264,
-   544,
+   546,
    "Build the app ourselves, or hand it to the agency?"
   ],
   [
    52,
-   652,
+   654,
    "Platform"
   ],
   [
    52,
-   670,
+   672,
    "Underneath all of it"
   ],
   [
    266,
-   652,
+   654,
    "Customer API"
   ],
   [
    266,
-   668,
+   670,
    "one source for profile and invoices"
   ],
   [
    948,
-   652,
+   654,
    "Notifications"
   ],
   [
    948,
-   668,
+   670,
    "e-mail and push from one service"
   ],
   [
    1288,
-   652,
+   654,
    "Usage dashboards"
   ],
   [
    1288,
-   668,
+   670,
    "which self-service gets used"
   ],
   [
    224,
-   168,
+   170,
    "Q1 2027"
   ],
   [
    294,
-   166,
+   168,
    "now"
   ],
   [
    564,
-   168,
+   170,
    "Q2 2027"
   ],
   [
    904,
-   168,
+   170,
    "Q3 2027"
   ],
   [
    1246,
-   168,
+   170,
    "Q4 2027"
   ],
   [
    40,
-   728,
+   730,
    "Key principles"
   ],
   [
    50,
-   754,
+   756,
    "A feature reaches the app only after it works in the portal."
   ],
   [
    50,
-   772,
+   774,
    "Every quarter ends with something a customer can use."
   ],
   [
    904,
-   728,
+   730,
    "Open questions"
   ],
   [
    908,
-   754,
+   756,
    "Q1"
   ],
   [
    930,
-   754,
+   756,
    "Build the app ourselves, or hand it to the agency?"
   ],
   [
    40,
-   800,
+   802,
    "Legend"
   ],
   [
    134,
-   800,
+   802,
    "Platform component"
   ],
   [
    302,
-   800,
+   802,
    "Data and storage"
   ],
   [
    452,
-   800,
+   802,
    "Depends on"
   ],
   [
    546,
-   800,
+   802,
    "new"
   ],
   [
    584,
-   800,
+   802,
    "New in this phase"
   ],
   [
    712,
-   800,
+   802,
    "changed"
   ],
   [
    772,
-   800,
+   802,
    "Changed in this phase"
   ],
   [
    926,
-   800,
+   802,
    "Q1"
   ],
   [
    952,
-   800,
+   802,
    "Open choice or friction"
   ]
  ],
@@ -401,15 +401,15 @@
    "points": [
     [
      556,
-     348
+     350
     ],
     [
      508,
-     348
+     350
     ],
     [
      508,
-     270
+     272
     ]
    ],
    "label": null
@@ -421,15 +421,15 @@
    "points": [
     [
      898,
-     474
+     476
     ],
     [
      848,
-     474
+     476
     ],
     [
      848,
-     394
+     396
     ]
    ],
    "label": null

@@ -4,121 +4,121 @@
    40,
    32,
    1560,
-   108
+   110
   ],
   "body": [
    40,
-   126,
+   128,
    1560,
-   386
+   388
   ],
   "teams": [
    40,
-   126,
+   128,
    348,
-   310
+   312
   ],
   "teams.card0": [
    54,
-   178,
+   180,
    334,
-   234
+   236
   ],
   "teams.card1": [
    54,
-   242,
+   244,
    334,
-   296
+   298
   ],
   "delivery": [
    396,
-   126,
+   128,
    1166,
-   386
+   388
   ],
   "delivery.card0": [
    408,
-   178,
+   180,
    1152,
-   234
+   236
   ],
   "delivery.process-strip0": [
    408,
-   244,
+   246,
    1152,
-   326
+   328
   ],
   "delivery.process-strip0.0": [
    408,
-   264,
+   266,
    538,
-   326
+   328
   ],
   "delivery.process-strip0.1": [
    562,
-   264,
+   266,
    692,
-   326
+   328
   ],
   "delivery.process-strip0.2": [
    716,
-   264,
+   266,
    846,
-   326
+   328
   ],
   "delivery.process-strip0.3": [
    870,
-   264,
+   266,
    1000,
-   326
+   328
   ],
   "delivery.process-strip0.4": [
    1024,
-   264,
+   266,
    1152,
-   326
+   328
   ],
   "delivery.chip0": [
    408,
-   336,
+   338,
    1152,
-   372
+   374
   ],
   "runtime": [
    1214,
-   126,
+   128,
    1560,
-   310
+   312
   ],
   "runtime.card0": [
    1226,
-   178,
+   180,
    1548,
-   234
+   236
   ],
   "runtime.card1": [
    1226,
-   242,
+   244,
    1548,
-   296
+   298
   ],
   "footer": [
    40,
-   404,
+   406,
    1560,
-   476
+   478
   ],
   "footer.principles": [
    40,
-   404,
+   406,
    1560,
-   446
+   448
   ],
   "footer.legend": [
    40,
-   456,
+   458,
    1560,
-   476
+   478
   ]
  },
  "text": [
@@ -129,217 +129,217 @@
   ],
   [
    40,
-   100,
+   104,
    "Every step is automated; a failed check stops the release"
   ],
   [
    52,
-   152,
+   154,
    "Product teams"
   ],
   [
    96,
-   202,
+   204,
    "Developers"
   ],
   [
    96,
-   218,
+   220,
    "merge to main"
   ],
   [
    96,
-   266,
+   268,
    "Release owner"
   ],
   [
    96,
-   282,
+   284,
    "approves production"
   ],
   [
    408,
-   152,
+   154,
    "Delivery pipeline"
   ],
   [
    452,
-   202,
+   204,
    "Pipeline as code"
   ],
   [
    452,
-   218,
+   220,
    "one template for every service"
   ],
   [
    408,
-   254,
+   256,
    "From merge to production"
   ],
   [
    426,
-   286,
+   288,
    "1"
   ],
   [
    468,
-   286,
+   288,
    "Build"
   ],
   [
    468,
-   300,
+   302,
    "image and"
   ],
   [
    468,
-   314,
+   316,
    "SBOM"
   ],
   [
    578,
-   286,
+   288,
    "2"
   ],
   [
    622,
-   286,
+   288,
    "Test"
   ],
   [
    622,
-   300,
+   302,
    "unit and"
   ],
   [
    622,
-   314,
+   316,
    "contract"
   ],
   [
    732,
-   286,
+   288,
    "3"
   ],
   [
    776,
-   286,
+   288,
    "Scan"
   ],
   [
    776,
-   300,
+   302,
    "CVEs block"
   ],
   [
    776,
-   314,
+   316,
    "release"
   ],
   [
    884,
-   286,
+   288,
    "4"
   ],
   [
    930,
-   286,
+   288,
    "Stage"
   ],
   [
    930,
-   300,
+   302,
    "smoke"
   ],
   [
    930,
-   314,
+   316,
    "tests"
   ],
   [
    1038,
-   286,
+   288,
    "5"
   ],
   [
    1084,
-   286,
+   288,
    "Release"
   ],
   [
    1084,
-   300,
+   302,
    "canary,"
   ],
   [
    1084,
-   314,
+   316,
    "then all"
   ],
   [
    446,
-   358,
+   360,
    "A failed step stops the release; nothing is skipped by hand"
   ],
   [
    1226,
-   152,
+   154,
    "Production"
   ],
   [
    1270,
-   202,
+   204,
    "Clusters"
   ],
   [
    1270,
-   218,
+   220,
    "two regions"
   ],
   [
    1270,
-   266,
+   268,
    "Canary analysis"
   ],
   [
    1270,
-   282,
+   284,
    "rolls back on errors"
   ],
   [
    40,
-   416,
+   418,
    "Key principles"
   ],
   [
    50,
-   442,
+   444,
    "Every change to production goes through the pipeline."
   ],
   [
    40,
-   470,
+   472,
    "Legend"
   ],
   [
    134,
-   470,
+   472,
    "People and teams"
   ],
   [
    288,
-   470,
+   472,
    "Platform component"
   ],
   [
    456,
-   470,
+   472,
    "Controls"
   ],
   [
    554,
-   470,
+   472,
    "Assumption or note"
   ]
  ],
@@ -351,11 +351,11 @@
    "points": [
     [
      354,
-     218
+     220
     ],
     [
      388,
-     218
+     220
     ]
    ],
    "label": null
@@ -367,11 +367,11 @@
    "points": [
     [
      1172,
-     218
+     220
     ],
     [
      1206,
-     218
+     220
     ]
    ],
    "label": null

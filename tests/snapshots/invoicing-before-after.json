@@ -4,163 +4,163 @@
    40,
    32,
    1560,
-   132
+   134
   ],
   "body": [
    40,
-   150,
+   152,
    1560,
-   934
+   746
   ],
   "erp": [
    40,
-   194,
+   196,
    776,
-   396
+   334
   ],
   "erp.card0": [
    54,
-   264,
-   764,
-   320
+   266,
+   404,
+   322
   ],
   "erp.card1": [
-   54,
-   328,
+   412,
+   266,
    764,
-   382
+   322
   ],
   "batch": [
    40,
-   440,
+   378,
    776,
-   642
+   518
   ],
   "batch.card0": [
    54,
-   510,
-   764,
-   566
+   450,
+   404,
+   504
   ],
   "batch.card1": [
-   54,
-   574,
+   412,
+   450,
    764,
-   630
+   504
   ],
   "matching": [
    40,
-   686,
+   562,
    776,
-   888
+   700
   ],
   "matching.card0": [
    54,
-   758,
-   764,
-   812
+   632,
+   404,
+   688
   ],
   "matching.card1": [
-   54,
-   820,
+   412,
+   632,
    764,
-   876
+   688
   ],
   "invoicing": [
    824,
-   194,
+   196,
    1560,
-   396
+   334
   ],
   "invoicing.card0": [
    838,
-   264,
-   1548,
-   320
+   266,
+   1188,
+   322
   ],
   "invoicing.card1": [
-   838,
-   328,
+   1196,
+   266,
    1548,
-   382
+   322
   ],
   "bankapi": [
    824,
-   440,
+   378,
    1560,
-   642
+   518
   ],
   "bankapi.card0": [
    838,
-   510,
-   1548,
-   566
+   450,
+   1188,
+   504
   ],
   "bankapi.card1": [
-   838,
-   574,
+   1196,
+   450,
    1548,
-   630
+   504
   ],
   "recon": [
    824,
-   686,
+   562,
    1560,
-   934
+   746
   ],
   "recon.card0": [
    838,
-   758,
-   1548,
-   812
+   632,
+   1188,
+   688
   ],
   "recon.card1": [
-   838,
-   820,
+   1196,
+   632,
    1548,
-   876
+   688
   ],
   "recon.chip0": [
    838,
-   886,
+   698,
    1548,
-   920
+   732
   ],
   "band.before": [
    40,
-   150,
+   152,
    776,
-   184
+   186
   ],
   "band.after": [
    824,
-   150,
+   152,
    1560,
-   184
+   186
   ],
   "footer": [
    40,
-   952,
+   764,
    1560,
-   1044
+   856
   ],
   "footer.principles": [
    40,
-   952,
+   764,
    876,
-   1014
+   826
   ],
   "footer.open_questions": [
    904,
-   952,
+   764,
    1560,
-   996
+   808
   ],
   "footer.legend": [
    40,
-   1024,
+   836,
    1560,
-   1044
+   856
   ]
  },
  "text": [
@@ -176,322 +176,322 @@
   ],
   [
    40,
-   124,
+   128,
    "An invoicing service replaces the nightly export, and payments are matched automatically instead of by hand"
   ],
   [
    52,
-   220,
+   222,
    "ERP"
   ],
   [
    52,
-   238,
+   240,
    "Raises every invoice"
   ],
   [
    96,
-   288,
+   290,
    "Invoice module"
   ],
   [
    96,
-   304,
+   306,
    "invoices for all customers"
   ],
   [
-   96,
-   352,
+   456,
+   290,
    "Ledger"
   ],
   [
-   96,
-   368,
+   456,
+   306,
    "the book of record"
   ],
   [
    52,
-   466,
+   404,
    "Nightly export"
   ],
   [
    52,
-   484,
+   422,
    "One file a day"
   ],
   [
    96,
-   534,
+   474,
    "Batch job"
   ],
   [
    96,
-   552,
+   490,
    "runs at 02:00, files all invoices of the day"
   ],
   [
-   96,
-   598,
+   456,
+   474,
    "SFTP upload"
   ],
   [
-   96,
-   614,
+   456,
+   490,
    "the file goes to the bank"
   ],
   [
    52,
-   712,
+   588,
    "Matching"
   ],
   [
    52,
-   730,
+   606,
    "Finance, every morning"
   ],
   [
    96,
-   782,
+   656,
    "Bank statement"
   ],
   [
    96,
-   798,
+   672,
    "downloaded and opened in a spreadsheet"
   ],
   [
-   96,
-   844,
+   456,
+   656,
    "Match by hand"
   ],
   [
-   96,
-   862,
+   456,
+   672,
    "payment to invoice, line by line"
   ],
   [
    836,
-   220,
+   222,
    "Invoicing service"
   ],
   [
    1518,
-   214,
+   216,
    "new"
   ],
   [
    836,
-   238,
+   240,
    "Raises and sends each invoice"
   ],
   [
    880,
-   288,
+   290,
    "Invoice API"
   ],
   [
    880,
-   304,
+   306,
    "one invoice at a time, when the order ships"
   ],
   [
-   880,
-   352,
+   1240,
+   290,
    "Ledger"
   ],
   [
-   880,
-   368,
+   1240,
+   306,
    "stays in the ERP"
   ],
   [
    836,
-   466,
+   404,
    "Bank connection"
   ],
   [
    1494,
-   460,
+   400,
    "changed"
   ],
   [
    836,
-   484,
+   422,
    "Per invoice, during the day"
   ],
   [
    880,
-   534,
+   474,
    "Payments API"
   ],
   [
    880,
-   552,
+   490,
    "replaces the SFTP file"
   ],
   [
-   880,
-   598,
+   1240,
+   474,
    "Batch job"
   ],
   [
-   956,
-   596,
+   1316,
+   472,
    "removed"
   ],
   [
-   880,
-   614,
+   1240,
+   490,
    "switched off"
   ],
   [
    836,
-   712,
+   588,
    "Reconciliation"
   ],
   [
    1518,
-   708,
+   582,
    "new"
   ],
   [
    836,
-   730,
+   606,
    "Automatic, with exceptions to finance"
   ],
   [
    880,
-   782,
+   656,
    "Matcher"
   ],
   [
    880,
-   798,
+   672,
    "pairs payments and invoices by reference"
   ],
   [
-   880,
-   844,
+   1240,
+   656,
    "Finance"
   ],
   [
-   880,
-   862,
+   1240,
+   672,
    "only the payments that do not match"
   ],
   [
    852,
-   908,
+   720,
    "Q1"
   ],
   [
    878,
-   906,
+   718,
    "Who owns a payment that matches two invoices?"
   ],
   [
    40,
-   170,
+   172,
    "Before"
   ],
   [
    824,
-   170,
+   172,
    "After"
   ],
   [
    40,
-   964,
+   776,
    "Key principles"
   ],
   [
    50,
-   990,
+   802,
    "An invoice goes to the bank when the order ships, not in tomorrow's file."
   ],
   [
    50,
-   1010,
+   822,
    "People handle only the payments the matcher cannot pair."
   ],
   [
    904,
-   964,
+   776,
    "Open questions"
   ],
   [
    908,
-   992,
+   804,
    "Q1"
   ],
   [
    930,
-   990,
+   802,
    "Who owns a payment that matches two invoices?"
   ],
   [
    40,
-   1038,
+   850,
    "Legend"
   ],
   [
    134,
-   1038,
+   850,
    "Platform component"
   ],
   [
    302,
-   1038,
+   850,
    "People and teams"
   ],
   [
    456,
-   1038,
+   850,
    "Clients and external systems"
   ],
   [
    674,
-   1038,
+   850,
    "Direction of data"
   ],
   [
    796,
-   1038,
+   850,
    "new"
   ],
   [
    832,
-   1038,
+   850,
    "New in this phase"
   ],
   [
    960,
-   1038,
+   850,
    "changed"
   ],
   [
    1022,
-   1038,
+   850,
    "Changed in this phase"
   ],
   [
    1176,
-   1038,
+   850,
    "removed"
   ],
   [
    1238,
-   1038,
+   850,
    "Removed in this phase"
   ],
   [
    1392,
-   1038,
+   850,
    "Q1"
   ],
   [
    1418,
-   1038,
+   850,
    "Open choice or friction"
   ]
  ],
@@ -503,11 +503,11 @@
    "points": [
     [
      408,
-     402
+     342
     ],
     [
      408,
-     432
+     372
     ]
    ],
    "label": null
@@ -519,11 +519,11 @@
    "points": [
     [
      408,
-     650
+     524
     ],
     [
      408,
-     680
+     554
     ]
    ],
    "label": null
@@ -535,11 +535,11 @@
    "points": [
     [
      1192,
-     402
+     342
     ],
     [
      1192,
-     432
+     372
     ]
    ],
    "label": null
@@ -551,11 +551,11 @@
    "points": [
     [
      1192,
-     650
+     524
     ],
     [
      1192,
-     680
+     554
     ]
    ],
    "label": null
