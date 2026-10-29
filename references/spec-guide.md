@@ -82,7 +82,12 @@ flows:
   - {from: services, to: bus, style: async}           # sync (solid, default) | async (dashed) | optional (dotted)
   - {from: orders, to: payments, step: 2}             # a numbered badge, for the order things happen
   - {from: services, to: bus, both: true}             # arrowheads at both ends
+  - {from: integration, to: proxy, focus: true}       # the one arrow the plate is about (one focus per plate)
 ```
+
+With a `focus` (a panel, a card, or an arrow), the panels it is about keep their full colour and the others get a
+quiet header in their role's tint, so the eye goes to the point first. A focused arrow is drawn heavier, in the
+accent colour.
 
 The router draws straight arrows across a gutter where it can, and otherwise turns corners through the
 gutters (one or two bends), or goes around: out of a box and back into the other on the same side, along a gutter

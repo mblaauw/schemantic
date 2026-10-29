@@ -187,6 +187,7 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
 
     focused = [p["id"] for p in spec["panels"] if p.get("focus")]
     focused += [card_id(p, i, c) for p in spec["panels"] for i, c in enumerate(p.get("cards", [])) if c.get("focus")]
+    focused += [f"flows/{i}" for i, f in enumerate(spec.get("flows", [])) if f.get("focus")]
     if len(focused) > 1:
         out.append(finding("focus", focused[1], f"{len(focused)} elements have focus ({', '.join(focused)}); a plate has one point"))
     if spec.get("flows") and not spec.get("flows_mean"):

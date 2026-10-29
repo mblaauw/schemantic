@@ -78,7 +78,7 @@
 {%- endmacro -%}
 
 {%- macro panel(p) -%}
-<section class="panel role-{{ p.role }}{% if p.lane %} lane{% endif %}{% if p.hub %} panel-hub{% endif %}{% if p.status %} status-{{ p.status }}{% endif %}{% if p.focus %} focus{% endif %}{% if p.spread %} spread{% endif %}" data-kind="panel" data-id="{{ p.id }}"{% if not p.nested %} style="grid-area: {{ p.id }}"{% endif %}{% if p.status == 'planned' %} data-dash{% endif %}>
+<section class="panel role-{{ p.role }}{% if p.lane %} lane{% endif %}{% if p.hub %} panel-hub{% endif %}{% if p.status %} status-{{ p.status }}{% endif %}{% if p.focus %} focus{% endif %}{% if p.quiet %} quiet{% endif %}{% if p.spread %} spread{% endif %}" data-kind="panel" data-id="{{ p.id }}"{% if not p.nested %} style="grid-area: {{ p.id }}"{% endif %}{% if p.status == 'planned' %} data-dash{% endif %}>
 <div class="ph"><div class="ph-row"><div class="ph-title">{{ p.title }}</div>{{ tag(p.status) }}</div>{% if p.subtitle %}<div class="ph-sub">{{ p.subtitle }}</div>{% endif %}</div>
 <div class="pb">
 <div class="blocks arrange-{{ p.arrange or 'column' }}">

@@ -333,3 +333,19 @@ def test_a_rail_cards_layer_is_a_layer_in_order_and_only_in_rails():
     security["cards"][0]["layer"] = "experience"
     next(p for p in spec["panels"] if p["id"] == "runtime")["cards"][0]["layer"] = "infra"
     assert any("only a rail" in e["detail"] for e in errors(spec))
+
+
+# Focus: the panels a plate is about keep their colour; the others go quiet. An arrow can be the focus too.
+def test_focus_leaves_the_other_panels_quiet(example):
+    from schemantic.html import focal_panels
+    assert focal_panels(example) == {"gateway"}  # the example focuses the gateway panel
+    example["panels"][2].pop("focus")
+    example["flows"][1]["focus"] = True  # identity -> gateway
+    assert focal_panels(example) == {"identity", "gateway"}
+    example["flows"][1].pop("focus")
+    assert focal_panels(example) is None
+
+
+def test_one_focus_counts_arrows_too(example):
+    example["flows"][0]["focus"] = True
+    assert [(e["check"], e["id"]) for e in errors(example)] == [("focus", "flows/0")]

@@ -355,6 +355,10 @@
             "minimum": 1,
             "maximum": 20,
             "description": "A numbered badge on the arrow, for the order things happen."
+          },
+          "focus": {
+            "type": "boolean",
+            "description": "The one arrow the plate is about: drawn heavier, in the accent colour (one focus per plate)."
           }
         }
       }

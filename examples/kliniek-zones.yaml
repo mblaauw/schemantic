@@ -82,7 +82,7 @@ flows_mean: request
 flows:
   - {from: patients, to: portal}
   - {from: portal, to: integration}
-  - {from: integration, to: proxy}
+  - {from: integration, to: proxy, focus: true}   # the one way from the cloud into the datacentre
   - {from: proxy, to: ehr}
   - {from: ehr, to: records}
 

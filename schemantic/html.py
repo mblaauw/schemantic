@@ -6,7 +6,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from . import archetypes, icons, roles
 from .config import CANVAS_SIZES, TEMPLATES
 from .export import font_css
-from .spec import FOOTER_WEIGHTS, flags, footer_layout, load_locale, notes, open_questions
+from .spec import FOOTER_WEIGHTS, card_id, flags, footer_layout, load_locale, notes, open_questions
 
 
 def grid_css(spec: dict) -> dict:
@@ -82,7 +82,7 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
     for st in ("new", "changed", "planned", "deprecated", "removed"):
         if any(t.get("status") == st for t in things):
             entries.append({"kind": "status", "key": st, "label": lg[f"status_{st}"]})
-    if any(t.get("focus") for t in things):
+    if any(t.get("focus") for t in things + spec.get("flows", [])):
         entries.append({"kind": "focus", "key": "focus", "label": lg["focus"]})
     kinds = [ch["kind"] for p in spec["panels"] for ch in p.get("chips", [])] + [f["kind"] for f in flags(spec)]
     for k in ("warning", "info"):
@@ -98,8 +98,22 @@ def panels_for_render(spec: dict) -> list[dict]:
     rows = arche.grid(spec).rows
     # A panel spanning several rows (a rail, a side spoke) spreads its cards over its height instead of leaving one hole.
     spread = {n for n in {n for r in rows for n in r} if sum(n in r for r in rows) > 1}
+    loud = focal_panels(spec)
     return [{**p, "role": p["role"], "chips_bottom": p["id"] in pinned, "spread": p["id"] in spread,
-             **arche.panel_defaults(spec, p)} for p in spec["panels"]]
+             "quiet": loud is not None and p["id"] not in loud, **arche.panel_defaults(spec, p)} for p in spec["panels"]]
+
+
+def focal_panels(spec: dict) -> set[str] | None:
+    """The panels a plate's focus is about: the focused panel, the panel of a focused card, or the panels at both ends
+    of a focused flow. The other panels get quiet headers so the eye goes there first. None without a focus."""
+    owner = {p["id"]: p["id"] for p in spec["panels"]}
+    owner |= {card_id(p, i, c): p["id"] for p in spec["panels"] for i, c in enumerate(p.get("cards", []))}
+    loud = {p["id"] for p in spec["panels"] if p.get("focus")}
+    loud |= {p["id"] for p in spec["panels"] for c in p.get("cards", []) if c.get("focus")}
+    for f in spec.get("flows", []):
+        if f.get("focus"):
+            loud |= {owner.get(f["from"]), owner.get(f["to"])} - {None}
+    return loud or None
 
 
 def chips_pinned(spec: dict) -> set[str]:

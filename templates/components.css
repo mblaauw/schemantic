@@ -160,6 +160,11 @@ body { background: var(--paper); }
 /* Focus: the one element the plate is about */
 .card.focus { border: 2px solid var(--accent); padding: 8px 9px; }
 .panel.focus { border: 2px solid var(--accent); }
+/* With a focus on the plate, the other panels' headers go quiet: their role's tint, dark text. The colour still says
+   the role; the full colour is left to what the plate is about. */
+.panel.quiet > .ph { background: var(--sub); }
+.panel.quiet .ph-title { color: var(--head); }
+.panel.quiet .ph-sub { color: var(--muted); }
 
 /* Legend samples for line styles (drawn by js/decorate.js) and focus */
 .ls { flex: 0 0 auto; width: 22px; height: 14px; margin: 0 2px; }
