@@ -22,7 +22,7 @@ to `_work/` and move to the output folder only when the build has no errors. Chr
 
 | Module | Does |
 | --- | --- |
-| `spec.py` | load the YAML, schema check, semantic checks (ids, placement, flows, stories, footer, chips, icons, language, traceability) |
+| `spec.py` | load the YAML, schema check, semantic checks (ids, placement, flows, stories, footer, chips, icons, language, traceability, placeholders) |
 | `archetypes/` | one module per body layout; the registry finds them; each knows its layout keys, checks, grid and panel defaults |
 | `roles.py` | panel roles: colours from tokens, legend labels, theme roles |
 | `html.py` | the template context: grid CSS, legend entries, footer layout, panels with their defaults |
@@ -32,6 +32,7 @@ to `_work/` and move to the output folder only when the build has no errors. Chr
 | `images.py` | image diffs (blurred, judged locally) and structural snapshots, read from the layout document |
 | `findings.py` | every check, its meaning, fix and hint; generates `references/lint-fixes.md` |
 | `outline.py`, `glyphs.py`, `icons.py`, `gallery.py` | the text outline, glyph outlines, icon search, README images |
+| `scaffold.py`, `starters/` | for the skill: starter specs per archetype (`new`) |
 | `cli.py`, `doctor.py` | the command line; finding a Python and Chromium (standard library only) |
 | `offline.py` | the offline kit: wheels, Chromium, checksums, installer, smoke test |
 | `js/` | page scripts: `common` (helpers), `fit`, `decorate`, `route`, `layout`, `lint`, `fonts-ready` |

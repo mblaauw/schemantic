@@ -1,0 +1,5 @@
+
+footer:
+  principles:
+    - "TODO: a decision, as a full sentence a team could check."
+  open_questions: {from_chips: true}

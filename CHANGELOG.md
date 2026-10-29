@@ -54,6 +54,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   checks that a flow runs from every step to the next, and says when only the panels around two cards are joined
   (the review's "jump"). Unlike the title-matching lint left out earlier, the author declares the route, so nothing
   is guessed. The outline lists the stories; the clinic and incident plates have one each.
+- `schemantic new <archetype> <path>`: a starter spec for every built archetype, with a brief, sources, refs, flows,
+  a story, a principle and an open question, and TODO wherever the sources must speak. The `placeholder` lint names
+  each TODO left by its path; filled in, every starter builds clean.
 
 ### Changed
 - One loud place per plate. Panel headers are quiet by default (their role's tint, the title in the role's colour);

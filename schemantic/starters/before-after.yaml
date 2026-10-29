@@ -1,0 +1,38 @@
+archetype: before-after
+
+layout:
+  before: [old_in, old_out]
+  after: [new_in, new_out]
+
+panels:
+  - id: old_in
+    title: "TODO: a part as it is"
+    role: platform
+    cards:
+      - {icon: server, name: "TODO: a thing with a name", note: "TODO: what it does today", refs: ["notes: TODO"]}
+  - id: old_out
+    title: "TODO: a part as it is"
+    role: actor
+    cards:
+      - {icon: users, name: "TODO: a thing with a name", note: "TODO: what it does today", refs: ["notes: TODO"]}
+  - id: new_in
+    title: "TODO: what it becomes"
+    role: platform
+    status: changed
+    cards:
+      - {icon: server, name: "TODO: a thing with a name", note: "TODO: what it will do", refs: ["notes: TODO"]}
+    chips:
+      - {kind: warning, text: "TODO: an open choice the sources leave"}
+  - id: new_out
+    title: "TODO: what it becomes"
+    role: platform
+    status: new
+    cards:
+      - {icon: rocket, name: "TODO: a thing with a name", note: "TODO: what it will do", refs: ["notes: TODO"]}
+
+flows_mean: data
+flows:
+  - {from: old_in, to: old_out}
+  - {from: new_in, to: new_out}
+stories:
+  - {name: "TODO: the route the title tells", path: [new_in, new_out]}

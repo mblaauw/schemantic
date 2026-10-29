@@ -19,6 +19,8 @@ FOOTER_WEIGHTS = {"context": 1.5, "principles": 1.4, "open_questions": 1.1, "not
 # FOOTER_STACK_MAX items stack under another column instead of taking one of their own.
 FOOTER_MAX_COLUMNS = 3
 FOOTER_STACK_MAX = 2
+# What a starter spec marks for the author to fill in.
+PLACEHOLDER = re.compile(r"\bTODO\b")
 
 
 def finding(check: str, id_: str, detail: str, level: str = "error") -> dict:
@@ -271,7 +273,24 @@ def traceability(spec: dict) -> list[dict]:
 
 def check(spec: dict, theme_css: str = "") -> list[dict]:
     """Schema first; semantic checks only on a spec that has the right shape."""
-    return schema_errors(spec) or semantic_errors(spec, theme_css)
+    return schema_errors(spec) or placeholders(spec) + semantic_errors(spec, theme_css)
+
+
+def placeholders(spec) -> list[dict]:
+    """Text a starter (`schemantic new`) left for the author: every string with TODO in it, by its path."""
+    out = []
+
+    def walk(v, where):
+        if isinstance(v, str) and PLACEHOLDER.search(v):
+            out.append(finding("placeholder", where or "(root)", f"'{v}' is a placeholder; write what the sources say"))
+        elif isinstance(v, dict):
+            for k, x in v.items():
+                walk(x, f"{where}/{k}" if where else str(k))
+        elif isinstance(v, list):
+            for i, x in enumerate(v):
+                walk(x, f"{where}/{i}")
+    walk(spec, "")
+    return out
 
 
 def slide_findings(spec: dict) -> list[dict]:

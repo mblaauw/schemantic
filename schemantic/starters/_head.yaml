@@ -1,0 +1,15 @@
+# A {archetype} plate, started with `schemantic new`. Every TODO is a place for what the sources say: lint names each
+# one left (check: placeholder) until none is. Rename the ids, add or drop panels and cards; the build says what breaks.
+brief:
+  message: "TODO: the one claim the plate makes"
+  reader: "TODO: who reads it, and what they must take away"
+  why: "TODO: why this layout tells it"
+  left_out: ["TODO: what the sources hold that the plate leaves out, and why"]
+  assumptions: ["TODO: what is assumed rather than found"]
+sources:
+  - {id: notes, kind: notes, ref: "TODO: the meeting, document or repository it comes from"}
+
+canvas: {size: landscape-4x3, lang: {lang}}
+topic: "TODO: what the plate is about, in a few words"
+title: "TODO: the claim, as a sentence the panels prove"
+subtitle: "TODO: how the plate makes that claim true"

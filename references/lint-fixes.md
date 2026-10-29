@@ -9,6 +9,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | check | means | fix |
 | --- | --- | --- |
 | `yaml` | the file is missing, is not valid YAML (the detail gives line and column) or holds no mapping | fix the file; quote strings that contain `: ` or start with a special character |
+| `placeholder` | text a starter left (`schemantic new`): a string with TODO in it | write what the sources say in its place, or drop the field or element; the id is its path |
 | `schema` | a field is missing, misspelled, too long or of the wrong type | the `id` is the path to the field; shorten text or correct the key |
 | `id` | two panels share an id, two cards share an id, or a card id equals a panel id or a card's automatic id | rename one; the detail names both places |
 | `archetype` | the archetype is planned but not built | pick a built one (`archetypes.md`, "Not built yet") |

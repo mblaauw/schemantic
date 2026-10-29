@@ -75,9 +75,16 @@ Series rule: more than 6 panels or 30 cards is two plates, each with its own mes
 
 ## 4. Write the spec
 
-Save it where the user keeps their work, for example `plates/<name>.yaml`. Start from the closest example in
-`$SKILL/examples/` or `references/analysis.md`, and follow `references/spec-guide.md` for every field, the text
-budgets and the writing rules. The short version:
+Start from a starter, saved where the user keeps their work:
+
+```bash
+"$PY" "$SKILL/scripts/plate.py" new <archetype> plates/<name>.yaml --lang en
+```
+
+It has every part (brief, sources, panels, flows, a story, footer) with TODO wherever the sources must speak; lint
+names each TODO left. Replace every one, and rename, add or drop panels and cards as the plan says. The examples in
+`$SKILL/examples/` show finished plates; follow `references/spec-guide.md` for every field, the text budgets and the
+writing rules. The short version:
 
 - 3 to 6 panels, 2 to 6 cards each. A card is a thing with a name; its note says what it does in this story.
 - Say once what arrows mean (`flows_mean`). Connect panels by default; when the title or subtitle names a route

@@ -5,6 +5,9 @@ plate readable. Lengths are maximum characters.
 
 ## Top level
 
+`schemantic new <archetype> <path>` writes a starter with every part below and TODO wherever the sources must speak;
+lint (`placeholder`) names each TODO left.
+
 | Field | Rule |
 | --- | --- |
 | `canvas.size` | `landscape-4x3` (1600 wide, the default choice), `landscape-16x9` (1920×1080, for slides), or `a3-landscape` / `a4-landscape` for print: laid out at the sheet's width (96 px per inch, so type prints at its own size), as tall as the content, then centred on the sheet and scaled down when taller; lint fails it when the smallest text would print under 6 pt (`print-size`). Build with `--dpi 300`; the SVG is the sheet in mm |

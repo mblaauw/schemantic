@@ -1,4 +1,4 @@
-"""Command line: `schemantic build | lint | series | doctor | icons | gallery | docs | offline | verify | smoke`.
+"""Command line: `schemantic new | build | lint | series | doctor | icons | gallery | docs | offline | verify | smoke`.
 Every command prints JSON and exits 1 on errors; an unexpected failure is an `internal` finding, never a traceback,
 because an agent reads the output."""
 
@@ -23,6 +23,10 @@ def _spec_command(sub, name: str, help_: str, scale: bool):
 def parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="schemantic", description="From a YAML spec to a finished architecture plate.")
     sub = ap.add_subparsers(dest="cmd", required=True)
+    n = sub.add_parser("new", help="write a starter spec for an archetype, with TODO wherever the sources must speak")
+    n.add_argument("archetype")
+    n.add_argument("path", help="the spec to write, for example plates/<name>.yaml; never overwritten")
+    n.add_argument("--lang", choices=("en", "nl"), default="en", help="the plate's language (default: en)")
     _spec_command(sub, "build", "check, lay out, lint and write <name>.svg and <name>.png", scale=True)
     _spec_command(sub, "lint", "build without writing deliverables; report only", scale=False)
     r = sub.add_parser("series", help="check the parts of a series against each other: numbering, language, arrows, colours")
@@ -55,6 +59,11 @@ def run(a) -> tuple[dict, int]:
         # All the words must match; if none does, any word is better than an empty answer for "identity provider".
         found = (icons.search(words, limit=40) or icons.search(words, limit=40, every=False)) if words else sorted(icons.index())
         return {"icons": found, "count": len(found)}, 0
+    if a.cmd == "new":
+        from .scaffold import new
+
+        r = new(a.archetype, a.path, a.lang)
+        return r, 1 if r["errors"] else 0
     if a.cmd == "series":
         from .findings import with_hint
         from .series import series_findings

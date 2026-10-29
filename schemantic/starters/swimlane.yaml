@@ -1,0 +1,35 @@
+archetype: swimlane
+
+layout:
+  lanes: [asker, team, system]
+  columns: ["TODO: phase 1", "TODO: phase 2", "TODO: phase 3"]
+
+panels:
+  - id: asker
+    title: "TODO: who starts it"
+    role: actor
+    cards:
+      - {id: ask, icon: message-circle, name: "TODO: a step", note: "TODO: what happens", col: 1, refs: ["notes: TODO"]}
+  - id: team
+    title: "TODO: who does the work"
+    role: actor
+    cards:
+      - id: decide
+        icon: flag
+        name: "TODO: a step"
+        note: "TODO: what happens"
+        col: 2
+        refs: ["notes: TODO"]
+        flag: {kind: warning, text: "TODO: an open choice the sources leave"}
+  - id: system
+    title: "TODO: the system that records it"
+    role: platform
+    cards:
+      - {id: record, icon: check, name: "TODO: a step", note: "TODO: what happens", col: 3, refs: ["notes: TODO"]}
+
+flows_mean: control
+flows:
+  - {from: ask, to: decide, step: 1}
+  - {from: decide, to: record, step: 2}
+stories:
+  - {name: "TODO: the route the title tells", path: [ask, decide, record]}
