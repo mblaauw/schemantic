@@ -34,6 +34,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   of that page, and linted with the examples.
 
 ### Changed
+- A flag on a footer context card was dropped without a word: not drawn, not asked, not in the outline. It now
+  shows its label and joins the open questions after the body's; the outline lists the context cards.
 - CI runs once per change (pull requests, and pushes to main), cancels a run a newer push replaces, and has a time
   limit per job.
 - Text in a panel header is checked against the header, so a lane title spilling out of its narrow header is a

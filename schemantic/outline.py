@@ -74,6 +74,11 @@ def markdown(spec: dict) -> str:
             md += [f"  - {b}" for b in c.get("bullets", [])]
         md += [f"- *{ch['text']}*" for ch in p.get("chips", [])]
         md.append("")
+    context = (spec.get("footer") or {}).get("context")
+    if context:
+        md += [f"## {context['title']}", ""]
+        md += [f"- {_card(c, card_id({'id': 'footer.context'}, i, c), flag_of, loc)}" for i, c in enumerate(context["cards"])]
+        md.append("")
     if spec.get("flows"):
         md += [f"## {loc['footer']['flows']}", ""]
         for f in spec["flows"]:
