@@ -14,6 +14,7 @@ BASE = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
 LAYERS = sp.load_spec(ROOT / "examples" / "ontwikkelplatform-lagen.yaml")
 SKIP = sp.load_spec(ROOT / "tests" / "fixtures" / "skip-connection.yaml")  # its skip arrow must cross a down arrow
 ROADMAP = sp.load_spec(ROOT / "examples" / "portal-roadmap.yaml")
+BEFORE_AFTER = sp.load_spec(ROOT / "examples" / "invoicing-before-after.yaml")
 
 
 def panel(spec, pid):
@@ -60,6 +61,7 @@ def admission_last(s):
 
 
 LAYOUT_TRIGGERS = {
+    "card-width": (lambda s: panel(s, "erp").update(card_columns=1), "", BEFORE_AFTER),
     "text-overflow": (lambda s: panel(s, "data")["patterns"][0]["tiers"][1].update(note="gestandaardiseerdeproductgegevens"), "", BASE),
     # Panels grow with their content, so only a theme that caps a panel's height can squeeze one.
     "containment": (lambda s: None, "#plate .panel { max-height: 160px; }", BASE),

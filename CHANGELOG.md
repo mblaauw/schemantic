@@ -60,11 +60,23 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - `build --review` (and `lint --review`): crops of the plate a model can read, in `<out>/_work/review/`: the whole
   plate, the title block, each panel with its gutter, and the footer, at about twice their size; a wide part is cut
   into overlapping pieces. The report lists each crop with its part and scale.
+- `card-width` warning: a wide panel that stacks its cards in one column while their text fills less than half of each
+  (the long, thin cards with an empty right half that `card_columns: 1` makes). Cards flow into columns by default,
+  so this names the spec that holds them back.
 - `flows_mean: sequence` ("Comes before"): arrows that run forward in time, from what comes first to what builds on
   it. On a roadmap, the `timeline` warning names an arrow that points back in time; the roadmap example and starter
   now use sequence, so their arrows run left to right instead of back against the periods.
 
 ### Changed
+- Arrows and step badges are slate ink instead of blue, so a blue arrow means the focus. Blue is left to the platform
+  role and the focus; every plate's arrows change colour.
+- Tests run in parallel (`pytest -n auto`, pytest-xdist), locally and in CI: about 3 minutes become 1.4 on an 8-core
+  machine. CI runs Python 3.10 on Linux only (3.14 on Linux and macOS), so a pull request waits for three test jobs
+  instead of four, and for one macOS runner instead of two.
+- The checks that read only the layout document (paint, fonts, widowed title lines, print size) live together in
+  `lint.py`; `export.py` only writes the SVG.
+- `schemantic gallery` also rebuilds the plates in `docs/plates/` into `docs/img/`; the architecture page's image had
+  kept the old filled headers.
 - A roadmap's `now` period is tinted down through every lane, not only marked in the band on top.
 - Before-after: a quiet grey chevron in the gutter between two facing panels reads "becomes", so the pairs read as
   what turned into what. It is not an arrow; arrows keep the meaning `flows_mean` gives them.

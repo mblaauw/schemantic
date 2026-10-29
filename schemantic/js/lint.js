@@ -313,6 +313,34 @@ schemantic.lint = (cfg) => {
         `its cards are spread ${Math.round(gap)}px apart to fill the rows it spans; give it fewer rows, or more cards`,
       );
   }
+  // Cards much wider than their text: a wide panel held to one column (card_columns) stacks long, thin cards whose
+  // right half is empty, and reads as a hole. Measured on what each card holds, so a long note keeps its card wide.
+  for (const p of panels) {
+    const cards = [...p.querySelectorAll(":scope > .pb > .blocks > .cards > [data-kind='card']")];
+    if (cards.length < 2 || new Set(cards.map((el) => Math.round(rel(el).l))).size > 1) continue;
+    const width = rel(cards[0]).r - rel(cards[0]).l;
+    if (width < cfg.wideCard) continue;
+    const textEnd = (el) => {
+      // The right end of the card's text runs (a range over the whole card would include its full-width blocks)
+      let end = 0;
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+        if (!n.textContent.trim()) continue;
+        const rg = document.createRange();
+        rg.selectNodeContents(n);
+        end = Math.max(end, rel(rg.getBoundingClientRect()).r);
+      }
+      return end - rel(el).l;
+    };
+    const used = Math.max(...cards.map(textEnd));
+    if (used < width * cfg.cardFill)
+      add(
+        "warning",
+        "card-width",
+        p.dataset.id,
+        `its cards are ${Math.round(width)}px wide in one column, but their text ends within ${Math.round(used)}px; let them flow into columns`,
+      );
+  }
   // A fixed canvas the rows cannot fill leaves the rest under the footer.
   const last = [body, plate.querySelector(".footer")].filter(Boolean).map((el) => rel(el).b);
   const band = inner(plate).b - 1 - Math.max(...last);

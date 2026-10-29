@@ -10,7 +10,7 @@
   --muted: #4F5D6E;      /* notes, qualifiers */
   --accent: #1763C4;     /* the focus: its outline, its arrow */
   --now-bg: #DDE8F7;     /* a roadmap's current period, down through the lanes */
-  --arrow: #2F7FC6;      /* flow arrows and their heads */
+  --arrow: #56657A;      /* flow arrows and their heads: ink, not blue, so a blue arrow means the focus */
   --on-head: #FFFFFF;    /* text on a panel's header colour */
 
   /* Panel roles: header, header subtitle, body tint, border. A theme may add a role: give it these four tokens and
@@ -48,7 +48,7 @@
   --lane-head: 170px; --step-gap: 40px;
   /* Nested zones: frame colour and the faint tint that deepens with each level */
   --zone-line: #94A3B8; --zone-1: #F8FAFC; --zone-2: #F1F5F9; --zone-3: #E9EEF4;
-  --step: #1763C4;       /* step badges: darker than --arrow, so white numbers reach 4.5:1 */
+  --step: #3B4A5E;       /* step badges: darker than --arrow, so white numbers reach 4.5:1 */
 
   /* Change status tags and the focus outline */
   --tag-new-bg: #E3F4E8;     --tag-new-text: #1B5E31;

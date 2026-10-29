@@ -68,6 +68,8 @@ def test_gallery_is_current():
     for name in examples:
         snap = json.loads((ROOT / "tests" / "snapshots" / f"{name}.json").read_text(encoding="utf-8"))
         assert manifest[name] == digest(snap), f"{name}: run python -m schemantic gallery"
+    for plate in (ROOT / "docs" / "plates").glob("*.yaml"):  # rebuilt by the same command, shown in the docs
+        assert (ROOT / "docs" / "img" / f"{plate.stem}.webp").exists(), f"{plate.stem}: run python -m schemantic gallery"
 
 
 def test_docs_list_what_is_built():

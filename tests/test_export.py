@@ -1,6 +1,7 @@
 """The SVG writer is a pure function of the layout document: tested on hand-made documents, without Chromium."""
 from schemantic.config import paper_fit
-from schemantic.export import num, on_paper, print_findings, svg_items
+from schemantic.export import num, on_paper, svg_items
+from schemantic.lint import print_findings
 
 INK = {"color": "#1a2b3c"}
 

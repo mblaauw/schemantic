@@ -36,6 +36,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 
 | check | means | fix |
 | --- | --- | --- |
+| `card-width` | a wide panel stacks its cards in one column, and their text fills less than half of each (warning) | drop `card_columns` so cards flow into columns of 280 px, or raise it; or give the panel less width |
 | `text-overflow` | a word or line runs outside its box | shorten the text; avoid one long word in a narrow tile; fewer `card_columns`; more `weights` for that block |
 | `containment` | a block is taller or wider than its panel | fewer cards or bullets; move a card to another panel; split the plate |
 | `canvas-fit` | something extends past the canvas margin | cut content; a shorter footer (fewer principles); `landscape-4x3` instead of 16x9 |

@@ -12,11 +12,12 @@ python -m schemantic doctor
 ## Tests and checks
 
 ```bash
-python -m pytest -q                              # everything: spec, checks, router, docs, snapshots, goldens
+python -m pytest -q -n auto                      # everything: spec, checks, router, docs, snapshots, goldens
 ruff check . && npx @biomejs/biome@2.3.11 check schemantic/js
 ```
 
-CI runs both on Ubuntu and macOS with Python 3.10 and 3.14.
+`-n auto` runs one worker per core (pytest-xdist); the suite takes about a third of the time it takes alone. CI runs
+both on Ubuntu and macOS with Python 3.14, and on Ubuntu with Python 3.10.
 
 ## Goldens, snapshots and the gallery
 

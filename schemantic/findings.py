@@ -89,6 +89,9 @@ CHECKS: dict[str, Check] = {
                   "Search the icons with: schemantic icons <word>."),
     "language": Check("spec", "a translated technical term in an `nl` plate", "use the English term (the id of the finding)",
                       "Use the English term named in `id`."),
+    "card-width": Check("layout", "a wide panel stacks its cards in one column, and their text fills less than half of each "
+                        "(warning)", "drop `card_columns` so cards flow into columns of 280 px, or raise it; or give the "
+                        "panel less width", "Drop card_columns so the cards flow into columns, or raise it."),
     "text-overflow": Check("layout", "a word or line runs outside its box",
                            "shorten the text; avoid one long word in a narrow tile; fewer `card_columns`; more `weights` "
                            "for that block", "Shorten the text, or give its block more width."),

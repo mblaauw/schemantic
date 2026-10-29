@@ -25,12 +25,15 @@ jobs:
 
   test:
     # Layout is the same on Linux and macOS (Chromium runs with --font-render-hinting=none); the goldens compare
-    # structurally, so both platforms run the full suite.
+    # structurally, so both platforms run the full suite on the newest Python. The oldest supported Python runs on
+    # Linux only: a Python version changes no layout, and macOS runners are the slowest to start.
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        python: ["3.10", "3.14"]
+        include:
+          - {os: ubuntu-latest, python: "3.14"}
+          - {os: macos-latest, python: "3.14"}
+          - {os: ubuntu-latest, python: "3.10"}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30   # a job stuck waiting or hanging fails instead of blocking the merge
     steps:
@@ -52,7 +55,7 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get install -y --no-install-recommends librsvg2-bin
       - run: python -m schemantic doctor --no-install
-      - run: python -m pytest -q --basetemp=pytest-tmp
+      - run: python -m pytest -q -n auto --dist load --basetemp=pytest-tmp   # one worker per core
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
