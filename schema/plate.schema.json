@@ -187,16 +187,6 @@
           },
           "description": "column-flow: relative column widths, one per column."
         },
-        "row_heights": {
-          "type": "array",
-          "items": {
-            "enum": [
-              "fill",
-              "auto"
-            ]
-          },
-          "description": "Deprecated: rows take their content height. Still honoured (fill rows share the preset height) until the next release."
-        },
         "hub": {
           "type": "string",
           "description": "hub-and-spokes: the central panel's id."
@@ -470,7 +460,6 @@
               "enum": [
                 "areas",
                 "column_widths",
-                "row_heights",
                 "chips_at"
               ]
             }
@@ -502,7 +491,6 @@
                 "bottom",
                 "left",
                 "right",
-                "row_heights",
                 "chips_at"
               ]
             }
@@ -532,7 +520,6 @@
                 "layers",
                 "left",
                 "right",
-                "row_heights",
                 "chips_at",
                 "rail_width"
               ]
@@ -979,7 +966,7 @@
         "role": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9-]*$",
-          "description": "Colour with a meaning, shown in the legend. Built in: platform (what the team builds or runs), data (data at rest, data platforms), external (systems outside the team's control), actor (people and teams). A theme can add roles. 'storage' is the old name of data."
+          "description": "Colour with a meaning, shown in the legend. Built in: platform (what the team builds or runs), data (data at rest, data platforms), external (systems outside the team's control), actor (people and teams). A theme can add roles."
         },
         "arrange": {
           "enum": [

@@ -2,6 +2,15 @@
 
 All notable changes to this project. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Removed (deprecated in 0.2)
+- The `render` command and its 0.1 report format, and the `scripts/render.py` and `scripts/lint.py` shims: use
+  `build` or `lint` (`scripts/plate.py build` from a skill folder).
+- `--scale`: use `--dpi` (96 is one pixel per CSS pixel).
+- `layout.row_heights` and the fixed-row mode behind it: rows take their content height. It is now a schema error.
+- The role name `storage` (it is `data`), and with it the `deprecated` check, since nothing is deprecated.
+
 ## [0.2.0] - 2026-10-29
 
 ### Added (series checks, before-after)

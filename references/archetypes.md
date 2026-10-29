@@ -7,7 +7,6 @@ Rows take their content height and the canvas fits them (`canvas.height: fit`, t
 `canvas.height: fixed` the preset size stays and spare height goes to the gaps between rows. A panel that spans
 several rows (a rail, a side spoke) spreads its cards over its height. Chips sit under their panel's content;
 `layout.chips_at: bottom` pins them to the bottom in rows where every panel has chips, so they line up.
-`row_heights` is deprecated.
 
 ## column-flow
 

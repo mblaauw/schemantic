@@ -126,12 +126,6 @@ def layout_errors(spec: dict, arche: archetypes.Archetype) -> list[dict]:
         c0, c1 = min(c for _, c in cells), max(c for _, c in cells)
         if len(cells) != (r1 - r0 + 1) * (c1 - c0 + 1):
             out.append(finding("layout", n, "area is not a rectangle"))
-    rh = spec["layout"].get("row_heights")
-    if rh and len(rh) != len(grid.rows):
-        out.append(finding("layout", "layout.row_heights", f"{len(rh)} heights for {len(grid.rows)} rows"))
-    if rh:
-        out.append(finding("deprecated", "layout.row_heights", "rows now take their content height and the canvas fits them "
-                           "(canvas.height); row_heights still works until the next release", level="warning"))
     return out
 
 

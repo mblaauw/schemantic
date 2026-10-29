@@ -56,8 +56,6 @@ def fonts_ready() -> str:
 
 
 def height_mode(spec: dict) -> str:
-    if spec["layout"].get("row_heights"):
-        return "legacy"
     # Paper too takes the content's height: the plate is fitted to the sheet afterwards (config.paper_fit).
     return spec["canvas"].get("height", "fit")
 

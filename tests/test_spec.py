@@ -213,9 +213,9 @@ def test_flag_counts_for_the_chip_mirror(example):
     assert [(e["check"], "Rate limits" in e["detail"]) for e in found] == [("chip-mirror", True)]
 
 
-def test_row_heights_still_work_but_are_deprecated(example):
-    example["layout"]["row_heights"] = ["fill", "auto"]
-    assert [(e["check"], e["level"]) for e in sp.check(example)] == [("deprecated", "warning")]
+def test_row_heights_are_gone(example):
+    example["layout"]["row_heights"] = ["fill", "auto"]  # removed in 0.3: rows take their content height
+    assert checks(example) == {"schema"}
 
 
 # C13: icons the agent can find

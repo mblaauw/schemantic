@@ -103,7 +103,7 @@
 .footer { grid-template-columns: {{ footer_columns }}; }
 </style></head>
 <body>
-<div id="plate"{% if spec.layout.row_heights %} class="rows-legacy"{% endif %} style="width: {{ width }}px; height: {{ height }}px">
+<div id="plate" style="width: {{ width }}px; height: {{ height }}px">
 <header class="titleblock" data-kind="titleblock" data-id="titleblock">
 <div>{% if spec.topic %}<p class="topic">{{ spec.topic }}</p>{% endif %}<h1 class="title">{{ spec.title }}</h1>{% if spec.subtitle %}<p class="subtitle">{{ spec.subtitle }}</p>{% endif %}</div>
 {%- if badge %}<div class="badge">{{ badge }}</div>{% endif -%}

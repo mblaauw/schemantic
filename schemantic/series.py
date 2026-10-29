@@ -5,7 +5,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from . import roles
 from .spec import check, read_spec
 
 
@@ -13,7 +12,7 @@ def _things(spec: dict) -> dict[str, tuple[str, str]]:
     """Every named thing on a plate, by its name in lower case: (role it is drawn in, where it is)."""
     out = {}
     for p in spec["panels"]:
-        role = roles.canonical(p["role"])
+        role = p["role"]
         out.setdefault(p["title"].strip().lower(), (role, p["id"]))
         for i, c in enumerate(p.get("cards", [])):
             out.setdefault(c["name"].strip().lower(), (role, c.get("id") or f"{p['id']}.card{i}"))

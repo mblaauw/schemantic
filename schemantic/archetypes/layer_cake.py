@@ -11,7 +11,7 @@ RAIL_SHARE = {"narrow": 15, "normal": 19, "wide": 25}
 class LayerCake(Archetype):
     name = "layer-cake"
     required = frozenset({"layers"})
-    allowed = frozenset({"layers", "left", "right", "row_heights", "chips_at", "rail_width"})
+    allowed = frozenset({"layers", "left", "right", "chips_at", "rail_width"})
 
     def grid(self, spec: dict) -> GridSpec:
         lay = spec["layout"]

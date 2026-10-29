@@ -31,7 +31,7 @@ def renders(tmp_path_factory):
 
     def render(path):
         if path not in done:
-            code, report = run("render", path, "--out", out, "--scale", 1)
+            code, report = run("build", path, "--out", out, "--dpi", 96)
             assert code == 0, report
             done[path] = out
         return done[path]
@@ -72,14 +72,14 @@ def test_lint_is_clean(path, tmp_path):
     assert (code, report["errors"]) == (0, [])
 
 
-def test_render_refuses_unbuilt_archetype(example, tmp_path):
-    example["archetype"] = "roadmap"
-    spec = tmp_path / "roadmap.yaml"
+def test_build_refuses_unbuilt_archetype(example, tmp_path):
+    example["archetype"] = "banded-matrix"
+    spec = tmp_path / "matrix.yaml"
     spec.write_text(yaml.safe_dump(example, allow_unicode=True), encoding="utf-8")
-    code, report = run("render", spec, "--out", tmp_path)
-    assert code == 1 and report["rendered"] is False
+    code, report = run("build", spec, "--out", tmp_path)
+    assert code == 1 and report["svg"] is None
     assert [e["check"] for e in report["errors"]] == ["archetype"]
-    assert not (tmp_path / "roadmap.svg").exists()
+    assert not (tmp_path / "matrix.svg").exists()
 
 
 def boxes_of(page) -> dict:
@@ -124,7 +124,7 @@ def test_unroutable_card_connector_is_reported(tmp_path):
 
 # F05, F16: a clean build publishes the plate with a manifest of what made it
 def test_clean_build_publishes_with_a_manifest(tmp_path):
-    code, report = run("build", ROOT / "examples" / "orderplatform-eventbus.yaml", "--out", tmp_path, "--scale", 1)
+    code, report = run("build", ROOT / "examples" / "orderplatform-eventbus.yaml", "--out", tmp_path, "--dpi", 96)
     assert code == 0 and report["preview"] is None
     names = {p.name for p in tmp_path.iterdir() if p.is_file()}
     assert names == {f"orderplatform-eventbus.{ext}" for ext in ("svg", "png", "md", "build.json")}
@@ -146,7 +146,7 @@ def test_two_way_flow_gets_two_heads(tmp_path):
     spec = sp.load_spec(EXAMPLES[0])
     one_way = spec["flows"][0]
     spec["flows"] = [dict(one_way, both=True)]
-    code, _ = run("render", write(tmp_path, spec, "both"), "--out", tmp_path)
+    code, _ = run("build", write(tmp_path, spec, "both"), "--out", tmp_path)
     assert code == 0
     svg = (tmp_path / "both.svg").read_text(encoding="utf-8")
     num = r"-?[\d.]+"
@@ -198,7 +198,7 @@ def test_hub_rows_of_any_size_keep_side_spokes_readable():
 
 
 # A4: unreadable input gives JSON and exit 1, never a traceback
-@pytest.mark.parametrize("script", ["render", "lint", "build"])
+@pytest.mark.parametrize("script", ["lint", "build"])
 @pytest.mark.parametrize("content", ['title: "x\n', "", None], ids=["broken", "empty", "missing"])
 def test_unreadable_spec_gives_json(script, content, tmp_path):
     path = tmp_path / "spec.yaml"
@@ -236,7 +236,7 @@ def test_golden_catches_a_local_text_change(change, tmp_path):
     spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
     gateway = next(p for p in spec["panels"] if p["id"] == "gateway")
     gateway["cards"][0]["note"] = change
-    code, _ = run("render", write(tmp_path, spec, "changed"), "--out", tmp_path, "--scale", 1)
+    code, _ = run("build", write(tmp_path, spec, "changed"), "--out", tmp_path, "--dpi", 96)
     assert code == 0
     diff = images.image_diff(GOLDEN / "orderplatform-toegang.png", tmp_path / "changed.png", tmp_path / "mask.png")
     card = json.loads((tmp_path / "_work" / "changed.snapshot.json").read_text())["boxes"]["gateway.card0"]
@@ -276,7 +276,7 @@ def test_read_only_skill_folder(tmp_path):
                              capture_output=True, text=True, env=env)
         report = json.loads(doc.stdout)
         assert doc.returncode == 0 and report["ok"] and report["python"] == sys.executable, report
-        proc = subprocess.run([report["python"], str(skill / "scripts" / "render.py"),
+        proc = subprocess.run([report["python"], str(skill / "scripts" / "plate.py"), "build",
                                str(skill / "examples" / "orderplatform-toegang.yaml"), "--out", str(tmp_path / "out")],
                               capture_output=True, text=True, env=env)
         assert proc.returncode == 0, proc.stdout + proc.stderr

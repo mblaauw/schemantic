@@ -19,7 +19,6 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `series` | parts of one series disagree: numbering, `of`, language, what arrows mean, or one thing drawn in two colours (people in one part, a platform component in another) | make the parts agree: one language, one `flows_mean`, and the same role for a thing wherever it appears (a panel's role, or the role of the panel a card sits in) |
 | `canvas` | `part` without `of` (or the reverse), `part` larger than `of`, or a theme file that does not exist | give both, with `1 ≤ part ≤ of`; check the theme path (relative to the spec) |
 | `role` | a panel role is neither built in nor defined by the theme, or the theme gives it no legend label in the plate's language | use platform, data, external or actor, or define the role and its label in the theme |
-| `deprecated` | an old name that still works for one release (warning) | use the new name in the detail |
 | `focus` | more than one panel or card has `focus: true` | keep focus on the one element the title is about |
 | `flows-mean` | the plate has flows but no `flows_mean` (warning) | say what an arrow means: data, request, dependency or control |
 | `traceability` | the spec declares `sources`, and a card has no `refs` or names an undeclared source (warning) | add `refs: ["<source id>: <path or quote>"]` from the inventory; a card you cannot trace is an assumption or an open question, not a fact |
@@ -32,7 +31,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | check | means | fix |
 | --- | --- | --- |
 | `text-overflow` | a word or line runs outside its box | shorten the text; avoid one long word in a narrow tile; fewer `card_columns`; more `weights` for that block |
-| `containment` | a block is taller or wider than its panel | fewer cards or bullets; move a card to another panel; `row_heights: auto` for that row; split the plate |
+| `containment` | a block is taller or wider than its panel | fewer cards or bullets; move a card to another panel; split the plate |
 | `canvas-fit` | something extends past the canvas margin | cut content; a shorter footer (fewer principles); `landscape-4x3` instead of 16x9 |
 | `overlap` | two boxes overlap | usually follows from containment; fix that first |
 | `type-floor` | text below 11 px | only from theme overrides; restore the type ramp in `tokens.css` |

@@ -36,8 +36,7 @@ plate readable. Lengths are maximum characters.
 ```
 
 Roles: `platform` for what the team builds or runs, `data` for data at rest and data platforms, `external` for
-systems outside the team's control, `actor` for people and teams. A theme can add roles (see the README). The old
-name `storage` still works for one release and lints as `deprecated`.
+systems outside the team's control, `actor` for people and teams. A theme can add roles (see the README).
 
 ## Cards
 

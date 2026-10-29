@@ -47,8 +47,6 @@ CHECKS: dict[str, Check] = {
     "role": Check("spec", "a panel role is neither built in nor defined by the theme, or the theme gives it no legend label in "
                   "the plate's language", "use platform, data, external or actor, or define the role and its label in the theme",
                   "Use a built-in role (platform, data, external, actor), or define it with a legend label in the theme."),
-    "deprecated": Check("spec", "an old name that still works for one release (warning)", "use the new name in the detail",
-                        "Use the new name given in the detail."),
     "focus": Check("spec", "more than one panel or card has `focus: true`", "keep focus on the one element the title is about",
                    "Keep focus on the one element the title is about."),
     "flows-mean": Check("spec", "the plate has flows but no `flows_mean` (warning)", "say what an arrow means: data, request, "
@@ -67,8 +65,8 @@ CHECKS: dict[str, Check] = {
                            "shorten the text; avoid one long word in a narrow tile; fewer `card_columns`; more `weights` "
                            "for that block", "Shorten the text, or give its block more width."),
     "containment": Check("layout", "a block is taller or wider than its panel",
-                         "fewer cards or bullets; move a card to another panel; `row_heights: auto` for that row; split "
-                         "the plate", "Cut cards or bullets in that panel, or move one to another panel."),
+                         "fewer cards or bullets; move a card to another panel; split the plate",
+                         "Cut cards or bullets in that panel, or move one to another panel."),
     "canvas-fit": Check("layout", "something extends past the canvas margin",
                         "cut content; a shorter footer (fewer principles); `landscape-4x3` instead of 16x9",
                         "Cut content, or use the taller landscape-4x3 canvas."),

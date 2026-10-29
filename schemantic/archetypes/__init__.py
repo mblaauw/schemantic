@@ -29,13 +29,13 @@ class GridSpec:
 class Archetype:
     name: str = ""
     required: frozenset[str] = frozenset()   # layout keys the archetype needs
-    allowed: frozenset[str] = frozenset()    # layout keys it accepts (chips_at and row_heights apply to every one)
+    allowed: frozenset[str] = frozenset()    # layout keys it accepts (chips_at applies to every one)
     router_hints: dict = {}                   # reserved for layouts that prefer certain channels
 
     def placed(self, spec: dict) -> list[str]:
         """Panel ids as the layout names them, duplicates kept so they can be reported."""
         out = []
-        for key in sorted(self.allowed - {"row_heights", "column_widths", "chips_at"}):
+        for key in sorted(self.allowed - {"column_widths", "chips_at"}):
             v = spec["layout"].get(key)
             out += v if isinstance(v, list) else ([v] if v else [])
         return out
