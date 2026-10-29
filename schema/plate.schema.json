@@ -131,6 +131,13 @@
             "fixed"
           ],
           "description": "fit (default): the canvas takes its content height (at least 9:16 of the width). fixed: the preset height; surplus space goes to the gaps between rows, never into a panel."
+        },
+        "profile": {
+          "enum": [
+            "document",
+            "slide"
+          ],
+          "description": "document (default): read up close, on screen or paper. slide: shown in a meeting; a larger type ramp, a higher type floor, and fewer panels and cards."
         }
       }
     },

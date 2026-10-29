@@ -47,6 +47,9 @@ CHECKS: dict[str, Check] = {
     "role": Check("spec", "a panel role is neither built in nor defined by the theme, or the theme gives it no legend label in "
                   "the plate's language", "use platform, data, external or actor, or define the role and its label in the theme",
                   "Use a built-in role (platform, data, external, actor), or define it with a legend label in the theme."),
+    "slide-budget": Check("spec", "a slide (canvas.profile: slide) holds more than 5 panels or 18 cards (warning)",
+                          "make it two slides, each with its own message, or cut the cards the message does not need",
+                          "Split it into two slides, or cut the cards the message does not need."),
     "role-fit": Check("spec", "a panel's colour says people but its cards look like systems, or the reverse (warning)",
                       "give the panel the role of what it holds (actor for people and teams, platform, data or "
                       "external for systems), or split people and systems into two panels",

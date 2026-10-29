@@ -135,8 +135,9 @@ def build_html(spec: dict, theme_css: str = "") -> str:
     loc = load_locale(spec["canvas"]["lang"])
     width, height = CANVAS_SIZES[spec["canvas"]["size"]]
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=select_autoescape(["j2", "html"]))
-    # Theme after the tokens, so it overrides them; role rules last, so a theme's own roles get theirs.
-    css = "\n".join([font_css(), (TEMPLATES / "tokens.css").read_text(encoding="utf-8"), theme_css,
+    # Theme after the tokens (and the profile's), so it overrides them; role rules last, so a theme's own roles get theirs.
+    profile = (TEMPLATES / "profile-slide.css").read_text(encoding="utf-8") if spec["canvas"].get("profile") == "slide" else ""
+    css = "\n".join([font_css(), (TEMPLATES / "tokens.css").read_text(encoding="utf-8"), profile, theme_css,
                      (TEMPLATES / "components.css").read_text(encoding="utf-8"), roles.role_css(theme_css)])
     canvas = spec["canvas"]
     badge = loc["badge"].format(part=canvas["part"], of=canvas["of"]) if canvas.get("part") and canvas.get("of") else None

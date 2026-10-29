@@ -535,7 +535,8 @@ schemantic.route = (flows) => {
   }
 
   // Step badges: a numbered disc on the longest run with room, before labels so labels keep clear of it.
-  const BADGE = 9;
+  const STEP_TEXT = S.px("--t-small");
+  const BADGE = Math.round(STEP_TEXT * 0.82); // 9 at the document's 11 px
   for (const r of routed) {
     if (!r.fl.step) continue;
     // Centred on a long run; on a short one (a single gutter) next to its start, clear of the arrowhead.
@@ -566,7 +567,7 @@ schemantic.route = (flows) => {
     r.svg =
       (r.svg || "") +
       `<circle cx="${r2(x)}" cy="${r2(y)}" r="${BADGE}" fill="${S.token("--step")}"/>` +
-      `<text x="${r2(x)}" y="${r2(y + 4)}" text-anchor="middle" font-family="${font}" font-size="11" font-weight="700" fill="${onHead}">${r.fl.step}</text>`;
+      `<text x="${r2(x)}" y="${r2(y + STEP_TEXT * 0.36)}" text-anchor="middle" font-family="${font}" font-size="${STEP_TEXT}" font-weight="700" fill="${onHead}">${r.fl.step}</text>`;
     r.step = { x, y, n: r.fl.step };
   }
   for (const r of later) placeLabel(r);

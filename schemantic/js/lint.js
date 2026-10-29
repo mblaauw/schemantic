@@ -55,7 +55,7 @@ schemantic.lint = (cfg) => {
     const rg = document.createRange();
     rg.selectNodeContents(n);
     const tr = rel(rg.getBoundingClientRect());
-    const box = el.closest("[data-kind]") || plate;
+    const box = el.closest(".ph, [data-kind]") || plate; // a header's text stays in its header (a lane's is narrow)
     const ib = el.closest("svg") ? rel(box) : inner(box);
     if (tr.r > ib.r + 0.5 || tr.l < ib.l - 0.5 || tr.b > ib.b + 0.5) {
       const over = Math.round(Math.max(tr.r - ib.r, ib.l - tr.l, tr.b - ib.b));

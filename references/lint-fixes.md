@@ -19,6 +19,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `series` | parts of one series disagree: numbering, `of`, language, what arrows mean, or one thing drawn in two colours (people in one part, a platform component in another) | make the parts agree: one language, one `flows_mean`, and the same role for a thing wherever it appears (a panel's role, or the role of the panel a card sits in) |
 | `canvas` | `part` without `of` (or the reverse), `part` larger than `of`, or a theme file that does not exist | give both, with `1 ≤ part ≤ of`; check the theme path (relative to the spec) |
 | `role` | a panel role is neither built in nor defined by the theme, or the theme gives it no legend label in the plate's language | use platform, data, external or actor, or define the role and its label in the theme |
+| `slide-budget` | a slide (canvas.profile: slide) holds more than 5 panels or 18 cards (warning) | make it two slides, each with its own message, or cut the cards the message does not need |
 | `role-fit` | a panel's colour says people but its cards look like systems, or the reverse (warning) | give the panel the role of what it holds (actor for people and teams, platform, data or external for systems), or split people and systems into two panels |
 | `focus` | more than one panel or card has `focus: true` | keep focus on the one element the title is about |
 | `flows-mean` | the plate has flows but no `flows_mean` (warning) | say what an arrow means: data, request, dependency or control |

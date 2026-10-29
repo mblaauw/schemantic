@@ -415,3 +415,21 @@ def test_rail_cards_sit_level_with_their_layer(renders):
     assert abs(boxes["security.card0"][1] - boxes["experience.card0"][1]) <= 2
     flow = next(f for f in snap["flows"] if f["from"] == "policy")
     assert len(flow["points"]) == 2  # straight
+
+
+# The slide profile: larger type, a higher floor; a lane header that the larger title outgrows is caught
+def test_slide_profile_scales_type_and_lint_catches_header_overflow(tmp_path):
+    spec = sp.load_spec(ROOT / "examples" / "incident-swimlane.yaml")
+    spec["canvas"].update(size="landscape-16x9", profile="slide")
+    report = pipeline_build(write(tmp_path, spec, "slide"), tmp_path / "a")
+    assert report["errors"] == []
+    layout = json.loads((Path(report["snapshot"]).parent / "slide.layout.json").read_text(encoding="utf-8"))
+    sizes = [it["font"]["size"] for g in layout["items"] for it in g.get("items", []) if it["kind"] == "text"]
+    assert max(sizes) >= 52  # the title
+    narrow = pipeline_build(write(tmp_path, spec, "narrow"), tmp_path / "b", theme_css=":root { --lane-head: 170px; }")
+    assert ("text-overflow", "comms") in [(e["check"], e["id"]) for e in narrow["errors"]]
+
+
+def pipeline_build(path, out, theme_css=""):
+    from schemantic import pipeline
+    return pipeline.build(path, out, deliver=False, theme_css=theme_css)

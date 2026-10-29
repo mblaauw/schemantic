@@ -9,6 +9,7 @@ plate readable. Lengths are maximum characters.
 | --- | --- |
 | `canvas.size` | `landscape-4x3` (1600 wide, the default choice), `landscape-16x9` (1920×1080, for slides), or `a3-landscape` / `a4-landscape` for print: laid out at the sheet's width (96 px per inch, so type prints at its own size), as tall as the content, then centred on the sheet and scaled down when taller; lint fails it when the smallest text would print under 6 pt (`print-size`). Build with `--dpi 300`; the SVG is the sheet in mm |
 | `canvas.lang` | `nl` or `en` |
+| `canvas.profile` | `document` (default: read up close) or `slide` (shown in a meeting, usually with `landscape-16x9`): a larger type ramp, a 13 px type floor, and lint warns past 5 panels or 18 cards (`slide-budget`) |
 | `canvas.series`, `part`, `of` | a badge "Part 2 of 3"; give both `part` and `of` |
 | `canvas.height` | `fit` (default: the canvas takes its content height; a 16:9 slide keeps its shape) or `fixed` (the preset size; spare height goes to the gaps) |
 | `canvas.theme` | optional CSS file, relative to the spec, that recolours or adds roles |

@@ -110,7 +110,7 @@ is still imperfect rather than looping.
 
 Give the user the PNG, SVG, spec and outline (`.md`) paths; the one message; the open questions; and the brief's
 assumptions. If they ask for changes, edit the spec and go back to step 5. For print, build with
-`canvas.size: a3-landscape` and `--dpi 300`; for hand-off to a design tool, add `--outline-text`.
+`canvas.size: a3-landscape` and `--dpi 300`; for a meeting, `landscape-16x9` with `canvas.profile: slide`; for hand-off to a design tool, add `--outline-text`.
 
 ## Rules
 

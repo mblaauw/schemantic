@@ -81,7 +81,7 @@ body { background: var(--paper); }
 
 /* Panel pattern: tree */
 .tree { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card);
-  padding: 8px 10px; font-family: var(--mono); font-size: 12px; color: var(--text); }
+  padding: 8px 10px; font-family: var(--mono); font-size: var(--t-mono); color: var(--text); }
 .tree-cap { font-family: var(--font); font-size: var(--t-small); font-weight: 600; color: var(--muted); margin-bottom: 4px; }
 .trow { display: flex; align-items: flex-start; line-height: 1.5; }
 .trow > span:last-child { white-space: pre; }
@@ -176,7 +176,8 @@ body { background: var(--paper); }
   flex-direction: column; justify-content: center; }
 .lane > .pb { flex: 1 1 auto; min-width: 0; }
 .lane .cards { column-gap: var(--step-gap); }
-.band { display: grid; column-gap: var(--step-gap); align-items: end; margin-bottom: -28px;  /* sits close to the lanes */
+.band { display: grid; column-gap: var(--step-gap); align-items: end;
+  margin-bottom: calc(-28px - var(--gap-extra, 0px));  /* sits close to the lanes, whatever spare height the gaps take */
   padding: 0 13px 0 calc(var(--lane-head) + 13px); }   /* the lane's border and padding, so columns line up */
 .band-label { font-size: var(--t-name); font-weight: 600; color: var(--muted); padding-bottom: 5px;
   border-bottom: 2px solid var(--frame-line); }

@@ -139,7 +139,7 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
     out = id_errors(spec) or layout_errors(spec, arche)
     if any(f["level"] == "error" for f in out):
         return out
-    out += roles.role_findings(spec, theme_css) + roles.role_fit_findings(spec)
+    out += roles.role_findings(spec, theme_css) + roles.role_fit_findings(spec) + slide_findings(spec)
 
     for p in spec["panels"]:
         if p.get("weights"):
@@ -234,6 +234,16 @@ def traceability(spec: dict) -> list[dict]:
 def check(spec: dict, theme_css: str = "") -> list[dict]:
     """Schema first; semantic checks only on a spec that has the right shape."""
     return schema_errors(spec) or semantic_errors(spec, theme_css)
+
+
+def slide_findings(spec: dict) -> list[dict]:
+    """A slide holds less than a document plate: past SLIDE_BUDGET it is two slides."""
+    if spec["canvas"].get("profile") != "slide":
+        return []
+    from .config import SLIDE_BUDGET
+    n = {"panels": len(spec["panels"]), "cards": sum(len(p.get("cards", [])) for p in spec["panels"])}
+    over = [f"{n[k]} {k} (a slide holds {v})" for k, v in SLIDE_BUDGET.items() if n[k] > v]
+    return [finding("slide-budget", "canvas.profile", "; ".join(over), level="warning")] if over else []
 
 
 def card_id(panel: dict, i: int, card: dict) -> str:

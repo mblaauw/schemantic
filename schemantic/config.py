@@ -33,6 +33,8 @@ def paper_fit(size: str, width: float, height: float) -> dict | None:
     return {"size": size, "scale": scale, "sheet_mm": (w_mm, h_mm),
             "offset_mm": ((w_mm - width * MM_PER_PX * scale) / 2, (h_mm - height * MM_PER_PX * scale) / 2)}
 TYPE_FLOOR_PX = 11
+SLIDE_FLOOR_PX = 13          # the slide profile reads from across a room
+SLIDE_BUDGET = {"panels": 5, "cards": 18}  # more than this is two slides
 
 
 @cache
