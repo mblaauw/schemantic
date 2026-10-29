@@ -151,7 +151,8 @@ def test_two_way_flow_gets_two_heads(tmp_path):
     assert code == 0
     svg = (tmp_path / "both.svg").read_text(encoding="utf-8")
     num = r"-?[\d.]+"
-    head = rf'<path d="M{num} {num}L{num} {num}L{num} {num}Z" fill="#2F7FC6"(/>|></path>)'  # a filled triangle in --arrow
+    ink = config.tokens()["--arrow"]
+    head = rf'<path d="M{num} {num}L{num} {num}L{num} {num}Z" fill="{ink}"(/>|></path>)'  # a filled triangle in --arrow
     assert len(re.findall(head, svg, flags=re.IGNORECASE)) == 2
 
 
