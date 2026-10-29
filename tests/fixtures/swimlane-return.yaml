@@ -1,0 +1,138 @@
+# Fixture: a swimlane whose last handoff goes back up from the bottom lane to the top one, past a handoff that
+# already goes round the right edge (from an eval run; the router used to have no second lane there).
+archetype: swimlane
+canvas:
+  lang: en
+  size: landscape-4x3
+flows:
+- from: application
+  step: 1
+  to: check
+- from: check
+  step: 2
+  to: assess
+- from: assess
+  step: 3
+  to: advice
+- from: advice
+  step: 4
+  to: draft
+- from: draft
+  step: 5
+  to: sign
+- from: sign
+  step: 6
+  to: publish
+- from: check
+  style: optional
+  to: documents
+- from: publish
+  step: 7
+  to: decision
+flows_mean: control
+footer:
+  legend: auto
+  open_questions:
+    extra:
+    - What happens if documents are still missing after two weeks?
+    - Which step uses the document archive?
+    from_chips: true
+  principles:
+  - The committee gives its advice before the case handler drafts the decision.
+  - The team lead signs every decision before the portal publishes it.
+  - The portal sends each decision to the applicant and publishes it.
+layout:
+  columns:
+  - Submit
+  - Check
+  - Assess
+  - Advise
+  - Decide
+  - Publish
+  lanes:
+  - applicant
+  - intake
+  - case
+  - welfare
+  - lead
+  - portal
+panels:
+- cards:
+  - col: 1
+    icon: file-plus
+    id: application
+    name: Application
+    note: submitted in the online portal
+  - col: 2
+    flag:
+      kind: warning
+      text: After documents arrive, is the check repeated?
+    icon: file-upload
+    id: documents
+    name: Missing documents
+    note: two weeks to add them
+  - col: 6
+    icon: file-check
+    id: decision
+    name: Decision
+    note: sent to them by the portal
+  id: applicant
+  role: actor
+  title: Applicant
+- cards:
+  - col: 6
+    icon: world-upload
+    id: publish
+    name: Published decision
+    note: sent to the applicant and published
+  id: portal
+  role: platform
+  title: Online portal
+- cards:
+  - col: 2
+    icon: checklist
+    id: check
+    name: Completeness check
+    note: in the case system; if incomplete, two weeks
+  id: intake
+  role: actor
+  title: Intake officer
+- cards:
+  - col: 3
+    icon: map-check
+    id: assess
+    name: Zoning assessment
+    note: plan against the zoning plan; asks for advice
+  - col: 5
+    icon: pencil
+    id: draft
+    name: Draft decision
+    note: for the team lead to sign
+  id: case
+  role: actor
+  title: Case handler
+- cards:
+  - col: 4
+    flag:
+      kind: warning
+      text: Is the advice binding, and what if it comes late?
+    icon: message-circle
+    id: advice
+    name: Committee advice
+    note: given within three weeks
+  id: welfare
+  role: actor
+  title: Welfare committee
+- cards:
+  - col: 5
+    icon: signature
+    id: sign
+    name: Signed decision
+    note: the team lead signs the draft
+  id: lead
+  role: actor
+  title: Team lead
+subtitle: Intake, assessment and sign-off run in the case management system; the committee
+  advises within three weeks
+title: Each permit passes four desks in one order, and two steps have time limits
+topic: Building permit application, from submission to decision

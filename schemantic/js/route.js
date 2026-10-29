@@ -56,8 +56,32 @@ schemantic.route = (flows) => {
   // They cost more than any gutter channel, so they are the last resort.
   const OUTER = 80;
   const body = rel(document.getElementById("body"));
-  for (const c of [body.l - 20, body.r + 20]) if (c > CLEAR && c < P.width - CLEAR) chX.set(r2(c), OUTER);
-  for (const c of [body.t - 9, body.b + 9]) if (c > CLEAR && c < P.height - CLEAR) chY.set(r2(c), OUTER);
+  // Each has a second lane one LANE further out, so two routes can go around without running on top of each other
+  // (a long swimlane handoff past one that already goes round the edge).
+  const outer = (set, cs, limit) => {
+    for (const [c, out] of cs)
+      for (const [o, cost] of [
+        [0, OUTER],
+        [out * LANE, OUTER + LANE],
+      ])
+        if (c + o > CLEAR && c + o < limit - CLEAR) set.set(r2(c + o), cost);
+  };
+  outer(
+    chX,
+    [
+      [body.l - 20, -1],
+      [body.r + 20, 1],
+    ],
+    P.width,
+  );
+  outer(
+    chY,
+    [
+      [body.t - 9, -1],
+      [body.b + 9, 1],
+    ],
+    P.height,
+  );
   // A U-route (out of one side, along a channel, back in on the same side) costs a little more than a Z.
   const U_COST = 40;
 

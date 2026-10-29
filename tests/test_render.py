@@ -433,3 +433,12 @@ def test_slide_profile_scales_type_and_lint_catches_header_overflow(tmp_path):
 def pipeline_build(path, out, theme_css=""):
     from schemantic import pipeline
     return pipeline.build(path, out, deliver=False, theme_css=theme_css)
+
+
+# A long handoff back up a swimlane goes round the edge in a second outer lane, past one that already uses the first
+def test_a_return_arrow_up_a_swimlane_takes_the_second_outer_lane(renders):
+    path = ROOT / "tests" / "fixtures" / "swimlane-return.yaml"
+    snap = json.loads((renders(path) / "_work" / f"{path.stem}.snapshot.json").read_text(encoding="utf-8"))
+    edge = snap["boxes"]["body"][2]
+    around = {f["i"]: max(x for x, _ in f["points"]) for f in snap["flows"] if max(x for x, _ in f["points"]) > edge}
+    assert len(around) == 2 and len(set(around.values())) == 2  # both round the right edge, each in its own lane
