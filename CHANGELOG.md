@@ -19,6 +19,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   Example: `examples/portal-roadmap.yaml`. `landscape-map` is no longer a planned name; `banded-matrix` is the one
   left.
 
+- Evals rerun with the skill (29 October): defects per plate 2.8 to 2.2 (Sonnet) and 2.0 to 1.6 (Haiku); no footer
+  defects left; holes and paths are the next targets. See `evals/README.md`.
+
 ### Changed
 - CI runs once per change (pull requests, and pushes to main), cancels a run a newer push replaces, and has a time
   limit per job.
