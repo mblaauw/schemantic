@@ -7,6 +7,12 @@ from dataclasses import dataclass
 from .config import ROOT
 
 
+def finding(check: str, id_: str, detail: str, level: str = "error", **extra) -> dict:
+    """A lint finding: which check, the element it is about (an id or a path in the spec), and what is wrong. `extra`
+    carries a finding's own `hint` when it knows a better first fix than the table's."""
+    return {"level": level, "check": check, "id": id_, "detail": detail, **extra}
+
+
 @dataclass(frozen=True)
 class Check:
     stage: str      # "spec" (no browser) or "layout" (measured in Chromium)

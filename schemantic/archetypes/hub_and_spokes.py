@@ -4,7 +4,8 @@ Each spoke row is its own grid in one body cell, so a row divides the hub's widt
 holds. Side spokes span every row and are as wide as one spoke of the fuller row."""
 from __future__ import annotations
 
-from . import Archetype, GridSpec, error, side_track
+from ..findings import finding
+from . import Archetype, GridSpec, side_track
 
 
 class HubAndSpokes(Archetype):
@@ -14,7 +15,7 @@ class HubAndSpokes(Archetype):
 
     def validate(self, spec: dict) -> list[dict]:
         if len(self.placed(spec)) < 3:
-            return [error("layout", "layout.hub", "a hub needs at least two spokes (top, bottom, left, right)")]
+            return [finding("layout", "layout.hub", "a hub needs at least two spokes (top, bottom, left, right)")]
         return []
 
     @staticmethod

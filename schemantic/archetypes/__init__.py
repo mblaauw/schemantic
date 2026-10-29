@@ -74,10 +74,6 @@ def side_track(spec: dict, preferred: str) -> str:
     return f"clamp({min_px:.0f}px, {preferred}, {SIDE_MAX}%)"
 
 
-def error(check: str, id_: str, detail: str) -> dict:
-    return {"level": "error", "check": check, "id": id_, "detail": detail}
-
-
 def _discover() -> dict[str, Archetype]:
     found = {}
     for mod in pkgutil.iter_modules(__path__):

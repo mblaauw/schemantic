@@ -9,7 +9,8 @@ import yaml
 
 from . import archetypes
 from .config import SCHEMA, STARTERS
-from .spec import finding, placeholders
+from .findings import finding
+from .spec import placeholders
 
 
 def starter(archetype: str, lang: str = "en") -> str:

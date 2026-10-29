@@ -30,7 +30,7 @@ to `_work/` and move to the output folder only when the build has no errors. Chr
 | `route.py`, `lint.py` | Python sides of the page scripts: problems to findings, lint thresholds |
 | `export.py` | the SVG, written from the layout document; font subsetting; the `font` check |
 | `images.py` | image diffs (blurred, judged locally) and structural snapshots, read from the layout document |
-| `findings.py` | every check, its meaning, fix and hint; generates `references/lint-fixes.md` |
+| `findings.py` | every check, its meaning, fix and hint, and `finding()`, the one way to make a finding; generates `references/lint-fixes.md` |
 | `outline.py`, `glyphs.py`, `icons.py`, `gallery.py` | the text outline, glyph outlines, icon search, README images |
 | `scaffold.py`, `starters/`, `review.py` | for the skill: starter specs per archetype (`new`), and review crops (`--review`) |
 | `cli.py`, `doctor.py` | the command line; finding a Python and Chromium (standard library only) |

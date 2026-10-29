@@ -2,7 +2,8 @@
 phase columns that line up across lanes, handoffs as flows between cards. A band of phase names runs on top."""
 from __future__ import annotations
 
-from . import Archetype, GridSpec, error
+from ..findings import finding
+from . import Archetype, GridSpec
 
 
 class Swimlane(Archetype):
@@ -25,9 +26,9 @@ class Swimlane(Archetype):
                 continue
             cols = [c["col"] for c in p.get("cards", []) if c.get("col")]
             if ncols and any(col > ncols for col in cols):
-                out.append(error("layout", p["id"], f"a step's col is beyond the {ncols} columns in layout.columns"))
+                out.append(finding("layout", p["id"], f"a step's col is beyond the {ncols} columns in layout.columns"))
             for col in sorted({c for c in cols if cols.count(c) > 1}):
-                out.append(error("layout", p["id"], f"two steps in column {col} of one lane; a lane has one step per column"))
+                out.append(finding("layout", p["id"], f"two steps in column {col} of one lane; a lane has one step per column"))
         return out
 
     def grid(self, spec: dict) -> GridSpec:

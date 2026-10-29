@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from .browser import call
 from .config import SLIDE_FLOOR_PX, TYPE_FLOOR_PX
+from .findings import finding
 
 # A run of empty space inside a body panel longer than this reads as a hole in the plate (review question 4).
 VOID_WARN_PX = 96
@@ -34,8 +35,8 @@ def widow_findings(layout: dict, spec: dict) -> list[dict]:
     for lines in runs:
         field = next((f for f in ("title", "subtitle", "topic") if " ".join(spec.get(f, "").split()) == " ".join(lines)), None)
         if field and len(lines) > 1 and len(lines[-1].split()) == 1:
-            out.append({"level": "warning", "check": "widow", "id": field,
-                        "detail": f"the {field} breaks over {len(lines)} lines and leaves '{lines[-1]}' on its own"})
+            out.append(finding("widow", field, f"the {field} breaks over {len(lines)} lines and leaves '{lines[-1]}' on its own",
+                               level="warning"))
     return out
 
 

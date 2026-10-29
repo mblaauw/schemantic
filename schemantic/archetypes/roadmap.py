@@ -3,7 +3,8 @@ for an item that runs over several periods), a band of period names on top with 
 swimlane: the same lanes and columns, read as time instead of steps."""
 from __future__ import annotations
 
-from . import GridSpec, error
+from ..findings import finding
+from . import GridSpec
 from .swimlane import Swimlane
 
 
@@ -20,7 +21,7 @@ class Roadmap(Swimlane):
         lay, out = spec["layout"], []
         ncols = len(lay["columns"])
         if lay.get("now") and not 1 <= lay["now"] <= ncols:
-            out.append(error("layout", "layout.now", f"now is period {lay['now']}; there are {ncols}"))
+            out.append(finding("layout", "layout.now", f"now is period {lay['now']}; there are {ncols}"))
         for p in spec["panels"]:
             if p["id"] not in lay["lanes"]:
                 continue
@@ -28,14 +29,14 @@ class Roadmap(Swimlane):
             for i, c in enumerate(p.get("cards", [])):
                 where = c.get("id") or f"{p['id']}.card{i}"
                 if not c.get("col"):
-                    out.append(error("layout", where, "a roadmap item needs `col`, the period it starts in"))
+                    out.append(finding("layout", where, "a roadmap item needs `col`, the period it starts in"))
                     continue
                 periods = range(c["col"], c["col"] + c.get("span", 1))
                 if periods.stop - 1 > ncols:
-                    out.append(error("layout", where, f"runs past the last of the {ncols} periods"))
+                    out.append(finding("layout", where, f"runs past the last of the {ncols} periods"))
                 for n in periods:
                     if n in taken:
-                        out.append(error("layout", where, f"overlaps {taken[n]} in period {n}; one item per period per lane"))
+                        out.append(finding("layout", where, f"overlaps {taken[n]} in period {n}; one item per period per lane"))
                         break
                     taken[n] = where
         return out

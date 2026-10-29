@@ -16,7 +16,7 @@ from . import __version__, outline
 from .browser import launch, on_sheet, open_plate, rasterise_svg
 from .config import FONTS_DIR, paper_fit
 from .export import export_svg, font_findings, measure, on_paper, print_findings
-from .findings import with_hint
+from .findings import finding, with_hint
 from .html import build_html
 from .images import image_diff, snapshot
 from .lint import dom_lint, widow_findings
@@ -32,7 +32,7 @@ def load_theme(spec: dict, spec_path: Path, theme: str | Path | None) -> tuple[s
     if path is None:
         return "", []
     if not path.is_file():
-        return "", [{"level": "error", "check": "canvas", "id": "canvas.theme", "detail": f"theme file not found: {path}"}]
+        return "", [finding("canvas", "canvas.theme", f"theme file not found: {path}")]
     return path.read_text(encoding="utf-8"), []
 
 
@@ -41,9 +41,8 @@ def paint_findings(unsupported: list[dict]) -> list[dict]:
     seen: dict[tuple, list[str]] = {}
     for u in unsupported:
         seen.setdefault((u["element"], u["property"], u["value"]), []).append(u["id"])
-    return [{"level": "error", "check": "paint", "id": ids[0],
-             "detail": f"{element} uses {prop}: {value}, which the SVG cannot draw"
-                       + (f" ({len(ids)} elements)" if len(ids) > 1 else "")}
+    return [finding("paint", ids[0], f"{element} uses {prop}: {value}, which the SVG cannot draw"
+                    + (f" ({len(ids)} elements)" if len(ids) > 1 else ""))
             for (element, prop, value), ids in seen.items()]
 
 
@@ -133,11 +132,11 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
             finally:
                 browser.close()
         for url in dict.fromkeys(refused):
-            issues.append({"level": "error", "check": "network", "id": "(plate)", "detail": f"tried to load {url}"})
+            issues.append(finding("network", "(plate)", f"tried to load {url}"))
         if par["fail"]:
-            issues.append({"level": "error", "check": "svg-parity", "id": "(plate)", "detail": par["detail"]})
+            issues.append(finding("svg-parity", "(plate)", par["detail"]))
         elif par["count"]:
-            issues.append({"level": "warning", "check": "svg-parity", "id": "(plate)", "detail": par["detail"]})
+            issues.append(finding("svg-parity", "(plate)", par["detail"], level="warning"))
         report.update(density=dom["density"], voids=dom["voids"], fonts=fonts, snapshot=str(snap_path),
                       parity={"pixels": par["count"], "regions": par["regions"], "detail": par["detail"]},
                       flow_problems=[dict(flow=spec["flows"][x["i"]], check=x["check"], problem=x["problem"])

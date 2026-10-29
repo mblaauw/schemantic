@@ -13,6 +13,7 @@ from fontTools.ttLib import TTFont
 from . import outline
 from .browser import call
 from .config import FONTS_DIR, MM_PER_PX, PRINT_FLOOR_PT
+from .findings import finding
 from .lint import VOID_WARN_PX
 
 # Bundled faces, loaded through @font-face so layout never depends on installed fonts.
@@ -83,8 +84,7 @@ def font_findings(layout: dict) -> list[dict]:
         chars[family, group] = chars.get((family, group), "") + text
     walk(layout["items"], "(plate)")
     files = {fam: [f for f in FONTS if f[0] == fam] for fam in first}
-    out = [{"level": "error", "check": "font", "id": group,
-            "detail": f"text set in {family}, which is not bundled, so the SVG cannot embed it"}
+    out = [finding("font", group, f"text set in {family}, which is not bundled, so the SVG cannot embed it")
            for family, group in first.items() if not files[family]]
     for (family, group), text in chars.items():
         if not files[family]:
@@ -95,9 +95,8 @@ def font_findings(layout: dict) -> list[dict]:
                           and unicodedata.category(ch) not in ("Cc", "Cf")})
         if missing:
             listed = ", ".join(f"'{ch}' (U+{ord(ch):04X})" for ch in missing)
-            out.append({"level": "error", "check": "font", "id": group,
-                        "detail": f"{listed} {'is' if len(missing) == 1 else 'are'} not in {family}, so a viewer draws "
-                                  f"{'it' if len(missing) == 1 else 'them'} with whatever font it has"})
+            out.append(finding("font", group, f"{listed} {'is' if len(missing) == 1 else 'are'} not in {family}, so a viewer "
+                               f"draws {'it' if len(missing) == 1 else 'them'} with whatever font it has"))
     return out
 
 
@@ -117,10 +116,10 @@ def print_findings(layout: dict, fit: dict) -> list[dict]:
     out = []
     band = fit["offset_mm"][1] / MM_PER_PX
     if band > VOID_WARN_PX:
-        out.append({"level": "warning", "check": "void", "id": "canvas.size",
-                    "detail": f"the plate fills {1 - 2 * band / (fit['sheet_mm'][1] / MM_PER_PX):.0%} of the "
-                              f"{fit['size']} sheet's height, leaving {band:.0f}px blank above and below it; let it grow "
-                              f"taller (fewer card_columns, another row) or use a screen size"})
+        out.append(finding("void", "canvas.size",
+                           f"the plate fills {1 - 2 * band / (fit['sheet_mm'][1] / MM_PER_PX):.0%} of the "
+                           f"{fit['size']} sheet's height, leaving {band:.0f}px blank above and below it; let it grow "
+                           f"taller (fewer card_columns, another row) or use a screen size", level="warning"))
     sizes = []
 
     def walk(items):
@@ -135,10 +134,10 @@ def print_findings(layout: dict, fit: dict) -> list[dict]:
     smallest = min(sizes, default=0) * MM_PER_PX * fit["scale"] * 72 / 25.4
     if not sizes or smallest >= PRINT_FLOOR_PT:
         return out
-    return out + [{"level": "error", "check": "print-size", "id": "canvas.size",
-                   "detail": f"the plate is {num(layout['width'])} x {num(layout['height'])} px, so {fit['size']} prints "
-                             f"it at {fit['scale']:.0%} and its smallest text at {smallest:.1f} pt (the floor is "
-                             f"{PRINT_FLOOR_PT} pt)"}]
+    return out + [finding("print-size", "canvas.size",
+                          f"the plate is {num(layout['width'])} x {num(layout['height'])} px, so {fit['size']} prints "
+                          f"it at {fit['scale']:.0%} and its smallest text at {smallest:.1f} pt (the floor is "
+                          f"{PRINT_FLOOR_PT} pt)")]
 
 
 def measure(page) -> dict:
