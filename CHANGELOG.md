@@ -67,6 +67,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ### Changed
 - Arrows and step badges are slate ink instead of blue, so a blue arrow means the focus. Blue is left to the platform
   role and the focus; every plate's arrows change colour.
+- `schemantic gallery` also rebuilds the plates in `docs/plates/` into `docs/img/`; the architecture page's image had
+  kept the old filled headers.
 - A roadmap's `now` period is tinted down through every lane, not only marked in the band on top.
 - Before-after: a quiet grey chevron in the gutter between two facing panels reads "becomes", so the pairs read as
   what turned into what. It is not an arrow; arrows keep the meaning `flows_mean` gives them.
