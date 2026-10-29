@@ -55,3 +55,28 @@ with the skill, most frequent first:
 - **Open questions the sources settle** (4).
 
 These are the next targets for lint and the review questions.
+
+### Rerun of 29 October 2026 (0.3.0.dev0, with the skill only)
+
+The same eight cases with the skill as it stands after the design tiers (claim titles with a topic line, question
+labels, panels that end with their content, footer and widow lint, series checks, before-after, rails by layer,
+quieter neighbours around the focus, role-fit, the slide profile, roadmap). Without the skill nothing changed, so it
+was not rerun. One run per case; the judge saw the runs under neutral names.
+
+| Model | Automated | Judged | Claim title | Nothing invented | Layout fits | Defects per plate (26 Oct) |
+| --- | --- | --- | --- | --- | --- | --- |
+| Sonnet 5.5 | 8/8 | 0/8 | 8/8 | 8/8 | 8/8 | 2.2 (2.8) |
+| Haiku 5.5 | 8/8 | 0/8 | 8/8 | 7/8 | 8/8 | 1.6 (2.0) |
+
+Defects fell by about a fifth on both models; the judged pass rate did not move (Haiku passed 2 of 8 before, 0
+now), since the judge fails a plate on any single defect and one run per case is noisy. By kind:
+
+- Footer over an eighth: 5 plates before, none now (`footer-share`).
+- Role colour: 4 before, 2 now (`role-fit` caught and fixed two more during the runs, by the agents' reports).
+- Holes are still first (12): with panels ending at their content, the judge now names the space beside a short
+  panel ("ends 135 px above the panel beside it"), and an empty area inside a zone frame, which no check measures.
+- Paths (6): the arrows join panels where the title names a route through cards, and two swimlane runs could not
+  draw an arrow from the bottom lane back to the top one, so the agents left a step out.
+
+The next targets: a hole check for rows and zones, card-to-card routes when the message names a path, and the
+router's long upward arrows in a swimlane.
