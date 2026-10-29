@@ -9,6 +9,7 @@ footer:
   legend: "Legenda"
   notes: "Toelichting"
   flows: "Verbindingen"
+  stories: "Routes"
 legend:
   platform: "Platformcomponent"
   data: "Data en opslag"

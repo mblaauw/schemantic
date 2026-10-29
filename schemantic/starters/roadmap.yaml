@@ -1,0 +1,25 @@
+archetype: roadmap
+
+layout:
+  lanes: [first, second]
+  columns: ["TODO: period 1", "TODO: period 2", "TODO: period 3", "TODO: period 4"]
+  now: 1
+
+panels:
+  - id: first
+    title: "TODO: a workstream"
+    role: platform
+    cards:
+      - {id: base, icon: package, name: "TODO: an item", note: "TODO: what it delivers", col: 1, refs: ["notes: TODO"]}
+      - {icon: tool, name: "TODO: an item", note: "TODO: what it delivers", col: 3, refs: ["notes: TODO"]}
+  - id: second
+    title: "TODO: a workstream"
+    role: platform
+    cards:
+      - {id: next, icon: rocket, name: "TODO: an item", note: "TODO: what it delivers", col: 2, span: 2, status: new, refs: ["notes: TODO"]}
+    chips:
+      - {kind: warning, text: "TODO: an open choice the sources leave"}
+
+flows_mean: dependency
+flows:
+  - {from: next, to: base}

@@ -28,8 +28,9 @@ python -m schemantic build examples/orderplatform-toegang.yaml --out out
 
 `build` checks the spec, lays the plate out in Chromium, routes the connectors, lints the result, and writes
 `out/<name>.svg`, `.png` and `.md` (the outline). It prints a JSON report and exits 1 on errors; every finding names
-an element and carries a hint. Other commands: `lint`, `doctor`, `icons <word>`, `gallery`, `docs`, `offline`,
-`verify`, `smoke`. Print with `canvas.size: a3-landscape` and `--dpi 300`; hand off to a design tool with
+an element and carries a hint. Other commands: `new <archetype> <path>` (a starter spec with TODOs to fill),
+`lint`, `doctor`, `icons <word>`, `gallery`, `docs`, `offline`, `verify`, `smoke`; `--review` adds crops of the
+plate a model can read. Print with `canvas.size: a3-landscape` and `--dpi 300`; hand off to a design tool with
 `--outline-text`; restyle with a theme (`canvas.theme` or `--theme`, see
 [`examples/themes/warm.css`](examples/themes/warm.css)).
 

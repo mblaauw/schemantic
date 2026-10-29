@@ -1,0 +1,34 @@
+archetype: column-flow
+
+layout:
+  areas:
+    - "source core store"
+
+panels:
+  - id: source
+    title: "TODO: where it starts"
+    role: external
+    cards:
+      - {id: start, icon: user, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {icon: device-desktop, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+  - id: core
+    title: "TODO: what handles it"
+    role: platform
+    cards:
+      - {id: handle, icon: server, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {icon: shield-lock, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+    chips:
+      - {kind: warning, text: "TODO: an open choice the sources leave"}
+  - id: store
+    title: "TODO: where it ends up"
+    role: data
+    cards:
+      - {id: keep, icon: database, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {icon: archive, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+
+flows_mean: request
+flows:
+  - {from: start, to: handle}
+  - {from: handle, to: keep}
+stories:
+  - {name: "TODO: the route the title tells", path: [start, handle, keep]}

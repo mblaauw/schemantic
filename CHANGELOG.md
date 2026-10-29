@@ -50,6 +50,16 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - `orphan` warning: on a plate with flows, a panel that no flow reaches (neither it nor one of its cards) reads as
   left over. Roadmap lanes and layer-cake rails are exempt; their place already says how they relate. The clinic
   plate had one: its insurers now check claim status through the integration API.
+- `stories`: the routes a plate tells, as named paths of card or panel ids. They are not drawn; the `story` lint
+  checks that a flow runs from every step to the next, and says when only the panels around two cards are joined
+  (the review's "jump"). Unlike the title-matching lint left out earlier, the author declares the route, so nothing
+  is guessed. The outline lists the stories; the clinic and incident plates have one each.
+- `schemantic new <archetype> <path>`: a starter spec for every built archetype, with a brief, sources, refs, flows,
+  a story, a principle and an open question, and TODO wherever the sources must speak. The `placeholder` lint names
+  each TODO left by its path; filled in, every starter builds clean.
+- `build --review` (and `lint --review`): crops of the plate a model can read, in `<out>/_work/review/`: the whole
+  plate, the title block, each panel with its gutter, and the footer, at about twice their size; a wide part is cut
+  into overlapping pieces. The report lists each crop with its part and scale.
 
 ### Changed
 - One loud place per plate. Panel headers are quiet by default (their role's tint, the title in the role's colour);

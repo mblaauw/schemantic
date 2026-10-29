@@ -383,6 +383,35 @@
       ],
       "description": "What every arrow on this plate means; sets the legend label. data: where data goes; request: who calls whom; dependency: what needs what; control: what steers what."
     },
+    "stories": {
+      "type": "array",
+      "maxItems": 4,
+      "description": "The routes the title or subtitle tells, step by step. Not drawn: lint checks that a flow joins every step to the next, so a reader can follow the route with a finger.",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "path"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 60,
+            "description": "The route in the reader's words, as the title or subtitle says it."
+          },
+          "path": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 10,
+            "items": {
+              "type": "string"
+            },
+            "description": "Card or panel ids, first to last; a flow must run from each to the next."
+          }
+        }
+      }
+    },
     "footer": {
       "type": "object",
       "description": "Context, principles, open questions and the legend, under the body.",

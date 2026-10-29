@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import re
 from functools import cache
+from itertools import pairwise
 from pathlib import Path
 
 import jsonschema
@@ -18,6 +19,8 @@ FOOTER_WEIGHTS = {"context": 1.5, "principles": 1.4, "open_questions": 1.1, "not
 # FOOTER_STACK_MAX items stack under another column instead of taking one of their own.
 FOOTER_MAX_COLUMNS = 3
 FOOTER_STACK_MAX = 2
+# What a starter spec marks for the author to fill in.
+PLACEHOLDER = re.compile(r"\bTODO\b")
 
 
 def finding(check: str, id_: str, detail: str, level: str = "error") -> dict:
@@ -165,7 +168,7 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
         if f["from"] == f["to"]:
             out.append(finding("flow", f"flows/{i}", f"from and to are the same element ('{f['from']}')"))
 
-    out += orphans(spec, arche)
+    out += orphans(spec, arche) + story_findings(spec, known)
 
     canvas = spec["canvas"]
     if ("part" in canvas) != ("of" in canvas):
@@ -225,6 +228,29 @@ def orphans(spec: dict, arche: archetypes.Archetype) -> list[dict]:
             if p["id"] not in free and not ends & ({p["id"]} | {card_id(p, i, c) for i, c in enumerate(p.get("cards", []))})]
 
 
+def story_findings(spec: dict, known: set[str]) -> list[dict]:
+    """Each story is a route a finger can follow: every step exists and a flow runs from it to the next (or joins
+    them both ways). A break names the step, and says so when only the panels around the two cards are joined."""
+    joined = {(f["from"], f["to"]) for f in spec.get("flows", [])}
+    joined |= {(f["to"], f["from"]) for f in spec.get("flows", []) if f.get("both")}
+    home = {card_id(p, i, c): p["id"] for p in spec["panels"] for i, c in enumerate(p.get("cards", []))}
+    out = []
+    for n, s in enumerate(spec.get("stories", [])):
+        where = f"stories/{n}"
+        missing = [step for step in s["path"] if step not in known]
+        if missing:
+            out += [finding("story", where, f"story '{s['name']}' names '{step}', which is no panel or card id") for step in missing]
+            continue
+        for a, b in pairwise(s["path"]):
+            if (a, b) in joined:
+                continue
+            detail = f"story '{s['name']}' breaks between '{a}' and '{b}': no flow from '{a}' to '{b}'"
+            if (home.get(a, a), home.get(b, b)) in joined:
+                detail += f" (a flow joins their panels, '{home.get(a, a)}' to '{home.get(b, b)}'; the route goes through the cards)"
+            out.append(finding("story", where, detail))
+    return out
+
+
 def traceability(spec: dict) -> list[dict]:
     """With `sources` declared, every card says where it comes from, and every ref names a declared source."""
     ids = {s["id"] for s in spec.get("sources", [])}
@@ -247,7 +273,24 @@ def traceability(spec: dict) -> list[dict]:
 
 def check(spec: dict, theme_css: str = "") -> list[dict]:
     """Schema first; semantic checks only on a spec that has the right shape."""
-    return schema_errors(spec) or semantic_errors(spec, theme_css)
+    return schema_errors(spec) or placeholders(spec) + semantic_errors(spec, theme_css)
+
+
+def placeholders(spec) -> list[dict]:
+    """Text a starter (`schemantic new`) left for the author: every string with TODO in it, by its path."""
+    out = []
+
+    def walk(v, where):
+        if isinstance(v, str) and PLACEHOLDER.search(v):
+            out.append(finding("placeholder", where or "(root)", f"'{v}' is a placeholder; write what the sources say"))
+        elif isinstance(v, dict):
+            for k, x in v.items():
+                walk(x, f"{where}/{k}" if where else str(k))
+        elif isinstance(v, list):
+            for i, x in enumerate(v):
+                walk(x, f"{where}/{i}")
+    walk(spec, "")
+    return out
 
 
 def slide_findings(spec: dict) -> list[dict]:
@@ -361,7 +404,7 @@ def iter_strings(obj):
         yield obj
     elif isinstance(obj, dict):
         for k, v in obj.items():
-            if k not in ("id", "icon", "role", "kind", "type", "tier", "layout", "from", "to", "refs", "sources", "brief"):
+            if k not in ("id", "icon", "role", "kind", "type", "tier", "layout", "from", "to", "refs", "sources", "brief", "path"):
                 yield from iter_strings(v)
     elif isinstance(obj, list):
         for v in obj:

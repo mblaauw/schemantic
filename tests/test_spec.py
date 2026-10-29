@@ -409,3 +409,26 @@ def test_rails_and_roadmap_lanes_may_stand_without_a_flow():
     assert [f for f in sp.check(layers) + sp.check(roadmap) if f["check"] == "orphan"] == []
     # Without the exemption the rail left without flows (observability) would be an orphan
     assert [f["id"] for f in sp.orphans(layers, archetypes.Archetype())] == ["observability"]
+
+
+def test_a_story_breaks_where_no_flow_joins_two_steps():
+    """A story is a route a finger can follow: each step joined to the next by a flow in its direction, or both ways."""
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    assert spec["stories"] and [f for f in sp.check(spec) if f["check"] == "story"] == []
+    spec["stories"] = [{"name": "Backwards", "path": ["integration", "portal"]}]
+    assert [f["detail"] for f in sp.check(spec) if f["check"] == "story"] == [
+        "story 'Backwards' breaks between 'integration' and 'portal': no flow from 'integration' to 'portal'"]
+    next(f for f in spec["flows"] if (f["from"], f["to"]) == ("portal", "integration"))["both"] = True
+    assert [f for f in sp.check(spec) if f["check"] == "story"] == []
+
+
+def test_a_story_through_cards_says_when_only_their_panels_are_joined():
+    """The review's 'jump': an arrow that ends on a panel while the route goes through one of its cards."""
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    portal, integration = (next(p for p in spec["panels"] if p["id"] == pid) for pid in ("portal", "integration"))
+    portal["cards"][0]["id"], integration["cards"][0]["id"] = "app", "api"
+    spec["stories"] = [{"name": "Card to card", "path": ["app", "api"]}]
+    found = [f for f in sp.check(spec) if f["check"] == "story"]
+    assert len(found) == 1 and "a flow joins their panels, 'portal' to 'integration'" in found[0]["detail"]
+    spec["flows"].append({"from": "app", "to": "api"})
+    assert [f for f in sp.check(spec) if f["check"] == "story"] == []

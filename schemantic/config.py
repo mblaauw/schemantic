@@ -14,6 +14,7 @@ ICONS = PACKAGE / "icons"
 FONTS_DIR = PACKAGE / "fonts"
 LOCALES = PACKAGE / "locales"
 SCHEMA = PACKAGE / "schema" / "plate.schema.json"
+STARTERS = PACKAGE / "starters"
 JS_DIR = PACKAGE / "js"
 
 # Paper presets in millimetres. A print plate is laid out at the sheet's width at 96 px per inch (whole CSS px), so

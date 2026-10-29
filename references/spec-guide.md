@@ -5,6 +5,9 @@ plate readable. Lengths are maximum characters.
 
 ## Top level
 
+`schemantic new <archetype> <path>` writes a starter with every part below and TODO wherever the sources must speak;
+lint (`placeholder`) names each TODO left.
+
 | Field | Rule |
 | --- | --- |
 | `canvas.size` | `landscape-4x3` (1600 wide, the default choice), `landscape-16x9` (1920×1080, for slides), or `a3-landscape` / `a4-landscape` for print: laid out at the sheet's width (96 px per inch, so type prints at its own size), as tall as the content, then centred on the sheet and scaled down when taller; lint fails it when the smallest text would print under 6 pt (`print-size`). Build with `--dpi 300`; the SVG is the sheet in mm |
@@ -98,6 +101,20 @@ above a horizontal one; short gutters fit short labels only.
 
 Say what arrows mean once, with `flows_mean`, and keep every arrow in that direction. The legend shows the meaning,
 and a line style only when the plate uses it.
+
+## Stories
+
+When the title or subtitle tells a route ("the portal reaches the records system only through one API"), write it
+down as a story: the steps a reader's finger follows, first to last. Stories are not drawn; lint (`story`) checks
+that a flow runs from every step to the next, in that direction (or with `both`).
+
+```yaml
+stories:                                              # up to 4
+  - name: "From the portal to the records system"     # 60, the route in the title's words
+    path: [portal, integration, proxy, ehr]           # card or panel ids; 2 to 10
+```
+
+A route through cards needs flows between those cards, not their panels; lint says when only the panels are joined.
 
 ## Footer
 

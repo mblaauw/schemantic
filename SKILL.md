@@ -75,13 +75,21 @@ Series rule: more than 6 panels or 30 cards is two plates, each with its own mes
 
 ## 4. Write the spec
 
-Save it where the user keeps their work, for example `plates/<name>.yaml`. Start from the closest example in
-`$SKILL/examples/` or `references/analysis.md`, and follow `references/spec-guide.md` for every field, the text
-budgets and the writing rules. The short version:
+Start from a starter, saved where the user keeps their work:
+
+```bash
+"$PY" "$SKILL/scripts/plate.py" new <archetype> plates/<name>.yaml --lang en
+```
+
+It has every part (brief, sources, panels, flows, a story, footer) with TODO wherever the sources must speak; lint
+names each TODO left. Replace every one, and rename, add or drop panels and cards as the plan says. The examples in
+`$SKILL/examples/` show finished plates; follow `references/spec-guide.md` for every field, the text budgets and the
+writing rules. The short version:
 
 - 3 to 6 panels, 2 to 6 cards each. A card is a thing with a name; its note says what it does in this story.
 - Say once what arrows mean (`flows_mean`). Connect panels by default; when the title or subtitle names a route
-  ("A via B to C"), give those cards ids and connect them card to card, every step, so a finger can follow it.
+  ("A via B to C"), give those cards ids, connect them card to card, and write the route as a `story`: lint then
+  checks that a finger can follow it, every step.
 - Show change with `status` (new, changed, planned, deprecated, removed) and the one element that matters with
   `focus`.
 - A `warning` chip or card `flag` marks an open choice; it appears again under open questions.
@@ -91,7 +99,7 @@ budgets and the writing rules. The short version:
 ## 5. Build, fix, repeat
 
 ```bash
-"$PY" "$SKILL/scripts/plate.py" build plates/<name>.yaml --out plates/out
+"$PY" "$SKILL/scripts/plate.py" build plates/<name>.yaml --out plates/out --review
 ```
 
 One command checks the spec, lays the plate out, routes the connectors, lints the result and writes
@@ -103,7 +111,9 @@ progress, restructure: move cards between panels, change the archetype, or split
 
 ## 6. Look at it
 
-Once the build is clean, open the PNG (read the image) and answer the defect questions in `references/review.md`.
+Once the build is clean, read the crops the report lists under `review` (the whole plate first, then the title
+block, each panel and the footer, at a size where every note is legible; a full PNG is scaled down until small text
+blurs) and answer the defect questions in `references/review.md`.
 Every "yes" is a spec change and another build, not a hand edit. Stop after three review rounds; tell the user what
 is still imperfect rather than looping.
 

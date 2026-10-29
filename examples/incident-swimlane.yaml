@@ -49,6 +49,8 @@ flows:
   - {from: decide, to: fix, step: 3}
   - {from: decide, to: status, step: 4}
   - {from: fix, to: review, step: 5}
+stories:
+  - {name: "From the alert to the customer update", path: [alert, ack, declare, decide, status]}
 
 footer:
   principles:

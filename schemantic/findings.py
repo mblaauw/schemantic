@@ -19,6 +19,9 @@ CHECKS: dict[str, Check] = {
     "yaml": Check("spec", "the file is missing, is not valid YAML (the detail gives line and column) or holds no mapping",
                   "fix the file; quote strings that contain `: ` or start with a special character",
                   "Fix the YAML at the line and column in the detail."),
+    "placeholder": Check("spec", "text a starter left (`schemantic new`): a string with TODO in it",
+                         "write what the sources say in its place, or drop the field or element; the id is its path",
+                         "Replace the TODO at the path in `id` with what the sources say, or drop it."),
     "schema": Check("spec", "a field is missing, misspelled, too long or of the wrong type",
                     "the `id` is the path to the field; shorten text or correct the key",
                     "Correct the field at the path in `id`; shorten text that is too long."),
@@ -41,6 +44,10 @@ CHECKS: dict[str, Check] = {
                     "add the flow the sources describe; if the sources name none, the panel may not belong on this plate, "
                     "or the relation is an open question",
                     "Add the flow the sources name for this panel, or drop the panel if nothing connects it."),
+    "story": Check("spec", "a story names an id that does not exist, or no flow runs from one of its steps to the next",
+                   "add the flow between the two steps the detail names, card to card when the route goes through cards "
+                   "(give both cards an id); if the sources name no such step, the story claims too much",
+                   "Add a flow from the first named step to the second, card to card."),
     "series": Check("spec", "parts of one series disagree: numbering, `of`, language, what arrows mean, or one thing drawn in "
                     "two colours (people in one part, a platform component in another)",
                     "make the parts agree: one language, one `flows_mean`, and the same role for a thing wherever it "
