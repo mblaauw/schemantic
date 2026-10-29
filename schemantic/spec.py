@@ -130,11 +130,8 @@ def layout_errors(spec: dict, arche: archetypes.Archetype) -> list[dict]:
 
 
 def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
-    """Checks the schema cannot express: archetype, ids, placement, roles, flows, footer, chips, icons, language."""
-    arche = archetypes.get(spec["archetype"])
-    if not arche:
-        return [finding("archetype", "archetype",
-                        f"'{spec['archetype']}' is not built yet; use one of {', '.join(archetypes.BUILT)}")]
+    """Checks the schema cannot express: ids, placement, roles, flows, footer, chips, icons, language."""
+    arche = archetypes.REGISTRY[spec["archetype"]]  # the schema names only built archetypes
     # Ids first: a colliding id makes every later check (and the router) look in the wrong place.
     out = id_errors(spec) or layout_errors(spec, arche)
     if any(f["level"] == "error" for f in out):

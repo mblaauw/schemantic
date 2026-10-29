@@ -85,6 +85,12 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - Text in a panel header is checked against the header, so a lane title spilling out of its narrow header is a
   `text-overflow` error. The swimlane phase band stays next to the lanes when a canvas spreads spare height.
 
+### Removed
+- `banded-matrix`, the planned archetype that was never built: the schema now names only built archetypes, so a
+  spec that names it fails the schema. A capability or ownership matrix fits in a panel as a `matrix` pattern. The
+  README's planned column (with two patterns nobody was building) goes with it, and its status line says where `main`
+  stands against the last release.
+
 ### Removed (deprecated in 0.2)
 - The `render` command and its 0.1 report format, and the `scripts/render.py` and `scripts/lint.py` shims: use
   `build` or `lint` (`scripts/plate.py build` from a skill folder).

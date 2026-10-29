@@ -82,16 +82,17 @@ field guide is [`references/spec-guide.md`](references/spec-guide.md).
 
 ## Status
 
-Proof of concept, version 0.2.0 (see [`CHANGELOG.md`](CHANGELOG.md)).
+The latest release is 0.2.0; `main` is ahead of it, with the changes listed under Unreleased in
+[`CHANGELOG.md`](CHANGELOG.md).
 
-| Built | Planned |
-| --- | --- |
-| Archetypes: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones, before-after, roadmap | Archetypes: banded-matrix |
-| Patterns: tier strip, process strip, tree, matrix | Patterns: mini sequence, lifecycle loop |
-| Connectors: straight, L, Z and U routes; card endpoints; sync, async, optional; steps | |
-| Roles, themes, change status, card flags, focus; locales `nl` and `en` | |
-| Lint with hints for every check; SVG parity; goldens and snapshots on Linux and macOS | |
-| The skill: analysis method, brief and traceability, review questions, evals | |
+| Built |
+| --- |
+| Archetypes: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones, before-after, roadmap |
+| Patterns: tier strip, process strip, tree, matrix |
+| Connectors: straight, L, Z and U routes; card endpoints; sync, async, optional; steps; stories |
+| Roles, themes, change status, card flags, focus; locales `nl` and `en` |
+| Lint with hints for every check; SVG parity; goldens and snapshots on Linux and macOS |
+| The skill: analysis method, brief and traceability, starters, review crops and questions, evals |
 
 ## How it works
 

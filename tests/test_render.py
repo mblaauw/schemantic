@@ -72,13 +72,13 @@ def test_lint_is_clean(path, tmp_path):
     assert (code, report["errors"]) == (0, [])
 
 
-def test_build_refuses_unbuilt_archetype(example, tmp_path):
+def test_build_refuses_an_unknown_archetype(example, tmp_path):
     example["archetype"] = "banded-matrix"
     spec = tmp_path / "matrix.yaml"
     spec.write_text(yaml.safe_dump(example, allow_unicode=True), encoding="utf-8")
     code, report = run("build", spec, "--out", tmp_path)
     assert code == 1 and report["svg"] is None
-    assert [e["check"] for e in report["errors"]] == ["archetype"]
+    assert [e["check"] for e in report["errors"]] == ["schema"]
     assert not (tmp_path / "matrix.svg").exists()
 
 

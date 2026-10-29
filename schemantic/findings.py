@@ -33,9 +33,9 @@ CHECKS: dict[str, Check] = {
                     "Correct the field at the path in `id`; shorten text that is too long."),
     "id": Check("spec", "two panels share an id, two cards share an id, or a card id equals a panel id or a card's "
                 "automatic id", "rename one; the detail names both places", "Rename one of the two elements in the detail."),
-    "archetype": Check("spec", "the archetype is planned but not built",
-                       "pick a built one (`archetypes.md`, \"Not built yet\")",
-                       "Pick a built archetype; references/archetypes.md lists workarounds."),
+    "archetype": Check("spec", "`schemantic new` names an archetype there is no starter for",
+                       "use one of the names in the detail; `references/archetypes.md` says when to use each",
+                       "Use one of the archetypes named in the detail."),
     "layout": Check("spec", "layout keys do not fit the archetype, a panel is placed twice or not at all, an area is "
                     "not a rectangle, widths/heights do not match the grid, or `footer.columns` does not match the "
                     "footer panels", "follow the detail; every panel id appears in the layout exactly once",

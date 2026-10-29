@@ -79,14 +79,10 @@ def test_docs_list_what_is_built():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
     reference = (ROOT / "references" / "archetypes.md").read_text(encoding="utf-8")
-    built_row = next(line for line in readme.splitlines() if line.startswith("| Archetypes:"))
-    built_cell, planned_cell = built_row.split("|")[1:3]
+    built_cell = next(line for line in readme.splitlines() if line.startswith("| Archetypes:")).split("|")[1]
     for name in archetypes.BUILT:
         assert name in built_cell and f"`{name}`" in skill and f"## {name}" in reference, name
-    for name in archetypes.PLANNED:
-        assert name in planned_cell and name not in built_cell and f"## {name}" not in reference, name
-    not_built = reference.split("## Not built yet")[1]
-    assert all(f"`{n}`" in not_built for n in archetypes.PLANNED)
+    assert sorted(line[3:] for line in reference.splitlines() if line.startswith("## ")) == archetypes.BUILT
     patterns = json.loads((ROOT / "schemantic" / "schema" / "plate.schema.json").read_text())["$defs"]["pattern"]["properties"]["type"]["enum"]
     pattern_row = next(line for line in readme.splitlines() if line.startswith("| Patterns:"))
     for p in patterns:
