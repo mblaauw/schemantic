@@ -26,7 +26,7 @@ plate readable. Lengths are maximum characters.
   title: "API gateway"            # 48
   subtitle: "Authentication, rate limiting and routing"   # 80, optional
   role: platform                  # platform | data | external | actor — colour has meaning, see the legend
-  card_columns: 2                 # optional, 1–6
+  card_columns: 2                 # optional, 1–6; without it, as many columns of 280 px as fit
   arrange: row                    # optional: blocks side by side instead of stacked
   weights: [1.35, 0.8, 1]         # with arrange: row — patterns first, then the cards block
   status: new                     # optional: new | changed | planned | deprecated | removed
@@ -86,9 +86,10 @@ flows:
   - {from: integration, to: proxy, focus: true}       # the one arrow the plate is about (one focus per plate)
 ```
 
-With a `focus` (a panel, a card, or an arrow), the panels it is about keep their full colour and the others get a
-quiet header in their role's tint, so the eye goes to the point first. A focused arrow is drawn heavier, in the
-accent colour.
+Panel headers are quiet: their role's tint, with the title in the role's colour. Only the panels a `focus` is about
+(a panel, a card, or the two ends of an arrow) get a filled header, so a plate has one loud place and the eye goes
+there first; without a focus, a hub-and-spokes hub is that place. A focused arrow is drawn heavier, in the accent
+colour.
 
 The router draws straight arrows across a gutter where it can, and otherwise turns corners through the
 gutters (one or two bends), or goes around: out of a box and back into the other on the same side, along a gutter

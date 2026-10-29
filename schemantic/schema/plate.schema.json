@@ -1042,7 +1042,8 @@
         "card_columns": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 6
+          "maximum": 6,
+          "description": "Columns for the panel's cards. Without it, the cards take as many columns of at least 280 px as the panel's width fits."
         },
         "cards": {
           "type": "array",

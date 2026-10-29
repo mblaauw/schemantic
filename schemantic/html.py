@@ -98,14 +98,14 @@ def panels_for_render(spec: dict) -> list[dict]:
     rows = arche.grid(spec).rows
     # A panel spanning several rows (a rail, a side spoke) spreads its cards over its height instead of leaving one hole.
     spread = {n for n in {n for r in rows for n in r} if sum(n in r for r in rows) > 1}
-    loud = focal_panels(spec)
+    loud = focal_panels(spec) or arche.loud(spec)
     return [{**p, "role": p["role"], "chips_bottom": p["id"] in pinned, "spread": p["id"] in spread,
-             "quiet": loud is not None and p["id"] not in loud, **arche.panel_defaults(spec, p)} for p in spec["panels"]]
+             "quiet": p["id"] not in loud, **arche.panel_defaults(spec, p)} for p in spec["panels"]]
 
 
 def focal_panels(spec: dict) -> set[str] | None:
     """The panels a plate's focus is about: the focused panel, the panel of a focused card, or the panels at both ends
-    of a focused flow. The other panels get quiet headers so the eye goes there first. None without a focus."""
+    of a focused flow. Only these get a filled header, so the eye goes there first. None without a focus."""
     owner = {p["id"]: p["id"] for p in spec["panels"]}
     owner |= {card_id(p, i, c): p["id"] for p in spec["panels"] for i, c in enumerate(p.get("cards", []))}
     loud = {p["id"] for p in spec["panels"] if p.get("focus")}

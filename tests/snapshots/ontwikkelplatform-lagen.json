@@ -4,235 +4,235 @@
    40,
    32,
    1560,
-   132
+   134
   ],
   "body": [
    40,
-   150,
+   152,
    1560,
-   950
+   952
   ],
   "experience": [
    376,
-   150,
+   152,
    1224,
-   306
+   308
   ],
   "experience.card0": [
    390,
-   220,
+   222,
    588,
-   292
+   294
   ],
   "experience.card1": [
    596,
-   220,
+   222,
    796,
-   292
+   294
   ],
   "experience.card2": [
    804,
-   220,
+   222,
    1004,
-   292
+   294
   ],
   "experience.card3": [
    1012,
-   220,
+   222,
    1210,
-   292
+   294
   ],
   "delivery": [
    376,
-   350,
+   352,
    1224,
-   506
+   508
   ],
   "delivery.card0": [
    390,
-   420,
+   422,
    588,
-   492
+   494
   ],
   "delivery.card1": [
    596,
-   420,
+   422,
    796,
-   492
+   494
   ],
   "delivery.card2": [
    804,
-   420,
+   422,
    1004,
-   492
+   494
   ],
   "delivery.card3": [
    1012,
-   420,
+   422,
    1210,
-   492
+   494
   ],
   "runtime": [
    376,
-   550,
+   552,
    1224,
-   706
+   708
   ],
   "admission": [
    390,
-   620,
+   622,
    588,
-   692
+   694
   ],
   "runtime.card1": [
    596,
-   620,
+   622,
    796,
-   692
+   694
   ],
   "runtime.card2": [
    804,
-   620,
+   622,
    1004,
-   692
+   694
   ],
   "runtime.card3": [
    1012,
-   620,
+   622,
    1210,
-   692
+   694
   ],
   "infra": [
    376,
-   750,
+   752,
    1224,
-   950
+   952
   ],
   "infra.card0": [
    390,
-   820,
+   822,
    588,
-   892
+   894
   ],
   "infra.card1": [
    596,
-   820,
+   822,
    796,
-   892
+   894
   ],
   "infra.card2": [
    804,
-   820,
+   822,
    1004,
-   892
+   894
   ],
   "infra.card3": [
    1012,
-   820,
+   822,
    1210,
-   892
+   894
   ],
   "infra.chip0": [
    390,
-   902,
+   904,
    1210,
-   938
+   940
   ],
   "security": [
    40,
-   150,
+   152,
    328,
-   950
+   952
   ],
   "security.card0": [
    54,
-   220,
+   222,
    316,
-   346
+   348
   ],
   "security.card1": [
    54,
-   420,
+   422,
    316,
-   510
+   512
   ],
   "policy": [
    54,
-   620,
+   622,
    316,
-   710
+   712
   ],
   "security.card3": [
    54,
-   718,
+   720,
    316,
-   826
+   828
   ],
   "security.chip0": [
    54,
-   902,
+   904,
    316,
-   938
+   940
   ],
   "observability": [
    1272,
-   150,
+   152,
    1560,
-   950
+   952
   ],
   "observability.card0": [
    1284,
-   220,
+   222,
    1548,
-   294
+   296
   ],
   "observability.card1": [
    1284,
-   420,
+   422,
    1548,
-   510
+   512
   ],
   "observability.card2": [
    1284,
-   620,
+   622,
    1548,
-   692
+   694
   ],
   "observability.card3": [
    1284,
-   820,
+   822,
    1548,
-   876
+   878
   ],
   "observability.chip0": [
    1284,
-   902,
+   904,
    1548,
-   938
+   940
   ],
   "footer": [
    40,
-   968,
+   970,
    1560,
-   1078
+   1080
   ],
   "footer.principles": [
    40,
-   968,
+   970,
    876,
-   1050
+   1052
   ],
   "footer.open_questions": [
    904,
-   968,
+   970,
    1560,
-   1012
+   1014
   ],
   "footer.legend": [
    40,
-   1060,
+   1062,
    1560,
-   1078
+   1080
   ]
  },
  "text": [
@@ -248,532 +248,532 @@
   ],
   [
    40,
-   124,
+   128,
    "Vier lagen van portal tot infrastructuur; security en observability raken elke laag als rails"
   ],
   [
    390,
-   176,
+   178,
    "Developer experience"
   ],
   [
    390,
-   194,
+   196,
    "Waar teams beginnen"
   ],
   [
    432,
-   244,
+   246,
    "Developer portal"
   ],
   [
    432,
-   260,
+   262,
    "één ingang voor alle"
   ],
   [
    432,
-   278,
+   280,
    "teams"
   ],
   [
    640,
-   244,
+   246,
    "Service catalog"
   ],
   [
    640,
-   260,
+   262,
    "eigenaar en status per"
   ],
   [
    640,
-   278,
+   280,
    "service"
   ],
   [
    848,
-   244,
+   246,
    "Golden paths"
   ],
   [
    848,
-   260,
+   262,
    "templates voor een"
   ],
   [
    848,
-   278,
+   280,
    "nieuwe service"
   ],
   [
    1054,
-   244,
+   246,
    "Docs"
   ],
   [
    1054,
-   260,
+   262,
    "naast de code, in de"
   ],
   [
    1054,
-   278,
+   280,
    "portal"
   ],
   [
    390,
-   376,
+   378,
    "Delivery"
   ],
   [
    390,
-   394,
+   396,
    "Van commit naar een gedeployde release"
   ],
   [
    432,
-   444,
+   446,
    "CI pipelines"
   ],
   [
    432,
-   460,
+   462,
    "build en test per commit"
   ],
   [
    640,
-   444,
+   446,
    "Artifact registry"
   ],
   [
    640,
-   460,
+   462,
    "images en packages,"
   ],
   [
    640,
-   478,
+   480,
    "gesigneerd"
   ],
   [
    848,
-   444,
+   446,
    "GitOps"
   ],
   [
    848,
-   460,
+   462,
    "gewenste staat staat in"
   ],
   [
    848,
-   478,
+   480,
    "Git"
   ],
   [
    1054,
-   444,
+   446,
    "Feature flags"
   ],
   [
    1054,
-   460,
+   462,
    "uitrol los van deploy"
   ],
   [
    390,
-   576,
+   578,
    "Runtime"
   ],
   [
    390,
-   594,
+   596,
    "Waar de services draaien"
   ],
   [
    432,
-   644,
+   646,
    "Admission control"
   ],
   [
    432,
-   660,
+   662,
    "weigert wat niet aan"
   ],
   [
    432,
-   678,
+   680,
    "policy voldoet"
   ],
   [
    640,
-   644,
+   646,
    "Kubernetes clusters"
   ],
   [
    640,
-   660,
+   662,
    "één per omgeving"
   ],
   [
    848,
-   644,
+   646,
    "Service mesh"
   ],
   [
    848,
-   660,
+   662,
    "mTLS tussen alle"
   ],
   [
    848,
-   678,
+   680,
    "services"
   ],
   [
    1054,
-   644,
+   646,
    "Secrets"
   ],
   [
    1054,
-   660,
+   662,
    "korte levensduur, nooit"
   ],
   [
    1054,
-   678,
+   680,
    "in Git"
   ],
   [
    390,
-   776,
+   778,
    "Infrastructuur"
   ],
   [
    390,
-   794,
+   796,
    "Beheerd als code"
   ],
   [
    432,
-   844,
+   846,
    "Cloud accounts"
   ],
   [
    432,
-   860,
+   862,
    "per team en omgeving"
   ],
   [
    640,
-   844,
+   846,
    "Netwerk"
   ],
   [
    640,
-   860,
+   862,
    "private endpoints, geen"
   ],
   [
    640,
-   878,
+   880,
    "publieke IP's"
   ],
   [
    848,
-   844,
+   846,
    "Managed databases"
   ],
   [
    848,
-   860,
+   862,
    "back-ups en patches"
   ],
   [
    848,
-   878,
+   880,
    "door de provider"
   ],
   [
    1054,
-   844,
+   846,
    "Object storage"
   ],
   [
    1054,
-   860,
+   862,
    "buckets per domein"
   ],
   [
    404,
-   924,
+   926,
    "V1"
   ],
   [
    430,
-   924,
+   926,
    "Eén cloud account per team, of per team en omgeving?"
   ],
   [
    52,
-   176,
+   178,
    "Security"
   ],
   [
    96,
-   244,
+   246,
    "Identity"
   ],
   [
    96,
-   260,
+   262,
    "SSO voor mensen en pipelines"
   ],
   [
    106,
-   278,
+   280,
    "workload identity in plaats van"
   ],
   [
    106,
-   296,
+   298,
    "keys"
   ],
   [
    106,
-   314,
+   316,
    "rollen per team, beheerd in de"
   ],
   [
    106,
-   332,
+   334,
    "portal"
   ],
   [
    96,
-   444,
+   446,
    "Scanning"
   ],
   [
    96,
-   460,
+   462,
    "images en dependencies"
   ],
   [
    106,
-   478,
+   480,
    "blokkeert bij kritieke CVE's"
   ],
   [
    106,
-   496,
+   498,
    "een SBOM per image"
   ],
   [
    96,
-   644,
+   646,
    "Policy as code"
   ],
   [
    96,
-   660,
+   662,
    "regels in Git"
   ],
   [
    106,
-   678,
+   680,
    "getest in CI, net als code"
   ],
   [
    106,
-   696,
+   698,
    "afgedwongen bij admission"
   ],
   [
    96,
-   742,
+   744,
    "Pentests"
   ],
   [
    96,
-   758,
+   760,
    "twee keer per jaar, door een"
   ],
   [
    96,
-   776,
+   778,
    "externe partij"
   ],
   [
    106,
-   794,
+   796,
    "bevindingen worden tickets bij"
   ],
   [
    106,
-   812,
+   814,
    "het team"
   ],
   [
    90,
-   922,
+   924,
    "Uitzonderingen via een pull request"
   ],
   [
    1284,
-   176,
+   178,
    "Observability"
   ],
   [
    1328,
-   244,
+   246,
    "Alerting"
   ],
   [
    1328,
-   260,
+   262,
    "naar het team dat eigenaar is"
   ],
   [
    1338,
-   278,
+   280,
    "routing via de service catalog"
   ],
   [
    1328,
-   444,
+   446,
    "Metrics"
   ],
   [
    1328,
-   460,
+   462,
    "SLO's per service"
   ],
   [
    1338,
-   478,
+   480,
    "een op error budget houdt de"
   ],
   [
    1338,
-   496,
+   498,
    "deploy tegen"
   ],
   [
    1328,
-   644,
+   646,
    "Traces"
   ],
   [
    1328,
-   660,
+   662,
    "door de mesh heen"
   ],
   [
    1338,
-   678,
+   680,
    "10% sampling, fouten altijd"
   ],
   [
    1328,
-   844,
+   846,
    "Logs"
   ],
   [
    1328,
-   860,
+   862,
    "centraal, 30 dagen, met trace-id"
   ],
   [
    1322,
-   922,
+   924,
    "Golden paths leveren alerts mee"
   ],
   [
    40,
-   982,
+   984,
    "Belangrijke uitgangspunten"
   ],
   [
    50,
-   1006,
+   1008,
    "Een team komt via de portal binnen, niet via een ticket bij het platformteam."
   ],
   [
    50,
-   1026,
+   1028,
    "Alles wat draait, is gedeployed via GitOps; handmatige wijzigingen worden teruggedraaid."
   ],
   [
    50,
-   1046,
+   1048,
    "Security en observability zitten in het platform, niet in elke service apart."
   ],
   [
    904,
-   982,
+   984,
    "Open vragen"
   ],
   [
    908,
-   1008,
+   1010,
    "V1"
   ],
   [
    930,
-   1006,
+   1008,
    "Eén cloud account per team, of per team en omgeving?"
   ],
   [
    40,
-   1072,
+   1074,
    "Legenda"
   ],
   [
    142,
-   1072,
+   1074,
    "Platformcomponent"
   ],
   [
    306,
-   1072,
+   1074,
    "Data en opslag"
   ],
   [
    444,
-   1072,
+   1074,
    "Stuurt aan"
   ],
   [
    556,
-   1072,
+   1074,
    "Asynchroon: event of bericht"
   ],
   [
    750,
-   1074,
+   1076,
    "V1"
   ],
   [
    774,
-   1072,
+   1074,
    "Open keuze of frictie"
   ],
   [
    946,
-   1072,
+   1074,
    "Aanname of toelichting"
   ],
   [
    808,
-   332,
+   334,
    "scaffolding"
   ],
   [
    808,
-   532,
+   534,
    "deploy via GitOps"
   ]
  ],
@@ -785,11 +785,11 @@
    "points": [
     [
      800,
-     312
+     314
     ],
     [
      800,
-     342
+     344
     ]
    ],
    "label": "scaffolding"
@@ -801,11 +801,11 @@
    "points": [
     [
      800,
-     512
+     514
     ],
     [
      800,
-     542
+     544
     ]
    ],
    "label": "deploy via GitOps"
@@ -817,11 +817,11 @@
    "points": [
     [
      800,
-     712
+     714
     ],
     [
      800,
-     742
+     744
     ]
    ],
    "label": null
@@ -833,11 +833,11 @@
    "points": [
     [
      322,
-     656
+     658
     ],
     [
      382,
-     656
+     658
     ]
    ],
    "label": null
@@ -849,11 +849,11 @@
    "points": [
     [
      1230,
-     628
+     630
     ],
     [
      1264,
-     628
+     630
     ]
    ],
    "label": null

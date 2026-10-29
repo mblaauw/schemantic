@@ -12,7 +12,7 @@ body { background: var(--paper); }
 .titleblock { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; flex: 0 0 auto; }
 .topic { font-size: var(--t-topic); font-weight: 700; color: var(--muted); line-height: 1.2; margin-bottom: 6px; }
 .title { font-size: var(--t-title); font-weight: 800; color: var(--ink); line-height: 1.1; }
-.subtitle { font-size: var(--t-sub); font-weight: 500; color: var(--accent); margin-top: 4px; line-height: 1.25; }
+.subtitle { font-size: var(--t-sub); font-weight: 400; color: var(--text); margin-top: 6px; line-height: 1.25; }
 .badge { flex: 0 0 auto; font-size: var(--t-badge); font-weight: 700; color: var(--platform-head);
   background: var(--platform-body); border: 1px solid var(--platform-line); border-radius: 8px;
   padding: 8px 16px; white-space: nowrap; }
@@ -162,7 +162,7 @@ body { background: var(--paper); }
 /* Focus: the one element the plate is about */
 .card.focus { border: 2px solid var(--accent); padding: 8px 9px; }
 .panel.focus { border: 2px solid var(--accent); }
-/* With a focus on the plate, the other panels' headers go quiet: their role's tint, dark text. The colour still says
+/* One header is filled: the focus (or a hub). Every other header is quiet: its role's tint, dark text. The colour still says
    the role; the full colour is left to what the plate is about. */
 .panel.quiet > .ph { background: var(--sub); }
 .panel.quiet .ph-title { color: var(--head); }

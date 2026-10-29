@@ -8,7 +8,7 @@
   --ink: #0F2547;        /* titles, card names */
   --text: #1E293B;       /* body text */
   --muted: #4F5D6E;      /* notes, qualifiers */
-  --accent: #1763C4;     /* subtitle */
+  --accent: #1763C4;     /* the focus: its outline, its arrow */
   --arrow: #2F7FC6;      /* flow arrows and their heads */
   --on-head: #FFFFFF;    /* text on a panel's header colour */
 
@@ -23,7 +23,7 @@
   --card-bg: #FFFFFF; --card-line: #D3E0EC;
 
   --warn-bg: #FFF2E8; --warn-line: #F2B98E; --warn-icon: #C2410C; --warn-text: #7A2D0E;
-  --info-bg: #EAF3FC; --info-line: #B7D3EE; --info-icon: #1763C4; --info-text: #1D3A5E;
+  --info-bg: #F3F6F9; --info-line: #CBD5E1; --info-icon: #4F5D6E; --info-text: #1E293B;
 
   --bronze-bg: #F7EADF; --bronze-line: #D6A178; --bronze-icon: #8F5427;
   --silver-bg: #EEF1F5; --silver-line: #B3BECA; --silver-icon: #526273;
@@ -58,4 +58,6 @@
 
   /* Spacing on a 4 px scale */
   --r-panel: 8px; --r-card: 6px;
+  /* Without card_columns, a panel's cards take as many columns of at least this width as fit */
+  --card-min: 280px;
 }

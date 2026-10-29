@@ -4,133 +4,133 @@
    40,
    32,
    1560,
-   132
+   134
   ],
   "body": [
    40,
-   150,
+   152,
    1560,
-   1090
+   1092
   ],
   "applicant": [
    40,
-   194,
+   196,
    1560,
-   310
+   312
   ],
   "application": [
    224,
-   206,
+   208,
    410,
-   296
+   298
   ],
   "documents": [
    450,
-   206,
+   208,
    638,
-   296
+   298
   ],
   "decision": [
    1360,
-   206,
+   208,
    1546,
-   296
+   298
   ],
   "portal": [
    40,
-   992,
+   994,
    1560,
-   1090
+   1092
   ],
   "publish": [
    1360,
-   1004,
+   1006,
    1546,
-   1076
+   1078
   ],
   "intake": [
    40,
-   354,
+   356,
    1560,
-   486
+   488
   ],
   "check": [
    450,
-   366,
+   368,
    638,
-   472
+   474
   ],
   "case": [
    40,
-   530,
+   532,
    1560,
-   646
+   648
   ],
   "assess": [
    678,
-   542,
+   544,
    864,
-   632
+   634
   ],
   "draft": [
    1132,
-   542,
+   544,
    1320,
-   632
+   634
   ],
   "welfare": [
    40,
-   690,
+   692,
    1560,
-   804
+   806
   ],
   "advice": [
    906,
-   702,
+   704,
    1092,
-   792
+   794
   ],
   "lead": [
    40,
-   848,
+   850,
    1560,
-   948
+   950
   ],
   "sign": [
    1132,
-   862,
+   864,
    1320,
-   934
+   936
   ],
   "band.phases": [
    40,
-   150,
+   152,
    1560,
-   178
+   180
   ],
   "footer": [
    40,
-   1108,
+   1110,
    1560,
-   1240
+   1242
   ],
   "footer.principles": [
    40,
-   1108,
+   1110,
    876,
-   1188
+   1190
   ],
   "footer.open_questions": [
    904,
-   1108,
+   1110,
    1560,
-   1212
+   1214
   ],
   "footer.legend": [
    40,
-   1222,
+   1224,
    1560,
-   1240
+   1242
   ]
  },
  "text": [
@@ -146,17 +146,17 @@
   ],
   [
    40,
-   124,
+   128,
    "Intake, assessment and sign-off run in the case management system; the committee advises within three weeks"
   ],
   [
    52,
-   256,
+   258,
    "Applicant"
   ],
   [
    266,
-   230,
+   232,
    "Application"
   ],
   [
@@ -166,12 +166,12 @@
   ],
   [
    266,
-   264,
+   266,
    "online portal"
   ],
   [
    494,
-   230,
+   232,
    "Missing documents"
   ],
   [
@@ -181,17 +181,17 @@
   ],
   [
    494,
-   264,
+   266,
    "two weeks to add"
   ],
   [
    494,
-   282,
+   284,
    "them"
   ],
   [
    1402,
-   230,
+   232,
    "Decision"
   ],
   [
@@ -201,322 +201,322 @@
   ],
   [
    1402,
-   264,
+   266,
    "portal"
   ],
   [
    52,
-   1046,
+   1048,
    "Online portal"
   ],
   [
    1402,
-   1028,
+   1030,
    "Published decision"
   ],
   [
    1402,
-   1044,
+   1046,
    "sent to the applicant"
   ],
   [
    1402,
-   1062,
+   1064,
    "and published"
   ],
   [
    52,
-   424,
+   426,
    "Intake officer"
   ],
   [
    494,
-   390,
+   392,
    "Completeness"
   ],
   [
    494,
-   408,
+   410,
    "check"
   ],
   [
    494,
-   424,
+   426,
    "in the case system; if"
   ],
   [
    494,
-   442,
+   444,
    "incomplete, two"
   ],
   [
    494,
-   458,
+   460,
    "weeks"
   ],
   [
    52,
-   592,
+   594,
    "Case handler"
   ],
   [
    720,
-   566,
+   568,
    "Zoning assessment"
   ],
   [
    720,
-   584,
+   586,
    "plan against the"
   ],
   [
    720,
-   600,
+   602,
    "zoning plan; asks for"
   ],
   [
    720,
-   618,
+   620,
    "advice"
   ],
   [
    1176,
-   566,
+   568,
    "Draft decision"
   ],
   [
    1176,
-   584,
+   586,
    "for the team lead to"
   ],
   [
    1176,
-   600,
+   602,
    "sign"
   ],
   [
    52,
-   742,
+   744,
    "Welfare"
   ],
   [
    52,
-   762,
+   764,
    "committee"
   ],
   [
    948,
-   726,
+   728,
    "Committee advice"
   ],
   [
    958,
-   742,
+   744,
    "Q2"
   ],
   [
    948,
-   760,
+   762,
    "given within three"
   ],
   [
    948,
-   776,
+   778,
    "weeks"
   ],
   [
    52,
-   904,
+   906,
    "Team lead"
   ],
   [
    1176,
-   886,
+   888,
    "Signed decision"
   ],
   [
    1176,
-   902,
+   904,
    "the team lead signs"
   ],
   [
    1176,
-   920,
+   922,
    "the draft"
   ],
   [
    224,
-   168,
+   170,
    "Submit"
   ],
   [
    450,
-   168,
+   170,
    "Check"
   ],
   [
    678,
-   168,
+   170,
    "Assess"
   ],
   [
    904,
-   168,
+   170,
    "Advise"
   ],
   [
    1132,
-   168,
+   170,
    "Decide"
   ],
   [
    1360,
-   168,
+   170,
    "Publish"
   ],
   [
    40,
-   1120,
+   1122,
    "Key principles"
   ],
   [
    50,
-   1146,
+   1148,
    "The committee gives its advice before the case handler drafts the decision."
   ],
   [
    50,
-   1166,
+   1168,
    "The team lead signs every decision before the portal publishes it."
   ],
   [
    50,
-   1184,
+   1186,
    "The portal sends each decision to the applicant and publishes it."
   ],
   [
    904,
-   1120,
+   1122,
    "Open questions"
   ],
   [
    908,
-   1146,
+   1148,
    "Q1"
   ],
   [
    930,
-   1146,
+   1148,
    "After documents arrive, is the check repeated?"
   ],
   [
    908,
-   1166,
+   1168,
    "Q2"
   ],
   [
    932,
-   1166,
+   1168,
    "Is the advice binding, and what if it comes late?"
   ],
   [
    908,
-   1186,
+   1188,
    "Q3"
   ],
   [
    934,
-   1186,
+   1188,
    "What happens if documents are still missing after two weeks?"
   ],
   [
    908,
-   1206,
+   1208,
    "Q4"
   ],
   [
    934,
-   1206,
+   1208,
    "Which step uses the document archive?"
   ],
   [
    40,
-   1234,
+   1236,
    "Legend"
   ],
   [
    134,
-   1234,
+   1236,
    "People and teams"
   ],
   [
    288,
-   1234,
+   1236,
    "Platform component"
   ],
   [
    456,
-   1234,
+   1236,
    "Controls"
   ],
   [
    558,
-   1234,
+   1236,
    "Optional or occasional"
   ],
   [
    714,
-   1234,
+   1236,
    "1"
   ],
   [
    734,
-   1234,
+   1236,
    "Step in the order things happen"
   ],
   [
    942,
-   1234,
+   1236,
    "Q1"
   ],
   [
    966,
-   1234,
+   1236,
    "Open choice or friction"
   ],
   [
    394,
-   346,
+   348,
    "1"
   ],
   [
    622,
-   524,
+   526,
    "2"
   ],
   [
    920,
-   660,
+   662,
    "3"
   ],
   [
    1076,
-   660,
+   662,
    "4"
   ],
   [
    1580,
-   750,
+   752,
    "5"
   ],
   [
    1304,
-   984,
+   986,
    "6"
   ],
   [
    1590,
-   654,
+   656,
    "7"
   ]
  ],
@@ -528,15 +528,15 @@
    "points": [
     [
      394,
-     304
+     306
     ],
     [
      394,
-     382
+     384
     ],
     [
      444,
-     382
+     384
     ]
    ],
    "label": null
@@ -548,15 +548,15 @@
    "points": [
     [
      622,
-     480
+     482
     ],
     [
      622,
-     558
+     560
     ],
     [
      670,
-     558
+     560
     ]
    ],
    "label": null
@@ -568,11 +568,11 @@
    "points": [
     [
      872,
-     616
+     618
     ],
     [
      920,
-     616
+     618
     ],
     [
      920,
@@ -592,11 +592,11 @@
     ],
     [
      1076,
-     616
+     618
     ],
     [
      1126,
-     616
+     618
     ]
    ],
    "label": null
@@ -608,19 +608,19 @@
    "points": [
     [
      1326,
-     616
+     618
     ],
     [
      1580,
-     616
+     618
     ],
     [
      1580,
-     878
+     880
     ],
     [
      1326,
-     878
+     880
     ]
    ],
    "label": null
@@ -632,15 +632,15 @@
    "points": [
     [
      1304,
-     940
+     944
     ],
     [
      1304,
-     1020
+     1022
     ],
     [
      1352,
-     1020
+     1022
     ]
    ],
    "label": null
@@ -652,11 +652,11 @@
    "points": [
     [
      544,
-     360
+     362
     ],
     [
      544,
-     304
+     306
     ]
    ],
    "label": null
@@ -668,19 +668,19 @@
    "points": [
     [
      1554,
-     1020
+     1022
     ],
     [
      1590,
-     1020
+     1022
     ],
     [
      1590,
-     280
+     282
     ],
     [
      1554,
-     280
+     282
     ]
    ],
    "label": null

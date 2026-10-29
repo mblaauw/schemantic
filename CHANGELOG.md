@@ -52,6 +52,15 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   plate had one: its insurers now check claim status through the integration API.
 
 ### Changed
+- One loud place per plate. Panel headers are quiet by default (their role's tint, the title in the role's colour);
+  only the panels a `focus` is about get a filled header, and without a focus the hub of a hub-and-spokes plate.
+  Plates that were a wall of navy headers now lead the eye; the legend's role swatches show the tint they explain.
+- A calmer title block: the subtitle is set in body colour at regular weight, explaining the title's claim instead
+  of competing with it in accent blue.
+- One meaning per colour: info chips (assumptions, notes) are neutral slate, so blue is the arrows, the focus and the
+  platform role.
+- Without `card_columns`, a panel's cards take as many columns of at least 280 px (`--card-min`) as fit, instead of
+  stretching one short line across a wide panel; the before-after plate is a fifth shorter.
 - A wheel could not render: templates, fonts, icons, locales and the schema sat outside the package, so only a
   checkout worked. They now live in `schemantic/` (`schemantic/templates/tokens.css`,
   `schemantic/schema/plate.schema.json`, …) and travel as package data; a test keeps that list complete. Specs that

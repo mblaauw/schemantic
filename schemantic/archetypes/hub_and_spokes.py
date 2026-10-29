@@ -42,6 +42,10 @@ class HubAndSpokes(Archetype):
         columns = [side] * sides[0] + ["minmax(0, 1fr)"] + [side] * sides[1]
         return GridSpec(rows=rows, columns=columns, groups=groups)
 
+    def loud(self, spec: dict) -> set[str]:
+        """The hub is the plate's centre: it keeps the filled header the spokes do without."""
+        return {spec["layout"]["hub"]}
+
     def panel_defaults(self, spec: dict, panel: dict) -> dict:
         if panel["id"] == spec["layout"]["hub"]:
             return {"hub": True}
