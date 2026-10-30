@@ -21,7 +21,7 @@ from .findings import finding, with_hint
 from .html import build_html
 from .images import image_diff, snapshot
 from .lint import dom_lint, layout_findings
-from .review import RASTER_SCALE, write_crops
+from .review import RASTER_SCALE, changed_parts, part_names, write_crops
 from .route import draw_flows, problems_as_findings
 from .spec import check, number_story, read_spec
 
@@ -82,9 +82,11 @@ def write_svg(plate: dict, spec: dict, work: Path, name: str, outline_text: bool
         from .glyphs import outline_text as to_paths
         svg_path.write_text(to_paths(svg), encoding="utf-8")
     snap_path = work / f"{name}.snapshot.json"
-    snap_path.write_text(json.dumps(snapshot(plate["layout"], plate["flows"]["segs"]), indent=1, ensure_ascii=False),
-                         encoding="utf-8")
-    return {"svg": svg_path, "parity_svg": parity_svg, "fonts": fonts, "snapshot": snap_path}
+    previous = json.loads(snap_path.read_text(encoding="utf-8")) if snap_path.exists() else None
+    snap = snapshot(plate["layout"], plate["flows"]["segs"])
+    snap_path.write_text(json.dumps(snap, indent=1, ensure_ascii=False), encoding="utf-8")
+    return {"svg": svg_path, "parity_svg": parity_svg, "fonts": fonts, "snapshot": snap_path, "snap": snap,
+            "changed": changed_parts(previous, snap, spec)}
 
 
 def parity(page, browser, parity_svg: Path, work: Path, refused: list[str]) -> dict:
@@ -96,12 +98,19 @@ def parity(page, browser, parity_svg: Path, work: Path, refused: list[str]) -> d
     return image_diff(work / "html.png", work / "svg.png", work / "parity-diff.png")
 
 
-def review_crops(browser, layout: dict, spec: dict, parity_svg: Path, work: Path, refused: list[str]) -> list[dict]:
-    """Optional: crops of the plate a model can read, in _work/review/."""
-    for old in (work / "review").glob("*.png"):
+def review_crops(browser, layout: dict, spec: dict, svg: dict, work: Path, refused: list[str], every: bool) -> dict:
+    """Optional: crops of the plate a model can read, in _work/review/. After the first round, only of the parts that
+    changed since the last round (the overview always), unless every part is asked for."""
+    dest, last = work / "review", work / "review" / "snapshot.json"
+    previous = None if every or not last.exists() else json.loads(last.read_text(encoding="utf-8"))
+    changed = changed_parts(previous, svg["snap"], spec)
+    for old in dest.glob("*.png"):
         old.unlink()  # a part renamed or cut differently leaves no stale crop behind
-    rasterise_svg(browser, parity_svg, work / "review.png", scale=RASTER_SCALE, refused=refused)
-    return write_crops(layout, spec, work / "review.png", work / "review")
+    rasterise_svg(browser, svg["parity_svg"], work / "review.png", scale=RASTER_SCALE, refused=refused)
+    crops = write_crops(layout, spec, work / "review.png", dest, only=changed)
+    last.write_text(json.dumps(svg["snap"], ensure_ascii=False), encoding="utf-8")
+    unchanged = [p for p in part_names(spec) if changed is not None and p not in changed]
+    return {"crops": crops, "unchanged": unchanged}
 
 
 def deliverables(browser, spec: dict, made: dict, svg_path: Path, fit: dict | None, scale: float, work: Path, name: str,
@@ -146,16 +155,18 @@ def publish(staged: dict[str, Path], report: dict, out: Path) -> None:
 
 
 def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale: float = 2,
-          theme: str | Path | None = None, theme_css: str = "", outline_text: bool = False, review: bool = False) -> dict:
+          theme: str | Path | None = None, theme_css: str = "", outline_text: bool = False, review: bool | str = False) -> dict:
     """Run the whole pipeline. With deliver, writes <out>/<name>.svg and .png; work files go to <out>/_work/.
     Returns the report: errors and warnings (each with a hint), density, parity, the build manifest, and the paths
-    published (None when the build has errors; then `preview` names the unpublished files in _work/). With review,
-    `review` lists crops of the plate a model can read, in <out>/_work/review/ (also for a build with errors)."""
+    published (None when the build has errors; then `preview` names the unpublished files in _work/). `changed` names
+    the parts (title block, panels, footer) that differ from the previous build in this folder. With review, `review`
+    lists crops of the plate a model can read, in <out>/_work/review/ (also for a build with errors): after the first
+    round only of the parts changed since the last one, which `review_unchanged` names; review="all" crops every part."""
     spec_path, out = Path(spec_path), Path(out)
     name, work = spec_path.stem, Path(out) / "_work"
     report = {"spec": str(spec_path), "errors": [], "warnings": [], "density": {}, "voids": {}, "parity": None,
               "svg": None, "png": None, "outline": None, "snapshot": None, "fonts": [], "flow_problems": [], "build": None, "preview": None,
-              "review": None}
+              "changed": None, "review": None, "review_unchanged": None}
     spec, theme_css, issues = prepare(spec_path, theme, theme_css)
     staged: dict[str, Path] = {}  # deliverables written to _work/, waiting for a clean report
     refused: list[str] = []  # network requests the page tried to make
@@ -172,7 +183,8 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 svg = write_svg(plate, spec, work, name, outline_text)
                 par = parity(page, browser, svg["parity_svg"], work, refused)
                 if review:
-                    report["review"] = review_crops(browser, plate["layout"], spec, svg["parity_svg"], work, refused)
+                    shot = review_crops(browser, plate["layout"], spec, svg, work, refused, every=review == "all")
+                    report.update(review=shot["crops"], review_unchanged=shot["unchanged"])
                 if deliver:
                     staged = deliverables(browser, spec, report["build"], svg["svg"], plate["fit"], scale, work, name, refused)
             finally:
@@ -180,7 +192,8 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
         issues += plate["issues"] + page_findings(refused, par)
         if plate["fit"]:
             report["paper"] = {"size": plate["fit"]["size"], "scale": round(plate["fit"]["scale"], 3)}
-        report.update(density=plate["dom"]["density"], voids=plate["dom"]["voids"], fonts=svg["fonts"], snapshot=str(svg["snapshot"]),
+        report.update(changed=svg["changed"], density=plate["dom"]["density"], voids=plate["dom"]["voids"], fonts=svg["fonts"],
+                      snapshot=str(svg["snapshot"]),
                       parity={"pixels": par["count"], "regions": par["regions"], "detail": par["detail"]},
                       flow_problems=[dict(flow=spec["flows"][x["i"]], check=x["check"], problem=x["problem"])
                                      for x in plate["flows"]["problems"]])

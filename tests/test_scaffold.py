@@ -1,4 +1,6 @@
 """The skill's own tools: starters (`schemantic new`) and review crops (`build --review`)."""
+import copy
+import json
 import re
 
 import pytest
@@ -77,3 +79,34 @@ def test_review_writes_a_readable_crop_of_every_part(tmp_path):
         size = Image.open(c["path"]).size
         assert max(size) <= review.LONG_EDGE
         assert c["part"] in ("the whole plate", "titleblock") or c["scale"] >= review.MIN_SCALE
+
+
+def test_a_part_that_only_moved_is_unchanged():
+    """Parts are compared from their own corner: a row that grows pushes the rows below down without changing them,
+    while new text in a card changes its panel, and only that one."""
+    spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
+    old = json.loads((ROOT / "tests" / "snapshots" / "orderplatform-toegang.json").read_text(encoding="utf-8"))
+    assert review.changed_parts(None, old, spec) is None and review.changed_parts(old, old, spec) == []
+    down = copy.deepcopy(old)
+    down["boxes"] = {k: [x0, y0 + 40, x1, y1 + 40] for k, (x0, y0, x1, y1) in old["boxes"].items()}
+    down["text"] = [[x, y + 40, t] for x, y, t in old["text"]]
+    down["flows"] = [dict(f, points=[[x, y + 40] for x, y in f["points"]]) for f in old["flows"]]
+    assert review.changed_parts(old, down, spec) == []
+    x0, y0, x1, y1 = old["boxes"]["gateway.card0"]
+    edited = copy.deepcopy(old)
+    edited["text"] = [[x, y, t + "!" if x0 <= x <= x1 and y0 <= y <= y1 else t] for x, y, t in old["text"]]
+    assert review.changed_parts(old, edited, spec) == ["gateway"]
+
+
+def test_a_second_review_crops_only_what_changed(tmp_path):
+    spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
+    path = write(tmp_path, spec, "plate")
+    run("lint", path, "--out", tmp_path, "--review")
+    spec["panels"][1]["cards"][0]["note"] += " and more"
+    write(tmp_path, spec, "plate")
+    _, report = run("lint", path, "--out", tmp_path, "--review")
+    assert report["changed"] == [spec["panels"][1]["id"]]
+    assert [c["part"] for c in report["review"]] == ["the whole plate", spec["panels"][1]["id"]]
+    assert spec["panels"][0]["id"] in report["review_unchanged"]
+    _, report = run("lint", path, "--out", tmp_path, "--review", "all")
+    assert len(report["review"]) > 2 and report["review_unchanged"] == []
