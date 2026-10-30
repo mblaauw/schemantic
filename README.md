@@ -82,8 +82,7 @@ field guide is [`references/spec-guide.md`](references/spec-guide.md).
 
 ## Status
 
-The latest release is 0.2.0; `main` is ahead of it, with the changes listed under Unreleased in
-[`CHANGELOG.md`](CHANGELOG.md).
+The latest release is 0.3.0; [`CHANGELOG.md`](CHANGELOG.md) lists what is in it.
 
 | Built |
 | --- |
