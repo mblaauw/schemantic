@@ -23,7 +23,7 @@ from .images import image_diff, snapshot
 from .lint import dom_lint, layout_findings
 from .review import RASTER_SCALE, write_crops
 from .route import draw_flows, problems_as_findings
-from .spec import check, read_spec
+from .spec import check, number_story, read_spec
 
 
 def load_theme(spec: dict, spec_path: Path, theme: str | Path | None) -> tuple[str, list[dict]]:
@@ -54,6 +54,8 @@ def prepare(spec_path: Path, theme: str | Path | None, theme_css: str) -> tuple[
         theme_css = "\n".join(c for c in (file_css, theme_css) if c)
     if not issues:
         issues = check(spec, theme_css)
+    if not any(i["level"] == "error" for i in issues):
+        spec = number_story(spec)
     return spec, theme_css, issues
 
 

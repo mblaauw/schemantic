@@ -105,13 +105,15 @@ and a line style only when the plate uses it.
 ## Stories
 
 When the title or subtitle tells a route ("the portal reaches the records system only through one API"), write it
-down as a story: the steps a reader's finger follows, first to last. Stories are not drawn; lint (`story`) checks
-that a flow runs from every step to the next, in that direction (or with `both`).
+down as a story: the steps a reader's finger follows, first to last. Lint (`story`) checks that a flow runs from
+every step to the next, in that direction (or with `both`). Draw the story the title names (`draw: true`): its flows
+get step badges 1 to n and the legend names the route, so the reader sees it, not only lint.
 
 ```yaml
 stories:                                              # up to 4
-  - name: "From the portal to the records system"     # 60, the route in the title's words
+  - name: "From the portal to the records system"     # 60, the route in the title's words; the legend shows it
     path: [portal, integration, proxy, ehr]           # card or panel ids; 2 to 10
+    draw: true                                        # one drawn story per plate; its flows take no `step`
 ```
 
 A route through cards needs flows between those cards, not their panels; lint says when only the panels are joined.

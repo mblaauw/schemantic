@@ -87,8 +87,8 @@ short version:
 
 - 3 to 6 panels, 2 to 6 cards each. A card is a thing with a name; its note says what it does in this story.
 - Say once what arrows mean (`flows_mean`). Connect panels by default; when the title or subtitle names a route
-  ("A via B to C"), give those cards ids, connect them card to card, and write the route as a `story`: lint then
-  checks that a finger can follow it, every step.
+  ("A via B to C"), give those cards ids, connect them card to card, and write the route as a `story` with
+  `draw: true`: lint checks that a finger can follow it, and the plate numbers its steps.
 - Show change with `status` (new, changed, planned, deprecated, removed) and the one element that matters with
   `focus`.
 - A `warning` chip or card `flag` marks an open choice; it appears again under open questions.

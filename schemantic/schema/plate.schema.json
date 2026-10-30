@@ -386,7 +386,7 @@
     "stories": {
       "type": "array",
       "maxItems": 4,
-      "description": "The routes the title or subtitle tells, step by step. Not drawn: lint checks that a flow joins every step to the next, so a reader can follow the route with a finger.",
+      "description": "The routes the title or subtitle tells, step by step. Lint checks that a flow joins every step to the next, so a reader can follow the route with a finger; `draw: true` numbers one of them on the plate.",
       "items": {
         "type": "object",
         "required": [
@@ -408,6 +408,10 @@
               "type": "string"
             },
             "description": "Card or panel ids, first to last; a flow must run from each to the next."
+          },
+          "draw": {
+            "type": "boolean",
+            "description": "Number the route on the plate: its flows get step badges 1 to n, and the legend names the story. One drawn story per plate; its flows take no step of their own."
           }
         }
       }

@@ -29,7 +29,7 @@ panels:
 
 flows_mean: control
 flows:
-  - {from: ask, to: decide, step: 1}
-  - {from: decide, to: record, step: 2}
+  - {from: ask, to: decide}
+  - {from: decide, to: record}
 stories:
-  - {name: "TODO: the route the title tells", path: [ask, decide, record]}
+  - {name: "TODO: the route the title tells", path: [ask, decide, record], draw: true}

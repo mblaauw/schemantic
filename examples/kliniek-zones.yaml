@@ -86,8 +86,8 @@ flows:
   - {from: integration, to: proxy, focus: true}   # the one way from the cloud into the datacentre
   - {from: proxy, to: ehr}
   - {from: ehr, to: records}
-stories:   # the route the subtitle tells; lint checks a flow joins every step
-  - {name: "From the portal to the records system", path: [portal, integration, proxy, ehr]}
+stories:   # the route the subtitle tells, numbered on the plate; lint checks a flow joins every step
+  - {name: "From the portal to the records system", path: [portal, integration, proxy, ehr], draw: true}
 
 footer:
   principles:

@@ -35,4 +35,4 @@ flows:
   - {from: old_in, to: old_out}
   - {from: new_in, to: new_out}
 stories:
-  - {name: "TODO: the route the title tells", path: [new_in, new_out]}
+  - {name: "TODO: the route the title tells", path: [new_in, new_out], draw: true}

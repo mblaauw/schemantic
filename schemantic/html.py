@@ -6,7 +6,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from . import archetypes, icons, roles
 from .config import CANVAS_SIZES, TEMPLATES
 from .export import font_css
-from .spec import FOOTER_WEIGHTS, card_id, flags, footer_layout, load_locale, notes, open_questions
+from .spec import FOOTER_WEIGHTS, card_id, drawn_story, flags, footer_layout, load_locale, notes, open_questions
 
 
 def grid_css(spec: dict) -> dict:
@@ -76,8 +76,9 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
         # The meaning entry already shows a solid arrow, so only the other line styles get an entry.
         styles = [s for s in ("async", "optional") if any(f.get("style") == s for f in flows)]
         entries += [{"kind": "line", "key": s, "label": lg[f"style_{s}"]} for s in styles]
-        if any(f.get("step") for f in flows):
-            entries.append({"kind": "step", "key": "step", "label": lg["step"]})
+        if any(f.get("step") for f in flows):  # a drawn story's steps are its route: the legend names it
+            story = drawn_story(spec)
+            entries.append({"kind": "step", "key": "step", "label": story["name"] if story else lg["step"]})
     things = [p for p in spec["panels"]] + [c for p in spec["panels"] for c in p.get("cards", [])]
     for st in ("new", "changed", "planned", "deprecated", "removed"):
         if any(t.get("status") == st for t in things):

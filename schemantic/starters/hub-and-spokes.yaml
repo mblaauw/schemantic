@@ -42,4 +42,4 @@ flows:
   - {from: hub, to: consumer}
   - {from: hub, to: reader}
 stories:
-  - {name: "TODO: the route the title tells", path: [producer, hub, consumer]}
+  - {name: "TODO: the route the title tells", path: [producer, hub, consumer], draw: true}

@@ -5,6 +5,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- Drawn stories: `draw: true` on a story numbers its flows 1 to n on the plate and names the route in the legend, so
+  the route the title promises is something the reader sees, not only something lint checks. One per plate; its
+  flows take no `step` of their own. On an arrow across one narrow gutter the badge is pinned on the arrow's tail.
+  Every starter draws its story; the clinic and roadmap examples draw theirs.
 - Rail cards placed by layer: `layer: runtime` on a rail card puts it level with that layer's cards, so a rail reads
   across and an arrow to that layer runs straight. Checked (a real layer, rails only, top to bottom); a card that
   cannot reach its layer is a `rail-layer` warning. The layer plate's rails now name their layers.

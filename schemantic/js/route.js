@@ -570,14 +570,18 @@ schemantic.route = (flows) => {
       const k = (BADGE + 2) / len;
       return [p[0] + (q[0] - p[0]) * k, p[1] + (q[1] - p[1]) * k];
     };
-    const spot = longestFirst(r.pts)
-      .filter((run) => runLength(run) >= 2 * BADGE + HEAD + 4)
-      .map(centre)
-      .find(([x, y]) => {
-        const b = { l: x - BADGE - 2, r: x + BADGE + 2, t: y - BADGE - 2, b: y + BADGE + 2 };
-        // A badge sits on its own arrow, so it only has to keep off what the arrow keeps off (not its endpoints' panels).
-        return !r.obstacles.some((o) => hits(b, o)) && !labelBoxes.some((o) => hits(b, o));
-      });
+    const clear = ([x, y]) => {
+      const b = { l: x - BADGE - 2, r: x + BADGE + 2, t: y - BADGE - 2, b: y + BADGE + 2 };
+      // A badge sits on its own arrow, so it only has to keep off what the arrow keeps off (not its endpoints' panels).
+      return !r.obstacles.some((o) => hits(b, o)) && !labelBoxes.some((o) => hits(b, o));
+    };
+    // An arrow across one narrow gutter (between rows, from a hub to its spoke) has no run that long: its badge is
+    // pinned on the tail, where the arrow leaves its source.
+    const spot =
+      longestFirst(r.pts)
+        .filter((run) => runLength(run) >= 2 * BADGE + HEAD + 4)
+        .map(centre)
+        .find(clear) || [r.pts[0]].find(clear);
     if (!spot) {
       problems.push({
         i: r.i,

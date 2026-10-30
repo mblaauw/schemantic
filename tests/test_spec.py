@@ -433,6 +433,28 @@ def test_a_story_through_cards_says_when_only_their_panels_are_joined():
     assert [f for f in sp.check(spec) if f["check"] == "story"] == []
 
 
+def test_a_drawn_story_numbers_its_route_and_names_it_in_the_legend():
+    """`draw: true` gives the story's flows step badges 1 to n, in the route's order, and the legend says which route."""
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    story = spec["stories"][0]
+    assert story["draw"] and not any(f.get("step") for f in spec["flows"])
+    numbered = sp.number_story(spec)
+    steps = {(f["from"], f["to"]): f["step"] for f in numbered["flows"] if f.get("step")}
+    assert steps == {("portal", "integration"): 1, ("integration", "proxy"): 2, ("proxy", "ehr"): 3}
+    assert not any(f.get("step") for f in spec["flows"])  # the spec as written is left alone
+    legend = html.legend_entries(numbered, sp.load_locale("en"))
+    assert {"kind": "step", "key": "step", "label": story["name"]} in legend
+
+
+def test_a_plate_draws_one_story_and_it_owns_the_steps():
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    spec["stories"].append(dict(spec["stories"][0], name="Again"))
+    spec["flows"][0]["step"] = 7
+    found = [(f["id"], f["detail"]) for f in sp.check(spec) if f["check"] == "story"]
+    assert ("stories/1", "only one story is drawn: a plate numbers one route") in found
+    assert ("flows/0", "the drawn story numbers its own flows; drop this flow's step 7") in found
+
+
 def test_roadmap_lanes_tint_now_and_arrows_run_forward():
     spec = sp.load_spec(ROOT / "examples" / "portal-roadmap.yaml")
     page = html.build_html(spec)
