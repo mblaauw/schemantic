@@ -29,10 +29,12 @@ schemantic.route = (flows) => {
   const CROSS = 2 * BEND; // price of crossing another arrow
   const MIN_RUN = 16; // shortest middle segment
 
-  // Boxes an arrow must not cross; panel headers count, so a card's arrow never runs through its own title.
+  // Boxes an arrow must not cross; panel headers count, so a card's arrow never runs through its own title. A swimlane
+  // lane is not a box but a row: a handoff crosses the empty cells of the lanes between, so only its header and cards
+  // are in the way.
   const solids = [
     ...plate.querySelectorAll(
-      '[data-kind="panel"], [data-kind="card"], [data-kind="pattern"], [data-kind="chip"], [data-kind="titleblock"], .ph, .zone-label',
+      '[data-kind="panel"]:not(.lane), [data-kind="card"], [data-kind="pattern"], [data-kind="chip"], [data-kind="titleblock"], .ph, .zone-label',
     ),
   ].map((el) => ({ el, box: rel(el) }));
   // Channels: the centre line of every gutter between two body panels, plus a lane on either side of it.

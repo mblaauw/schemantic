@@ -145,6 +145,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - The role name `storage` (it is `data`), and with it the `deprecated` check, since nothing is deprecated.
 
 ### Fixed
+- A swimlane handoff over a lane went round the edge of the plate (every Sonnet swimlane in the eval rerun): a
+  lane counted as one box. Only a lane's header and its cards are in the way now, so the handoff crosses the empty
+  cell of the lane between, straight down its column; lint lets it, but not through a lane's header.
 - `docs/architecture.md`, "Adding an archetype": it still said to move the name from planned to built, and left out
   the starter, the `loud` and `standalone` hooks, the schema's enum and the gallery.
 - The worked examples in `references/analysis.md` taught the eval's top defect: titles that name a route, drawn

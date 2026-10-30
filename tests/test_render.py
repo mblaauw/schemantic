@@ -458,12 +458,15 @@ def pipeline_build(path, out, theme_css=""):
 
 
 # A long handoff back up a swimlane goes round the edge in a second outer lane, past one that already uses the first
-def test_a_return_arrow_up_a_swimlane_takes_the_second_outer_lane(renders):
+def test_a_swimlane_handoff_crosses_the_lanes_between_its_steps(renders):
+    """A handoff over a lane runs through that lane's empty cell, not round the plate's edge: here the draft goes
+    straight down past the committee to the team lead, and the decision straight up from the portal to the applicant."""
     path = ROOT / "tests" / "fixtures" / "swimlane-return.yaml"
     snap = json.loads((renders(path) / "_work" / f"{path.stem}.snapshot.json").read_text(encoding="utf-8"))
     edge = snap["boxes"]["body"][2]
-    around = {f["i"]: max(x for x, _ in f["points"]) for f in snap["flows"] if max(x for x, _ in f["points"]) > edge}
-    assert len(around) == 2 and len(set(around.values())) == 2  # both round the right edge, each in its own lane
+    assert all(x <= edge for f in snap["flows"] for x, _ in f["points"])
+    straight = {(f["from"], f["to"]) for f in snap["flows"] if len(f["points"]) == 2}
+    assert {("draft", "sign"), ("publish", "decision")} <= straight
 
 
 # Holes outside panels: a short panel next to taller ones in its row, and an empty run inside a zone frame
