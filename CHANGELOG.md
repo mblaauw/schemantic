@@ -5,6 +5,7 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- `docs/layouts.md`: every layout and pattern as a sketch, with the reader's question it answers and a finished plate.
 - Evals of all this, judged blind (`evals/README.md`): under one set of rules, 9 of 48 runs pass (3 before), at 2.31 defects
   per plate (3.54), with nothing invented in 39 of 48 (11). `judge.md` changed, and that alone nearly doubled the defects on
   the same plates, so last round's numbers do not compare. Corrections change only what was asked in 22 of 24 runs.
@@ -36,7 +37,12 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   numbered by row), `capability-map` (what exists by domain, the gaps dashed), `comparison` (options against criteria,
   the pick marked), `hierarchy` (a tree whose arrows follow from `children`) and `quadrant` (a two-by-two).
 
+### Fixed
+- A ref may quote a `TODO` from its source; only a starter's bare `notes: TODO` counts as a placeholder.
+
 ### Changed
+- The docs teach what the checks ask: worked examples cite a source on every arrow and warning, or mark it `assumed`, and the
+  `orphan` and `arrow-routing` fixes no longer send assumptions to the brief.
 - The `series` hint on arrow meanings says a difference is fine when true and said in the subtitle. Agents were
   relabelling calls as data to quiet it.
 

@@ -19,7 +19,8 @@ lint (`placeholder`) names each TODO left.
 | `topic` (60) | optional: what the plate is about, in a few words ("Order platform after phase 2"); a quiet line above the title, so the title is free to make the claim |
 | `title` (80) | the one message, as a claim. Not "Architecture overview": that is a topic. Lint warns when its last line is one word |
 | `subtitle` (120) | how the plate makes that claim true |
-| `archetype`, `layout` | see `archetypes.md`; `layout.chips_at: bottom` lines chips up at the bottom of a row |
+| `sources` | where the content comes from: `{id, kind, ref, path}`. Once given, every card, arrow, status and warning names a source or says it is `assumed` (lint: `traceability`). `path`, relative to the spec, is the file or folder on disk: lint then checks that each quote is in it |
+| `archetype`, `layout` | see `archetypes.md` and the drawings in `docs/layouts.md`; `layout.chips_at: bottom` lines chips up at the bottom of a row |
 | `flows_mean` | what every arrow means: `data`, `request`, `dependency`, `control` or `sequence` (what comes before what, for a roadmap); sets the legend (lint warns without it) |
 
 ## Panels
@@ -33,6 +34,8 @@ lint (`placeholder`) names each TODO left.
   arrange: row                    # optional: blocks side by side instead of stacked
   weights: [1.35, 0.8, 1]         # with arrange: row — patterns first, then the cards block
   status: new                     # optional: new | changed | planned | deprecated | removed
+  status_ref: "plan: phase 2 adds a gateway"   # where the sources give the status; needed once `sources` are declared
+  assumed: "a grouping of ours"   # optional: not in the sources, and why; the plate tags it
   focus: true                     # optional: the one element the plate is about (at most one per plate)
   cards: [...]                    # up to 6
   patterns: [...]                 # up to 2
@@ -76,7 +79,9 @@ leave the note out; a note written from the name is an invention.
   `footer.open_questions.from_chips: true` or repeat its exact text in `extra`. A card `flag` does the same for one
   card. Every open question gets a label in reading order (Q1, Q2; V1 in Dutch) that shows on the chip or card and
   in the footer, so the reader can go from one to the other. Info flags are notes (N1).
-- `info` (90): an assumption or a note the reader needs. A chip holds at most two lines.
+- `info` (90): a note the reader needs. A chip holds at most two lines. What you assume about a card, panel or arrow goes
+  on that element, with `assumed`.
+- A warning names its source: `refs: ["notes: not decided yet"]`, on the chip or the flag.
 
 ## Flows
 

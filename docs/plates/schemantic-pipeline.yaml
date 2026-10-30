@@ -3,7 +3,7 @@
 canvas: {size: landscape-4x3, lang: en}
 topic: "Schemantic: how one build runs"
 title: "Chromium lays the plate out once; the SVG is written from what it measured"
-subtitle: "Python checks the spec and writes the files; the page scripts size, route and lint the plate in between"
+subtitle: "Python checks the spec and writes the files; the page scripts size the plate, draw its arrows and measure it in between"
 archetype: column-flow
 
 layout:
@@ -48,7 +48,7 @@ panels:
     subtitle: "Python, from the layout document alone"
     role: platform
     cards:
-      - {icon: vector, name: "SVG", note: "export.py, with a subset of the fonts"}
+      - {icon: vector, name: "SVG writer", note: "export.py, with a subset of the fonts"}
       - {icon: photo, name: "Parity", note: "page screenshot against the SVG raster"}
       - {icon: list-details, name: "Outline and snapshot", note: "text for review, structure for tests"}
 

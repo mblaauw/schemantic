@@ -34,7 +34,7 @@ Read these, in this order, and note the file and key for each finding:
 | environment variables (`*_URL`, `*_HOST`, `.env.example`) | which service calls which, and external systems |
 
 A dependency the code shows but no document explains is still a fact; a component a document names but the code
-does not contain is planned or gone, so ask, or mark it `status: planned`.
+does not contain is planned or gone: ask, or make it an open question. With nothing to quote, it gets no status.
 
 ### From a process description
 
@@ -103,7 +103,7 @@ panels:
       - {id: form, icon: forms, name: "Web form", note: "lands in Zendesk as a ticket", refs: ["notes: both land in Zendesk"]}
       - {icon: book, name: "Help centre", note: "Zendesk Guide; articles out of date", refs: ["notes: articles ... out of date"]}
     chips:
-      - {kind: warning, text: "Who owns the help centre articles?"}
+      - {kind: warning, text: "Who owns the help centre articles?", refs: ["notes: nobody owns them"]}
   - id: support
     title: "Support"
     subtitle: "All work happens in Zendesk"
@@ -119,13 +119,13 @@ panels:
       - {id: jira, icon: list-details, name: "Jira", note: "confirmed bugs, through the integration", refs: ["notes: through the Zendesk integration"]}
       - {icon: users-group, name: "Product team", note: "triages Jira every Monday", refs: ["notes: triages Jira every Monday"]}
     chips:
-      - {kind: warning, text: "Status page: Statuspage or our own?"}
+      - {kind: warning, text: "Status page: Statuspage or our own?", refs: ["notes: have not decided between Statuspage and building our own"]}
 flows_mean: request
 flows:
-  - {from: mail, to: zendesk}
-  - {from: form, to: zendesk}
-  - {from: zendesk, to: second}
-  - {from: second, to: jira}
+  - {from: mail, to: zendesk, refs: ["notes: both land in Zendesk"]}
+  - {from: form, to: zendesk, refs: ["notes: both land in Zendesk"]}
+  - {from: zendesk, to: second, refs: ["notes: second line takes bugs"]}
+  - {from: second, to: jira, refs: ["notes: Confirmed bugs go to Jira"]}
 stories:
   - name: "A bug leaves Zendesk only through Jira"
     path: [form, zendesk, second, jira]
@@ -151,7 +151,8 @@ aws_elasticache_cluster.queue`; `compose: redis` locally). Flows from the enviro
 the database and the queue. Open point: the `TODO`.
 
 Grouping by responsibility. Message: the API takes every request; slow work goes through a queue to the worker.
-That is a route (API, queue, worker, bucket), so the flows join those cards and the route is a story.
+That is a route (API, queue, worker, bucket), so the flows join those cards and the route is a story. No source says the
+browser app calls the API, though nothing else could take its requests: that arrow is `assumed`, and the plate shows it.
 
 <!-- lint: full -->
 ```yaml
@@ -187,7 +188,7 @@ panels:
       - {id: api, icon: api, name: "API", qualifier: "FastAPI", note: "takes every request", refs: ["compose: services.api"]}
       - {id: worker, icon: settings, name: "Worker", qualifier: "Celery", note: "scans uploads, then stores them",
          refs: ["compose: services.worker", "readme: uploads are scanned before they are stored"],
-         flag: {kind: warning, text: "Move scanning to a managed service?"}}
+         flag: {kind: warning, text: "Move scanning to a managed service?", refs: ["code: TODO in worker/tasks.py"]}}
   - id: data
     title: "Data"
     role: data
@@ -198,10 +199,10 @@ panels:
       - {id: bucket, icon: bucket, name: "Upload bucket", note: "scanned files only", refs: ["tf: aws_s3_bucket.uploads"]}
 flows_mean: data
 flows:
-  - {from: browser, to: api}
-  - {from: api, to: queue}
-  - {from: queue, to: worker, style: async}
-  - {from: worker, to: bucket}
+  - {from: browser, to: api, assumed: "nginx serves the app; no source names what it calls"}
+  - {from: api, to: queue, refs: ["compose: REDIS_URL on api"]}
+  - {from: queue, to: worker, style: async, refs: ["compose: REDIS_URL on worker"]}
+  - {from: worker, to: bucket, refs: ["readme: uploads are scanned before they are stored"]}
 stories:
   - name: "An upload, from the API through the queue to the bucket"
     path: [api, queue, worker, bucket]
@@ -267,10 +268,10 @@ panels:
          refs: ["process: paid with the next salary run"]}
 flows_mean: control
 flows:
-  - {from: submit, to: approve, step: 1}
-  - {from: approve, to: check, step: 2}
-  - {from: check, to: pay, step: 3}
-  - {from: approve, to: pay}
+  - {from: submit, to: approve, step: 1, refs: ["process: Their manager approves or rejects it"]}
+  - {from: approve, to: check, step: 2, refs: ["process: Finance checks claims over 500 euro"]}
+  - {from: check, to: pay, step: 3, refs: ["process: Approved claims are paid"]}
+  - {from: approve, to: pay, refs: ["process: Approved claims are paid"]}
 stories:
   - name: "A claim over 500 euro"
     path: [submit, approve, check, pay]
@@ -345,9 +346,9 @@ panels:
       - {id: exp, icon: file-export, name: "Exports", refs: ["inventory: Reporting"]}
 flows_mean: data
 flows:
-  - {from: lending, to: hub, label: "events"}
-  - {from: office, to: hub, label: "events"}
-  - {from: hub, to: reporting, label: "reads"}
+  - {from: lending, to: hub, label: "events", refs: ["inventory: Everything publishes events to the event hub"]}
+  - {from: office, to: hub, label: "events", refs: ["inventory: Everything publishes events to the event hub"]}
+  - {from: hub, to: reporting, label: "reads", refs: ["inventory: reporting reads from it"]}
 footer:
   principles:
     - "Reporting reads events from the hub."

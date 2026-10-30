@@ -72,7 +72,7 @@ def test_gallery_is_current():
 
 
 def test_docs_list_what_is_built():
-    """F7: README, SKILL.md and the archetypes reference name exactly the built archetypes and patterns."""
+    """F7: README, SKILL.md, the archetypes reference and the layouts page name the built archetypes and patterns."""
     import json
 
     from schemantic import archetypes
@@ -84,10 +84,14 @@ def test_docs_list_what_is_built():
     for name in archetypes.BUILT:
         assert name in built_cell and f"`{name}`" in skill and f"## {name}" in reference, name
     assert sorted(line[3:] for line in reference.splitlines() if line.startswith("## ")) == archetypes.BUILT
+    layouts = (ROOT / "docs" / "layouts.md").read_text(encoding="utf-8")
+    for name in archetypes.BUILT:
+        assert f"## {name}" in layouts and (ROOT / "docs" / "img" / "layouts" / f"{name}.svg").exists(), name
     patterns = json.loads((ROOT / "schemantic" / "schema" / "plate.schema.json").read_text())["$defs"]["pattern"]["properties"]["type"]["enum"]
     pattern_row = next(line for line in readme.splitlines() if line.startswith("| Patterns:"))
     for p in patterns:
         assert p.replace("-", " ") in pattern_row.split("|")[1], p
+        assert f"`{p}`" in layouts and (ROOT / "docs" / "img" / "layouts" / f"pattern-{p}.svg").exists(), p
 
 
 def test_the_wheel_carries_every_file_a_render_reads():

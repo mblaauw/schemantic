@@ -400,7 +400,9 @@ def placeholders(spec) -> list[dict]:
     out = []
 
     def walk(v, where):
-        if isinstance(v, str) and PLACEHOLDER.search(v):
+        # A ref may quote a TODO in its source; only the starter's bare "notes: TODO" is unfilled.
+        quoting = ("/refs/" in where or where.endswith("/status_ref")) and isinstance(v, str) and not re.fullmatch(r"[^:]*:\s*TODO", v)
+        if isinstance(v, str) and PLACEHOLDER.search(v) and not quoting:
             out.append(finding("placeholder", where or "(root)", f"still a placeholder: '{v}'"))
         elif isinstance(v, dict):
             for k, x in v.items():

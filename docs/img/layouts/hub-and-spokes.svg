@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 230" width="360" height="230" role="img" aria-label="Hub and spokes: one central panel with panels above, below and beside it" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="360" height="230" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<rect x="14" y="12" width="80" height="48" rx="4" fill="#EEF5FC" stroke="#BCD5EC" stroke-width="1"/>
+<path d="M14.5 28V16a3.5 3.5 0 0 1 3.5-3.5H90a3.5 3.5 0 0 1 3.5 3.5V28Z" fill="#D6E7F7"/>
+<text x="20" y="23.5" font-size="9" font-weight="600" fill="#0B4F8F" text-anchor="start">Orders</text>
+<rect x="19.0" y="32" width="70.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="102" y="12" width="80" height="48" rx="4" fill="#EEF5FC" stroke="#BCD5EC" stroke-width="1"/>
+<path d="M102.5 28V16a3.5 3.5 0 0 1 3.5-3.5H178a3.5 3.5 0 0 1 3.5 3.5V28Z" fill="#D6E7F7"/>
+<text x="108" y="23.5" font-size="9" font-weight="600" fill="#0B4F8F" text-anchor="start">Payments</text>
+<rect x="107.0" y="32" width="70.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="190" y="12" width="80" height="48" rx="4" fill="#EEF5FC" stroke="#BCD5EC" stroke-width="1"/>
+<path d="M190.5 28V16a3.5 3.5 0 0 1 3.5-3.5H266a3.5 3.5 0 0 1 3.5 3.5V28Z" fill="#D6E7F7"/>
+<text x="196" y="23.5" font-size="9" font-weight="600" fill="#0B4F8F" text-anchor="start">Shipping</text>
+<rect x="195.0" y="32" width="70.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="14" y="170" width="80" height="48" rx="4" fill="#ECF7F4" stroke="#A9D6CB" stroke-width="1"/>
+<path d="M14.5 186V174a3.5 3.5 0 0 1 3.5-3.5H90a3.5 3.5 0 0 1 3.5 3.5V186Z" fill="#D3F0E9"/>
+<text x="20" y="181.5" font-size="9" font-weight="600" fill="#0D6457" text-anchor="start">Search</text>
+<rect x="19.0" y="190" width="70.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="102" y="170" width="80" height="48" rx="4" fill="#ECF7F4" stroke="#A9D6CB" stroke-width="1"/>
+<path d="M102.5 186V174a3.5 3.5 0 0 1 3.5-3.5H178a3.5 3.5 0 0 1 3.5 3.5V186Z" fill="#D3F0E9"/>
+<text x="108" y="181.5" font-size="9" font-weight="600" fill="#0D6457" text-anchor="start">Analytics</text>
+<rect x="107.0" y="190" width="70.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="190" y="170" width="80" height="48" rx="4" fill="#EEF5FC" stroke="#BCD5EC" stroke-width="1"/>
+<path d="M190.5 186V174a3.5 3.5 0 0 1 3.5-3.5H266a3.5 3.5 0 0 1 3.5 3.5V186Z" fill="#D6E7F7"/>
+<text x="196" y="181.5" font-size="9" font-weight="600" fill="#0B4F8F" text-anchor="start">Notify</text>
+<rect x="195.0" y="190" width="70.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="14" y="82" width="256" height="66" rx="4" fill="#EEF5FC" stroke="#0B4F8F" stroke-width="1.5"/>
+<path d="M14.5 98V86a3.5 3.5 0 0 1 3.5-3.5H266a3.5 3.5 0 0 1 3.5 3.5V98Z" fill="#0B4F8F"/>
+<text x="20" y="93.5" font-size="9" font-weight="600" fill="#FFFFFF" text-anchor="start">Hub: the one central thing</text>
+<rect x="19.0" y="102" width="79.3" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="102.3" y="102" width="79.3" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="185.7" y="102" width="79.3" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="290" y="12" width="56" height="206" rx="4" fill="#F3F6F9" stroke="#CBD5E1" stroke-width="1"/>
+<path d="M290.5 28V16a3.5 3.5 0 0 1 3.5-3.5H342a3.5 3.5 0 0 1 3.5 3.5V28Z" fill="#E3E9F0"/>
+<text x="296" y="23.5" font-size="9" font-weight="600" fill="#44546A" text-anchor="start">Ops</text>
+<rect x="295.0" y="32" width="46.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="295.0" y="70" width="46.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="295.0" y="108" width="46.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="295.0" y="146" width="46.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<polyline points="54,61 54,81" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="50.8,76 57.2,76 54,81" fill="#44546A"/>
+<polyline points="54,149 54,169" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="50.8,164 57.2,164 54,169" fill="#44546A"/>
+<polyline points="142,61 142,81" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="138.8,76 145.2,76 142,81" fill="#44546A"/>
+<polyline points="142,149 142,169" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="138.8,164 145.2,164 142,169" fill="#44546A"/>
+<polyline points="230,61 230,81" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="226.8,76 233.2,76 230,81" fill="#44546A"/>
+<polyline points="230,149 230,169" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="226.8,164 233.2,164 230,169" fill="#44546A"/>
+<polyline points="289,115 271,115" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="276,111.8 276,118.2 271,115" fill="#44546A"/>
+</svg>

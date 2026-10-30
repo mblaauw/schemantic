@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 90" width="170" height="90" role="img" aria-label="Matrix: rows against columns, each cell full, partial or none" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="170" height="90" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="70" y="18" font-size="8" font-weight="600" fill="#4F5D6E" text-anchor="middle">API</text>
+<text x="106" y="18" font-size="8" font-weight="600" fill="#4F5D6E" text-anchor="middle">Data</text>
+<text x="142" y="18" font-size="8" font-weight="600" fill="#4F5D6E" text-anchor="middle">Admin</text>
+<text x="10" y="39" font-size="8.5" font-weight="600" fill="#0F2547" text-anchor="start">Client</text>
+<circle cx="70" cy="36" r="4" fill="#0B4F8F"/>
+<line x1="102" y1="36" x2="110" y2="36" stroke="#94A3B8" stroke-width="1.5"/>
+<line x1="138" y1="36" x2="146" y2="36" stroke="#94A3B8" stroke-width="1.5"/>
+<text x="10" y="59" font-size="8.5" font-weight="600" fill="#0F2547" text-anchor="start">Team</text>
+<circle cx="70" cy="56" r="4" fill="#0B4F8F"/>
+<circle cx="106" cy="56" r="4" fill="#0B4F8F"/>
+<circle cx="142" cy="56" r="3.5" fill="#FFFFFF" stroke="#0B4F8F" stroke-width="1.3"/>
+<text x="10" y="79" font-size="8.5" font-weight="600" fill="#0F2547" text-anchor="start">Analyst</text>
+<line x1="66" y1="76" x2="74" y2="76" stroke="#94A3B8" stroke-width="1.5"/>
+<circle cx="106" cy="76" r="4" fill="#0B4F8F"/>
+<line x1="138" y1="76" x2="146" y2="76" stroke="#94A3B8" stroke-width="1.5"/>
+</svg>

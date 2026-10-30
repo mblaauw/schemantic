@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 230" width="360" height="230" role="img" aria-label="Comparison: options in columns, criteria in rows, a filled cell for each, and the pick marked" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="360" height="230" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="134" y="24" font-size="10" font-weight="700" fill="#4F5D6E" text-anchor="middle">Option A</text>
+<text x="218" y="24" font-size="10" font-weight="700" fill="#4F5D6E" text-anchor="middle">Option B</text>
+<text x="302" y="24" font-size="10" font-weight="700" fill="#0B4F8F" text-anchor="middle">Pick</text>
+<rect x="263" y="30" width="84" height="186" rx="4" fill="#EEF5FC" stroke="#0B4F8F" stroke-width="1.5"/>
+<text x="16" y="58" font-size="9" font-weight="700" fill="#4F5D6E" text-anchor="start">Cost</text>
+<rect x="100" y="36" width="70" height="36" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="184" y="36" width="70" height="36" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="268" y="36" width="70" height="36" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="16" y="102" font-size="9" font-weight="700" fill="#4F5D6E" text-anchor="start">Quality</text>
+<line x1="14" y1="77" x2="346" y2="77" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="100" y="80" width="70" height="36" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="184" y="80" width="70" height="36" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="268" y="80" width="70" height="36" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="16" y="146" font-size="9" font-weight="700" fill="#4F5D6E" text-anchor="start">Effort</text>
+<line x1="14" y1="121" x2="346" y2="121" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="100" y="124" width="70" height="36" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="184" y="124" width="70" height="36" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="268" y="124" width="70" height="36" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="16" y="190" font-size="9" font-weight="700" fill="#4F5D6E" text-anchor="start">Risk</text>
+<line x1="14" y1="165" x2="346" y2="165" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="100" y="168" width="70" height="36" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="184" y="168" width="70" height="36" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="268" y="168" width="70" height="36" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+</svg>

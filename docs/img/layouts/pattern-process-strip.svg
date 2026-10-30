@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 90" width="170" height="90" role="img" aria-label="Process strip: numbered steps in a row" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="170" height="90" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<rect x="10" y="28" width="34" height="34" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="27" y="48" font-size="9" font-weight="700" fill="#0F2547" text-anchor="middle">1</text>
+<rect x="48" y="28" width="34" height="34" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="65" y="48" font-size="9" font-weight="700" fill="#0F2547" text-anchor="middle">2</text>
+<rect x="86" y="28" width="34" height="34" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="103" y="48" font-size="9" font-weight="700" fill="#0F2547" text-anchor="middle">3</text>
+<rect x="124" y="28" width="34" height="34" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="141" y="48" font-size="9" font-weight="700" fill="#0F2547" text-anchor="middle">4</text>
+</svg>

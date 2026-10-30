@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 90" width="170" height="90" role="img" aria-label="Tier strip: tiles in a row, one tier leading to the next" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="170" height="90" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<rect x="10" y="18" width="44" height="54" rx="3" fill="#F6E8DC" stroke="#94A3B8" stroke-width="1"/>
+<text x="32" y="48" font-size="8.5" font-weight="600" fill="#0F2547" text-anchor="middle">Bronze</text>
+<text x="57" y="48" font-size="10" font-weight="700" fill="#4F5D6E" text-anchor="middle">›</text>
+<rect x="62" y="18" width="44" height="54" rx="3" fill="#EEF1F5" stroke="#94A3B8" stroke-width="1"/>
+<text x="84" y="48" font-size="8.5" font-weight="600" fill="#0F2547" text-anchor="middle">Silver</text>
+<text x="109" y="48" font-size="10" font-weight="700" fill="#4F5D6E" text-anchor="middle">›</text>
+<rect x="114" y="18" width="44" height="54" rx="3" fill="#FBF2CB" stroke="#94A3B8" stroke-width="1"/>
+<text x="136" y="48" font-size="8.5" font-weight="600" fill="#0F2547" text-anchor="middle">Gold</text>
+</svg>

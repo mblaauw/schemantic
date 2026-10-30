@@ -49,13 +49,22 @@ No coordinates does not mean the layout designs itself. Three parts decide three
   glyph. With both, the layout and the pixels match, and the same goldens pass on both.
 - **A frame says "this is full".** A panel stretched to the height of its row showed an empty band inside its
   frame, and reviewers read it as missing content. The same space below a panel that ends with its content reads
-  as rhythm, so panels now end with their content; only panels spanning rows still fill them.
+  as rhythm, so panels now end with their content; only panels spanning rows still fill them, and a panel a little shorter
+  than its row, whose cards take up the difference. A later eval found reviewers count a small gap beside a panel as a hole too.
 - **Holes are the common defect, and the fix is content.** A density ratio missed panels that looked empty; the
   void check (the largest empty run inside a panel) matches what reviewers see. Most voids came from a fixed canvas
   dumping its spare height into one row, which `canvas.height: fit` removes.
 - **A footer is context.** Dark header bars on footer panels drew the eye away from the body and took 17–18% of the
   canvas; quiet labels and a legend strip bring it under 13%, and lint warns above an eighth (`footer-share`), the
   share the review question names, unless the footer is only a line or two and the plate is short.
+- **A judge's rule is a measuring instrument.** One sentence added to the judge ("what only the brief admits is still
+  invented") took the same plates from 97 to 170 defects. Change the yardstick and the numbers stop comparing, so the old plates
+  are judged again before anything is claimed.
+- **Measure a check before shipping it.** Run on the last eval's delivered specs, against the judges' verdicts, a check shows
+  its precision in minutes: `route-end` fired mostly where judges had found a defect, and a first cut of the mixed-panel check
+  mostly where they had not.
+- **Agents copy starters and examples.** A starter with stories through panels taught exactly the defect reviewers kept
+  reporting. Starters and examples are held to the checks they teach.
 - **One loud place.** With every header filled in its role's dark colour, four of seven plates were a wall of navy
   and nothing led the eye; the focus only stood out because setting it quietened the rest. Quiet headers are now the
   default and a filled header is what a focus (or a hub) earns. The same review moved the subtitle out of accent

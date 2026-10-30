@@ -33,7 +33,7 @@ A change that alters a render fails the golden and snapshot tests on purpose. Wh
 
 - Never add coordinates, pixel sizes or colours to the spec format; layout stays derived. Visual values live in
   `schemantic/templates/tokens.css`.
-- Every example lints clean with 0 parity pixels.
+- Every example lints clean with 0 parity pixels, and without warnings: agents copy what the examples do.
 - A spec change ships with its docs: the schema description, `references/spec-guide.md`, and the archetypes
   reference when a layout changes. Marked YAML samples in the docs are linted by the tests.
 - A new lint check gets a row in `schemantic/findings.py` (then `python -m schemantic docs`) and a test that

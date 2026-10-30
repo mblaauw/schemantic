@@ -1,6 +1,7 @@
 # Skill evals
 
-Eight cases test the skill's real job: from sources to a truthful plate. Each case in `cases/` has a `prompt.md`
+Thirteen cases test the skill's real job, from sources to a truthful plate: eight in the main comparison, and five
+that test whether an agent picks and fills the newer layouts. Each case in `cases/` has a `prompt.md`
 (what the user asks), `inputs/` (fictional sources) and a `rubric.yaml` (what a good plate must have).
 
 | Case | Source | What it tests |
@@ -42,7 +43,13 @@ python evals/run_all.py <runs>   # both halves, per run, and the totals per mode
 
 A run passes when both halves pass: the automated half (`grade.py`: the specs lint clean, archetype, language,
 components, counts, nothing invented by name) and the judged half (a claim in the title, a fitting layout, nothing
-invented, no defect). One run per case is noisy; take three.
+invented, no defect). One run per case is noisy; take three. A change to `judge.md` moves the numbers too, far more than
+the prompt's wording: when it changes, judge the last round's plates again under it before comparing.
+
+```bash
+python evals/corrections.py prepare <runs> --skill <skill copy>   # a delivered plate and one sentence per run
+python evals/corrections.py grade <runs>                          # by code: done, nothing else changed, still clean
+```
 
 ## Latest results
 

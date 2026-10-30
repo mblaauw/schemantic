@@ -1003,7 +1003,7 @@
         "text"
       ],
       "additionalProperties": false,
-      "description": "A warning (open choice, repeated under open questions) or info (assumption) note in a panel.",
+      "description": "A warning (open choice, repeated under open questions) or info note in a panel.",
       "properties": {
         "refs": {
           "type": "array",

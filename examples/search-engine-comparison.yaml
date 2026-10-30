@@ -36,7 +36,7 @@ panels:
     cards:
       - {icon: circle-check, name: "Lowest", note: "no new licence", col: 1, refs: ["review: cost"]}
       - {icon: alert-triangle, name: "Middle", note: "servers and the engineer", col: 2, refs: ["review: cost"]}
-      - {id: price, icon: alert-triangle, name: "Highest", note: "priced per query", col: 3, refs: ["review: cost"], flag: {kind: warning, text: "Does the board accept a price per query?"}}
+      - {id: price, icon: alert-triangle, name: "Highest", note: "priced per query", col: 3, refs: ["review: cost"], flag: {kind: warning, text: "Does the board accept a price per query?", refs: ["review: cost"]}}
   - id: risk
     title: "Biggest risk"
     role: data
