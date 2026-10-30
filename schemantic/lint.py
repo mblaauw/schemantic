@@ -19,10 +19,10 @@ VOID_ERROR_PX = 160
 SPREAD_SHARE = 0.75
 SPREAD_FLOOR_PX = 32
 # The footer is context; above this share of the plate's height it competes with the body (review question 6). A
-# footer of a line or two of principles and questions with the legend is about FOOTER_FLOOR_PX tall and passes on any
-# plate, since on a short plate there is nothing left to cut.
+# footer of two lines of principles or questions over a legend on two lines is about FOOTER_FLOOR_PX tall and passes on
+# any plate, since on a short plate there is nothing left to cut (measured on the eval plates: 106 to 114 px).
 FOOTER_SHARE = 0.125
-FOOTER_FLOOR_PX = 96
+FOOTER_FLOOR_PX = 116
 # Cards stacked in one column at least this wide, whose text fills less than this share of them, leave half a card
 # empty: they should flow into columns.
 WIDE_CARD_PX = 560

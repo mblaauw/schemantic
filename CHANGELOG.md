@@ -19,6 +19,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   cluster, stretched, and lint called it an error. A zone that holds zones now takes its parent's whole width, so the
   small zone wraps underneath.
 
+### Changed
+- `footer-share` passes a footer of two lines over a two-line legend (116 px) on any plate: eval agents could not cut
+  it further on a short plate, and left the warning standing. The judge's eighth still counts such a footer.
+
 ## [0.3.0] - 2026-10-30
 
 The skill's own tools and a stronger picture. Stories name the routes a plate claims and can be numbered on it; starters

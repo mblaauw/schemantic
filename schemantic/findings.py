@@ -127,7 +127,8 @@ CHECKS: dict[str, Check] = {
                         "fewer or shorter cards above it in the rail, a later layer for one of them, or no layer for "
                         "cards that concern every layer",
                         "Shorten the rail cards above it, or drop `layer` from a card that concerns every layer."),
-    "footer-share": Check("layout", "the footer takes more than an eighth (12.5%) of the plate's height, and more than a line or two (warning)",
+    "footer-share": Check("layout", "the footer takes more than an eighth (12.5%) of the plate's height, and more than two lines "
+                          "over the legend (warning)",
                           "fewer principles (three that a team could check), shorter open questions, no context panel "
                           "unless the roles matter to the message; the footer is context for the body",
                           "Cut the footer: keep three principles, shorten the questions, or drop the context panel."),
