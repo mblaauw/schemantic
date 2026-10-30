@@ -123,6 +123,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - The role name `storage` (it is `data`), and with it the `deprecated` check, since nothing is deprecated.
 
 ### Fixed
+- The worked examples in `references/analysis.md` taught the eval's top defect: titles that name a route, drawn
+  panel to panel with no story. Each now joins the route's cards and writes it as a story. The expense example
+  sent every claim through finance, though its source says only claims over 500 euro go there; both paths are now
+  drawn, and its principle about receipts (not in the source) is gone.
 - The doctor installed pytest and pytest-xdist into every user's venv: `requirements.txt` now holds the runtime
   dependencies only (contributors install `.[dev]`).
 - The doctor only checked that the dependencies import, so a venv an older release built was used even when a newer
