@@ -1,0 +1,4 @@
+lang: en
+archetype: [capability-map]
+components: [enrolment, timetabling, grading, transcripts]
+open_questions_min: 1
