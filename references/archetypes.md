@@ -89,6 +89,8 @@ layout:
 
 - A card's `col` (1 is the first column) places the step; one step per column per lane.
 - Number the handoffs with `step` and say `flows_mean: control` (or `request`): the order is the story.
+- A handoff crosses the empty cells of the lanes between its steps, straight down or up its column; it cannot
+  cross a step's card or a lane's name.
 - Put a lane's open point on a card as a `flag`; a chip spans the whole lane and blocks handoffs crossing it.
 - Example: `examples/incident-swimlane.yaml`.
 

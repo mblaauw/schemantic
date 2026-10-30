@@ -54,7 +54,8 @@ No coordinates does not mean the layout designs itself. Three parts decide three
   void check (the largest empty run inside a panel) matches what reviewers see. Most voids came from a fixed canvas
   dumping its spare height into one row, which `canvas.height: fit` removes.
 - **A footer is context.** Dark header bars on footer panels drew the eye away from the body and took 17–18% of the
-  canvas; quiet labels and a legend strip bring it under 13%, and lint warns above 15% (`footer-share`).
+  canvas; quiet labels and a legend strip bring it under 13%, and lint warns above an eighth (`footer-share`), the
+  share the review question names, unless the footer is only a line or two and the plate is short.
 - **One loud place.** With every header filled in its role's dark colour, four of seven plates were a wall of navy
   and nothing led the eye; the focus only stood out because setting it quietened the rest. Quiet headers are now the
   default and a filled header is what a focus (or a hub) earns. The same review moved the subtitle out of accent

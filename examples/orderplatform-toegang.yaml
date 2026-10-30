@@ -124,8 +124,6 @@ footer:
     title: "Rollen en samenwerking"
     card_columns: 2
     cards:
-      - {icon: users, name: "Data engineer", note: "bouwt en onderhoudt pipelines"}
-      - {icon: chart-bar, name: "Analist", note: "rapporteert op Gold"}
       - {icon: users-group, name: "Domeinteam", note: "eigenaar van service en data"}
       - {icon: tool, name: "Platformteam", note: "beheert gateway en lakehouse"}
   principles:

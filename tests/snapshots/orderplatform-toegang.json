@@ -226,13 +226,13 @@
    40,
    970,
    1560,
-   1120
+   1102
   ],
   "footer.context": [
    40,
    970,
    590,
-   1074
+   1034
   ],
   "footer.context.card0": [
    40,
@@ -245,18 +245,6 @@
    998,
    590,
    1034
-  ],
-  "footer.context.card2": [
-   40,
-   1036,
-   308,
-   1074
-  ],
-  "footer.context.card3": [
-   322,
-   1036,
-   590,
-   1074
   ],
   "footer.principles": [
    618,
@@ -272,9 +260,9 @@
   ],
   "footer.legend": [
    40,
-   1084,
+   1064,
    1560,
-   1120
+   1102
   ]
  },
  "text": [
@@ -741,41 +729,21 @@
   [
    66,
    1012,
-   "Data engineer"
-  ],
-  [
-   66,
-   1028,
-   "bouwt en onderhoudt pipelines"
-  ],
-  [
-   348,
-   1012,
-   "Analist"
-  ],
-  [
-   348,
-   1028,
-   "rapporteert op Gold"
-  ],
-  [
-   66,
-   1052,
    "Domeinteam"
   ],
   [
    66,
-   1068,
+   1028,
    "eigenaar van service en data"
   ],
   [
    348,
-   1052,
+   1012,
    "Platformteam"
   ],
   [
    348,
-   1068,
+   1028,
    "beheert gateway en lakehouse"
   ],
   [
@@ -835,72 +803,72 @@
   ],
   [
    40,
-   1096,
+   1078,
    "Legenda"
   ],
   [
    142,
-   1096,
+   1078,
    "Clients en externe systemen"
   ],
   [
    358,
-   1096,
+   1078,
    "Platformcomponent"
   ],
   [
    522,
-   1096,
+   1078,
    "Data en opslag"
   ],
   [
    658,
-   1096,
+   1078,
    "Richting van requests"
   ],
   [
    838,
-   1096,
+   1078,
    "Asynchroon: event of bericht"
   ],
   [
    1034,
-   1096,
+   1078,
    "nieuw"
   ],
   [
    1080,
-   1096,
+   1078,
    "Nieuw in deze fase"
   ],
   [
    1216,
-   1096,
+   1078,
    "gepland"
   ],
   [
    1274,
-   1096,
+   1078,
    "Gepland, nog niet gebouwd"
   ],
   [
    142,
-   1114,
+   1096,
    "Waar deze plaat om draait"
   ],
   [
    318,
-   1116,
+   1096,
    "V1"
   ],
   [
    344,
-   1114,
+   1096,
    "Open keuze of frictie"
   ],
   [
    516,
-   1114,
+   1096,
    "Aanname of toelichting"
   ],
   [

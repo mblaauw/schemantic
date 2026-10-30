@@ -1,0 +1,578 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   134
+  ],
+  "body": [
+   40,
+   152,
+   1560,
+   598
+  ],
+  "web": [
+   40,
+   152,
+   384,
+   372
+  ],
+  "webapp": [
+   54,
+   222,
+   372,
+   296
+  ],
+  "web.card1": [
+   54,
+   304,
+   372,
+   358
+  ],
+  "booking": [
+   432,
+   152,
+   776,
+   416
+  ],
+  "api": [
+   446,
+   222,
+   764,
+   278
+  ],
+  "sync": [
+   446,
+   286,
+   764,
+   340
+  ],
+  "booking.chip0": [
+   446,
+   350,
+   764,
+   402
+  ],
+  "data": [
+   824,
+   152,
+   1168,
+   336
+  ],
+  "mq": [
+   838,
+   204,
+   1156,
+   260
+  ],
+  "db": [
+   838,
+   268,
+   1156,
+   322
+  ],
+  "notify": [
+   1216,
+   152,
+   1560,
+   324
+  ],
+  "notifier": [
+   1230,
+   204,
+   1548,
+   312
+  ],
+  "outside": [
+   40,
+   460,
+   1560,
+   598
+  ],
+  "clinics": [
+   54,
+   530,
+   796,
+   586
+  ],
+  "messaging": [
+   804,
+   530,
+   1548,
+   586
+  ],
+  "footer": [
+   40,
+   616,
+   1560,
+   730
+  ],
+  "footer.principles": [
+   40,
+   616,
+   876,
+   678
+  ],
+  "footer.open_questions": [
+   904,
+   616,
+   1560,
+   700
+  ],
+  "footer.legend": [
+   40,
+   710,
+   1560,
+   730
+  ]
+ },
+ "text": [
+  [
+   40,
+   46,
+   "Bookings service"
+  ],
+  [
+   40,
+   92,
+   "The API takes bookings; a queue hands confirmations to the notifier"
+  ],
+  [
+   40,
+   128,
+   "The web app calls the API, which queues a message; the notifier sends e-mail and SMS through an external provider"
+  ],
+  [
+   52,
+   178,
+   "Front end"
+  ],
+  [
+   52,
+   196,
+   "What customers use"
+  ],
+  [
+   96,
+   246,
+   "Web app"
+  ],
+  [
+   96,
+   262,
+   "customer front end, calls the API"
+  ],
+  [
+   106,
+   280,
+   "container image bookings/web, port 8080"
+  ],
+  [
+   96,
+   328,
+   "CloudFront and S3"
+  ],
+  [
+   224,
+   328,
+   "(bookings-web)"
+  ],
+  [
+   340,
+   326,
+   "Q1"
+  ],
+  [
+   96,
+   344,
+   "static hosting declared in Terraform"
+  ],
+  [
+   444,
+   178,
+   "Bookings and availability"
+  ],
+  [
+   444,
+   196,
+   "Both run as ECS services"
+  ],
+  [
+   488,
+   246,
+   "API"
+  ],
+  [
+   488,
+   262,
+   "handles bookings and availability"
+  ],
+  [
+   488,
+   310,
+   "Sync"
+  ],
+  [
+   488,
+   326,
+   "reads clinic calendars every 300 seconds"
+  ],
+  [
+   460,
+   372,
+   "Q2"
+  ],
+  [
+   488,
+   372,
+   "Move sync from polling to the clinics'"
+  ],
+  [
+   488,
+   388,
+   "webhooks?"
+  ],
+  [
+   836,
+   178,
+   "Data"
+  ],
+  [
+   880,
+   228,
+   "RabbitMQ"
+  ],
+  [
+   880,
+   244,
+   "joins the API and the notifier"
+  ],
+  [
+   880,
+   292,
+   "PostgreSQL"
+  ],
+  [
+   880,
+   308,
+   "bookings; read by the API and sync"
+  ],
+  [
+   1228,
+   178,
+   "Confirmations"
+  ],
+  [
+   1272,
+   228,
+   "Notifier"
+  ],
+  [
+   1272,
+   244,
+   "sends confirmation e-mails and SMS"
+  ],
+  [
+   1282,
+   262,
+   "takes messages from the queue"
+  ],
+  [
+   1282,
+   280,
+   "has no database setting in compose"
+  ],
+  [
+   1282,
+   298,
+   "calls the messaging provider's API"
+  ],
+  [
+   52,
+   486,
+   "Outside the team"
+  ],
+  [
+   52,
+   504,
+   "External APIs we call"
+  ],
+  [
+   96,
+   554,
+   "Clinic scheduling"
+  ],
+  [
+   216,
+   554,
+   "(v2 API)"
+  ],
+  [
+   96,
+   570,
+   "source of the clinics' calendars"
+  ],
+  [
+   848,
+   554,
+   "Messaging provider"
+  ],
+  [
+   848,
+   570,
+   "delivers the e-mail and SMS"
+  ],
+  [
+   40,
+   630,
+   "Key principles"
+  ],
+  [
+   50,
+   656,
+   "The notifier sends confirmations; the API only queues them."
+  ],
+  [
+   50,
+   674,
+   "Sync reads clinic calendars on a timer, not on request."
+  ],
+  [
+   904,
+   630,
+   "Open questions"
+  ],
+  [
+   908,
+   656,
+   "Q1"
+  ],
+  [
+   930,
+   656,
+   "Is the web app served from its own container or from S3 and CloudFront?"
+  ],
+  [
+   908,
+   676,
+   "Q2"
+  ],
+  [
+   932,
+   676,
+   "Move sync from polling to the clinics' webhooks?"
+  ],
+  [
+   908,
+   696,
+   "Q3"
+  ],
+  [
+   934,
+   696,
+   "Does the API publish and the notifier consume? Compose shows a shared queue only."
+  ],
+  [
+   40,
+   724,
+   "Legend"
+  ],
+  [
+   134,
+   724,
+   "Platform component"
+  ],
+  [
+   302,
+   724,
+   "Data and storage"
+  ],
+  [
+   452,
+   724,
+   "Clients and external systems"
+  ],
+  [
+   670,
+   724,
+   "Direction of data"
+  ],
+  [
+   820,
+   724,
+   "Asynchronous: event or message"
+  ],
+  [
+   1042,
+   724,
+   "1"
+  ],
+  [
+   1060,
+   724,
+   "A confirmation, from the web app to the provider"
+  ],
+  [
+   1370,
+   724,
+   "Q1"
+  ],
+  [
+   1396,
+   724,
+   "Open choice or friction"
+  ],
+  [
+   408,
+   254,
+   "1"
+  ],
+  [
+   800,
+   244,
+   "2"
+  ],
+  [
+   1192,
+   236,
+   "3"
+  ],
+  [
+   1388,
+   424,
+   "4"
+  ],
+  [
+   354,
+   428,
+   "calendars"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "webapp",
+   "to": "api",
+   "points": [
+    [
+     378,
+     250
+    ],
+    [
+     438,
+     250
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 1,
+   "from": "api",
+   "to": "mq",
+   "points": [
+    [
+     770,
+     240
+    ],
+    [
+     830,
+     240
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 2,
+   "from": "mq",
+   "to": "notifier",
+   "points": [
+    [
+     1162,
+     232
+    ],
+    [
+     1222,
+     232
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 3,
+   "from": "notifier",
+   "to": "messaging",
+   "points": [
+    [
+     1388,
+     318
+    ],
+    [
+     1388,
+     524
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 4,
+   "from": "api",
+   "to": "db",
+   "points": [
+    [
+     770,
+     262
+    ],
+    [
+     800,
+     262
+    ],
+    [
+     800,
+     284
+    ],
+    [
+     830,
+     284
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 5,
+   "from": "sync",
+   "to": "db",
+   "points": [
+    [
+     770,
+     304
+    ],
+    [
+     830,
+     304
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 6,
+   "from": "clinics",
+   "to": "sync",
+   "points": [
+    [
+     418,
+     524
+    ],
+    [
+     418,
+     324
+    ],
+    [
+     438,
+     324
+    ]
+   ],
+   "label": "calendars"
+  }
+ ]
+}

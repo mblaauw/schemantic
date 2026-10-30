@@ -128,19 +128,24 @@ schemantic.lint = (cfg) => {
   // Footer: context for the body, so it stays a small share of the plate
   const footer = plate.querySelector('[data-kind="footer"]');
   if (footer) {
-    const share = (rel(footer).b - rel(footer).t) / P.height;
-    if (share > cfg.footerShare)
+    const tall = rel(footer).b - rel(footer).t;
+    const share = tall / P.height;
+    if (share > cfg.footerShare && tall > cfg.footerFloor)
       add(
         "warning",
         "footer-share",
         "footer",
-        `takes ${Math.round(share * 100)}% of the plate's height; keep it under ${Math.round(cfg.footerShare * 100)}%`,
+        `takes ${Math.round(share * 100)}% of the plate's height; keep it under ${cfg.footerShare * 100}%`,
       );
   }
 
   // Arrows: every run stays off panels other than the endpoints' own, and off cards other than the endpoints;
-  // labels clear of every box
+  // labels clear of every box. A swimlane handoff may cross the lanes between its steps, but not their headers.
   const panels = kinds.filter((e) => e.dataset.kind === "panel");
+  const walls = panels.map((e) => ({
+    id: e.dataset.id,
+    box: rel(e.classList.contains("lane") ? e.querySelector(".ph") : e),
+  }));
   const cards = kinds.filter((e) => e.dataset.kind === "card");
   for (const s of cfg.segs) {
     const crossed = new Set();
@@ -152,9 +157,8 @@ schemantic.lint = (cfg) => {
         t: Math.min(p[1], q[1]) - 1,
         b: Math.max(p[1], q[1]) + 1,
       };
-      for (const el of panels)
-        if (![s.fromPanel, s.toPanel].includes(el.dataset.id) && S.overlapArea(seg, rel(el)) > 0)
-          crossed.add(`panel ${el.dataset.id}`);
+      for (const pn of walls)
+        if (![s.fromPanel, s.toPanel].includes(pn.id) && S.overlapArea(seg, pn.box) > 0) crossed.add(`panel ${pn.id}`);
       for (const el of cards)
         if (![s.from, s.to].includes(el.dataset.id) && S.overlapArea(seg, rel(el)) > 0)
           crossed.add(`card ${el.dataset.id}`);

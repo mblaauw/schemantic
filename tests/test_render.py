@@ -109,13 +109,12 @@ def test_connector_runs_from_a_card_in_one_panel_to_a_card_in_another():
 
 
 def test_unroutable_card_connector_is_reported(tmp_path):
-    # Admission control moved to the far end of its layer: every route from the Security rail crosses other cards.
+    # A card in the top layer straight to one in the bottom layer: every way round crosses the two layers between.
     spec = sp.load_spec(ROOT / "examples" / "ontwikkelplatform-lagen.yaml")
-    runtime = next(p for p in spec["panels"] if p["id"] == "runtime")
-    runtime["cards"].append(runtime["cards"].pop(0))
+    spec["flows"].append({"from": "experience.card1", "to": "infra.card2"})
     code, report = run("build", write(tmp_path, spec, "blocked"), "--out", tmp_path)
     assert code == 1
-    assert [x["flow"]["to"] for x in report["flow_problems"]] == ["admission"]
+    assert [x["flow"]["to"] for x in report["flow_problems"]] == ["infra.card2"]
     # F05: a build with errors publishes nothing; the unpublished files stay in _work/ to look at
     assert report["svg"] is None and report["png"] is None
     assert not list(tmp_path.glob("blocked.svg")) + list(tmp_path.glob("blocked.png"))
@@ -458,12 +457,15 @@ def pipeline_build(path, out, theme_css=""):
 
 
 # A long handoff back up a swimlane goes round the edge in a second outer lane, past one that already uses the first
-def test_a_return_arrow_up_a_swimlane_takes_the_second_outer_lane(renders):
+def test_a_swimlane_handoff_crosses_the_lanes_between_its_steps(renders):
+    """A handoff over a lane runs through that lane's empty cell, not round the plate's edge: here the draft goes
+    straight down past the committee to the team lead, and the decision straight up from the portal to the applicant."""
     path = ROOT / "tests" / "fixtures" / "swimlane-return.yaml"
     snap = json.loads((renders(path) / "_work" / f"{path.stem}.snapshot.json").read_text(encoding="utf-8"))
     edge = snap["boxes"]["body"][2]
-    around = {f["i"]: max(x for x, _ in f["points"]) for f in snap["flows"] if max(x for x, _ in f["points"]) > edge}
-    assert len(around) == 2 and len(set(around.values())) == 2  # both round the right edge, each in its own lane
+    assert all(x <= edge for f in snap["flows"] for x, _ in f["points"])
+    straight = {(f["from"], f["to"]) for f in snap["flows"] if len(f["points"]) == 2}
+    assert {("draft", "sign"), ("publish", "decision")} <= straight
 
 
 # Holes outside panels: a short panel next to taller ones in its row, and an empty run inside a zone frame
@@ -499,3 +501,30 @@ def test_void_checks_empty_cells_spread_cards_and_a_blank_band(tmp_path):
     spec["canvas"].update(size="landscape-16x9", height="fixed")
     report = pipeline.build(write(tmp_path, spec, "band"), tmp_path / "d", deliver=False)
     assert "canvas" in voids(report) and report["voids"]["canvas"] > 96
+
+
+def test_cards_joined_inside_their_panel_get_room_for_a_straight_arrow(tmp_path):
+    """The default gap between cards is shorter than an arrowhead, so a flow from one card to the card below it used to
+    leave the panel and come back; a panel with such a flow spaces its cards so the arrow runs straight down."""
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    proxy = next(p for p in spec["panels"] if p["id"] == "proxy")
+    proxy["cards"][0]["id"], proxy["cards"][1]["id"] = "mtls", "accesslog"
+    spec["flows"].append({"from": "mtls", "to": "accesslog"})
+    spec.pop("stories", None)
+    code, report = run("lint", write(tmp_path, spec, "linked"), "--out", tmp_path)
+    assert code == 0, report["errors"]
+    snap = json.loads((tmp_path / "_work" / "linked.snapshot.json").read_text(encoding="utf-8"))
+    (flow,) = [f for f in snap["flows"] if (f["from"], f["to"]) == ("mtls", "accesslog")]
+    assert len(flow["points"]) == 2 and flow["points"][0][0] == flow["points"][1][0]  # one vertical run
+
+
+def test_a_card_under_a_header_is_reached_up_the_gutter(renders):
+    """The calendars come from a wide card in the bottom panel to Sync, above a chip: no straight line, and the route
+    starts under its own panel's header. It leaves through the header's empty band and turns in up the gutter."""
+    path = ROOT / "tests" / "fixtures" / "gutter-route.yaml"
+    code, report = run("lint", path, "--out", renders(path))
+    assert (code, report["errors"]) == (0, [])
+    snap = json.loads((renders(path) / "_work" / f"{path.stem}.snapshot.json").read_text(encoding="utf-8"))
+    (route,) = [f for f in snap["flows"] if (f["from"], f["to"]) == ("clinics", "sync")]
+    booking, web = snap["boxes"]["booking"], snap["boxes"]["web"]
+    assert len(route["points"]) == 3 and web[2] < route["points"][0][0] < booking[0]  # one bend, up the gutter between

@@ -1,5 +1,5 @@
-# Fixture: a swimlane whose last handoff goes back up from the bottom lane to the top one, past a handoff that
-# already goes round the right edge (from an eval run; the router used to have no second lane there).
+# Fixture: a swimlane whose handoffs cross lanes (from an eval run): the draft goes down past the committee to the
+# team lead, and the last handoff back up from the portal to the applicant, through the empty cells between.
 archetype: swimlane
 canvas:
   lang: en
