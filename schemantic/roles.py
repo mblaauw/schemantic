@@ -44,9 +44,10 @@ def is_person(icon: str | None) -> bool:
 
 def role_fit_findings(spec: dict) -> list[dict]:
     """A panel coloured as people whose cards look like systems, or the reverse, judged by the cards' icons: at least
-    two cards, two thirds of them pointing the other way. A warning, since icons are only a hint. Swimlane lanes are
-    left out: their cards are an actor's steps, not things."""
-    if spec["archetype"] == "swimlane":
+    two cards, two thirds of them pointing the other way; or a panel that mixes the two, at least two of each and more
+    than a third of each. One person beside a row of tools is left alone. A warning, since icons are only a hint. Lanes
+    are left out: their cards are steps or items, not things."""
+    if spec["archetype"] in ("swimlane", "roadmap"):
         return []
     out = []
     for p in spec["panels"]:
@@ -60,6 +61,9 @@ def role_fit_findings(spec: dict) -> list[dict]:
         elif p["role"] != "actor" and people >= 2 * len(cards) / 3:
             out.append(finding("role-fit", p["id"], f"coloured as {p['role']}, but {people} of its {len(cards)} cards show "
                                "people", level="warning"))
+        elif (fewest := min(people, len(cards) - people)) >= 2 and fewest * 3 > len(cards):
+            out.append(finding("role-fit", p["id"], f"mixes people ({people}) and systems or things ({len(cards) - people}) "
+                               "under one colour", level="warning"))
     return out
 
 

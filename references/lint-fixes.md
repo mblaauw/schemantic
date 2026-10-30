@@ -23,7 +23,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `canvas` | `part` without `of` (or the reverse), `part` larger than `of`, or a theme file that does not exist | give both, with `1 ≤ part ≤ of`; check the theme path (relative to the spec) |
 | `role` | a panel role is neither built in nor defined by the theme, or the theme gives it no legend label in the plate's language | use platform, data, external or actor, or define the role and its label in the theme |
 | `slide-budget` | a slide (canvas.profile: slide) holds more than 5 panels or 18 cards (warning) | make it two slides, each with its own message, or cut the cards the message does not need |
-| `role-fit` | a panel's colour says people but its cards look like systems, or the reverse (warning) | give the panel the role of what it holds (actor for people and teams, platform, data or external for systems), or split people and systems into two panels |
+| `role-fit` | a panel's colour says people but its cards look like systems, or the reverse, or it mixes both (warning) | give the panel the role of what it holds (actor for people and teams, platform, data or external for systems), or split people and systems into two panels |
 | `focus` | more than one panel or card has `focus: true` | keep focus on the one element the title is about |
 | `flows-mean` | the plate has flows but no `flows_mean` (warning) | say what an arrow means: data, request, dependency, control or sequence |
 | `timeline` | on a roadmap, an arrow ends at an item that starts before the item it comes from, so it reads back in time (warning) | point each arrow from what comes first to what builds on it, and say `flows_mean: sequence` |

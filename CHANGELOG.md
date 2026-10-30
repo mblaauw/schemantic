@@ -8,6 +8,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - Evals of 0.3.0 (30 October), all eight cases, three runs each, judged blind: 8 of 48 runs pass the judge (4 before), at
   2.12 (Sonnet) and 2.25 (Haiku) defects per plate. Paths fall from 41 to 28 of the defects; holes rise from 15 to 21,
   and series plates get worse. See `evals/README.md`.
+- `references/analysis.md` has a worked series: a part whose title makes two claims, with a stand-in panel named for
+  what it holds, never "Part 1".
+- `role-fit` warns about a panel that mixes people and systems (at least two of each, more than a third of each), and
+  suggests splitting it. It used to warn only when two thirds looked wrong. One person beside a row of tools passes.
 
 ### Fixed
 - The outline of a nested-zones plate left out the zones, the point of such a plate. It now lists them, nested, with

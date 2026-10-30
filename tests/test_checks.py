@@ -174,6 +174,14 @@ def test_examples_have_no_voids_and_a_low_footer(path, mode, tmp_path):
     assert footer <= 0.13 * height + 2, f"footer {footer}px of {height}px"
 
 
+def test_role_fit_flags_a_mixed_panel_but_not_one_person_beside_tools():
+    icons = lambda *names: [{"icon": n, "name": f"Card {i}"} for i, n in enumerate(names)]  # noqa: E731
+    mixed = mutate(lambda s: panel(s, "services").update(cards=icons("users", "headset", "server", "database")))
+    assert [f["id"] for f in sp.check(mixed) if f["check"] == "role-fit"] == ["services"]
+    one = mutate(lambda s: panel(s, "services").update(cards=icons("users", "server", "database", "cloud")))
+    assert "role-fit" not in {f["check"] for f in sp.check(one)}
+
+
 def test_a_repeated_hint_is_given_once_and_summed_up():
     """A fresh starter has dozens of TODOs: the report gives their hint once, and a summary line per check, errors
     first, says how many there are and what to try."""

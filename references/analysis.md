@@ -282,3 +282,74 @@ footer:
     - "Finance checks only the claims over 500 euro."
   legend: auto
 ```
+
+## Worked example D: a series
+
+Source (`inventory`, fictional): *Library platform. Lending: catalogue, loans, reservations, renewals, fines. Members:
+accounts, cards, notices. Branches: opening hours, stock, returns, transfers. Back office: invoicing, purchasing,
+payroll. Reporting: dashboards, exports. Everything publishes events to the event hub; reporting reads from it. Lending
+calls members; branches call lending.*
+
+The inventory tells two stories, the calls between areas and the events across them, and one plate carries one message.
+Part 1 takes the calls between lending, members and branches. Part 2, below, takes the events. Its title makes two
+claims, so both get arrows: a stand-in panel holds what part 1 owns, named for what it holds, and the hub is a card of
+its own in the middle. An arrow from a whole panel is right here: every card in it publishes, so one arrow says it
+without seven. The inventory names no owner or status, so no card has a note and nothing is asked about either.
+
+<!-- lint: full -->
+```yaml
+canvas: {size: landscape-4x3, lang: en, series: "Library platform", part: 2, of: 2}
+title: "Every area publishes events to one hub, and reporting reads from it"
+subtitle: "Lending, members and branches are on part 1; the back office publishes here too"
+archetype: hub-and-spokes
+brief:
+  message: "One hub carries every event; reporting reads only from there."
+  reader: "The board, after part 1"
+  why: "hub-and-spokes: one thing in the middle, publishers above and readers below"
+  assumptions: ["Everything in the inventory means every area, the back office included"]
+sources:
+  - {id: inventory, kind: document, ref: "Platform inventory"}
+layout:
+  hub: hub
+  top: [lending, office]
+  bottom: [reporting]
+panels:
+  - id: hub
+    title: "Events"
+    role: data
+    cards:
+      - {id: bus, icon: topology-star, name: "Event hub", refs: ["inventory: the event hub"]}
+  - id: lending
+    title: "Lending, members and branches"
+    subtitle: "Part 1 shows their calls"
+    role: platform
+    card_columns: 3
+    cards:
+      - {id: lend, icon: books, name: "Lending", refs: ["inventory: Lending"]}
+      - {id: mem, icon: id, name: "Members", refs: ["inventory: Members"]}
+      - {id: bra, icon: building, name: "Branches", refs: ["inventory: Branches"]}
+  - id: office
+    title: "Back office"
+    role: platform
+    card_columns: 3
+    cards:
+      - {id: inv, icon: receipt, name: "Invoicing", refs: ["inventory: Back office"]}
+      - {id: pur, icon: shopping-cart, name: "Purchasing", refs: ["inventory: Back office"]}
+      - {id: pay, icon: cash, name: "Payroll", refs: ["inventory: Back office"]}
+  - id: reporting
+    title: "Reporting"
+    role: data
+    card_columns: 2
+    cards:
+      - {id: dash, icon: chart-bar, name: "Dashboards", refs: ["inventory: Reporting"]}
+      - {id: exp, icon: file-export, name: "Exports", refs: ["inventory: Reporting"]}
+flows_mean: data
+flows:
+  - {from: lending, to: hub, label: "events"}
+  - {from: office, to: hub, label: "events"}
+  - {from: hub, to: reporting, label: "reads"}
+footer:
+  principles:
+    - "Reporting reads events from the hub."
+  legend: auto
+```
