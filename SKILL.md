@@ -96,7 +96,8 @@ short version:
   to the card it acts on. End an arrow on a panel only when the sources speak of the whole panel, or of every card
   in it.
 - Everything the title or subtitle says moves, calls, reads or feeds gets an arrow on this plate; a step that lives
-  only in a note is a gap (on a series, draw a stand-in card for what sits on the other part). Write the main route
+  only in a note is a gap. On a series, draw a stand-in panel for what sits on the other part, named for what it
+  holds ("Lending"), never "Part 1"; `references/analysis.md` has a worked series. Write the main route
   as a `story` with `draw: true`: lint checks that a finger can follow it, and the plate numbers its steps.
 - Show change with `status` (new, changed, planned, deprecated, removed) and the one element that matters with
   `focus`.
