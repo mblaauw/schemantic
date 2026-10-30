@@ -118,6 +118,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - `layout.row_heights` and the fixed-row mode behind it: rows take their content height. It is now a schema error.
 - The role name `storage` (it is `data`), and with it the `deprecated` check, since nothing is deprecated.
 
+### Fixed
+- The doctor installed pytest and pytest-xdist into every user's venv: `requirements.txt` now holds the runtime
+  dependencies only (contributors install `.[dev]`).
+
 ## [0.2.0] - 2026-10-29
 
 ### Added (series checks, before-after)

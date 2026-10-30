@@ -8,7 +8,6 @@ from conftest import ROOT
 def test_requirements_follow_pyproject():
     py = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     deps = re.findall(r'^\s*"([^"]+)",?$', py.split("dependencies = [")[1].split("]")[0], re.M)
-    deps += re.findall(r'"(pytest[^"]*)"', py.split("[project.optional-dependencies]")[1].split("\n\n")[0])
     reqs = [line for line in (ROOT / "requirements.txt").read_text(encoding="utf-8").splitlines() if line and not line.startswith("#")]
     assert reqs == deps
 
