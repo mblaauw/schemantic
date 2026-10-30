@@ -20,6 +20,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   small zone wraps underneath.
 
 ### Changed
+- The skill and the `orphan` hint say to draw a step the sources imply and list it as an assumption, and to leave out
+  only what has no basis. "Never invent" had agents dropping steps such as the arrow out of Bronze.
 - `footer-share` passes a footer of two lines over a two-line legend (116 px) on any plate: eval agents could not cut
   it further on a short plate, and left the warning standing. The judge's eighth still counts such a footer.
 

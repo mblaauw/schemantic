@@ -76,8 +76,10 @@ Plan the panels, their cards (each with `refs: ["<source id>: <path, line or sho
 open questions. Then audit the plan against the sources, and fix it before writing more:
 
 - Every card traces to a source. A card you cannot trace is an assumption or an open question, not a fact.
-- The title, subtitle, principles and notes say only what the sources say. An "only", a "never", an order or a detail
-  you inferred is an assumption: move it to the brief, or leave it out.
+- The title, subtitle, principles and notes say only what the sources say. An "only", a "never" or a detail you inferred
+  is an assumption: move it to the brief, or leave it out.
+- A step the sources imply is drawn, and listed in the brief's assumptions: dbt builds Silver and Gold, so an arrow
+  runs out of Bronze; the WMS books shipments, so an arrow runs to the carrier. Leave out only what has no basis at all.
 - Every uncertainty in the sources is a warning chip, a card flag or an open question. Before you keep a question,
   look for its answer: one the sources settle ("everything publishes", "test mirrors production") is a fact to draw.
 - Every route the title or subtitle names ("A via B to C") is a `story` through cards that exist.
