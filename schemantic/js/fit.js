@@ -11,7 +11,9 @@ schemantic.fit = ({ mode, height, gaps, cap, minHeight, even }) => {
   for (const grid of plate.querySelectorAll(".blk.cards:not([data-keep])")) {
     const cards = [...grid.children].filter((el) => el.classList.contains("card"));
     if (cards.some((c) => c.style.gridColumn || c.style.gridRow)) continue;
-    const columns = getComputedStyle(grid).gridTemplateColumns.split(/\s+/).filter((w) => parseFloat(w) > 0).length;
+    const columns = getComputedStyle(grid)
+      .gridTemplateColumns.split(/\s+/)
+      .filter((w) => parseFloat(w) > 0).length;
     const over = cards.length % columns;
     if (over) cards[cards.length - 1].style.gridColumn = `span ${columns - over + 1}`;
   }
@@ -20,7 +22,11 @@ schemantic.fit = ({ mode, height, gaps, cap, minHeight, even }) => {
   const rowmates = [...plate.querySelectorAll("#body > .panel:not(.spread), .spoke-row > .panel")];
   const box = (el) => el.getBoundingClientRect();
   const tallest = rowmates.map((p) =>
-    Math.max(...rowmates.filter((o) => o.parentElement === p.parentElement && Math.abs(box(o).top - box(p).top) < 2).map((o) => box(o).bottom)),
+    Math.max(
+      ...rowmates
+        .filter((o) => o.parentElement === p.parentElement && Math.abs(box(o).top - box(p).top) < 2)
+        .map((o) => box(o).bottom),
+    ),
   );
   rowmates.forEach((p, i) => {
     if (!even) return;

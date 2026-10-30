@@ -8,7 +8,12 @@ schemantic.decorate = () => {
   const { r2 } = S;
   const items = [];
   const colour = (c) => S.hex(S.rgba(c) || [0, 0, 0, 1]);
-  const dashOf = { sync: "", async: S.token("--dash-async"), optional: S.token("--dash-optional"), assumed: S.token("--dash-async") };
+  const dashOf = {
+    sync: "",
+    async: S.token("--dash-async"),
+    optional: S.token("--dash-optional"),
+    assumed: S.token("--dash-async"),
+  };
 
   for (const el of plate.querySelectorAll("[data-dash]")) {
     const cs = getComputedStyle(el);
