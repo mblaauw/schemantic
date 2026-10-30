@@ -5,6 +5,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- `layout.outside_at: bottom` on nested zones: outside panels stand in a row under the zones. A short panel in the
+  side column floats beside tall zones with blank space around it, the hole judges flagged most on deployment plates.
 - Evals rerun three times per case (30 October), judged blind: every plate builds clean; 2 of 24 runs pass the
   judge on each model, at 2.25 (Sonnet) and 2.5 (Haiku) defects per plate, as before. Swimlanes are nearly solved;
   paths are still a third of all defects, mostly routes the router refuses card to card. `evals/harness.py` sets

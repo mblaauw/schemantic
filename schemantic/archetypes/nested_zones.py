@@ -1,5 +1,5 @@
 """nested-zones: where things run. Zones are labelled dashed frames (an account, a cluster, a namespace), nested up
-to three levels, holding panels; panels outside every zone stand in a column beside them."""
+to three levels, holding panels; panels outside every zone stand in a column beside them, or in a row under them."""
 from __future__ import annotations
 
 from ..findings import finding
@@ -18,7 +18,7 @@ def walk(zones: list[dict], depth: int = 1):
 class NestedZones(Archetype):
     name = "nested-zones"
     required = frozenset({"zones"})
-    allowed = frozenset({"zones", "outside", "chips_at"})
+    allowed = frozenset({"zones", "outside", "outside_at", "chips_at"})
 
     def placed(self, spec: dict) -> list[str]:
         lay = spec["layout"]
@@ -41,10 +41,11 @@ class NestedZones(Archetype):
         lay = spec["layout"]
         zoned = [pid for z, _ in walk(lay["zones"]) for pid in z.get("panels", [])]
         outside = list(lay.get("outside", []))
-        rows = [["_zones"] + (["_outside"] if outside else [])]
-        columns = ["minmax(0, 1fr)"] + ([side_track(spec, "20%")] if outside else [])
+        below = lay.get("outside_at") == "bottom"  # a short panel beside tall zones is a hole; under them, a row
+        rows = [["_zones"], ["_outside"]] if outside and below else [["_zones"] + (["_outside"] if outside else [])]
+        columns = ["minmax(0, 1fr)"] + ([side_track(spec, "20%")] if outside and not below else [])
         groups = {"_zones": zoned, **({"_outside": outside} if outside else {})}
-        kinds = {"_zones": "zones", "_outside": "stack"}
+        kinds = {"_zones": "zones", "_outside": "row" if below else "stack"}
         return GridSpec(rows=rows, columns=columns, groups=groups, group_kind=kinds, zones=lay["zones"])
 
     def panel_defaults(self, spec: dict, panel: dict) -> dict:
