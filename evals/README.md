@@ -40,6 +40,67 @@ invented, no defect). One run per case is noisy; take three.
 
 ## Latest results
 
+Version 0.3.0, the released skill: eight cases, three runs each, judged blind with the same judge and review
+questions as the runs below. A run passes when the automated grade passes and the judge finds nothing invented and no
+defect; one defect fails it. In brackets, the same cases on 30 October, before the router and skill changes.
+
+| Model | Automated | Judged | Nothing invented | Defects per plate |
+| --- | --- | --- | --- | --- |
+| Sonnet 5.5 | 24/24 | 3/24 (2/24) | 23/24 (22/24) | 2.12 (2.25) |
+| Haiku 5.5 | 24/24 | 5/24 (2/24) | 19/24 (22/24) | 2.25 (2.50) |
+
+Twice as many runs pass (8 against 4), and defects fell by about 8%. Take that as a direction, not a measurement: 48
+runs is few, judges differ (some counted a footer of 15% as a defect, others did not), and defect kinds are sorted by
+keyword.
+
+| Case | Passed | Defects per plate |
+| --- | --- | --- |
+| 1 notes | 1/6 (0/6) | 1.67 (2.17) |
+| 2 repository | 3/6 (0/6) | 1.50 (3.00) |
+| 3 series | 0/6 (0/6) | 4.50 (3.33) |
+| 4 open choices | 0/6 (0/6) | 2.00 (3.00) |
+| 5 swimlane | 3/6 (4/6) | 0.67 (0.33) |
+| 6 deployment | 0/6 (0/6) | 1.67 (2.17) |
+| 7 phase change | 1/6 (0/6) | 2.67 (3.17) |
+| 8 language | 0/6 (0/6) | 2.83 (1.83) |
+
+By kind, of 105 defects (114 before):
+
+- **Paths, 28 (41)**: the largest drop. Arrows ending on a panel fell from 33% to 23%, and a drawn route is on 38 of 56
+  plates (29 of 57). What is left is mostly steps with no arrow at all: agents leave out a step the source implies
+  (dbt builds from Bronze, the WMS books shipments) under "never invent", so that rule may be overcorrecting.
+- **Holes, 21 (15)**: up. Deployment plates fail on a short zone beside tall ones. `outside_at: bottom` does not solve
+  it: at least four agents tried it and backed out, because wider accounts put the data panel beside the cluster,
+  stretched, which lint calls an error.
+- **Colour, 14 (12)**: people and systems in one panel, an identity provider in a people panel.
+- **Footer, 11 (9)**: now that lint warns at an eighth, agents see it, but many short plates cannot get under: a legend
+  on two lines is enough. Most leave the warning standing.
+- **Truth, 11 (15)**, **open ends, 9 (7)**, **words, 8 (7)**.
+- **Invented**: Haiku fell to 19 of 24, on invented parts inside a service and on status questions the source never
+  raises, even though it now leaves notes off cards that have only a name.
+
+Series plates got worse: their second part keeps failing on "data reads from the bus", either undrawn or as an open
+question the inventory settles, and on opaque stand-in panels ("Part 1 areas").
+
+From the agents' own reports, three things this run found in the tools:
+
+- `--review` deletes earlier crops and moves its baseline on every build, so an agent that builds several times before
+  reading sees only the last round's changed parts. Most agents still read only some of the crops.
+- The outline of a nested-zones plate lists panels and cards but not the zones they sit in, which on such a plate is
+  the point.
+- Agents spend a lot on layout: one tried 72 variants to clear one arrow crossing.
+
+**Next targets**: inner zones that stack when an account gets wider, so `outside_at: bottom` works; crops that survive
+a rebuild; zones in the outline; a footer limit a short plate can meet; and "draw what the source implies, and list it
+as an assumption" in place of leaving the step out.
+
+## History
+
+Each run below names what changed before it and what it found; the targets it names are what the following runs
+went after.
+
+### Three runs per case (30 October)
+
 30 October 2026, with the skill as of 0.3.0.dev0 after #17 (drawn stories, starters, review crops of what changed,
 grouped findings, the reordered steps). Eight cases, **three runs each**, judged blind under random names with the
 same judge and review questions as the two runs of 29 October, so the numbers compare. A run passes when the
@@ -103,11 +164,6 @@ most path defects are arrows ending on a panel or steps with no arrow at all. Ha
 written from names), though with so few runs that may be noise. The 32 px gap between joined cards had no room for a
 badge or a two-way arrow (a judge saw a diamond); it is 46 px now. The skill now says to connect cards by default,
 and that every step the title states gets an arrow. That change is not measured yet.
-
-## History
-
-Each run below names what changed before it and what it found; the targets it names are what the following runs
-went after.
 
 ### Latest results before the three-run rerun (29 October)
 
