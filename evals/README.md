@@ -85,6 +85,25 @@ both); that has not been rerun since.
 panel, a lane between two swimlane steps), so routes stay card to card; one footer threshold; a budget check for
 panels and cards on every plate; and a hint on `orphan` that says to leave it, not to invent a flow.
 
+### After the router fixes (30 October, second run)
+
+The router and footer changes of #19, measured on the four cases where paths failed most (repository, series, open
+choices, phase change): 24 runs, three per case on each model, same blind judge. The earlier column is the same four
+cases in the run above.
+
+| Model | Judged | Nothing invented | Defects per plate | Path defects |
+| --- | --- | --- | --- | --- |
+| Sonnet 5.5 | 1/12 (0/12) | 11/12 (11/12) | 2.75 (2.92) | 12 (14) |
+| Haiku 5.5 | 2/12 (0/12) | 7/12 (10/12) | 3.42 (3.33) | 21 (14) |
+
+Three runs pass where none did, but one judge gave two of them and called both close, and 12 runs per model is few.
+Defects per plate did not move, and path defects rose from 28 to 33. **The router fixes did not fix paths.** Refusals
+were only part of it: SKILL.md said "connect panels by default", about half of all arrows still ended on a panel, and
+most path defects are arrows ending on a panel or steps with no arrow at all. Haiku also invented more (card notes
+written from names), though with so few runs that may be noise. The 32 px gap between joined cards had no room for a
+badge or a two-way arrow (a judge saw a diamond); it is 46 px now. The skill now says to connect cards by default,
+and that every step the title states gets an arrow. That change is not measured yet.
+
 ## History
 
 Each run below names what changed before it and what it found; the targets it names are what the following runs

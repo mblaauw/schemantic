@@ -516,6 +516,7 @@ def test_cards_joined_inside_their_panel_get_room_for_a_straight_arrow(tmp_path)
     snap = json.loads((tmp_path / "_work" / "linked.snapshot.json").read_text(encoding="utf-8"))
     (flow,) = [f for f in snap["flows"] if (f["from"], f["to"]) == ("mtls", "accesslog")]
     assert len(flow["points"]) == 2 and flow["points"][0][0] == flow["points"][1][0]  # one vertical run
+    assert flow["points"][1][1] - flow["points"][0][1] >= 32  # holds a step badge and a head, or two heads and some shaft
 
 
 def test_a_card_under_a_header_is_reached_up_the_gutter(renders):
