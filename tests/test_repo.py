@@ -107,3 +107,17 @@ def test_the_doctor_imports_only_the_standard_library():
     loaded = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, cwd=ROOT, check=True).stdout
     for dep in ("yaml", "jsonschema", "jinja2", "PIL", "fontTools", "playwright"):
         assert f"'{dep}'" not in loaded, dep
+
+
+def test_the_doctor_refreshes_an_outdated_requirement(monkeypatch):
+    """A venv an older release built has every module but not the versions a newer release needs: the probe says
+    which, so the doctor installs again instead of a build failing later."""
+    import sys
+    from pathlib import Path
+
+    from schemantic import doctor
+    monkeypatch.setattr(doctor, "requirements", lambda: ["pyyaml>=999", "jinja2>=3.1,<999", "no-such-package-here>=1"])
+    r = doctor.probe(Path(sys.executable))
+    assert r["deps"] is False
+    assert r["missing"][0].startswith("pyyaml ") and r["missing"][0].endswith("(needs >=999)")
+    assert r["missing"][1:] == ["no-such-package-here"]

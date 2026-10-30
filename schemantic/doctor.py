@@ -21,11 +21,24 @@ from pathlib import Path
 from .config import LAUNCH_ARGS, ROOT  # config is standard library only, as this module must be
 
 MIN_PYTHON = (3, 10)
+# Checks each requirement's installed version, not only that it imports, so a venv an older release built is
+# refreshed when a requirement moves.
 PROBE = r"""
-import importlib.util, json, sys
+import importlib.metadata, json, operator, re, sys
 if sys.version_info < (3, 10):
     print(json.dumps({"deps": False, "old": "{}.{}".format(*sys.version_info[:2])})); sys.exit()
-missing = [m for m in ("yaml", "jsonschema", "jinja2", "PIL", "fontTools", "brotli", "playwright") if importlib.util.find_spec(m) is None]
+OPS = {">=": operator.ge, "<=": operator.le, "==": operator.eq, ">": operator.gt, "<": operator.lt}
+key = lambda v: tuple(int(re.match(r"\d*", part).group() or 0) for part in (v.split(".") + ["0", "0"])[:3])
+missing = []
+for req in %r:
+    name, specs = re.match(r"([A-Za-z0-9_.-]+)(.*)", req).groups()
+    try:
+        have = importlib.metadata.version(name)
+    except importlib.metadata.PackageNotFoundError:
+        missing.append(name); continue
+    for op, want in (re.match(r"(>=|<=|==|>|<)(.+)", s.strip()).groups() for s in specs.split(",") if s.strip()):
+        if not OPS[op](key(have), key(want)):
+            missing.append(f"{name} {have} (needs {op}{want})")
 if missing:
     print(json.dumps({"deps": False, "missing": missing})); sys.exit()
 from playwright.sync_api import sync_playwright
@@ -55,9 +68,14 @@ def venv_python(venv: Path) -> Path:
     return venv / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
 
 
+def requirements() -> list[str]:
+    lines = (ROOT / "requirements.txt").read_text(encoding="utf-8").splitlines()
+    return [line.strip() for line in lines if line.strip() and not line.startswith("#")]
+
+
 def probe(python: Path) -> dict:
     try:
-        out = subprocess.run([str(python), "-c", PROBE % (LAUNCH_ARGS,)], capture_output=True, text=True, timeout=180)
+        out = subprocess.run([str(python), "-c", PROBE % (requirements(), LAUNCH_ARGS)], capture_output=True, text=True, timeout=180)
         return json.loads(out.stdout.strip().splitlines()[-1])
     except Exception as e:  # a broken interpreter is just another candidate that does not work
         return {"deps": False, "error": f"{type(e).__name__}: {e}"}
@@ -90,7 +108,7 @@ def diagnose(install: bool = True) -> dict:
     for py in candidates:
         r = probe(py)
         steps.append(f"{py}: " + (f"Python {r['old']}, older than 3.10" if r.get("old") else
-                                  "dependencies missing: " + (", ".join(r.get("missing", [])) or r.get("error", "?")) if not r.get("deps")
+                                  "needs installing: " + (", ".join(r.get("missing", [])) or r.get("error", "?")) if not r.get("deps")
                                   else f"Chromium {r['chromium']}" if r.get("chromium") else f"Chromium did not start ({r.get('error')})"))
         if r.get("deps"):
             found = (py, r)
@@ -101,6 +119,7 @@ def diagnose(install: bool = True) -> dict:
     if not found and install and base:
         py = venv_python(venv)
         if not py.exists() or probe(py).get("old"):  # none yet, or one an older doctor built from an old Python
+            # (an existing venv with missing or outdated requirements is updated in place by the install below)
             venv.parent.mkdir(parents=True, exist_ok=True)
             run([base, "-m", "venv", "--clear", str(venv)], steps, f"create venv {venv} with {base}")
         if py.exists() and run([str(py), "-m", "pip", "install", "-q", "-r", str(ROOT / "requirements.txt")], steps, "install requirements"):

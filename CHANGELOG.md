@@ -121,6 +121,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ### Fixed
 - The doctor installed pytest and pytest-xdist into every user's venv: `requirements.txt` now holds the runtime
   dependencies only (contributors install `.[dev]`).
+- The doctor only checked that the dependencies import, so a venv an older release built was used even when a newer
+  release needs newer versions. It now checks each requirement's version and installs again when one is missing or
+  outdated.
 
 ## [0.2.0] - 2026-10-29
 
