@@ -2,6 +2,13 @@
 
 All notable changes to this project. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+- Evals of 0.3.0 (30 October), all eight cases, three runs each, judged blind: 8 of 48 runs pass the judge (4 before), at
+  2.12 (Sonnet) and 2.25 (Haiku) defects per plate. Paths fall from 41 to 28 of the defects; holes rise from 15 to 21,
+  and series plates get worse. See `evals/README.md`.
+
 ## [0.3.0] - 2026-10-30
 
 The skill's own tools and a stronger picture. Stories name the routes a plate claims and can be numbered on it; starters
