@@ -56,7 +56,7 @@ def height_mode(spec: dict) -> str:
     return spec["canvas"].get("height", "fit")
 
 
-def open_plate(browser, html: str, spec: dict, scale: float = 1, refused: list[str] | None = None):
+def open_plate(browser, html: str, spec: dict, scale: float = 1, refused: list[str] | None = None, even: bool = True):
     """Load the plate, wait for its fonts, set the canvas height (fit or fixed), and draw the decorations. Requests
     for the network are refused and noted in `refused`."""
     width, height = CANVAS_SIZES[spec["canvas"]["size"]]
@@ -69,7 +69,7 @@ def open_plate(browser, html: str, spec: dict, scale: float = 1, refused: list[s
     # A slide keeps its 16:9 shape even when the content is short.
     min_height = round(width * 9 / 16) if spec["canvas"]["size"] == "landscape-16x9" else 0
     h = call(page, "fit", {"mode": height_mode(spec), "height": height, "gaps": gaps, "cap": GAP_CAP,
-                           "minHeight": min_height})
+                           "minHeight": min_height, "even": even})
     page.set_viewport_size({"width": math.ceil(width), "height": math.ceil(h)})
     call(page, "rails")
     call(page, "decorate")

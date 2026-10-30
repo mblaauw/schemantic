@@ -10,36 +10,36 @@ panels:
     title: "TODO: the central thing"
     role: platform
     cards:
-      - {icon: stack-2, name: "TODO: what it offers", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
-      - {icon: settings, name: "TODO: what it offers", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {id: hub_part, icon: stack-2, name: "TODO: what it offers", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {id: hub_out, icon: settings, name: "TODO: what it offers", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
     chips:
-      - {kind: warning, text: "TODO: an open choice the sources leave"}
+      - {kind: warning, text: "TODO: an open choice the sources leave", refs: ["notes: TODO"]}
   - id: producer
     title: "TODO: a part that feeds the hub"
     role: platform
     cards:
-      - {icon: server, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {id: producer_part, icon: server, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
   - id: caller
     title: "TODO: a part that feeds the hub"
     role: external
     cards:
-      - {icon: device-desktop, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {id: caller_part, icon: device-desktop, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
   - id: consumer
     title: "TODO: a part that reads from it"
     role: platform
     cards:
-      - {icon: bell, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {id: consumer_part, icon: bell, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
   - id: reader
     title: "TODO: a part that reads from it"
     role: data
     cards:
-      - {icon: chart-bar, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {id: reader_part, icon: chart-bar, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
 
 flows_mean: data
 flows:
-  - {from: producer, to: hub}
-  - {from: caller, to: hub}
-  - {from: hub, to: consumer}
-  - {from: hub, to: reader}
+  - {from: producer_part, to: hub_part, refs: ["notes: TODO"]}
+  - {from: caller_part, to: hub_part, refs: ["notes: TODO"]}
+  - {from: hub_part, to: consumer_part, refs: ["notes: TODO"]}
+  - {from: hub_out, to: reader_part, refs: ["notes: TODO"]}
 stories:
-  - {name: "TODO: the route the title tells", path: [producer, hub, consumer], draw: true}
+  - {name: "TODO: the route the title tells", path: [producer_part, hub_part, consumer_part], draw: true}

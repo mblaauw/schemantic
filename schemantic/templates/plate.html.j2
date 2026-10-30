@@ -13,14 +13,14 @@
 
 {%- macro card(c, cid) -%}
 {%- set fl = flag_of.get(cid) -%}
-<div class="card{% if c.status %} status-{{ c.status }}{% endif %}{% if c.focus %} focus{% endif %}" data-kind="card" data-id="{{ cid }}"{% if c.col %} style="grid-column: {{ c.col }}{% if c.span %} / span {{ c.span }}{% endif %}; grid-row: 1"{% elif c.row %} style="grid-row: {{ c.row }}"{% endif %}{% if c.layer %} data-layer="{{ c.layer }}"{% endif %}{% if c.refs %} data-refs="{{ c.refs | join(' | ') }}"{% endif %}{% if c.status == 'planned' %} data-dash{% endif %}>{{ icon(c.icon or 'box') }}<div class="ct"><div class="cn"><span{% if c.status == 'removed' %} data-strike{% endif %}>{{ c.name }}</span>{% if c.qualifier %} <span class="cq">({{ c.qualifier }})</span>{% endif %}{% if fl %}<span class="flag flag-{{ fl.kind }}">{{ fl.label }}</span>{% endif %}{% if c.status %} {{ tag(c.status) }}{% endif %}</div>
+<div class="card{% if c.status %} status-{{ c.status }}{% endif %}{% if c.focus %} focus{% endif %}" data-kind="card" data-id="{{ cid }}"{% if c.col %} style="grid-column: {{ c.col }}{% if c.span %} / span {{ c.span }}{% endif %}; grid-row: 1"{% elif c.row %} style="grid-row: {{ c.row }}"{% endif %}{% if c.layer %} data-layer="{{ c.layer }}"{% endif %}{% if c.refs %} data-refs="{{ c.refs | join(' | ') }}"{% endif %}{% if c.status == 'planned' %} data-dash{% endif %}>{{ icon(c.icon or 'box') }}<div class="ct"><div class="cn"><span{% if c.status == 'removed' %} data-strike{% endif %}>{{ c.name }}</span>{% if c.qualifier %} <span class="cq">({{ c.qualifier }})</span>{% endif %}{% if fl %}<span class="flag flag-{{ fl.kind }}">{{ fl.label }}</span>{% endif %}{% if c.status %} {{ tag(c.status) }}{% endif %}{% if c.assumed %} {{ tag('assumed') }}{% endif %}</div>
 {%- if c.note %}<div class="cnote">{{ c.note }}</div>{% endif -%}
 {%- if c.bullets %}<div class="cb">{{ bullets(c.bullets) }}</div>{% endif -%}
 </div></div>
 {%- endmacro -%}
 
 {%- macro cards_block(p, flex='') -%}
-<div class="blk cards{% if p.linked %} linked{% endif %}" style="grid-template-columns: {% if p.card_columns %}repeat({{ p.card_columns }}, minmax(0, 1fr)){% else %}repeat(auto-fit, minmax(min(var(--card-min), 100%), 1fr)){% endif %}{% if p.card_rows %}; grid-template-rows: repeat({{ p.card_rows }}, minmax(0, 1fr)){% endif %}{{ flex }}">
+<div class="blk cards{% if p.linked %} linked{% endif %}"{% if p.keep_grid %} data-keep{% endif %} style="grid-template-columns: {% if p.card_columns %}repeat({{ p.card_columns }}, minmax(0, 1fr)){% else %}repeat(auto-fit, minmax(min(var(--card-min), 100%), 1fr)){% endif %}{% if p.card_rows %}; grid-template-rows: repeat({{ p.card_rows }}, minmax(0, 1fr)){% endif %}{{ flex }}">
 {%- if p.lifeline %}<div class="lifeline-line" style="grid-row: 1 / -1"></div>{% endif -%}
 {%- if p.now %}<div class="now-cell" style="grid-column: {{ p.now }}; grid-row: 1"></div>{% endif -%}
 {%- for c in p.cards %}{{ card(c, c.id or (p.id ~ '.card' ~ loop.index0)) }}{% endfor -%}
@@ -81,7 +81,7 @@
 
 {%- macro panel(p) -%}
 <section class="panel role-{{ p.role }}{% if p.lane %} lane{% endif %}{% if p.lifeline %} lifeline{% endif %}{% if p.cell %} cell{% endif %}{% if p.hub %} panel-hub{% endif %}{% if p.status %} status-{{ p.status }}{% endif %}{% if p.focus %} focus{% endif %}{% if p.quiet %} quiet{% endif %}{% if p.spread %} spread{% endif %}" data-kind="panel" data-id="{{ p.id }}"{% if not p.nested %} style="grid-area: {{ p.id }}"{% endif %}{% if p.status == 'planned' %} data-dash{% endif %}>
-<div class="ph"><div class="ph-row"><div class="ph-title">{{ p.title }}</div>{{ tag(p.status) }}</div>{% if p.subtitle %}<div class="ph-sub">{{ p.subtitle }}</div>{% endif %}</div>
+<div class="ph"><div class="ph-row"><div class="ph-title">{{ p.title }}</div>{{ tag(p.status) }}{% if p.assumed %}{{ tag('assumed') }}{% endif %}</div>{% if p.subtitle %}<div class="ph-sub">{{ p.subtitle }}</div>{% endif %}</div>
 <div class="pb">
 <div class="blocks arrange-{{ p.arrange or 'column' }}">
 {#- In a row, blocks share the width by `weights` (patterns first, then cards). -#}

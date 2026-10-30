@@ -8,7 +8,12 @@ schemantic.decorate = () => {
   const { r2 } = S;
   const items = [];
   const colour = (c) => S.hex(S.rgba(c) || [0, 0, 0, 1]);
-  const dashOf = { sync: "", async: S.token("--dash-async"), optional: S.token("--dash-optional") };
+  const dashOf = {
+    sync: "",
+    async: S.token("--dash-async"),
+    optional: S.token("--dash-optional"),
+    assumed: S.token("--dash-async"),
+  };
 
   for (const el of plate.querySelectorAll("[data-dash]")) {
     const cs = getComputedStyle(el);
@@ -44,7 +49,7 @@ schemantic.decorate = () => {
     ];
     const dash = pattern && S.fitDash(pattern, run, w);
     items.push(
-      `<line x1="${r2(x1)}" y1="${r2(y)}" x2="${r2(x2)}" y2="${r2(y)}" stroke="${S.token("--arrow")}" stroke-width="${w}" stroke-linecap="round"${dash ? ` stroke-dasharray="${dash}"` : ""}/>`,
+      `<line x1="${r2(x1)}" y1="${r2(y)}" x2="${r2(x2)}" y2="${r2(y)}" stroke="${S.token(el.dataset.line === "assumed" ? "--arrow-assumed" : "--arrow")}" stroke-width="${w}" stroke-linecap="round"${dash ? ` stroke-dasharray="${dash}"` : ""}/>`,
     );
   }
 

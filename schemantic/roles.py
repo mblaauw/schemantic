@@ -45,9 +45,11 @@ def is_person(icon: str | None) -> bool:
 
 def role_fit_findings(spec: dict) -> list[dict]:
     """A panel coloured as people whose cards look like systems, or the reverse, judged by the cards' icons: at least
-    two cards, two thirds of them pointing the other way; or a panel that mixes the two, at least two of each and more
-    than a third of each. One person beside a row of tools is left alone. A warning, since icons are only a hint. A layout
-    whose cards are steps or verdicts is left out."""
+    two cards, two thirds of them pointing the other way; or a panel that mixes the two: a third or more people among systems, or
+    half or more things among people. One person beside a row of tools is left alone, and so is an external panel, whose legend
+    covers both. And one thing in two colours on one plate: a card
+    or a panel title that recurs under another role, unless it is marked removed. Warnings, since icons and names are only a hint. A layout whose
+    cards are steps or verdicts is left out."""
     if not archetypes.REGISTRY[spec["archetype"]].cards_are_things:
         return []
     out = []
@@ -62,9 +64,26 @@ def role_fit_findings(spec: dict) -> list[dict]:
         elif p["role"] != "actor" and people >= 2 * len(cards) / 3:
             out.append(finding("role-fit", p["id"], f"coloured as {p['role']}, but {people} of its {len(cards)} cards show "
                                "people", level="warning"))
-        elif (fewest := min(people, len(cards) - people)) >= 2 and fewest * 3 > len(cards):
+        elif (p["role"] == "actor" and (len(cards) - people) * 2 >= len(cards)
+              or p["role"] not in ("actor", "external") and people * 3 >= len(cards)):
             out.append(finding("role-fit", p["id"], f"mixes people ({people}) and systems or things ({len(cards) - people}) "
                                "under one colour", level="warning"))
+    return out + two_colours(spec)
+
+
+def two_colours(spec: dict) -> list[dict]:
+    """The same card name, or the same panel title, under two roles on one plate."""
+    out = []
+    for kind, things in (("card", [(c["name"], p["role"], p["id"]) for p in spec["panels"] for c in p.get("cards", [])
+                                  if c.get("status") != "removed"]),
+                         ("panel", [(p["title"], p["role"], p["id"]) for p in spec["panels"]])):
+        seen: dict[str, tuple[str, str]] = {}
+        for name, role, pid in things:
+            first = seen.setdefault(name.casefold(), (role, pid))
+            if first[0] != role and role in BUILT_IN and first[0] in BUILT_IN:
+                out.append(finding("role-fit", pid, f"{kind} '{name}' is {role} here and {first[0]} in '{first[1]}': one thing, "
+                                   "two colours", level="warning",
+                                   hint="Give one thing one role wherever it appears; move a card if its panel's role does not fit it."))
     return out
 
 

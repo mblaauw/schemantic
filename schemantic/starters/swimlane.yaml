@@ -20,7 +20,7 @@ panels:
         note: "TODO: what happens"
         col: 2
         refs: ["notes: TODO"]
-        flag: {kind: warning, text: "TODO: an open choice the sources leave"}
+        flag: {kind: warning, text: "TODO: an open choice the sources leave", refs: ["notes: TODO"]}
   - id: system
     title: "TODO: the system that records it"
     role: platform
@@ -29,7 +29,7 @@ panels:
 
 flows_mean: control
 flows:
-  - {from: ask, to: decide}
-  - {from: decide, to: record}
+  - {from: ask, to: decide, refs: ["notes: TODO"]}
+  - {from: decide, to: record, refs: ["notes: TODO"]}
 stories:
   - {name: "TODO: the route the title tells", path: [ask, decide, record], draw: true}

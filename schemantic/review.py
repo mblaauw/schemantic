@@ -54,6 +54,12 @@ def changed_parts(old: dict | None, new: dict, spec: dict) -> list[str] | None:
     return [part for part in b if a.get(part) != b[part]]
 
 
+def moved_parts(old: dict, new: dict, spec: dict) -> list[str]:
+    """The parts whose corner is somewhere else: a row above them grew, or the plate was rearranged."""
+    a, b = old["boxes"], new["boxes"]
+    return [part for part in part_names(spec) if part in a and part in b and max(abs(a[part][0] - b[part][0]), abs(a[part][1] - b[part][1])) > 2]
+
+
 def boxes(layout: dict, spec: dict) -> list[tuple[str, list[float]]]:
     """(name, CSS box) for each part, in reading order: title block, panels in spec order, footer."""
     found: dict[str, list[float]] = {}

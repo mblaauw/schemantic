@@ -46,6 +46,72 @@ invented, no defect). One run per case is noisy; take three.
 
 ## Latest results
 
+The skill at `truthful-plates`, unreleased: plates mark what the sources do not say, `route-end`, `role-fit` on one thing in
+two colours, cards that fill their row, panels evened out, and corrections. Eight cases, three runs each, judged blind.
+
+**The yardstick changed, so last round's numbers do not compare.** `judge.md` and `review.md` now say that what the plate
+marks as assumed is not invented, and what only the brief admits still is. That one sentence is a far harder rule: on the
+48 plates of the last round, defects went from 97 to 170, and runs with nothing invented from 37 to 11. All 48 were judged
+again under it, so the table compares the same rule on both sides. Those plates could not mark anything, so part of the gain on
+truth is the feature itself; the columns other than truth are the plainer test.
+
+| Under the new rules | Last round's plates | These plates |
+| --- | --- | --- |
+| Judged pass | 3/48 | 9/48 |
+| Defects per plate | 3.54 | 2.31 |
+| Nothing invented | 11/48 | 39/48 |
+| Truth defects | 54 | 24 |
+| Path defects | 39 | 30 |
+| Hole defects | 34 | 28 |
+| Colour defects | 18 | 11 |
+
+| Model | Automated | Judged | Nothing invented | Defects per plate |
+| --- | --- | --- | --- | --- |
+| Sonnet 5.5 | 23/24 | 5/24 | 22/24 | 1.88 |
+| Haiku 5.5 | 24/24 | 4/24 | 17/24 | 2.75 |
+
+| Case | Passed, before | Passed | Defects per plate, before | Defects per plate |
+| --- | --- | --- | --- | --- |
+| 1 notes | 0/6 | 1/6 | 4.50 | 3.50 |
+| 2 repository | 0/6 | 0/6 | 4.00 | 3.33 |
+| 3 series | 0/6 | 0/6 | 5.50 | 2.67 |
+| 4 open choices | 0/6 | 0/6 | 2.67 | 2.50 |
+| 5 swimlane | 2/6 | 3/6 | 1.33 | 0.50 |
+| 6 deployment | 0/6 | 4/6 | 3.17 | 0.67 |
+| 7 phase change | 0/6 | 0/6 | 3.83 | 2.50 |
+| 8 language | 1/6 | 1/6 | 3.33 | 2.83 |
+
+What it says: agents use the marking (29 of 303 arrows and 14 of 689 cards are assumed, and every status has a `status_ref`),
+and nearly every source got a `path`. Nothing invented is the clearest gain, and deployment and swimlane are close to done. The
+goals of one defect per plate and half of all runs passing are not met. Holes and routes that stop short are still the largest
+groups, and Haiku is well behind Sonnet. `route-end` also has a cost: asked for a route to "the channels", some agents end
+it on one channel they pick, or draw no story at all.
+
+### Corrections
+
+`evals/corrections.py`: a delivered plate, one sentence from the user, graded by code. Six cases, two models, two runs each.
+
+| Case | Passed | Parts changed | Parts moved |
+| --- | --- | --- | --- |
+| Rename a card | 4/4 | 1 | 0 |
+| Move an arrow | 2/4 | 3 to 7 | 0 |
+| Drop a card | 4/4 | 2 | 0 |
+| A settled question off the plate | 4/4 | 6 | 4 |
+| Change a status | 4/4 | 2 | 0 |
+| Add a card | 4/4 | 2 | 1 |
+
+22 of 24 changed only what was asked, and all 24 took a baseline first. The two others, both Haiku, also corrected a matrix row the
+new arrow had made false, and said so: arguably right, and the grader counts it against them. "Changed" counts a part whose
+arrow was rerouted. Runs showed that citing the user on a plate without `sources` set off 21 warnings across it, and that
+two examples mixed people and systems; both are fixed since, and not measured.
+
+## History
+
+Each run below names what changed before it and what it found; the targets it names are what the following runs
+went after.
+
+### After the new layouts (30 October)
+
 The skill at `more-archetypes`, unreleased: a worked series in `references/analysis.md`, `role-fit` on mixed panels, the
 #24 fixes, and five new layouts. Eight cases, three runs each, judged blind. In brackets, 0.3.0.
 
@@ -98,11 +164,6 @@ Reading these runs led to fixes **not measured yet**: dashed messages read "Repl
 rows share their width, with no colours or phases in its legend; a hierarchy's arrows read "Leads" and its panels end
 with their content; the quadrant docs no longer ask each panel for a verdict; the `series` hint no longer invites
 relabelling arrows, which two series runs did.
-
-## History
-
-Each run below names what changed before it and what it found; the targets it names are what the following runs
-went after.
 
 ### 0.3.0 (30 October)
 

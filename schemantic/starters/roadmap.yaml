@@ -16,12 +16,12 @@ panels:
     title: "TODO: a workstream"
     role: platform
     cards:
-      - {id: next, icon: rocket, name: "TODO: an item", note: "TODO: what it delivers", col: 2, span: 2, status: new, refs: ["notes: TODO"]}
+      - {id: next, icon: rocket, name: "TODO: an item", note: "TODO: what it delivers", col: 2, span: 2, status: new, status_ref: "notes: TODO", refs: ["notes: TODO"]}
     chips:
-      - {kind: warning, text: "TODO: an open choice the sources leave"}
+      - {kind: warning, text: "TODO: an open choice the sources leave", refs: ["notes: TODO"]}
 
 flows_mean: sequence
 flows:
-  - {from: base, to: next}
+  - {from: base, to: next, refs: ["notes: TODO"]}
 stories:
   - {name: "TODO: the order the title tells", path: [base, next], draw: true}

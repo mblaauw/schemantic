@@ -3,7 +3,7 @@
 canvas: {size: landscape-4x3, lang: nl, series: orderplatform, part: 2, of: 3}
 topic: "Orderplatform na fase 2: toegang en data flow"
 title: "Eén identity provider en één gateway bepalen wie wat bereikt"
-subtitle: "Mensen loggen in via OIDC, systemen met service accounts; data delen loopt via het lakehouse"
+subtitle: "Mensen loggen in via OIDC, systemen met een service account; data delen loopt via het lakehouse"
 archetype: column-flow
 
 layout:

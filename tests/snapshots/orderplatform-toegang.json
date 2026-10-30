@@ -16,109 +16,109 @@
    40,
    152,
    360,
-   590
+   652
   ],
   "clients.card0": [
    54,
    222,
    348,
-   278
+   290
   ],
   "clients.card1": [
    54,
-   286,
+   298,
    348,
-   340
+   366
   ],
   "clients.card2": [
    54,
+   374,
    348,
-   348,
-   404
+   442
   ],
   "clients.card3": [
    54,
-   412,
+   450,
    348,
-   468
+   518
   ],
   "clients.card4": [
    54,
-   476,
+   526,
    348,
-   532
+   594
   ],
   "clients.chip0": [
    54,
-   542,
+   604,
    348,
-   578
+   640
   ],
   "identity": [
    408,
    152,
    760,
-   646
+   652
   ],
   "identity.card0": [
    422,
    222,
    748,
-   278
+   280
   ],
   "identity.card1": [
    422,
-   286,
+   288,
    748,
-   340
+   344
   ],
   "identity.card2": [
    422,
-   348,
+   352,
    748,
-   404
+   410
   ],
   "identity.matrix0": [
    422,
-   414,
+   420,
    748,
-   572
+   578
   ],
   "identity.chip0": [
    422,
-   582,
+   588,
    748,
-   634
+   640
   ],
   "gateway": [
    808,
    152,
    1128,
-   570
+   652
   ],
   "gateway.card0": [
    822,
    224,
    1114,
-   332
+   352
   ],
   "gateway.card1": [
    822,
-   340,
+   360,
    1114,
-   394
+   436
   ],
   "gateway.card2": [
    822,
-   402,
+   444,
    1114,
-   494
+   554
   ],
   "gateway.card3": [
    822,
-   502,
+   562,
    1114,
-   556
+   638
   ],
   "services": [
    1176,
@@ -208,13 +208,13 @@
    1088,
    768,
    1548,
-   822
+   826
   ],
   "data.card1": [
    1088,
-   830,
+   834,
    1548,
-   886
+   894
   ],
   "data.chip0": [
    54,
@@ -279,7 +279,7 @@
   [
    40,
    128,
-   "Mensen loggen in via OIDC, systemen met service accounts; data delen loopt via het lakehouse"
+   "Mensen loggen in via OIDC, systemen met een service account; data delen loopt via het lakehouse"
   ],
   [
    1436,
@@ -308,47 +308,47 @@
   ],
   [
    96,
-   310,
+   322,
    "Mobile app"
   ],
   [
    96,
-   326,
+   338,
    "iOS en Android, zelfde API"
   ],
   [
    96,
-   372,
+   398,
    "Partner integraties"
   ],
   [
    96,
-   390,
+   414,
    "B2B order API voor leveranciers"
   ],
   [
    96,
-   436,
+   474,
    "Data engineers"
   ],
   [
    96,
-   452,
+   490,
    "bouwen pipelines per domein"
   ],
   [
    96,
-   500,
+   550,
    "Analisten"
   ],
   [
    96,
-   516,
+   566,
    "rapporteren via de BI tool"
   ],
   [
    90,
-   562,
+   624,
    "Partners krijgen eigen client credentials"
   ],
   [
@@ -373,87 +373,87 @@
   ],
   [
    464,
-   310,
+   312,
    "Service accounts"
   ],
   [
    464,
-   326,
+   328,
    "één per service, geen gedeelde secrets"
   ],
   [
    464,
-   372,
+   376,
    "Audit log"
   ],
   [
    464,
-   390,
+   394,
    "elke token-uitgifte wordt gelogd"
   ],
   [
    434,
-   434,
+   440,
    "Wie mag wat"
   ],
   [
    510,
-   454,
+   460,
    "Orders API"
   ],
   [
    594,
-   454,
+   460,
    "Data (Gold)"
   ],
   [
    690,
-   454,
+   460,
    "Beheer"
   ],
   [
    434,
-   476,
+   480,
    "Klant"
   ],
   [
    434,
-   496,
+   502,
    "Partner"
   ],
   [
    434,
-   518,
+   522,
    "Engineer"
   ],
   [
    434,
-   538,
+   544,
    "Analist"
   ],
   [
    448,
-   560,
+   566,
    "volledig"
   ],
   [
    518,
-   560,
+   566,
    "beperkt"
   ],
   [
    588,
-   560,
+   566,
    "geen toegang"
   ],
   [
    458,
-   604,
+   608,
    "Klanten en medewerkers in aparte realms;"
   ],
   [
    458,
-   620,
+   626,
    "audit log een jaar bewaard"
   ],
   [
@@ -493,52 +493,52 @@
   ],
   [
    864,
-   364,
+   384,
    "Rate limiting"
   ],
   [
    958,
-   362,
+   382,
    "V1"
   ],
   [
    988,
-   362,
+   382,
    "nieuw"
   ],
   [
    864,
-   380,
+   400,
    "beschermt services tegen pieken"
   ],
   [
    864,
-   426,
+   468,
    "Routing"
   ],
   [
    864,
-   444,
+   484,
    "per domein naar de juiste service"
   ],
   [
    876,
-   462,
+   502,
    "versie in het pad: /v1, /v2"
   ],
   [
    876,
-   478,
+   520,
    "canary releases per service"
   ],
   [
    864,
-   526,
+   586,
    "Observability"
   ],
   [
    864,
-   542,
+   604,
    "logs en traces per request"
   ],
   [
@@ -708,12 +708,12 @@
   ],
   [
    1130,
-   854,
+   858,
    "Pipelines"
   ],
   [
    1130,
-   872,
+   874,
    "jobs per domein, gedeployed via CI/CD"
   ],
   [
@@ -873,12 +873,12 @@
   ],
   [
    208,
-   648,
+   678,
    "BI en notebooks"
   ],
   [
    592,
-   676,
+   678,
    "scoped credentials"
   ],
   [
@@ -895,11 +895,11 @@
    "points": [
     [
      368,
-     370
+     402
     ],
     [
      400,
-     370
+     402
     ]
    ],
    "label": null
@@ -911,11 +911,11 @@
    "points": [
     [
      768,
-     360
+     402
     ],
     [
      800,
-     360
+     402
     ]
    ],
    "label": null
@@ -927,11 +927,11 @@
    "points": [
     [
      1136,
-     360
+     402
     ],
     [
      1168,
-     360
+     402
     ]
    ],
    "label": null
@@ -943,7 +943,7 @@
    "points": [
     [
      200,
-     598
+     660
     ],
     [
      200,
@@ -959,7 +959,7 @@
    "points": [
     [
      584,
-     654
+     660
     ],
     [
      584,

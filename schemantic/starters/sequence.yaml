@@ -21,7 +21,7 @@ panels:
         name: "TODO: what it asks next"
         row: 2
         refs: ["notes: TODO"]
-        flag: {kind: warning, text: "TODO: an open choice the sources leave"}
+        flag: {kind: warning, text: "TODO: an open choice the sources leave", refs: ["notes: TODO"]}
       - {id: reply, icon: corner-down-left, name: "TODO: what it returns", row: 3, refs: ["notes: TODO"]}
   - id: store
     title: "TODO: what it depends on"
@@ -31,6 +31,6 @@ panels:
 
 flows_mean: request
 flows:      # numbered by row
-  - {from: ask, to: take}
-  - {from: fetch, to: read}
-  - {from: reply, to: done, style: async}
+  - {from: ask, to: take, refs: ["notes: TODO"]}
+  - {from: fetch, to: read, refs: ["notes: TODO"]}
+  - {from: reply, to: done, style: async, refs: ["notes: TODO"]}

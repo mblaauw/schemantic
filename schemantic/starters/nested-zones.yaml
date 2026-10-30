@@ -6,7 +6,7 @@ layout:
       kind: "TODO: account"
       title: "TODO: where it runs"
       zones:
-        - {id: inner, kind: "TODO: network", title: "TODO: the zone inside", panels: [front, back]}
+        - {id: inner, kind: "TODO: network", title: "TODO: the zone inside", panels: [back, front]}
   outside: [users]
 
 panels:
@@ -15,24 +15,24 @@ panels:
     role: platform
     cards:
       - {icon: lock, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
-      - {icon: server, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {id: front_part, icon: server, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
     chips:
-      - {kind: warning, text: "TODO: an open choice the sources leave"}
+      - {kind: warning, text: "TODO: an open choice the sources leave", refs: ["notes: TODO"]}
   - id: back
     title: "TODO: what it protects"
     role: data
     cards:
-      - {icon: database, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {id: back_part, icon: database, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
       - {icon: archive, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
   - id: users
     title: "TODO: who reaches in"
     role: external
     cards:
-      - {icon: users, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {id: users_part, icon: users, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
 
 flows_mean: request
 flows:
-  - {from: users, to: front}
-  - {from: front, to: back}
+  - {from: users_part, to: front_part, refs: ["notes: TODO"]}
+  - {from: front_part, to: back_part, refs: ["notes: TODO"]}
 stories:
-  - {name: "TODO: the route the title tells", path: [users, front, back], draw: true}
+  - {name: "TODO: the route the title tells", path: [users_part, front_part, back_part], draw: true}

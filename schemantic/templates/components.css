@@ -64,6 +64,10 @@ body { background: var(--paper); }
 /* A panel spanning several rows spreads its cards evenly over its height */
 .spread .blocks { flex: 1 1 auto; }
 .spread .blocks > .cards { flex: 1 1 auto; align-content: space-evenly; }
+/* A panel nearly as tall as its row: its cards take up the difference */
+.body > .panel.evened, .spoke-row > .panel.evened { align-self: stretch !important; }
+.evened .blocks, .evened .blocks > .cards { flex: 1 1 auto; }
+.evened .blocks > .cards { align-content: stretch; }
 .chip { display: flex; gap: 8px; align-items: flex-start; border-radius: var(--r-card); padding: 8px 10px;
   font-size: var(--t-body); line-height: 1.35; font-weight: 600; }
 .chip .ic { width: 18px; height: 18px; }
@@ -147,6 +151,7 @@ body { background: var(--paper); }
 .tag-planned { background: var(--tag-planned-bg); color: var(--tag-planned-text); }
 .tag-deprecated { background: var(--tag-deprecated-bg); color: var(--tag-deprecated-text); }
 .tag-removed { background: var(--tag-removed-bg); color: var(--tag-removed-text); }
+.tag-assumed { background: var(--tag-assumed-bg); color: var(--tag-assumed-text); }
 .card.status-deprecated, .card.status-removed { background: var(--frame-body); }
 .status-deprecated .cn, .status-deprecated .cnote, .status-removed .cn, .status-removed .cnote { color: var(--muted); }
 .card.status-deprecated .ic, .card.status-removed .ic { color: var(--muted); }

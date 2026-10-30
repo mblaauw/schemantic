@@ -52,7 +52,7 @@
     },
     "sources": {
       "type": "array",
-      "description": "Where the content comes from. When given, every card names its source in refs (lint: traceability).",
+      "description": "Where the content comes from. When given, every card, arrow, status and warning names its source, or says it is assumed (lint: traceability).",
       "items": {
         "type": "object",
         "required": [
@@ -61,6 +61,10 @@
         ],
         "additionalProperties": false,
         "properties": {
+          "path": {
+            "type": "string",
+            "description": "The source on disk, relative to the spec: a file, or a folder of files. Lint then checks that each ref's quote is really there."
+          },
           "id": {
             "type": "string",
             "pattern": "^[a-z][a-z0-9_-]*$"
@@ -389,6 +393,18 @@
         ],
         "additionalProperties": false,
         "properties": {
+          "refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Where this comes from: '<source id>: <path, line or short quote>'. Not rendered."
+          },
+          "assumed": {
+            "type": "string",
+            "maxLength": 160,
+            "description": "The sources do not say this; why it is drawn anyway. The plate marks it, so a reader can tell it from a fact. Not rendered."
+          },
           "from": {
             "type": "string",
             "description": "A panel id or card id."
@@ -867,6 +883,15 @@
       "additionalProperties": false,
       "description": "A thing with a name inside a panel.",
       "properties": {
+        "assumed": {
+          "type": "string",
+          "maxLength": 160,
+          "description": "The sources do not say this; why it is drawn anyway. The plate marks it, so a reader can tell it from a fact. Not rendered."
+        },
+        "status_ref": {
+          "type": "string",
+          "description": "Where the sources give this status: '<source id>: <path, line or short quote>'. Not rendered."
+        },
         "id": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_-]*$",
@@ -921,6 +946,13 @@
           "additionalProperties": false,
           "description": "A numbered marker on the card; the text goes to the footer under the same number (warning: open questions; info: notes).",
           "properties": {
+            "refs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Where this comes from: '<source id>: <path, line or short quote>'. Not rendered."
+            },
             "kind": {
               "enum": [
                 "warning",
@@ -973,6 +1005,13 @@
       "additionalProperties": false,
       "description": "A warning (open choice, repeated under open questions) or info (assumption) note in a panel.",
       "properties": {
+        "refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Where this comes from: '<source id>: <path, line or short quote>'. Not rendered."
+        },
         "kind": {
           "enum": [
             "warning",
@@ -1209,6 +1248,15 @@
       "additionalProperties": false,
       "description": "A box on the plate holding cards, patterns and chips.",
       "properties": {
+        "assumed": {
+          "type": "string",
+          "maxLength": 160,
+          "description": "The sources do not say this; why it is drawn anyway. The plate marks it, so a reader can tell it from a fact. Not rendered."
+        },
+        "status_ref": {
+          "type": "string",
+          "description": "Where the sources give this status: '<source id>: <path, line or short quote>'. Not rendered."
+        },
         "id": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_-]*$",

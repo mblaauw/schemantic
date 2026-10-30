@@ -9,21 +9,21 @@ panels:
     title: "TODO: the layer people use"
     role: platform
     cards:
-      - {icon: device-desktop, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
-      - {icon: users, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {id: top_part, icon: device-desktop, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {icon: layout, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
   - id: middle
     title: "TODO: the layer it builds on"
     role: platform
     cards:
-      - {icon: server, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {id: middle_part, icon: server, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
       - {icon: git-branch, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
     chips:
-      - {kind: warning, text: "TODO: an open choice the sources leave"}
+      - {kind: warning, text: "TODO: an open choice the sources leave", refs: ["notes: TODO"]}
   - id: base
     title: "TODO: the layer underneath"
     role: platform
     cards:
-      - {icon: cloud, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
+      - {id: base_part, icon: cloud, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
       - {icon: database, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
   - id: across
     title: "TODO: what cuts across"
@@ -35,7 +35,7 @@ panels:
 
 flows_mean: dependency
 flows:
-  - {from: top, to: middle}
-  - {from: middle, to: base}
+  - {from: top_part, to: middle_part, refs: ["notes: TODO"]}
+  - {from: middle_part, to: base_part, refs: ["notes: TODO"]}
 stories:
-  - {name: "TODO: the route the title tells", path: [top, middle, base], draw: true}
+  - {name: "TODO: the route the title tells", path: [top_part, middle_part, base_part], draw: true}

@@ -52,6 +52,8 @@ systems outside the team's control, `actor` for people and teams. A theme can ad
   note: "events no consumer could handle"   # 70, lowercase start, no full stop
   bullets: ["first responder replays or skips"]   # up to 3, 60 each
   status: planned                 # optional: a tag after the name; planned is dashed, deprecated muted, removed struck
+  status_ref: "plan: built in phase 2"   # where the sources give the status; needed once `sources` are declared
+  assumed: "the plan implies it"  # optional: not in the sources, and why; the plate tags it
   flag: {kind: warning, text: "Rate limits per tenant or per client?"}   # optional: numbered marker, text in the footer
   focus: true                     # optional, as on panels
 ```
@@ -88,6 +90,8 @@ flows:
   - {from: orders, to: payments, step: 2}             # a numbered badge, for the order things happen
   - {from: services, to: bus, both: true}             # arrowheads at both ends
   - {from: integration, to: proxy, focus: true}       # the one arrow the plate is about (one focus per plate)
+  - {from: wms, to: carrier, refs: ["plan: WMS books shipments"]}   # where the sources say so
+  - {from: ci, to: registry, assumed: "CI must push its images"}    # not in the sources: amber and dashed, in the legend
 ```
 
 Panel headers are quiet: their role's tint, with the title in the role's colour. Only the panels a `focus` is about

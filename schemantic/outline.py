@@ -2,7 +2,7 @@
 <desc>, as the <name>.md written next to the images, and as review input. The focus element comes first."""
 from __future__ import annotations
 
-from .spec import card_id, flags, load_locale, open_questions
+from .spec import assumed_items, card_id, flags, load_locale, open_questions
 
 
 def _focus_first(spec: dict) -> list[dict]:
@@ -15,6 +15,8 @@ def _card(c: dict, cid: str, flag_of: dict, loc: dict) -> str:
     bits = [c["name"] + (f" ({c['qualifier']})" if c.get("qualifier") else "")]
     if c.get("status"):
         bits.append(f"[{loc['status'][c['status']]}]")
+    if c.get("assumed"):
+        bits.append(f"[{loc['status']['assumed']}]")
     if c.get("note"):
         bits.append(f"— {c['note']}")
     if cid in flag_of:
@@ -45,7 +47,8 @@ def lines(spec: dict) -> list[str]:
     for f in spec.get("flows", []):
         label = f" ({f['label']})" if f.get("label") else ""
         arrow = "<->" if f.get("both") else "->"
-        out.append(f"{names.get(f['from'], f['from'])} {arrow} {names.get(f['to'], f['to'])}{label}")
+        mark = f" [{loc['status']['assumed']}]" if f.get("assumed") else ""
+        out.append(f"{names.get(f['from'], f['from'])} {arrow} {names.get(f['to'], f['to'])}{label}{mark}")
     out += [f"{s['name']}: {' -> '.join(names.get(step, step) for step in s['path'])}" for s in spec.get("stories", [])]
     return out
 
@@ -101,7 +104,8 @@ def markdown(spec: dict) -> str:
         md += [f"## {loc['footer']['flows']}", ""]
         for f in spec["flows"]:
             label = f" — {f['label']}" if f.get("label") else ""
-            md.append(f"- {names.get(f['from'], f['from'])} → {names.get(f['to'], f['to'])}{label}")
+            mark = f" [{loc['status']['assumed']}]" if f.get("assumed") else ""
+            md.append(f"- {names.get(f['from'], f['from'])} → {names.get(f['to'], f['to'])}{label}{mark}")
         md.append("")
     if spec.get("stories"):
         md += [f"## {loc['footer']['stories']}", ""]
@@ -115,6 +119,9 @@ def markdown(spec: dict) -> str:
     principles = (spec.get("footer") or {}).get("principles") or []
     if principles:
         md += [f"## {loc['footer']['principles']}", ""] + [f"- {p}" for p in principles] + [""]
+    assumed = assumed_items(spec) + (spec.get("brief") or {}).get("assumptions", [])
+    if assumed:
+        md += [f"## {loc['footer']['assumptions']}", ""] + [f"- {a}" for a in assumed] + [""]
     notes = [f for f in flags(spec) if f["kind"] == "info"]
     if notes:
         md += [f"## {loc['footer']['notes']}", ""] + [f"- {n['label']} {n['text']}" for n in notes] + [""]

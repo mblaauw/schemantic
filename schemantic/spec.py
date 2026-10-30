@@ -22,6 +22,8 @@ FOOTER_MAX_COLUMNS = 3
 FOOTER_STACK_MAX = 2
 # What a starter spec marks for the author to fill in.
 PLACEHOLDER = re.compile(r"\bTODO\b")
+# A source file past this size (bytes) is no text a ref can quote: a binary, a dump.
+QUOTE_FILE_MAX = 2_000_000
 
 
 def load_spec(path: str | Path) -> dict:
@@ -165,7 +167,7 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
         if f["from"] == f["to"]:
             out.append(finding("flow", f"flows/{i}", f"from and to are the same element ('{f['from']}')"))
 
-    out += orphans(spec, arche) + story_findings(spec, known)
+    out += orphans(spec, arche) + story_findings(spec, known) + route_ends(spec)
 
     canvas = spec["canvas"]
     if ("part" in canvas) != ("of" in canvas):
@@ -253,6 +255,34 @@ def story_findings(spec: dict, known: set[str]) -> list[dict]:
     return out
 
 
+def route_ends(spec: dict) -> list[dict]:
+    """Routes that stop short of what they are about: a story through a panel that holds cards, an arrow labelled with a
+    card's name that ends on the panel around it, and a card the title or subtitle names that no arrow reaches."""
+    if not spec.get("flows"):
+        return []
+    cards_of = {p["id"]: [(card_id(p, i, c), c["name"]) for i, c in enumerate(p.get("cards", []))] for p in spec["panels"]}
+    out = []
+    for n, s in enumerate(spec.get("stories", [])):
+        for step in s["path"]:
+            if cards_of.get(step):
+                out.append(finding("route-end", f"stories/{n}", f"story '{s['name']}' goes through panel '{step}', which holds cards; "
+                                   "a finger stops at its edge", level="warning"))
+    for n, f in enumerate(spec.get("flows", [])):
+        words = set(re.findall(r"\w{4,}", f.get("label", "").casefold()))
+        for end in ("from", "to"):
+            hit = next((name for _, name in cards_of.get(f[end], []) if words & set(re.findall(r"\w{4,}", name.casefold()))), None)
+            if hit:
+                out.append(finding("route-end", f"flows/{n}", f"arrow '{f['label']}' is about card '{hit}' but ends on panel '{f[end]}'",
+                                   level="warning"))
+    ends = {f[end] for f in spec["flows"] for end in ("from", "to")}
+    claim = f"{spec.get('title', '')} {spec.get('subtitle', '')}"
+    for cards in cards_of.values():
+        for cid, name in cards:
+            if len(name) >= 4 and cid not in ends and re.search(rf"\b{re.escape(name)}\b", claim, re.I):
+                out.append(finding("route-end", cid, f"the title or subtitle names '{name}', but no arrow reaches the card", level="warning"))
+    return out
+
+
 def drawn_story(spec: dict) -> dict | None:
     return next((s for s in spec.get("stories", []) if s.get("draw")), None)
 
@@ -270,23 +300,93 @@ def number_story(spec: dict) -> dict:
     return {**spec, "flows": flows}
 
 
+def claims(spec: dict):
+    """What a plate says about the world, with what backs it: (id, what it is, refs, assumed)."""
+    for p in spec["panels"]:
+        if p.get("status"):
+            yield p["id"], f"status '{p['status']}' on panel '{p['title']}'", [p["status_ref"]] if p.get("status_ref") else [], p.get("assumed")
+        for n, ch in enumerate(p.get("chips", [])):
+            if ch["kind"] == "warning":
+                yield f"{p['id']}/chips/{n}", f"warning '{ch['text']}'", ch.get("refs", []), None
+        for i, c in enumerate(p.get("cards", [])):
+            cid = card_id(p, i, c)
+            yield cid, f"card '{c['name']}'", c.get("refs", []), c.get("assumed")
+            if c.get("status"):
+                yield cid, f"status '{c['status']}' on card '{c['name']}'", [c["status_ref"]] if c.get("status_ref") else [], c.get("assumed")
+            if c.get("flag", {}).get("kind") == "warning":
+                yield cid, f"warning '{c['flag']['text']}'", c["flag"].get("refs", []), None
+    for n, f in enumerate(spec.get("flows", [])):
+        yield f"flows/{n}", f"arrow {f['from']} to {f['to']}", f.get("refs", []), f.get("assumed")
+
+
+def assumed_items(spec: dict) -> list[str]:
+    """Everything the plate itself marks as assumed, and why."""
+    panels = [(p["title"], p["assumed"]) for p in spec["panels"] if p.get("assumed")]
+    cards = [(c["name"], c["assumed"]) for p in spec["panels"] for c in p.get("cards", []) if c.get("assumed")]
+    names = {p["id"]: p["title"] for p in spec["panels"]}
+    names |= {card_id(p, i, c): c["name"] for p in spec["panels"] for i, c in enumerate(p.get("cards", []))}
+    flows = [(f"{names.get(f['from'], f['from'])} -> {names.get(f['to'], f['to'])}", f["assumed"])
+             for f in spec.get("flows", []) if f.get("assumed")]
+    return [f"{what}: {why}" for what, why in panels + cards + flows]
+
+
 def traceability(spec: dict) -> list[dict]:
-    """With `sources` declared, every card says where it comes from, and every ref names a declared source."""
+    """With `sources` declared, each claim says where it comes from or that it is assumed, every ref names a declared
+    source, and assumption does not outweigh what was found."""
     ids = {s["id"] for s in spec.get("sources", [])}
     if not ids:
         return []
     out = []
-    for p in spec["panels"]:
-        for i, c in enumerate(p.get("cards", [])):
-            cid = card_id(p, i, c)
-            if not c.get("refs"):
-                out.append(finding("traceability", cid, f"card '{c['name']}' has no refs; say which source it comes from",
+    for where, what, refs, assumed in claims(spec):
+        if not refs and not assumed:
+            out.append(finding("traceability", where, f"{what} has no source; say which one, or that it is assumed", level="warning"))
+        for ref in refs:
+            if ref.split(":", 1)[0].strip() not in ids:
+                out.append(finding("traceability", where, f"ref '{ref}' does not start with a declared source id ({', '.join(sorted(ids))})",
                                    level="warning"))
-            for ref in c.get("refs", []):
-                head = ref.split(":", 1)[0].strip()
-                if head not in ids:
-                    out.append(finding("traceability", cid, f"ref '{ref}' does not start with a declared source id ({', '.join(sorted(ids))})",
-                                       level="warning"))
+    things = [c for p in spec["panels"] for c in p.get("cards", [])] + spec.get("flows", [])
+    guessed = sum(bool(t.get("assumed")) for t in things)
+    if guessed >= 3 and guessed * 3 > len(things):
+        out.append(finding("traceability", "(plate)", f"{guessed} of {len(things)} cards and arrows are assumed: this plate says more "
+                           "about the author than the sources", level="warning",
+                           hint="Drop what has no basis, or make it an open question; ask for the source that settles the rest."))
+    return out
+
+
+def plain(text: str) -> str:
+    """Text as it is compared with a source: lower case, words only, so punctuation and markup never decide."""
+    return " ".join(re.findall(r"\w+", text.casefold()))
+
+
+def source_text(path: Path) -> str:
+    files = sorted(f for f in path.rglob("*") if f.is_file()) if path.is_dir() else [path]
+    return plain(" ".join(f.read_text(encoding="utf-8", errors="replace") for f in files if f.stat().st_size < QUOTE_FILE_MAX))
+
+
+def quote_found(quote: str, source: Path, text: str) -> bool:
+    """A ref holds a quote, or points somewhere: a line ('line 12', 'L12') or, in a folder, a file ('compose.yml:12').
+    A quote may skip words with '...' or an ellipsis."""
+    quote = quote.strip().strip("\"'“”‘’")
+    if re.fullmatch(r"(lines?\s*|L)?\d+(\s*-\s*\d+)?", quote, re.I):
+        return True
+    if quote and source.is_dir() and (source / quote.split()[0].split(":")[0]).exists():
+        return True
+    return all(plain(part) in text for part in re.split(r"\.\.\.|…", quote) if plain(part))
+
+
+def source_quotes(spec: dict, base: Path) -> list[dict]:
+    """A source with a `path` can be read, so a ref that quotes it can be checked: the words must be there."""
+    sources = {s["id"]: base / s["path"] for s in spec.get("sources", []) if s.get("path")}
+    out = [finding("traceability", f"sources/{sid}", f"no such file or folder: {path}", level="warning")
+           for sid, path in sources.items() if not path.exists()]
+    texts = {sid: source_text(path) for sid, path in sources.items() if path.exists()}
+    for where, what, refs, _ in claims(spec):
+        for ref in refs:
+            sid, _, quote = ref.partition(":")
+            sid = sid.strip()
+            if sid in texts and not quote_found(quote, sources[sid], texts[sid]):
+                out.append(finding("traceability", where, f"{what}: '{quote.strip()}' is not in source '{sid}'", level="warning",
+                                   hint="Quote the source word for word; if it does not say this, mark it `assumed` with why, or drop it."))
     return out
 
 
@@ -423,7 +523,8 @@ def iter_strings(obj):
         yield obj
     elif isinstance(obj, dict):
         for k, v in obj.items():
-            if k not in ("id", "icon", "role", "kind", "type", "tier", "layout", "from", "to", "refs", "sources", "brief", "path"):
+            if k not in ("id", "icon", "role", "kind", "type", "tier", "layout", "from", "to", "refs", "status_ref", "assumed", "sources",
+                         "brief", "path"):
                 yield from iter_strings(v)
     elif isinstance(obj, list):
         for v in obj:

@@ -17,7 +17,8 @@ Answer in JSON, nothing else:
 
 - `claim_in_title`: the title states a claim the plate supports, not a topic ("Architecture overview" is a topic).
 - `invented`: be strict. Generic words ("API", "database") are fine when the inputs imply them; a named product, a
-  number or a decision the inputs do not contain is invented.
+  number or a decision the inputs do not contain is invented. What the plate itself marks as assumed (an "assumed"
+  tag, an amber dashed arrow) is not invented; what only the brief admits still is.
 - `archetype_fits`: the layout suits the reader's question in the prompt (a process with handoffs between people
   wants lanes; a deployment wants nested zones; a path wants columns).
 - `defects`: answer the review questions as a reviewer would, with the image in front of you.

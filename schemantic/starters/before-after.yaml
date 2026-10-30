@@ -9,30 +9,32 @@ panels:
     title: "TODO: a part as it is"
     role: platform
     cards:
-      - {icon: server, name: "TODO: a thing with a name", note: "TODO: what it does today", refs: ["notes: TODO"]}
+      - {id: old_in_part, icon: server, name: "TODO: a thing with a name", note: "TODO: what it does today", refs: ["notes: TODO"]}
   - id: old_out
     title: "TODO: a part as it is"
     role: actor
     cards:
-      - {icon: users, name: "TODO: a thing with a name", note: "TODO: what it does today", refs: ["notes: TODO"]}
+      - {id: old_out_part, icon: users, name: "TODO: a thing with a name", note: "TODO: what it does today", refs: ["notes: TODO"]}
   - id: new_in
     title: "TODO: what it becomes"
     role: platform
     status: changed
+    status_ref: "notes: TODO"
     cards:
-      - {icon: server, name: "TODO: a thing with a name", note: "TODO: what it will do", refs: ["notes: TODO"]}
+      - {id: new_in_part, icon: server, name: "TODO: a thing with a name", note: "TODO: what it will do", refs: ["notes: TODO"]}
     chips:
-      - {kind: warning, text: "TODO: an open choice the sources leave"}
+      - {kind: warning, text: "TODO: an open choice the sources leave", refs: ["notes: TODO"]}
   - id: new_out
     title: "TODO: what it becomes"
     role: platform
     status: new
+    status_ref: "notes: TODO"
     cards:
-      - {icon: rocket, name: "TODO: a thing with a name", note: "TODO: what it will do", refs: ["notes: TODO"]}
+      - {id: new_out_part, icon: rocket, name: "TODO: a thing with a name", note: "TODO: what it will do", refs: ["notes: TODO"]}
 
 flows_mean: data
 flows:
-  - {from: old_in, to: old_out}
-  - {from: new_in, to: new_out}
+  - {from: old_in_part, to: old_out_part, refs: ["notes: TODO"]}
+  - {from: new_in_part, to: new_out_part, refs: ["notes: TODO"]}
 stories:
-  - {name: "TODO: the route the title tells", path: [new_in, new_out], draw: true}
+  - {name: "TODO: the route the title tells", path: [new_in_part, new_out_part], draw: true}

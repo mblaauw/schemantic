@@ -56,6 +56,12 @@ CHECKS: dict[str, Check] = {
                    "add the flow between the two steps the detail names, card to card when the route goes through cards "
                    "(give both cards an id); if the sources name no such step, the story claims too much",
                    "Add a flow from the first named step to the second, card to card."),
+    "route-end": Check("spec", "a route stops short of what it is about: a story through a panel that holds cards, an arrow labelled "
+                       "with a card's name that ends on the panel around it, or a card the title or subtitle names that no arrow "
+                       "reaches (warning)",
+                       "give the cards ids and run the arrow to the card it is about; if the sources speak of the whole panel, say "
+                       "so in the label without a card's name",
+                       "Run the arrow to the card, not the panel around it, and put that card in the story."),
     "series": Check("spec", "parts of one series disagree: numbering, `of`, language, what arrows mean, or one thing drawn in "
                     "two colours (people in one part, a platform component in another)",
                     "make the parts agree: one language, and the same role for a thing wherever it appears (a panel's role, or "
@@ -82,10 +88,12 @@ CHECKS: dict[str, Check] = {
     "timeline": Check("spec", "on a roadmap, an arrow ends at an item that starts before the item it comes from, so it reads "
                       "back in time (warning)", "point each arrow from what comes first to what builds on it, and say "
                       "`flows_mean: sequence`", "Reverse the arrow so it runs forward in time, with flows_mean: sequence."),
-    "traceability": Check("spec", "the spec declares `sources`, and a card has no `refs` or names an undeclared source (warning)",
-                          "add `refs: [\"<source id>: <path or quote>\"]` from the inventory; a card you cannot trace is an "
-                          "assumption or an open question, not a fact", "Add refs naming the source; untraceable content goes to "
-                          "the brief's assumptions or an open question."),
+    "traceability": Check("spec", "the spec declares `sources`, and a card, arrow, status or warning has no source and is not "
+                          "marked `assumed`; a ref names an undeclared source; a ref's quote is not in the file a source's `path` "
+                          "names; or more than a third of the cards and arrows are assumed (warning)",
+                          "add `refs: [\"<source id>: <path or quote>\"]` from the inventory (`status_ref` for a status); what the "
+                          "sources do not say gets `assumed: <why>`, which the plate shows, or becomes an open question",
+                          "Add refs quoting the source; what it does not say gets `assumed: <why>`, or drop it."),
     "chip-mirror": Check("spec", "a warning chip or warning flag is not under open questions", "`open_questions: {from_chips: true}`",
                          "Set footer.open_questions.from_chips to true."),
     "icon": Check("spec", "unknown icon", "use one of the closest names in the hint, or search: `schemantic icons <word>`",

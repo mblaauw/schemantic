@@ -1,5 +1,6 @@
 """The skill's own tools: starters (`schemantic new`) and review crops (`build --review`)."""
 import copy
+import itertools
 import json
 import re
 from pathlib import Path
@@ -12,13 +13,15 @@ from test_render import run, write
 
 from schemantic import review, scaffold
 
+NUMBER = itertools.count(1)
+
 
 def filled(v):
-    """A starter as an author fills it in: every TODO replaced by the guidance that follows it."""
+    """A starter as an author fills it in: every TODO replaced by the guidance that follows it, each card named apart."""
     if isinstance(v, str):
         return re.sub(r"\bTODO:?\s*", "", v).strip() or "Filled"
     if isinstance(v, dict):
-        return {k: filled(x) for k, x in v.items()}
+        return {k: filled(x) + f" {next(NUMBER)}" if k in ("name", "title") else filled(x) for k, x in v.items()}
     if isinstance(v, list):
         return [filled(x) for x in v]
     return v

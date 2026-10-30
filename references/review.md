@@ -14,18 +14,23 @@ left to you.
 1. **Message.** With the subtitle covered, does the picture fail to support the title's claim? (No check can.)
 2. **Path.** Is there a jump where a reader cannot follow the route the title or subtitle names, from its first
    card to its last? Lint (`story`) checks that a flow joins every step of a story; you check that every route the
-   title names has a story, drawn (`draw: true`), and that no step lives only in a card note.
+   title names has a story, drawn (`draw: true`), and that no step lives only in a card note. Lint (`route-end`) flags a
+   route that stops at a panel around the card it is about; you check the routes it cannot read from the words.
 3. **Arrows.** Does any arrow point against what `flows_mean` says arrows mean (data where requests are meant)?
    Lint catches a roadmap arrow back in time (`timeline`); every other direction is yours.
 4. **Colour.** Does any panel have a role whose legend label is wrong for it? Lint (`role-fit`) judges a panel by
-   its cards' icons; you judge the panels whose icons do not say (a team drawn with system icons).
+   its cards' icons, and flags one thing in two colours; you judge the panels whose icons do not say (a team drawn with
+   system icons).
 5. **Holes.** Is any part of the plate visibly empty: a panel emptier than its neighbours, cards floating apart, a
-   blank band? Lint (`void`) warns at 96 px; a smaller hole you can see is still a defect.
+   blank band? A last card fills its row and nearly level panels are evened out for you; lint (`void`) warns at 96 px;
+   a smaller hole you can see is still a defect.
 6. **Footer.** Does the footer draw the eye before the body? Its size is lint's (`footer-share`).
 7. **Words.** Is any name a term the reader would not know, or any note true of every system rather than this one?
    (No check can.)
-8. **Truth.** Is any card, flow or principle not supported by the sources (the brief's assumptions aside)? Lint
-   (`traceability`) checks that every card cites a source; you check that the source says it.
+8. **Truth.** Is any card, arrow, status, warning, panel name or principle not supported by the sources? What the plate
+   itself marks as assumed (the tag, the amber dashed arrow) is no defect; what only the brief admits still is. Lint
+   (`traceability`) checks that each names a source or says it is assumed, and that a quote from a source with a `path`
+   is really there; you check that the source means it: someone asking for a report does not make it `planned`.
 9. **Open ends.** Is any warning a question the sources already settle, or any principle a slogan nobody could
    check? (No check can.)
 10. **Series.** If this is one part of a series, does anything carry a different name than on the other parts?

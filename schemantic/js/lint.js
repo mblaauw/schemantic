@@ -230,6 +230,7 @@ schemantic.lint = (cfg) => {
   // Holes outside panels, which a reader sees as well: a panel that ends far above the tallest panel beside it in its
   // row (panels end with their content), and an empty run inside a zone frame.
   const outside = (id, gap, where) => {
+    voids[`outside.${id}`] = Math.round(gap);
     if (gap > cfg.voidWarn)
       add(
         "warning",

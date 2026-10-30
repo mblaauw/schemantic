@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 import platform
+import shutil
 from importlib.metadata import version
 from pathlib import Path
 
@@ -21,9 +22,9 @@ from .findings import finding, grouped
 from .html import build_html
 from .images import image_diff, snapshot
 from .lint import dom_lint, layout_findings
-from .review import RASTER_SCALE, changed_parts, write_crops
+from .review import RASTER_SCALE, changed_parts, moved_parts, write_crops
 from .route import draw_flows, problems_as_findings
-from .spec import check, number_story, read_spec
+from .spec import assumed_items, check, number_story, read_spec, source_quotes
 
 
 def load_theme(spec: dict, spec_path: Path, theme: str | Path | None) -> tuple[str, list[dict]]:
@@ -55,14 +56,26 @@ def prepare(spec_path: Path, theme: str | Path | None, theme_css: str) -> tuple[
     if not issues:
         issues = check(spec, theme_css)
     if not any(i["level"] == "error" for i in issues):
+        issues += source_quotes(spec, spec_path.parent)
         spec = number_story(archetypes.get(spec["archetype"]).expand(spec))
     return spec, theme_css, issues
 
 
-def lay_out(page, spec: dict, work: Path, name: str) -> dict:
-    """Stage 2, in the page: route the connectors, lint the layout, measure it into the layout document (written to
-    _work/) and fit it to paper. Returns the layout, flows, DOM lint, paper fit and their findings."""
+def open_routed(browser, html: str, spec: dict, refused: list[str]) -> tuple:
+    """Load the plate and route its connectors. Panels evened out to the height of their row can close the gap a route
+    or a label needed; a plate with such a problem is laid out again without them, since a route matters more."""
+    page = open_plate(browser, html, spec, refused=refused)
     flows = draw_flows(page, spec)
+    if flows["problems"] and page.locator(".evened").count():
+        page.close()
+        page = open_plate(browser, html, spec, refused=refused, even=False)
+        flows = draw_flows(page, spec)
+    return page, flows
+
+
+def lay_out(page, flows: dict, spec: dict, work: Path, name: str) -> dict:
+    """Stage 2, in the page: lint the routed layout, measure it into the layout document (written to _work/) and fit it to
+    paper. Returns the layout, flows, DOM lint, paper fit and their findings."""
     dom = dom_lint(page, flows["segs"], slide=spec["canvas"].get("profile") == "slide")
     layout = measure(page)
     (work / f"{name}.layout.json").write_text(json.dumps(layout, ensure_ascii=False), encoding="utf-8")
@@ -143,6 +156,32 @@ def page_findings(refused: list[str], par: dict) -> list[dict]:
     return out
 
 
+def set_baseline(spec_path: str | Path, out: str | Path) -> dict:
+    """Before a correction: keep the plate as delivered, so each build until the next baseline says what differs from it."""
+    name, out = Path(spec_path).stem, Path(out)
+    md, snap = out / f"{name}.md", out / "_work" / f"{name}.snapshot.json"
+    if not md.exists() or not snap.exists():
+        return {"errors": [finding("yaml", "(file)", f"no delivered plate '{name}' in {out}: build it first")], "warnings": []}
+    dest = out / "_work" / "baseline" / name
+    dest.mkdir(parents=True, exist_ok=True)
+    shutil.copy(md, dest / "plate.md")
+    shutil.copy(snap, dest / "snapshot.json")
+    return {"baseline": str(dest), "errors": [], "warnings": []}
+
+
+def since_baseline(spec: dict, snap: dict, work: Path, name: str) -> dict | None:
+    """What differs from the baseline: outline lines gone and new (an arrow that now points elsewhere shows here by the
+    names at its ends), the parts whose content changed, and the parts that only moved. None without a baseline."""
+    dest = work / "baseline" / name
+    if not (dest / "plate.md").exists():
+        return None
+    old = [line for line in (dest / "plate.md").read_text(encoding="utf-8").splitlines() if line.strip()]
+    new = [line for line in outline.markdown(spec).splitlines() if line.strip()]
+    base = json.loads((dest / "snapshot.json").read_text(encoding="utf-8"))
+    return {"removed": [line for line in old if line not in new], "added": [line for line in new if line not in old],
+            "parts_changed": changed_parts(base, snap, spec), "parts_moved": moved_parts(base, snap, spec)}
+
+
 def publish(staged: dict[str, Path], report: dict, out: Path) -> None:
     """Move the staged deliverables to <out>/ when the report has no errors; otherwise name them under `preview`."""
     if not staged:
@@ -165,13 +204,16 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
     the parts (title block, panels, footer) that differ from the previous build in this folder. With review, `review`
     lists crops of the plate a model can read, in <out>/_work/review/<name>/ (also for a build with errors): after the first
     round the whole plate and the parts changed since the last one; `review_unchanged` lists the crops of the others,
-    still on disk; review="all" lists every part."""
+    still on disk; review="all" lists every part. `assumptions` lists what the plate marks as assumed, then the brief's.
+    `since_baseline` says what differs from the plate `set_baseline` kept, if any."""
     spec_path, out = Path(spec_path), Path(out)
     name, work = spec_path.stem, Path(out) / "_work"
     report = {"spec": str(spec_path), "summary": [], "errors": [], "warnings": [], "density": {}, "voids": {}, "parity": None,
               "svg": None, "png": None, "outline": None, "snapshot": None, "fonts": [], "flow_problems": [], "build": None, "preview": None,
-              "changed": None, "review": None, "review_unchanged": None}
+              "changed": None, "review": None, "review_unchanged": None, "assumptions": [], "since_baseline": None}
     spec, theme_css, issues = prepare(spec_path, theme, theme_css)
+    if not any(i["level"] == "error" for i in issues):
+        report["assumptions"] = assumed_items(spec) + (spec.get("brief") or {}).get("assumptions", [])
     staged: dict[str, Path] = {}  # deliverables written to _work/, waiting for a clean report
     refused: list[str] = []  # network requests the page tried to make
     if not any(i["level"] == "error" for i in issues):
@@ -182,8 +224,8 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
             browser = launch(p)
             try:
                 report["build"] = manifest(spec, spec_path, theme_css, browser.version)
-                page = open_plate(browser, html, spec, refused=refused)
-                plate = lay_out(page, spec, work, name)
+                page, flows = open_routed(browser, html, spec, refused)
+                plate = lay_out(page, flows, spec, work, name)
                 svg = write_svg(plate, spec, work, name, outline_text)
                 par = parity(page, browser, svg["parity_svg"], work, refused)
                 if review:
@@ -196,6 +238,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
         issues += plate["issues"] + page_findings(refused, par)
         if plate["fit"]:
             report["paper"] = {"size": plate["fit"]["size"], "scale": round(plate["fit"]["scale"], 3)}
+        report["since_baseline"] = since_baseline(spec, svg["snap"], work, name)
         report.update(changed=svg["changed"], density=plate["dom"]["density"], voids=plate["dom"]["voids"], fonts=svg["fonts"],
                       snapshot=str(svg["snapshot"]),
                       parity={"pixels": par["count"], "regions": par["regions"], "detail": par["detail"]},

@@ -17,16 +17,17 @@ panels:
     role: platform
     cards:
       - {icon: box, name: "TODO: a capability", refs: ["notes: TODO"]}
-      - {icon: box, name: "TODO: a capability", status: deprecated, refs: ["notes: TODO"]}
+      - {icon: box, name: "TODO: a capability", status: deprecated, status_ref: "notes: TODO", refs: ["notes: TODO"]}
   - id: third
     title: "TODO: the domain with the gaps"
     role: platform
     cards:
       - {icon: box, name: "TODO: a capability", refs: ["notes: TODO"]}
-      - {icon: box, name: "TODO: a capability that is missing", status: planned, refs: ["notes: TODO"]}
+      - {icon: box, name: "TODO: a capability that is missing", status: planned, status_ref: "notes: TODO", refs: ["notes: TODO"]}
       - id: gap
         icon: box
         name: "TODO: a capability that is missing"
         status: planned
+        status_ref: "notes: TODO"
         refs: ["notes: TODO"]
-        flag: {kind: warning, text: "TODO: an open choice the sources leave"}
+        flag: {kind: warning, text: "TODO: an open choice the sources leave", refs: ["notes: TODO"]}

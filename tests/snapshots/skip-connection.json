@@ -16,109 +16,109 @@
    40,
    128,
    360,
-   566
+   628
   ],
   "clients.card0": [
    54,
    198,
    348,
-   254
+   266
   ],
   "clients.card1": [
    54,
-   262,
+   274,
    348,
-   316
+   342
   ],
   "clients.card2": [
    54,
-   324,
+   350,
    348,
-   380
+   418
   ],
   "clients.card3": [
    54,
-   388,
+   426,
    348,
-   444
+   494
   ],
   "clients.card4": [
    54,
-   452,
+   502,
    348,
-   508
+   570
   ],
   "clients.chip0": [
    54,
-   518,
+   580,
    348,
-   554
+   616
   ],
   "identity": [
    408,
    128,
    760,
-   622
+   628
   ],
   "identity.card0": [
    422,
    198,
    748,
-   254
+   256
   ],
   "identity.card1": [
    422,
-   262,
+   264,
    748,
-   316
+   320
   ],
   "identity.card2": [
    422,
-   324,
+   328,
    748,
-   380
+   386
   ],
   "identity.matrix0": [
    422,
-   390,
+   396,
    748,
-   548
+   554
   ],
   "identity.chip0": [
    422,
-   558,
+   564,
    748,
-   610
+   616
   ],
   "gateway": [
    808,
    128,
    1128,
-   546
+   628
   ],
   "gateway.card0": [
    822,
    200,
    1114,
-   308
+   328
   ],
   "gateway.card1": [
    822,
-   316,
+   336,
    1114,
-   370
+   412
   ],
   "gateway.card2": [
    822,
-   378,
+   420,
    1114,
-   470
+   530
   ],
   "gateway.card3": [
    822,
-   478,
+   538,
    1114,
-   532
+   614
   ],
   "services": [
    1176,
@@ -208,13 +208,13 @@
    1088,
    744,
    1548,
-   798
+   802
   ],
   "data.card1": [
    1088,
-   806,
+   810,
    1548,
-   862
+   870
   ],
   "data.chip0": [
    54,
@@ -315,47 +315,47 @@
   ],
   [
    96,
-   286,
+   298,
    "Mobile app"
   ],
   [
    96,
-   302,
+   314,
    "iOS en Android, zelfde API"
   ],
   [
    96,
-   348,
+   374,
    "Partner integraties"
   ],
   [
    96,
-   366,
+   390,
    "B2B order API voor leveranciers"
   ],
   [
    96,
-   412,
+   450,
    "Data engineers"
   ],
   [
    96,
-   428,
+   466,
    "bouwen pipelines per domein"
   ],
   [
    96,
-   476,
+   526,
    "Analisten"
   ],
   [
    96,
-   492,
+   542,
    "rapporteren via de BI tool"
   ],
   [
    90,
-   538,
+   600,
    "Partners krijgen eigen client credentials"
   ],
   [
@@ -380,87 +380,87 @@
   ],
   [
    464,
-   286,
+   288,
    "Service accounts"
   ],
   [
    464,
-   302,
+   304,
    "één per service, geen gedeelde secrets"
   ],
   [
    464,
-   348,
+   352,
    "Audit log"
   ],
   [
    464,
-   366,
+   370,
    "elke token-uitgifte wordt gelogd"
   ],
   [
    434,
-   410,
+   416,
    "Wie mag wat"
   ],
   [
    510,
-   430,
+   436,
    "Orders API"
   ],
   [
    594,
-   430,
+   436,
    "Data (Gold)"
   ],
   [
    690,
-   430,
+   436,
    "Beheer"
   ],
   [
    434,
-   452,
+   456,
    "Klant"
   ],
   [
    434,
-   472,
+   478,
    "Partner"
   ],
   [
    434,
-   494,
+   498,
    "Engineer"
   ],
   [
    434,
-   514,
+   520,
    "Analist"
   ],
   [
    448,
-   536,
+   542,
    "volledig"
   ],
   [
    518,
-   536,
+   542,
    "beperkt"
   ],
   [
    588,
-   536,
+   542,
    "geen toegang"
   ],
   [
    458,
-   580,
+   584,
    "Klanten en medewerkers in aparte realms;"
   ],
   [
    458,
-   596,
+   602,
    "audit log een jaar bewaard"
   ],
   [
@@ -500,52 +500,52 @@
   ],
   [
    864,
-   340,
+   360,
    "Rate limiting"
   ],
   [
    958,
-   338,
+   358,
    "V1"
   ],
   [
    988,
-   338,
+   358,
    "nieuw"
   ],
   [
    864,
-   356,
+   376,
    "beschermt services tegen pieken"
   ],
   [
    864,
-   402,
+   444,
    "Routing"
   ],
   [
    864,
-   420,
+   460,
    "per domein naar de juiste service"
   ],
   [
    876,
-   438,
+   478,
    "versie in het pad: /v1, /v2"
   ],
   [
    876,
-   454,
+   496,
    "canary releases per service"
   ],
   [
    864,
-   502,
+   562,
    "Observability"
   ],
   [
    864,
-   518,
+   580,
    "logs en traces per request"
   ],
   [
@@ -715,12 +715,12 @@
   ],
   [
    1130,
-   830,
+   834,
    "Pipelines"
   ],
   [
    1130,
-   848,
+   850,
    "jobs per domein, gedeployed via CI/CD"
   ],
   [
@@ -900,12 +900,12 @@
   ],
   [
    208,
-   624,
+   654,
    "BI en notebooks"
   ],
   [
    592,
-   642,
+   648,
    "scoped credentials"
   ],
   [
@@ -922,11 +922,11 @@
    "points": [
     [
      368,
-     346
+     378
     ],
     [
      400,
-     346
+     378
     ]
    ],
    "label": null
@@ -938,11 +938,11 @@
    "points": [
     [
      768,
-     336
+     378
     ],
     [
      800,
-     336
+     378
     ]
    ],
    "label": null
@@ -954,11 +954,11 @@
    "points": [
     [
      1136,
-     336
+     378
     ],
     [
      1168,
-     336
+     378
     ]
    ],
    "label": null
@@ -970,7 +970,7 @@
    "points": [
     [
      200,
-     574
+     636
     ],
     [
      200,
@@ -986,7 +986,7 @@
    "points": [
     [
      584,
-     630
+     636
     ],
     [
      584,
@@ -1018,15 +1018,15 @@
    "points": [
     [
      344,
-     574
+     636
     ],
     [
      344,
-     658
+     660
     ],
     [
      1192,
-     658
+     660
     ],
     [
      1192,

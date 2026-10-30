@@ -77,19 +77,28 @@ brief:
   left_out: ["What the sources hold that the plate leaves out, and why"]
   assumptions: ["What is assumed rather than found"]
 sources:
-  - {id: notes, kind: notes, ref: "Design review, 12 May"}
+  - {id: notes, kind: notes, ref: "Design review, 12 May", path: ../inputs/notes.md}
 ```
 
-Plan the panels, their cards (each with `refs: ["<source id>: <path, line or short quote>"]`), the flows and the
-open questions. Then audit the plan against the sources, and fix it before writing more:
+Give a source its `path` when it is on disk (a file, or a folder of files), relative to the spec: lint then checks each
+quote against it. Plan the panels, their cards, the flows and the open questions. Everything that says something about
+the world names its source: `refs: ["<source id>: <path, line or short quote>"]` on cards, arrows and warnings,
+`status_ref` beside a `status`. Quote word for word, in the source's language. Then audit the plan against the sources,
+and fix it before writing more:
 
-- Every card traces to a source. A card you cannot trace is an assumption or an open question, not a fact.
-- The title, subtitle, principles and notes say only what the sources say. An "only", a "never" or a detail you inferred
-  is an assumption: move it to the brief, or leave it out.
-- A step the sources imply is drawn, and listed in the brief's assumptions: dbt builds Silver and Gold, so an arrow
-  runs out of Bronze; the WMS books shipments, so an arrow runs to the carrier. Leave out only what has no basis at all.
+- What the sources do not say is marked or left out. Mark what you have reason to draw with `assumed: <why>`: the plate
+  tags the card or panel and draws the arrow amber and dashed, so a reader can tell it from a fact. dbt builds Silver and
+  Gold, so an arrow runs out of Bronze: `refs` if the notes say so, `assumed` if you worked it out. Leave out what has no
+  basis at all. The brief's `assumptions` are for what cannot be marked on the plate.
+- A `status` is what the sources say about that thing. Someone asking for a report does not make it `planned`, and "not
+  decided" is a warning, not a status: with nothing to quote, draw no status.
+- A panel name uses the sources' words. A grouping you coin that a reader would take for a real domain or team
+  ("Customers and sales") gets `assumed`, or a plainer name.
+- The title, subtitle, principles and notes say only what the sources say. An "only", an "every", a "never" or a detail
+  you inferred goes in the brief, or is left out. Check every "every" against the plate's own open questions.
 - Every uncertainty in the sources is a warning chip, a card flag or an open question. Before you keep a question,
-  look for its answer: one the sources settle ("everything publishes", "test mirrors production") is a fact to draw.
+  look for its answer: one the sources settle ("everything publishes", "test mirrors production") is a fact to draw. A
+  question the sources do not raise goes in your reply to the user, not on the plate.
 - Every route the title or subtitle names ("A via B to C") is a `story` through cards that exist.
 
 ## 4. Fill the spec
@@ -125,7 +134,7 @@ nothing, and `preview` in the report names the unpublished files in `plates/out/
 line per check, errors first, with its count and `hint` (the first fix to try); its first line is the one to fix
 first. Each finding under `errors` and `warnings` has `check`, `id` and `detail`; `references/lint-fixes.md` has
 the full table. `changed` names the parts your last edit changed, so you see whether it did what you meant. Fix
-every error in the spec and build again. Treat `void` and `traceability` warnings as real. After five rounds without
+every error in the spec and build again. Treat `void`, `traceability`, `route-end` and `role-fit` warnings as real. After five rounds without
 progress, restructure: move cards between panels, change the archetype, or split the plate.
 
 ## 6. Look at it
@@ -139,9 +148,28 @@ a hand edit. Stop after three review rounds; tell the user what is still imperfe
 
 ## 7. Deliver
 
-Give the user the PNG, SVG, spec and outline (`.md`) paths; the one message; the open questions; and the brief's
-assumptions. If they ask for changes, edit the spec and go back to step 5. For print, build with
+Give the user the PNG, SVG, spec and outline (`.md`) paths; the one message; the open questions; and the `assumptions`
+in the report. If they ask for changes, go to step 8. For print, build with
 `canvas.size: a3-landscape` and `--dpi 300`; for a meeting, `landscape-16x9` with `canvas.profile: slide`; for hand-off to a design tool, add `--outline-text`.
+
+## 8. Corrections
+
+A correction is an edit to the spec you have, never a new plate. "Rename this, that arrow is wrong, drop that card."
+
+```bash
+"$PY" "$SKILL/scripts/plate.py" baseline plates/<name>.yaml --out plates/out
+```
+
+1. Run this first, once per request. It keeps the plate as delivered; each build after it reports `since_baseline`.
+2. Find the elements the sentence is about and change only those. Leave every other word, id, order and panel alone, even
+   what you would now write better; a defect you notice goes in your reply, not in the edit.
+3. What the user tells you is a source. If the spec declares `sources`, add `{id: user, kind: conversation, ref: "Correction,
+   <date>"}` once and cite their words: `refs: ["user: <their words>"]`. When they confirm an assumption, its `assumed` gives
+   way to that ref. A spec without `sources` stays without: declaring one asks a source of everything already on the plate.
+4. Build with `--review`, as in step 5. Read `since_baseline`: every line in `removed` and `added` must come from what they
+   asked, and `parts_changed` and `parts_moved` must be parts you expected. Put back anything else. A renumbered question
+   (Q2 becoming Q1) follows from a question removed.
+5. Answer the review questions for the crops listed, then reply in a few lines: what changed, and anything that moved.
 
 ## Rules
 
