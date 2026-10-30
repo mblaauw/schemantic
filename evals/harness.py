@@ -3,7 +3,7 @@
 whoever runs the eval (one agent per prompt, given nothing but its prompt).
 
 Usage:
-  python evals/harness.py prepare <runs> --skill <dir> [--models sonnet haiku] [--repeats 3]
+  python evals/harness.py prepare <runs> --skill <dir> [--models sonnet haiku] [--repeats 3] [--cases 2-repo-en ...]
       copies each case's inputs to <runs>/<model>/with/<case>/<n>/ and writes <runs>/prompts.json: one entry per
       run with its folder and the prompt to give the agent. <dir> is a read-only copy of the skill.
   python evals/harness.py blind <runs> <judge dir>
@@ -35,10 +35,10 @@ questions; decide as the skill says. When done, reply with the paths of the plat
 message, and their open questions."""
 
 
-def prepare(runs: Path, skill: Path, models: list[str], repeats: int) -> list[dict]:
+def prepare(runs: Path, skill: Path, models: list[str], repeats: int, cases: list[str] | None = None) -> list[dict]:
     out = []
     for model in models:
-        for case in sorted(p for p in CASES.iterdir() if p.is_dir()):
+        for case in sorted(p for p in CASES.iterdir() if p.is_dir() and (not cases or p.name in cases)):
             for n in range(1, repeats + 1):
                 folder = runs / model / "with" / case.name / str(n)
                 if folder.exists():
@@ -87,6 +87,7 @@ def main() -> None:
     p.add_argument("--skill", type=Path, required=True)
     p.add_argument("--models", nargs="+", default=["sonnet", "haiku"])
     p.add_argument("--repeats", type=int, default=3)
+    p.add_argument("--cases", nargs="+", help="only these cases (default: all)")
     b = sub.add_parser("blind")
     b.add_argument("runs", type=Path)
     b.add_argument("judge", type=Path)
@@ -94,7 +95,7 @@ def main() -> None:
     u.add_argument("runs", type=Path)
     a = ap.parse_args()
     if a.cmd == "prepare":
-        print(f"{len(prepare(a.runs, a.skill, a.models, a.repeats))} runs; prompts in {a.runs / 'prompts.json'}")
+        print(f"{len(prepare(a.runs, a.skill, a.models, a.repeats, a.cases))} runs; prompts in {a.runs / 'prompts.json'}")
     elif a.cmd == "blind":
         print(f"{len(blind(a.runs, a.judge))} runs blinded into {a.judge}")
     else:
