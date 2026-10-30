@@ -13,6 +13,7 @@ class Hierarchy(Archetype):
     name = "hierarchy"
     required = frozenset({"root", "children"})
     allowed = frozenset({"root", "children", "chips_at"})
+    legend_keys = {"mean_control": "mean_leads"}
 
     def placed(self, spec: dict) -> list[str]:
         return [spec["layout"]["root"]] + [c for kids in spec["layout"]["children"].values() for c in kids]
@@ -62,9 +63,6 @@ class Hierarchy(Archetype):
     def expand(self, spec: dict) -> dict:
         tree = [{"from": parent, "to": kid} for parent, kids in spec["layout"]["children"].items() for kid in kids or []]
         return {**spec, "flows": tree + spec.get("flows", [])}
-
-    def panel_defaults(self, spec: dict, panel: dict) -> dict:
-        return {"cell": True}
 
 
 ARCHETYPE = Hierarchy()

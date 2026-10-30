@@ -62,9 +62,10 @@ def matrix_values(pt: dict) -> list[str]:
 def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
     """The legend, generated from what the plate uses: roles, what arrows mean and their styles, steps, change
     statuses, focus, and chip or flag kinds."""
-    lg, lang = loc["legend"], spec["canvas"]["lang"]
+    arche, lang = archetypes.get(spec["archetype"]), spec["canvas"]["lang"]
+    lg = {k: loc["legend"][arche.legend_keys.get(k, k)] for k in loc["legend"]}
     entries, seen = [], []
-    for p in spec["panels"] if archetypes.get(spec["archetype"]).legend_roles else []:
+    for p in spec["panels"] if arche.legend_roles else []:
         role = p["role"]
         if role not in seen:
             seen.append(role)
@@ -75,8 +76,7 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
         entries.append({"kind": "arrow", "key": "arrow", "label": lg[f"mean_{mean}"] if mean else lg["arrow"]})
         # The meaning entry already shows a solid arrow, so only the other line styles get an entry.
         styles = [s for s in ("async", "optional") if any(f.get("style") == s for f in flows)]
-        keys = {"async": archetypes.get(spec["archetype"]).dashed_means, "optional": "style_optional"}
-        entries += [{"kind": "line", "key": s, "label": lg[keys[s]]} for s in styles]
+        entries += [{"kind": "line", "key": s, "label": lg[f"style_{s}"]} for s in styles]
         if any(f.get("step") for f in flows):  # a drawn story's steps are its route: the legend names it
             story = drawn_story(spec)
             entries.append({"kind": "step", "key": "step", "label": story["name"] if story else lg["step"]})

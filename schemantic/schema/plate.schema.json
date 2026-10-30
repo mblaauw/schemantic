@@ -261,7 +261,7 @@
         },
         "per_row": {
           "type": "integer", "minimum": 2, "maximum": 8,
-          "description": "capability-map: cards per row of a domain; default, the fullest domain's count."
+          "description": "capability-map: columns that line up down the plate; without it, each domain's cards share its row's width."
         },
         "criteria": {
           "type": "array", "minItems": 2, "maxItems": 6, "items": {"type": "string"},

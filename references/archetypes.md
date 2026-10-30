@@ -195,19 +195,21 @@ layout:
 
 ## capability-map
 
-What we can do, and where the gaps are. One row per domain, capabilities as cards in columns that line up down the
-plate. No arrows: `status` is the assessment, so the gaps show at a glance.
+What we can do, and where the gaps are. One row per domain, its capabilities sharing the row's width. No arrows:
+`status` is the assessment, so the gaps show at a glance.
 
 <!-- lint: examples/retail-capability-map.yaml -->
 ```yaml
 archetype: capability-map
 layout:
   domains: [sell, fulfil, aftersales, insight]   # 2 to 6 rows, top first
-  per_row: 5                                     # optional: cards per row; default, the fullest domain
+  per_row: 5                                     # optional: columns that line up; a shorter row then ends in a gap
 ```
 
-- `planned` is a gap, `deprecated` is on its way out, no status is in place. Only use what the sources assess.
-- `focus: true` on the domain the title is about. Flows are allowed, but a map that needs many is a column-flow.
+- `planned` is a gap, `deprecated` is on its way out, no status is in place. Only use what the sources assess: a thing
+  that works on a scheduler being replaced is not itself on its way out.
+- `focus: true` on the domain the title is about. Panel colours stay out of the legend. Flows are allowed, but a map that
+  needs many is a column-flow.
 - The title claims the finding ("Selling is covered; the gaps are all in after-sales"), not "capability overview".
 - Example: `examples/retail-capability-map.yaml`.
 
@@ -248,7 +250,7 @@ layout:
 ```
 
 - Up to 4 levels and 8 panels at the ends of the tree; each panel has one parent. Say `flows_mean` for what the tree
-  means: `control` for reporting lines, `dependency` for what is made of what.
+  means: `control` for reporting lines (the legend says "Leads"), `dependency` for what is made of what.
 - `flows` are only for what cuts across the tree, and are drawn on top of the tree's own arrows.
 - Example: `examples/platform-org-hierarchy.yaml`.
 
@@ -266,6 +268,8 @@ layout:
   cells: [first, plan, later, leave]  # left to right, top row first
 ```
 
-- Each panel's title says what to do with what is in it ("Move first"), and each card's note why it sits there.
+- Title a panel with what the sources decide about it ("Move first"). Where they decide nothing, name its place ("High
+  value, high effort"): a verdict you made up is an invention, however natural it reads. A note says why a card sits
+  there only if the sources do; repeating the axes adds nothing.
 - `focus: true` on the quadrant the title is about. Panel colours stay out of the legend.
 - Example: `examples/migration-quadrant.yaml`.

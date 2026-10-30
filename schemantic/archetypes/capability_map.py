@@ -1,6 +1,7 @@
-"""capability-map: what we have, and where the gaps are. One row per domain, its name on the left, capabilities as
-cards in columns that line up down the plate. `status` carries the assessment (planned is a gap, deprecated is on its
-way out), so a reader scans the map without arrows."""
+"""capability-map: what we have, and where the gaps are. One row per domain, its name on the left, its capabilities
+sharing the row's width, so no row ends in a hole; `per_row` lines the columns up instead. `status` carries the
+assessment (planned is a gap, deprecated is on its way out), so a reader scans the map without arrows. Colour stays out
+of it: a domain is neither a platform nor data."""
 from __future__ import annotations
 
 from . import Archetype, GridSpec
@@ -11,13 +12,11 @@ class CapabilityMap(Archetype):
     required = frozenset({"domains"})
     allowed = frozenset({"domains", "per_row", "chips_at"})
     cards_are_things = False
+    legend_roles = False
+    legend_keys = {"status_new": "status_new_plain", "status_changed": "status_changed_plain"}
 
     def placed(self, spec: dict) -> list[str]:
         return spec["layout"]["domains"]
-
-    def width(self, spec: dict) -> int:
-        lay = spec["layout"]
-        return lay.get("per_row") or max(len(p.get("cards", [])) for p in spec["panels"] if p["id"] in lay["domains"])
 
     def grid(self, spec: dict) -> GridSpec:
         return GridSpec(rows=[[d] for d in spec["layout"]["domains"]], columns=["minmax(0, 1fr)"])
@@ -26,7 +25,9 @@ class CapabilityMap(Archetype):
         return set(spec["layout"]["domains"])
 
     def panel_defaults(self, spec: dict, panel: dict) -> dict:
-        return {"lane": True, "card_columns": self.width(spec)} if panel["id"] in spec["layout"]["domains"] else {}
+        if panel["id"] not in spec["layout"]["domains"]:
+            return {}
+        return {"lane": True, "role": "frame", "card_columns": spec["layout"].get("per_row") or max(len(panel.get("cards", [])), 1)}
 
 
 ARCHETYPE = CapabilityMap()

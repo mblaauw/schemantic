@@ -69,10 +69,17 @@ def test_a_dashed_message_is_a_reply_in_the_legend():
     assert "Reply or event" in {e["label"] for e in legend_entries(SEQUENCE, load_locale("en"))}
 
 
+def test_a_map_has_no_phases_and_a_tree_leads():
+    from schemantic.html import legend_entries
+    from schemantic.spec import load_locale
+    assert "New" in {e["label"] for e in legend_entries(MAP, load_locale("en"))}
+    assert "Leads" in {e["label"] for e in legend_entries(archetypes.get("hierarchy").expand(HIERARCHY), load_locale("en"))}
+
+
 def test_comparison_and_quadrant_keep_panel_colours_out_of_the_legend():
     from schemantic.html import legend_entries
     from schemantic.spec import load_locale
-    for spec in (COMPARISON, QUADRANT):
+    for spec in (COMPARISON, QUADRANT, MAP):
         assert "role" not in {e["kind"] for e in legend_entries(spec, load_locale("en"))}
 
 
@@ -111,5 +118,8 @@ def test_a_plate_with_nothing_to_explain_has_no_empty_legend(tmp_path):
     assert "Legend" not in (tmp_path / "_work" / "q.svg").read_text(encoding="utf-8")
 
 
-def test_capability_map_lines_up_its_columns():
-    assert archetypes.get("capability-map").panel_defaults(MAP, panel(MAP, "insight"))["card_columns"] == 5
+def test_capability_map_rows_share_their_width_unless_columns_are_asked_for():
+    arche = archetypes.get("capability-map")
+    assert arche.panel_defaults(MAP, panel(MAP, "insight"))["card_columns"] == 3
+    lined = {**MAP, "layout": {**MAP["layout"], "per_row": 5}}
+    assert arche.panel_defaults(lined, panel(MAP, "insight"))["card_columns"] == 5

@@ -57,25 +57,25 @@
   "fulfil.card0": [
    224,
    252,
-   456,
+   524,
    294
   ],
   "fulfil.card1": [
-   496,
+   564,
    252,
-   728,
+   866,
    294
   ],
   "fulfil.card2": [
-   768,
+   906,
    252,
-   1002,
+   1206,
    294
   ],
   "fulfil.card3": [
-   1042,
+   1246,
    252,
-   1274,
+   1548,
    294
   ],
   "aftersales": [
@@ -123,19 +123,19 @@
   "insight.card0": [
    224,
    478,
-   456,
+   638,
    520
   ],
   "insight.card1": [
-   496,
+   678,
    478,
-   728,
+   1092,
    520
   ],
   "insight.card2": [
-   768,
+   1132,
    478,
-   1002,
+   1546,
    520
   ],
   "footer": [
@@ -214,22 +214,22 @@
    "Stock"
   ],
   [
-   538,
+   608,
    276,
    "Delivery"
   ],
   [
-   812,
+   948,
    276,
    "Click and collect"
   ],
   [
-   1084,
+   1288,
    276,
    "Label printing"
   ],
   [
-   1190,
+   1396,
    276,
    "phasing out"
   ],
@@ -289,17 +289,17 @@
    "Sales reports"
   ],
   [
-   538,
+   720,
    502,
    "Customer profiles"
   ],
   [
-   812,
+   1176,
    502,
    "Demand forecast"
   ],
   [
-   942,
+   1304,
    502,
    "new"
   ],
@@ -319,57 +319,47 @@
    "Legend"
   ],
   [
-   134,
-   618,
-   "Platform component"
-  ],
-  [
-   302,
-   618,
-   "Data and storage"
-  ],
-  [
-   428,
+   110,
    616,
    "new"
   ],
   [
-   464,
+   146,
    618,
-   "New in this phase"
+   "New"
   ],
   [
-   592,
+   198,
    616,
    "changed"
   ],
   [
-   652,
+   258,
    618,
-   "Changed in this phase"
+   "Changed"
   ],
   [
-   808,
+   336,
    616,
    "planned"
   ],
   [
-   866,
+   392,
    618,
    "Planned, not built yet"
   ],
   [
-   1014,
+   540,
    616,
    "phasing out"
   ],
   [
-   1090,
+   618,
    618,
    "Being phased out"
   ],
   [
-   1242,
+   768,
    618,
    "The point of this plate"
   ]

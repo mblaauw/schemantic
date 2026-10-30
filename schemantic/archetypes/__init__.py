@@ -31,7 +31,7 @@ class Archetype:
     allowed: frozenset[str] = frozenset()    # layout keys it accepts (chips_at applies to every one)
     router_hints: dict = {}                   # reserved for layouts that prefer certain channels
     max_cards: int = 6                        # cards in one panel; a lifeline needs more, as it has one per moment
-    dashed_means: str = "style_async"         # the locale key of the legend's line for a dashed arrow
+    legend_keys: dict = {}                    # legend locale keys this layout reads differently (a reply, not "async")
     legend_roles: bool = True                 # False when a panel's colour means nothing on this layout
     cards_are_things: bool = True             # False when cards are steps or verdicts, so their icons do not say who
 
