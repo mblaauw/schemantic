@@ -47,6 +47,7 @@ SPEC_TRIGGERS = {
     "role-fit": lambda s: panel(s, "services").update(role="actor"),
     "placeholder": lambda s: s.update(subtitle="TODO: how the plate makes the claim true"),
     "story": lambda s: s.update(stories=[{"name": "Straight to the services", "path": ["clients", "gateway"]}]),
+    "route-end": lambda s: s.update(stories=[{"name": "Through the gateway", "path": ["clients", "gateway"]}]),
     "orphan": lambda s: s.update(flows=[f for f in s["flows"] if "services" not in (f["from"], f["to"])]),
     "language": lambda s: s["panels"][0]["cards"][0].update(note="leest de productcatalogus"),
 }
@@ -172,6 +173,18 @@ def test_examples_have_no_voids_and_a_low_footer(path, mode, tmp_path):
     height = float(re.search(r'height="([\d.]+)"', (tmp_path / "_work" / f"{path.stem}.svg").read_text()[:400]).group(1))
     footer = boxes["footer"][3] - boxes["footer"][1]
     assert footer <= 0.13 * height + 2, f"footer {footer}px of {height}px"
+
+
+def test_route_end_finds_an_arrow_about_a_card_and_a_card_the_title_names():
+    label = mutate(lambda s: s["flows"].append({"from": "clients", "to": "gateway", "label": "routing"}))
+    assert any("Routing" in f["detail"] for f in sp.check(label) if f["check"] == "route-end")
+    named = mutate(lambda s: s.update(subtitle="Audit log bewaart alles"))
+    assert any("Audit log" in f["detail"] for f in sp.check(named) if f["check"] == "route-end")
+
+
+def test_role_fit_flags_one_thing_in_two_colours():
+    spec = mutate(lambda s: panel(s, "clients")["cards"].append({"icon": "server", "name": "Routing"}))
+    assert any("one thing" in f["detail"] for f in sp.check(spec) if f["check"] == "role-fit")
 
 
 def test_role_fit_flags_a_mixed_panel_but_not_one_person_beside_tools():

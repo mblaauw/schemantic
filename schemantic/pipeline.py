@@ -60,10 +60,21 @@ def prepare(spec_path: Path, theme: str | Path | None, theme_css: str) -> tuple[
     return spec, theme_css, issues
 
 
-def lay_out(page, spec: dict, work: Path, name: str) -> dict:
-    """Stage 2, in the page: route the connectors, lint the layout, measure it into the layout document (written to
-    _work/) and fit it to paper. Returns the layout, flows, DOM lint, paper fit and their findings."""
+def open_routed(browser, html: str, spec: dict, refused: list[str]) -> tuple:
+    """Load the plate and route its connectors. Panels evened out to the height of their row can close the gap a route
+    or a label needed; a plate with such a problem is laid out again without them, since a route matters more."""
+    page = open_plate(browser, html, spec, refused=refused)
     flows = draw_flows(page, spec)
+    if flows["problems"] and page.locator(".evened").count():
+        page.close()
+        page = open_plate(browser, html, spec, refused=refused, even=False)
+        flows = draw_flows(page, spec)
+    return page, flows
+
+
+def lay_out(page, flows: dict, spec: dict, work: Path, name: str) -> dict:
+    """Stage 2, in the page: lint the routed layout, measure it into the layout document (written to _work/) and fit it to
+    paper. Returns the layout, flows, DOM lint, paper fit and their findings."""
     dom = dom_lint(page, flows["segs"], slide=spec["canvas"].get("profile") == "slide")
     layout = measure(page)
     (work / f"{name}.layout.json").write_text(json.dumps(layout, ensure_ascii=False), encoding="utf-8")
@@ -185,8 +196,8 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
             browser = launch(p)
             try:
                 report["build"] = manifest(spec, spec_path, theme_css, browser.version)
-                page = open_plate(browser, html, spec, refused=refused)
-                plate = lay_out(page, spec, work, name)
+                page, flows = open_routed(browser, html, spec, refused)
+                plate = lay_out(page, flows, spec, work, name)
                 svg = write_svg(plate, spec, work, name, outline_text)
                 par = parity(page, browser, svg["parity_svg"], work, refused)
                 if review:

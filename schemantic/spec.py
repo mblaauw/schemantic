@@ -167,7 +167,7 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
         if f["from"] == f["to"]:
             out.append(finding("flow", f"flows/{i}", f"from and to are the same element ('{f['from']}')"))
 
-    out += orphans(spec, arche) + story_findings(spec, known)
+    out += orphans(spec, arche) + story_findings(spec, known) + route_ends(spec)
 
     canvas = spec["canvas"]
     if ("part" in canvas) != ("of" in canvas):
@@ -252,6 +252,34 @@ def story_findings(spec: dict, known: set[str]) -> list[dict]:
     if drawn:
         out += [finding("story", f"flows/{n}", f"the drawn story numbers its own flows; drop this flow's step {f['step']}")
                 for n, f in enumerate(spec.get("flows", [])) if f.get("step")]
+    return out
+
+
+def route_ends(spec: dict) -> list[dict]:
+    """Routes that stop short of what they are about: a story through a panel that holds cards, an arrow labelled with a
+    card's name that ends on the panel around it, and a card the title or subtitle names that no arrow reaches."""
+    if not spec.get("flows"):
+        return []
+    cards_of = {p["id"]: [(card_id(p, i, c), c["name"]) for i, c in enumerate(p.get("cards", []))] for p in spec["panels"]}
+    out = []
+    for n, s in enumerate(spec.get("stories", [])):
+        for step in s["path"]:
+            if cards_of.get(step):
+                out.append(finding("route-end", f"stories/{n}", f"story '{s['name']}' goes through panel '{step}', which holds cards; "
+                                   "a finger stops at its edge", level="warning"))
+    for n, f in enumerate(spec.get("flows", [])):
+        words = set(re.findall(r"\w{4,}", f.get("label", "").casefold()))
+        for end in ("from", "to"):
+            hit = next((name for _, name in cards_of.get(f[end], []) if words & set(re.findall(r"\w{4,}", name.casefold()))), None)
+            if hit:
+                out.append(finding("route-end", f"flows/{n}", f"arrow '{f['label']}' is about card '{hit}' but ends on panel '{f[end]}'",
+                                   level="warning"))
+    ends = {f[end] for f in spec["flows"] for end in ("from", "to")}
+    claim = f"{spec.get('title', '')} {spec.get('subtitle', '')}"
+    for cards in cards_of.values():
+        for cid, name in cards:
+            if len(name) >= 4 and cid not in ends and re.search(rf"\b{re.escape(name)}\b", claim, re.I):
+                out.append(finding("route-end", cid, f"the title or subtitle names '{name}', but no arrow reaches the card", level="warning"))
     return out
 
 

@@ -5,6 +5,12 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- `route-end` warns when a route stops short of what it is about: a story through a panel that holds cards, an arrow labelled
+  with a card's name that ends on the panel, a card the title names that no arrow reaches. On the last eval's plates, 15 of
+  the 19 runs it fires on also had a judged path defect.
+- `role-fit` also flags one thing in two colours on a plate, and fewer people among systems.
+- A last card takes the rest of its row, and a panel nearly as tall as its row takes up the difference, unless a route needs
+  that gap. Starters now connect cards, not panels.
 - A plate marks what the sources do not say: `assumed: <why>` tags a card or panel and draws an arrow amber and dashed, with a
   legend entry; the outline and the report's `assumptions` list them.
 - `traceability` now covers arrows, statuses and warnings (`refs`, `status_ref`), and a source's `path` lets lint check

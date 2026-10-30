@@ -429,7 +429,7 @@ def test_refs_reach_the_svg_and_the_outline_is_written(tmp_path):
     for f in spec["flows"]:
         f["refs"] = ["adr: section 2"]
     code, report = run("build", write(tmp_path, spec, "traced"), "--out", tmp_path)
-    assert (code, report["errors"], report["warnings"]) == (0, [], [])
+    assert (code, report["errors"]) == (0, []) and "traceability" not in {w["check"] for w in report["warnings"]}
     assert 'data-refs="adr: section 2"' in (tmp_path / "traced.svg").read_text(encoding="utf-8")
     md = (tmp_path / "traced.md").read_text(encoding="utf-8")
     assert md.startswith("# " + spec["title"]) and "## Open vragen" in md and "Token validatie" in md

@@ -27,7 +27,7 @@ class CapabilityMap(Archetype):
     def panel_defaults(self, spec: dict, panel: dict) -> dict:
         if panel["id"] not in spec["layout"]["domains"]:
             return {}
-        return {"lane": True, "role": "frame", "card_columns": spec["layout"].get("per_row") or max(len(panel.get("cards", [])), 1)}
+        return {"lane": True, "role": "frame", "keep_grid": True, "card_columns": spec["layout"].get("per_row") or max(len(panel.get("cards", [])), 1)}
 
 
 ARCHETYPE = CapabilityMap()

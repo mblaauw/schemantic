@@ -56,6 +56,12 @@ CHECKS: dict[str, Check] = {
                    "add the flow between the two steps the detail names, card to card when the route goes through cards "
                    "(give both cards an id); if the sources name no such step, the story claims too much",
                    "Add a flow from the first named step to the second, card to card."),
+    "route-end": Check("spec", "a route stops short of what it is about: a story through a panel that holds cards, an arrow labelled "
+                       "with a card's name that ends on the panel around it, or a card the title or subtitle names that no arrow "
+                       "reaches (warning)",
+                       "give the cards ids and run the arrow to the card it is about; if the sources speak of the whole panel, say "
+                       "so in the label without a card's name",
+                       "Run the arrow to the card, not the panel around it, and put that card in the story."),
     "series": Check("spec", "parts of one series disagree: numbering, `of`, language, what arrows mean, or one thing drawn in "
                     "two colours (people in one part, a platform component in another)",
                     "make the parts agree: one language, and the same role for a thing wherever it appears (a panel's role, or "

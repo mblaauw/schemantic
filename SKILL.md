@@ -134,7 +134,7 @@ nothing, and `preview` in the report names the unpublished files in `plates/out/
 line per check, errors first, with its count and `hint` (the first fix to try); its first line is the one to fix
 first. Each finding under `errors` and `warnings` has `check`, `id` and `detail`; `references/lint-fixes.md` has
 the full table. `changed` names the parts your last edit changed, so you see whether it did what you meant. Fix
-every error in the spec and build again. Treat `void` and `traceability` warnings as real. After five rounds without
+every error in the spec and build again. Treat `void`, `traceability`, `route-end` and `role-fit` warnings as real. After five rounds without
 progress, restructure: move cards between panels, change the archetype, or split the plate.
 
 ## 6. Look at it
