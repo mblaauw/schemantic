@@ -96,8 +96,10 @@ colour.
 
 The router draws straight arrows across a gutter where it can, and otherwise turns corners through the
 gutters (one or two bends), or goes around: out of a box and back into the other on the same side, along a gutter
-beyond both (a skip connection past the panels between them). It never crosses another panel or card. A label sits beside a vertical run or
-above a horizontal one; short gutters fit short labels only.
+beyond both (a skip connection past the panels between them). It never crosses another panel or card, nor a
+panel's title; it may pass the empty band of a header beside the title, to reach a card in that panel's first row.
+Cards joined to each other inside one panel get room for a straight arrow between them. A label sits beside a
+vertical run or above a horizontal one; short gutters fit short labels only.
 
 Say what arrows mean once, with `flows_mean`, and keep every arrow in that direction. The legend shows the meaning,
 and a line style only when the plate uses it.
