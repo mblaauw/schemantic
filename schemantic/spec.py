@@ -242,7 +242,29 @@ def story_findings(spec: dict, known: set[str]) -> list[dict]:
             if (home.get(a, a), home.get(b, b)) in joined:
                 detail += f" (a flow joins their panels, '{home.get(a, a)}' to '{home.get(b, b)}'; the route goes through the cards)"
             out.append(finding("story", where, detail))
+    drawn = [n for n, s in enumerate(spec.get("stories", [])) if s.get("draw")]
+    out += [finding("story", f"stories/{n}", "only one story is drawn: a plate numbers one route") for n in drawn[1:]]
+    if drawn:
+        out += [finding("story", f"flows/{n}", f"the drawn story numbers its own flows; drop this flow's step {f['step']}")
+                for n, f in enumerate(spec.get("flows", [])) if f.get("step")]
     return out
+
+
+def drawn_story(spec: dict) -> dict | None:
+    return next((s for s in spec.get("stories", []) if s.get("draw")), None)
+
+
+def number_story(spec: dict) -> dict:
+    """A drawn story numbers the flows along its route, 1 to n, so the reader sees the route the title names. Runs on
+    a spec that checked clean: every step of the story has its flow, and no flow has a step of its own."""
+    story = drawn_story(spec)
+    if not story:
+        return spec
+    flows = [dict(f) for f in spec["flows"]]
+    for n, (a, b) in enumerate(pairwise(story["path"]), 1):
+        f = next(f for f in flows if (f["from"], f["to"]) == (a, b) or f.get("both") and (f["from"], f["to"]) == (b, a))
+        f.setdefault("step", n)  # a route that passes one flow twice keeps its first number
+    return {**spec, "flows": flows}
 
 
 def traceability(spec: dict) -> list[dict]:
@@ -276,7 +298,7 @@ def placeholders(spec) -> list[dict]:
 
     def walk(v, where):
         if isinstance(v, str) and PLACEHOLDER.search(v):
-            out.append(finding("placeholder", where or "(root)", f"'{v}' is a placeholder; write what the sources say"))
+            out.append(finding("placeholder", where or "(root)", f"still a placeholder: '{v}'"))
         elif isinstance(v, dict):
             for k, x in v.items():
                 walk(x, f"{where}/{k}" if where else str(k))

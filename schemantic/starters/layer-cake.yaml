@@ -38,4 +38,4 @@ flows:
   - {from: top, to: middle}
   - {from: middle, to: base}
 stories:
-  - {name: "TODO: the route the title tells", path: [top, middle, base]}
+  - {name: "TODO: the route the title tells", path: [top, middle, base], draw: true}

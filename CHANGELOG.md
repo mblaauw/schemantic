@@ -5,6 +5,15 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- Change-aware builds: the report's `changed` names the parts (title block, panels, footer) that differ from the
+  previous build in the folder, compared from each part's own corner, so a part that only moved down is unchanged.
+  After the first review round, `--review` crops only the parts changed since the last round, besides the whole
+  plate, and `review_unchanged` names the rest; `--review all` crops every part again. A round that fixes one panel
+  now gives the model two images to read instead of ten.
+- Drawn stories: `draw: true` on a story numbers its flows 1 to n on the plate and names the route in the legend, so
+  the route the title promises is something the reader sees, not only something lint checks. One per plate; its
+  flows take no `step` of their own. On an arrow across one narrow gutter the badge is pinned on the arrow's tail.
+  Every starter draws its story; the clinic and roadmap examples draw theirs.
 - Rail cards placed by layer: `layer: runtime` on a rail card puts it level with that layer's cards, so a rail reads
   across and an arrow to that layer runs straight. Checked (a real layer, rails only, top to bottom); a card that
   cannot reach its layer is a `rail-layer` warning. The layer plate's rails now name their layers.
@@ -68,6 +77,13 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   now use sequence, so their arrows run left to right instead of back against the periods.
 
 ### Changed
+- Grouped findings: the report opens with `summary`, one line per check (errors first, in the order found) with its
+  count and hint, and its first line is the fix to make first. A hint repeated by the same check is given once, on
+  the check's first finding. A placeholder's detail is just the text left (`still a placeholder: '...'`). A fresh
+  starter's report falls from 9.9 KB to 6.4 KB; `series` reports the same way.
+- The review questions say which part of each question lint already answers (story, timeline, role-fit, void,
+  footer-share, traceability, series), so the model judges what no check can: the message, words, truth and open
+  ends. Later rounds ask the whole-plate questions of the overview and the rest of the new crops only.
 - `evals/README.md` leads with the latest result per model and says what is not measured yet; the earlier runs follow
   as history.
 - The skill's steps run in an order an agent can follow: settle the message and the layout, then `new` writes the

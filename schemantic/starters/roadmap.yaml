@@ -24,4 +24,4 @@ flows_mean: sequence
 flows:
   - {from: base, to: next}
 stories:
-  - {name: "TODO: the order the title tells", path: [base, next]}
+  - {name: "TODO: the order the title tells", path: [base, next], draw: true}

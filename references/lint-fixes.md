@@ -2,7 +2,7 @@
 
 Generated from `schemantic/findings.py` by `python -m schemantic docs`; edit the table there.
 
-Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `footer.open_questions`) and carries a `hint`, the first fix to try. Fix it in the spec. Errors block delivery; warnings are judgement calls that usually mean "add substance".
+Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `footer.open_questions`). A check's `hint`, the first fix to try, comes with its first finding and in the report's `summary`, one line per check with its count, errors first. Fix it in the spec. Errors block delivery; warnings are judgement calls that usually mean "add substance".
 
 ## Spec checks (no browser)
 

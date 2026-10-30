@@ -49,7 +49,7 @@ flows:
   - {from: sso, to: profile}
   - {from: profile, to: app}
 stories:
-  - {name: "Sign-on first, then self-service, then the app", path: [sso, profile, app]}
+  - {name: "Sign-on first, then self-service, then the app", path: [sso, profile, app], draw: true}
 
 footer:
   principles:

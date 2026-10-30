@@ -363,34 +363,54 @@
    "Comes before"
   ],
   [
-   558,
+   560,
+   802,
+   "1"
+  ],
+  [
+   578,
+   802,
+   "Sign-on first, then self-service, then the app"
+  ],
+  [
+   864,
    802,
    "new"
   ],
   [
-   596,
+   900,
    802,
    "New in this phase"
   ],
   [
-   724,
+   1030,
    802,
    "changed"
   ],
   [
-   784,
+   1090,
    802,
    "Changed in this phase"
   ],
   [
-   938,
+   1244,
    802,
    "Q1"
   ],
   [
-   964,
+   1268,
    802,
    "Open choice or friction"
+  ],
+  [
+   508,
+   314,
+   "1"
+  ],
+  [
+   848,
+   440,
+   "2"
   ]
  ],
  "flows": [

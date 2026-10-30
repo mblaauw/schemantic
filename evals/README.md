@@ -43,8 +43,9 @@ both); that has not been rerun since.
 The most frequent defect left is **paths**: arrows that end on a panel where the title names a card, and steps that
 live only in a card note (7 of Haiku's last 20 defects, 16 of 45 across both models the run before).
 
-**Not yet measured:** everything since these runs. Stories (a route named in the title, checked by lint), starters
-(`schemantic new`), review crops (`build --review`), the skill's reordered steps and worked examples that draw their
+**Not yet measured:** everything since these runs. Stories (a route named in the title, checked by lint and drawn as
+numbered steps), starters (`schemantic new`), review crops (`build --review`, only of what changed after the first
+round), grouped findings, the skill's reordered steps and worked examples that draw their
 routes, the `sequence` flows and `now` column, and slate arrows. One run per case is noisy; the next rerun should
 take three per case.
 

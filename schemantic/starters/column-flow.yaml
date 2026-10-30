@@ -31,4 +31,4 @@ flows:
   - {from: start, to: handle}
   - {from: handle, to: keep}
 stories:
-  - {name: "TODO: the route the title tells", path: [start, handle, keep]}
+  - {name: "TODO: the route the title tells", path: [start, handle, keep], draw: true}

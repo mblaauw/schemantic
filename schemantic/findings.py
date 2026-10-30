@@ -171,6 +171,23 @@ def with_hint(finding: dict) -> dict:
     return {**finding, "hint": finding.get("hint") or check.hint} if check else finding
 
 
+def grouped(issues: list[dict]) -> dict:
+    """The report's findings: errors, warnings, and a summary of one line per check (errors first, in the order they
+    were found, so the first line is the one to fix first) with its count and hint. A hint repeated by the same
+    check (a fresh starter has dozens of TODOs) is given once, on that check's first finding and in the summary."""
+    ordered = [with_hint(i) for i in issues if i["level"] == "error"] + [with_hint(i) for i in issues if i["level"] == "warning"]
+    summary: dict[tuple[str, str], dict] = {}
+    seen: set[tuple[str, str | None]] = set()
+    out: dict[str, list] = {"error": [], "warning": []}
+    for f in ordered:
+        line = summary.setdefault((f["level"], f["check"]), {"check": f["check"], "level": f["level"], "count": 0, "hint": f.get("hint")})
+        line["count"] += 1
+        key = (f["check"], f.get("hint"))
+        out[f["level"]].append(f if key not in seen else {k: v for k, v in f.items() if k != "hint"})
+        seen.add(key)
+    return {"errors": out["error"], "warnings": out["warning"], "summary": list(summary.values())}
+
+
 LINT_FIXES = ROOT / "references" / "lint-fixes.md"
 
 
@@ -178,9 +195,10 @@ def lint_fixes_md() -> str:
     """references/lint-fixes.md, generated from CHECKS."""
     parts = ["# Lint findings and their fixes", "",
              "Generated from `schemantic/findings.py` by `python -m schemantic docs`; edit the table there.", "",
-             "Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `footer.open_questions`) and "
-             "carries a `hint`, the first fix to try. Fix it in the spec. Errors block delivery; warnings are judgement "
-             "calls that usually mean \"add substance\"."]
+             "Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `footer.open_questions`). "
+             "A check's `hint`, the first fix to try, comes with its first finding and in the report's `summary`, one "
+             "line per check with its count, errors first. Fix it in the spec. Errors block delivery; warnings are "
+             "judgement calls that usually mean \"add substance\"."]
     for stage, title in (("spec", "Spec checks (no browser)"), ("layout", "Layout checks (measured in Chromium)")):
         parts += ["", f"## {title}", "", "| check | means | fix |", "| --- | --- | --- |"]
         parts += [f"| `{name}` | {c.means} | {c.fix} |" for name, c in CHECKS.items() if c.stage == stage]

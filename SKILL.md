@@ -87,8 +87,8 @@ short version:
 
 - 3 to 6 panels, 2 to 6 cards each. A card is a thing with a name; its note says what it does in this story.
 - Say once what arrows mean (`flows_mean`). Connect panels by default; when the title or subtitle names a route
-  ("A via B to C"), give those cards ids, connect them card to card, and write the route as a `story`: lint then
-  checks that a finger can follow it, every step.
+  ("A via B to C"), give those cards ids, connect them card to card, and write the route as a `story` with
+  `draw: true`: lint checks that a finger can follow it, and the plate numbers its steps.
 - Show change with `status` (new, changed, planned, deprecated, removed) and the one element that matters with
   `focus`.
 - A `warning` chip or card `flag` marks an open choice; it appears again under open questions.
@@ -103,16 +103,19 @@ short version:
 
 One command checks the spec, lays the plate out, routes the connectors, lints the result and writes
 `plates/out/<name>.svg`, `.png` and `.md` (the outline). It prints JSON and exits 1 on errors; then it publishes
-nothing, and `preview` in the report names the unpublished files in `plates/out/_work/`. Each finding has
-`check`, `id`, `detail` and `hint` (the first fix to try); `references/lint-fixes.md` has the full table. Fix every
-error in the spec and build again. Treat `void` and `traceability` warnings as real. After five rounds without
+nothing, and `preview` in the report names the unpublished files in `plates/out/_work/`. Start with `summary`: one
+line per check, errors first, with its count and `hint` (the first fix to try); its first line is the one to fix
+first. Each finding under `errors` and `warnings` has `check`, `id` and `detail`; `references/lint-fixes.md` has
+the full table. `changed` names the parts your last edit changed, so you see whether it did what you meant. Fix
+every error in the spec and build again. Treat `void` and `traceability` warnings as real. After five rounds without
 progress, restructure: move cards between panels, change the archetype, or split the plate.
 
 ## 6. Look at it
 
 Once the build is clean, read the crops the report lists under `review` (the whole plate first, then the title
 block, each panel and the footer, at a size where every note is legible; a full PNG is scaled down until small text
-blurs) and answer the defect questions in `references/review.md`.
+blurs) and answer the defect questions in `references/review.md`. After the first round, `review` holds the whole
+plate and only the parts that changed since the last round.
 Every "yes" is a spec change and another build, not a hand edit. Stop after three review rounds; tell the user what
 is still imperfect rather than looping.
 

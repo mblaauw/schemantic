@@ -17,7 +17,9 @@ def _spec_command(sub, name: str, help_: str, scale: bool):
     if scale:
         p.add_argument("--dpi", type=float, default=192, help="PNG resolution: 96 is 1 px per CSS px (default 192)")
         p.add_argument("--outline-text", action="store_true", help="write text as glyph outlines (needs uharfbuzz)")
-    p.add_argument("--review", action="store_true", help="also write crops of the plate a model can read, to <out>/_work/review/")
+    p.add_argument("--review", nargs="?", const="changed", choices=["changed", "all"],
+                   help="also write crops of the plate a model can read, to <out>/_work/review/: of the parts changed since "
+                        "the last review (the first time, and with `--review all`, of every part)")
     return p
 
 
@@ -66,11 +68,10 @@ def run(a) -> tuple[dict, int]:
         r = new(a.archetype, a.path, a.lang)
         return r, 1 if r["errors"] else 0
     if a.cmd == "series":
-        from .findings import with_hint
+        from .findings import grouped
         from .series import series_findings
-        found = [with_hint(f) for f in series_findings(a.specs)]
-        errors = [f for f in found if f["level"] == "error"]
-        return {"errors": errors, "warnings": [f for f in found if f["level"] == "warning"]}, 1 if errors else 0
+        r = grouped(series_findings(a.specs))
+        return r, 1 if r["errors"] else 0
     if a.cmd in ("offline", "verify", "smoke"):
         from . import offline
         r = offline.bundle(a.dest) if a.cmd == "offline" else offline.verify(a.kit) if a.cmd == "verify" else \
@@ -94,7 +95,7 @@ def run(a) -> tuple[dict, int]:
 
     if a.cmd == "lint":
         r = build(a.spec, a.out, deliver=False, theme=a.theme, review=a.review)
-        keep = ("spec", "errors", "warnings", "density", "voids", "parity", "review")
+        keep = ("spec", "summary", "errors", "warnings", "changed", "density", "voids", "parity", "review", "review_unchanged")
         return {k: r[k] for k in keep}, 1 if r["errors"] else 0
     r = build(a.spec, a.out, scale=a.dpi / 96, theme=a.theme, outline_text=a.outline_text, review=a.review)
     return r, 1 if r["errors"] else 0

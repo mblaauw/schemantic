@@ -35,4 +35,4 @@ flows:
   - {from: users, to: front}
   - {from: front, to: back}
 stories:
-  - {name: "TODO: the route the title tells", path: [users, front, back]}
+  - {name: "TODO: the route the title tells", path: [users, front, back], draw: true}
