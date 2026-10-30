@@ -64,7 +64,8 @@ def role_fit_findings(spec: dict) -> list[dict]:
         elif p["role"] != "actor" and people >= 2 * len(cards) / 3:
             out.append(finding("role-fit", p["id"], f"coloured as {p['role']}, but {people} of its {len(cards)} cards show "
                                "people", level="warning"))
-        elif p["role"] == "actor" and (len(cards) - people) * 2 >= len(cards) or p["role"] not in ("actor", "external") and people * 3 >= len(cards):
+        elif (p["role"] == "actor" and (len(cards) - people) * 2 >= len(cards)
+              or p["role"] not in ("actor", "external") and people * 3 >= len(cards)):
             out.append(finding("role-fit", p["id"], f"mixes people ({people}) and systems or things ({len(cards) - people}) "
                                "under one colour", level="warning"))
     return out + two_colours(spec)

@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 import platform
+import shutil
 from importlib.metadata import version
 from pathlib import Path
 
@@ -21,7 +22,7 @@ from .findings import finding, grouped
 from .html import build_html
 from .images import image_diff, snapshot
 from .lint import dom_lint, layout_findings
-from .review import RASTER_SCALE, changed_parts, write_crops
+from .review import RASTER_SCALE, changed_parts, moved_parts, write_crops
 from .route import draw_flows, problems_as_findings
 from .spec import assumed_items, check, number_story, read_spec, source_quotes
 
@@ -155,6 +156,32 @@ def page_findings(refused: list[str], par: dict) -> list[dict]:
     return out
 
 
+def set_baseline(spec_path: str | Path, out: str | Path) -> dict:
+    """Before a correction: keep the plate as delivered, so each build until the next baseline says what differs from it."""
+    name, out = Path(spec_path).stem, Path(out)
+    md, snap = out / f"{name}.md", out / "_work" / f"{name}.snapshot.json"
+    if not md.exists() or not snap.exists():
+        return {"errors": [finding("yaml", "(file)", f"no delivered plate '{name}' in {out}: build it first")], "warnings": []}
+    dest = out / "_work" / "baseline" / name
+    dest.mkdir(parents=True, exist_ok=True)
+    shutil.copy(md, dest / "plate.md")
+    shutil.copy(snap, dest / "snapshot.json")
+    return {"baseline": str(dest), "errors": [], "warnings": []}
+
+
+def since_baseline(spec: dict, snap: dict, work: Path, name: str) -> dict | None:
+    """What differs from the baseline: outline lines gone and new (an arrow that now points elsewhere shows here by the
+    names at its ends), the parts whose content changed, and the parts that only moved. None without a baseline."""
+    dest = work / "baseline" / name
+    if not (dest / "plate.md").exists():
+        return None
+    old = [line for line in (dest / "plate.md").read_text(encoding="utf-8").splitlines() if line.strip()]
+    new = [line for line in outline.markdown(spec).splitlines() if line.strip()]
+    base = json.loads((dest / "snapshot.json").read_text(encoding="utf-8"))
+    return {"removed": [line for line in old if line not in new], "added": [line for line in new if line not in old],
+            "parts_changed": changed_parts(base, snap, spec), "parts_moved": moved_parts(base, snap, spec)}
+
+
 def publish(staged: dict[str, Path], report: dict, out: Path) -> None:
     """Move the staged deliverables to <out>/ when the report has no errors; otherwise name them under `preview`."""
     if not staged:
@@ -177,12 +204,13 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
     the parts (title block, panels, footer) that differ from the previous build in this folder. With review, `review`
     lists crops of the plate a model can read, in <out>/_work/review/<name>/ (also for a build with errors): after the first
     round the whole plate and the parts changed since the last one; `review_unchanged` lists the crops of the others,
-    still on disk; review="all" lists every part. `assumptions` lists what the plate marks as assumed, then the brief's."""
+    still on disk; review="all" lists every part. `assumptions` lists what the plate marks as assumed, then the brief's.
+    `since_baseline` says what differs from the plate `set_baseline` kept, if any."""
     spec_path, out = Path(spec_path), Path(out)
     name, work = spec_path.stem, Path(out) / "_work"
     report = {"spec": str(spec_path), "summary": [], "errors": [], "warnings": [], "density": {}, "voids": {}, "parity": None,
               "svg": None, "png": None, "outline": None, "snapshot": None, "fonts": [], "flow_problems": [], "build": None, "preview": None,
-              "changed": None, "review": None, "review_unchanged": None, "assumptions": []}
+              "changed": None, "review": None, "review_unchanged": None, "assumptions": [], "since_baseline": None}
     spec, theme_css, issues = prepare(spec_path, theme, theme_css)
     if not any(i["level"] == "error" for i in issues):
         report["assumptions"] = assumed_items(spec) + (spec.get("brief") or {}).get("assumptions", [])
@@ -210,6 +238,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
         issues += plate["issues"] + page_findings(refused, par)
         if plate["fit"]:
             report["paper"] = {"size": plate["fit"]["size"], "scale": round(plate["fit"]["scale"], 3)}
+        report["since_baseline"] = since_baseline(spec, svg["snap"], work, name)
         report.update(changed=svg["changed"], density=plate["dom"]["density"], voids=plate["dom"]["voids"], fonts=svg["fonts"],
                       snapshot=str(svg["snapshot"]),
                       parity={"pixels": par["count"], "regions": par["regions"], "detail": par["detail"]},

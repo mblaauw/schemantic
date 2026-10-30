@@ -1,4 +1,4 @@
-"""Command line: `schemantic new | build | lint | series | doctor | icons | gallery | docs | offline | verify | smoke`.
+"""Command line: `schemantic new | build | lint | baseline | series | doctor | icons | gallery | docs | offline | verify | smoke`.
 Every command prints JSON and exits 1 on errors; an unexpected failure is an `internal` finding, never a traceback,
 because an agent reads the output."""
 
@@ -32,6 +32,9 @@ def parser() -> argparse.ArgumentParser:
     n.add_argument("--lang", choices=("en", "nl"), default="en", help="the plate's language (default: en)")
     _spec_command(sub, "build", "check, lay out, lint and write <name>.svg and <name>.png", scale=True)
     _spec_command(sub, "lint", "build without writing deliverables; report only", scale=False)
+    b = sub.add_parser("baseline", help="before a correction: keep the delivered plate; each later build says what differs from it")
+    b.add_argument("spec")
+    b.add_argument("--out", default="out", help="the folder the plate was built into (default: out)")
     r = sub.add_parser("series", help="check the parts of a series against each other: numbering, language, arrows, colours")
     r.add_argument("specs", nargs="+")
     d = sub.add_parser("doctor", help="find a Python with the dependencies and prove Chromium starts")
@@ -67,6 +70,11 @@ def run(a) -> tuple[dict, int]:
 
         r = new(a.archetype, a.path, a.lang)
         return r, 1 if r["errors"] else 0
+    if a.cmd == "baseline":
+        from .pipeline import set_baseline
+
+        r = set_baseline(a.spec, a.out)
+        return r, 1 if r["errors"] else 0
     if a.cmd == "series":
         from .findings import grouped
         from .series import series_findings
@@ -95,7 +103,8 @@ def run(a) -> tuple[dict, int]:
 
     if a.cmd == "lint":
         r = build(a.spec, a.out, deliver=False, theme=a.theme, review=a.review)
-        keep = ("spec", "summary", "errors", "warnings", "changed", "density", "voids", "parity", "review", "review_unchanged", "assumptions")
+        keep = ("spec", "summary", "errors", "warnings", "changed", "density", "voids", "parity", "review", "review_unchanged",
+                "assumptions", "since_baseline")
         return {k: r[k] for k in keep}, 1 if r["errors"] else 0
     r = build(a.spec, a.out, scale=a.dpi / 96, theme=a.theme, outline_text=a.outline_text, review=a.review)
     return r, 1 if r["errors"] else 0

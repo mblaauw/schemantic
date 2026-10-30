@@ -5,6 +5,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- Corrections: `schemantic baseline` keeps the delivered plate, and each build after it reports `since_baseline`: the outline
+  lines gone and new, the parts changed and the parts moved. `SKILL.md` step 8 says how to carry out one sentence and nothing
+  else; `evals/corrections.py` measures it.
 - `route-end` warns when a route stops short of what it is about: a story through a panel that holds cards, an arrow labelled
   with a card's name that ends on the panel, a card the title names that no arrow reaches. On the last eval's plates, 15 of
   the 19 runs it fires on also had a judged path defect.

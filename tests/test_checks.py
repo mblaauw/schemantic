@@ -2,6 +2,7 @@
 import copy
 import json
 import re
+import sys
 from pathlib import Path
 
 import pytest
@@ -271,6 +272,45 @@ def test_an_assumption_is_marked_on_the_plate_and_listed(tmp_path):
     assert "#a86a00" in svg.lower() and "aanname" in svg.lower()
     md = (tmp_path / "marked.md").read_text(encoding="utf-8")
     assert "## Aannames" in md and "[aanname]" in md
+
+
+def test_a_correction_reports_only_what_it_changed(tmp_path):
+    path = write(tmp_path, BASE, "plate")
+    assert cli.main(["baseline", str(path), "--out", str(tmp_path)]) == 1  # nothing delivered yet
+    assert pipeline.build(path, tmp_path)["since_baseline"] is None
+    assert pipeline.set_baseline(path, tmp_path)["errors"] == []
+    corrected = mutate(lambda s: panel(s, "services")["cards"][0].update(name="Producten"))
+    since = pipeline.build(write(tmp_path, corrected, "plate"), tmp_path)["since_baseline"]
+    assert [line[:11] for line in since["removed"]] == ["- Catalog —"] and [line[:13] for line in since["added"]] == ["- Producten —"]
+    assert since["parts_changed"] == ["services"] and since["parts_moved"] == []
+
+
+def test_a_correction_shows_an_arrow_that_now_points_elsewhere(tmp_path):
+    """An automatic card id follows its position: dropping a card repoints the arrow to the next, and the names show it."""
+    base = mutate(lambda s: s["flows"].append({"from": "clients", "to": "identity.card1"}))
+    path = write(tmp_path, base, "plate")
+    pipeline.build(path, tmp_path)
+    pipeline.set_baseline(path, tmp_path)
+    corrected = copy.deepcopy(base)
+    panel(corrected, "identity")["cards"].pop(0)
+    since = pipeline.build(write(tmp_path, corrected, "plate"), tmp_path)["since_baseline"]
+    assert any("Service accounts" in line and "→" in line for line in since["removed"])
+    assert any("Audit log" in line and "→" in line for line in since["added"])
+
+
+def test_the_correction_eval_grades_stray_edits():
+    sys.path.insert(0, str(ROOT / "evals"))
+    import corrections
+
+    before = sp.load_spec(ROOT / "examples" / f"{corrections.EVENTS}.yaml")
+    assert corrections.stray(before, before, []) == []
+    after = copy.deepcopy(before)
+    panel(after, "search")["cards"][0]["name"] = "Product search index"
+    panel(after, "ops")["cards"].reverse()  # order does not count
+    assert corrections.CASES["rename"][3](after)
+    assert corrections.stray(before, after, corrections.CASES["rename"][2]) == []
+    after["title"] = "Something else"
+    assert corrections.stray(before, after, corrections.CASES["rename"][2]) == ["title"]
 
 
 def test_a_repeated_hint_is_given_once_and_summed_up():
