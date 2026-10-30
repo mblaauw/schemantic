@@ -126,7 +126,8 @@ layout:
 
 - Every panel sits in exactly one zone or in `outside`; a zone holds zones, panels, or both.
 - One or two short panels beside tall zones leave a hole: put them in a row underneath with `outside_at: bottom`,
-  or give a short zone the same treatment by moving its panels to `outside`.
+  or give a short zone the same treatment by moving its panels to `outside`. A zone that holds zones takes its
+  parent's whole width, so a small zone beside it wraps underneath.
 - The zone a thing runs in is the point: say it in the title ("Patient data never leaves the clinic's datacentre").
 - Flows cross zone frames freely; the gaps between zones are gutters for the router.
 - Example: `examples/kliniek-zones.yaml`.

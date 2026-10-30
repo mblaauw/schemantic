@@ -9,6 +9,11 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   2.12 (Sonnet) and 2.25 (Haiku) defects per plate. Paths fall from 41 to 28 of the defects; holes rise from 15 to 21,
   and series plates get worse. See `evals/README.md`.
 
+### Fixed
+- `outside_at: bottom` could not solve the deployment plate it was made for: wider accounts stood a small zone beside a
+  cluster, stretched, and lint called it an error. A zone that holds zones now takes its parent's whole width, so the
+  small zone wraps underneath.
+
 ## [0.3.0] - 2026-10-30
 
 The skill's own tools and a stronger picture. Stories name the routes a plate claims and can be numbered on it; starters

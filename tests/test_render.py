@@ -541,3 +541,16 @@ def test_outside_panels_can_stand_in_a_row_under_the_zones(tmp_path):
     frames = [b for k, b in boxes.items() if k.startswith("zone.") and k.count(".") == 1]
     patients, insurers = boxes["patients"], boxes["insurers"]
     assert patients[1] >= max(b[3] for b in frames if b) and patients[1] == insurers[1] and patients[2] < insurers[0]
+
+
+def test_a_zone_that_holds_zones_takes_the_whole_row(tmp_path):
+    """Beside a cluster of namespaces, a small zone stands stretched; it wraps under the cluster instead, also when
+    the outside panels leave the account the whole width of the plate."""
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    spec["layout"]["outside_at"] = "bottom"
+    cloud = next(z for z in spec["layout"]["zones"] if z["id"] == "cloud")
+    moved = cloud["zones"][0]["zones"].pop()
+    cloud["zones"].append(moved)
+    run("lint", write(tmp_path, spec, "wrap"), "--out", tmp_path)
+    boxes = json.loads((tmp_path / "_work" / "wrap.snapshot.json").read_text(encoding="utf-8"))["boxes"]
+    assert boxes[f"zone.{moved['id']}"][1] >= boxes["zone.cluster"][3]

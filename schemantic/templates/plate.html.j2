@@ -69,7 +69,7 @@
 
 {#- A zone of a nested-zones plate: a dashed frame with a label, holding zones and panels; up to three levels. -#}
 {%- macro zone(z, depth) -%}
-<section class="zone zone-{{ depth }}" data-kind="zone" data-id="zone.{{ z.id }}" data-dash>
+<section class="zone zone-{{ depth }}{% if z.zones %} has-zones{% endif %}" data-kind="zone" data-id="zone.{{ z.id }}" data-dash>
 <div class="zone-label">{% if z.kind %}<span class="zone-kind">{{ z.kind }}</span>{% endif %}<span>{{ z.title }}</span></div>
 <div class="zone-body">
 {%- for child in z.zones or [] %}{{ zone(child, depth + 1) }}{% endfor -%}
