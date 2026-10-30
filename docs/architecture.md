@@ -110,7 +110,7 @@ checks the one effect it must have.
 2. Add `schemantic/archetypes/<name>.py` defining `ARCHETYPE`: its `name`, `required` and `allowed` layout keys,
    `validate` (its own checks), `grid` (a `GridSpec`: rows of panel ids or group names, column tracks, and any
    groups, bands, zones or marks), and where it needs them `panel_defaults`, `loud` (the panels with a filled header
-   when nothing is in focus: the layout's own centre) and `standalone` (panels whose place already says how they
+   when nothing is in focus: the layout's own centre) and `expand` (what the layout implies, filled in after the checks: a tree's arrows, numbers by row), `legend_roles` and `cards_are_things` (when panel colours or card icons mean nothing here), and `standalone` (panels whose place already says how they
    relate, so they need no flow). The registry finds it; no shared code changes.
 3. Add its `layout` keys and an `if/then` block to `schemantic/schema/plate.schema.json`, and its name to the
    `archetype` enum; `tests/test_spec.py` checks that the schema and the registry agree.

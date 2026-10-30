@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../schemantic/schema/plate.schema.json
+# Fictional example: a sequence of one request, one lifeline per participant.
+canvas: {size: landscape-4x3, lang: en}
+title: "The gateway checks every token before a request reaches a service"
+subtitle: "An order request from the web shop, with a valid token; a refused token ends after step 3"
+archetype: sequence
+brief:
+  message: "No request reaches a service before the gateway has checked its token."
+  reader: "Engineers joining the order team"
+  why: "sequence: one request, in order, between named participants"
+  assumptions: []
+sources:
+  - {id: design, kind: document, ref: "Gateway design note"}
+layout:
+  participants: [shop, gateway, identity, orders]
+panels:
+  - id: shop
+    title: "Web shop"
+    role: external
+    cards:
+      - {id: send, icon: browser, name: "Sends the order", note: "with its bearer token", row: 1, refs: ["design: request"]}
+      - {id: done, icon: check, name: "Shows the order", row: 5, refs: ["design: response"]}
+  - id: gateway
+    title: "API gateway"
+    role: platform
+    cards:
+      - {id: take, icon: route, name: "Takes the request", row: 1, refs: ["design: gateway"]}
+      - {id: ask, icon: shield-check, name: "Asks about the token", row: 2, refs: ["design: gateway"]}
+      - {id: learn, icon: user-check, name: "Learns the customer", row: 3, refs: ["design: gateway"]}
+      - {id: pass, icon: arrow-right, name: "Passes the order on", note: "adds the customer id", row: 4, refs: ["design: gateway"]}
+      - {id: reply, icon: corner-down-left, name: "Returns the result", row: 5, refs: ["design: gateway"]}
+  - id: identity
+    title: "Identity service"
+    role: platform
+    cards:
+      - {id: verify, icon: key, name: "Verifies the token", note: "signature and expiry", row: 2, refs: ["design: identity"]}
+      - {id: answer, icon: check, name: "Says who it is", row: 3, refs: ["design: identity"]}
+  - id: orders
+    title: "Order service"
+    role: platform
+    cards:
+      - {id: place, icon: shopping-cart, name: "Places the order", row: 4, refs: ["design: orders"]}
+flows_mean: request
+flows:
+  - {from: send, to: take}
+  - {from: ask, to: verify}
+  - {from: answer, to: learn, style: async}
+  - {from: pass, to: place}
+  - {from: reply, to: done, style: async}
+footer:
+  principles:
+    - "Services trust the customer id the gateway adds; none of them reads a token."
+  legend: auto

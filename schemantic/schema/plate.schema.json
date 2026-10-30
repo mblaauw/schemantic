@@ -166,7 +166,12 @@
         "nested-zones",
         "swimlane",
         "before-after",
-        "roadmap"
+        "roadmap",
+        "sequence",
+        "capability-map",
+        "comparison",
+        "hierarchy",
+        "quadrant"
       ],
       "description": "The body layout; references/archetypes.md says when to use each."
     },
@@ -245,6 +250,50 @@
             "wide"
           ],
           "description": "layer-cake: width of the rails, between 260 px (at 1600 wide) and 30% of the body. normal is the default."
+        },
+        "participants": {
+          "type": "array", "minItems": 2, "maxItems": 6, "items": {"type": "string"},
+          "description": "sequence: participant (panel) ids, left to right; each is a lifeline."
+        },
+        "domains": {
+          "type": "array", "minItems": 2, "maxItems": 6, "items": {"type": "string"},
+          "description": "capability-map: domain (panel) ids, top first; a domain's cards are its capabilities."
+        },
+        "per_row": {
+          "type": "integer", "minimum": 2, "maximum": 8,
+          "description": "capability-map: cards per row of a domain; default, the fullest domain's count."
+        },
+        "criteria": {
+          "type": "array", "minItems": 2, "maxItems": 6, "items": {"type": "string"},
+          "description": "comparison: criterion (panel) ids, top first; a criterion has one card per option."
+        },
+        "options": {
+          "type": "array", "minItems": 2, "maxItems": 4, "items": {"type": "string"},
+          "description": "comparison: the options' names, the column labels."
+        },
+        "pick": {
+          "type": "integer", "minimum": 1,
+          "description": "comparison: the option recommended (1 is the first), marked and tinted."
+        },
+        "root": {
+          "type": "string",
+          "description": "hierarchy: the panel at the top of the tree."
+        },
+        "children": {
+          "type": "object", "additionalProperties": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "description": "hierarchy: panel id -> the panels directly under it; the arrows follow from this."
+        },
+        "cells": {
+          "type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "string"},
+          "description": "quadrant: the four panels, left to right, top row first."
+        },
+        "x": {
+          "type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "string"},
+          "description": "quadrant: the labels over the left and right columns."
+        },
+        "y": {
+          "type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "string"},
+          "description": "quadrant: the labels beside the top and bottom rows."
         },
         "lanes": {
           "type": "array",
@@ -697,6 +746,116 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "sequence"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": ["participants"],
+            "propertyNames": {
+              "enum": ["participants", "chips_at"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "capability-map"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": ["domains"],
+            "propertyNames": {
+              "enum": ["domains", "per_row", "chips_at"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "comparison"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": ["criteria", "options"],
+            "propertyNames": {
+              "enum": ["criteria", "options", "pick", "chips_at"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "hierarchy"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": ["root", "children"],
+            "propertyNames": {
+              "enum": ["root", "children", "chips_at"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "quadrant"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": ["cells", "x", "y"],
+            "propertyNames": {
+              "enum": ["cells", "x", "y", "chips_at"]
+            }
+          }
+        }
+      }
     }
   ],
   "$defs": {
@@ -786,6 +945,12 @@
           "minimum": 1,
           "maximum": 8,
           "description": "swimlane: the step column (1 is the first phase) this card sits in."
+        },
+        "row": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12,
+          "description": "sequence: the moment this card acts, 1 is the first; a message joins two cards in one row."
         },
         "layer": {
           "type": "string",

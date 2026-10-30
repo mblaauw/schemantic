@@ -3,6 +3,7 @@ badge: "Part {part} of {of}"
 markers: {question: "Q", note: "N"}   # open question Q1, note N1
 before_after: ["Before", "After"]
 now: "now"
+pick: "recommended"
 footer:
   principles: "Key principles"
   open_questions: "Open questions"

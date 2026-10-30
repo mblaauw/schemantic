@@ -46,7 +46,9 @@ One plate per archetype, each built from a fictional spec in [`examples/`](examp
 | ![column-flow](assets/gallery/orderplatform-toegang.webp) **column-flow**: a path, with status tags, a flag and focus | ![hub-and-spokes](assets/gallery/orderplatform-eventbus.webp) **hub-and-spokes**: one bus, async flows, a card-to-card connector |
 | ![layer-cake](assets/gallery/ontwikkelplatform-lagen.webp) **layer-cake**: layers with security and observability rails | ![swimlane](assets/gallery/incident-swimlane.webp) **swimlane**: actors, phases and numbered handoffs |
 | ![nested-zones](assets/gallery/kliniek-zones.webp) **nested-zones**: where everything runs | ![before-after](assets/gallery/invoicing-before-after.webp) **before-after**: what each part becomes, with change status |
-| ![roadmap](assets/gallery/portal-roadmap.webp) **roadmap**: workstreams over quarters, with now marked | |
+| ![roadmap](assets/gallery/portal-roadmap.webp) **roadmap**: workstreams over quarters, with now marked | ![sequence](assets/gallery/token-check-sequence.webp) **sequence**: one request between lifelines, numbered by row |
+| ![capability-map](assets/gallery/retail-capability-map.webp) **capability-map**: what exists by domain, with the gaps dashed | ![comparison](assets/gallery/search-engine-comparison.webp) **comparison**: options against criteria, with the pick marked |
+| ![hierarchy](assets/gallery/platform-org-hierarchy.webp) **hierarchy**: a tree whose arrows follow from its children | ![quadrant](assets/gallery/migration-quadrant.webp) **quadrant**: a two-by-two, where the position is the message |
 
 ## The spec in one look
 
@@ -86,7 +88,7 @@ The latest release is 0.3.0; [`CHANGELOG.md`](CHANGELOG.md) lists what is in it.
 
 | Built |
 | --- |
-| Archetypes: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones, before-after, roadmap |
+| Archetypes: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones, before-after, roadmap, sequence, capability-map, comparison, hierarchy, quadrant |
 | Patterns: tier strip, process strip, tree, matrix |
 | Connectors: straight, L, Z and U routes; card endpoints; sync, async, optional; steps; stories |
 | Roles, themes, change status, card flags, focus; locales `nl` and `en` |

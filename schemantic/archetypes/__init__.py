@@ -22,6 +22,7 @@ class GridSpec:
     bands: dict[str, list[str]] = field(default_factory=dict)   # band name -> labels of a header row (no panels)
     zones: list[dict] = field(default_factory=list)             # the zone tree rendered in a "zones" group
     marks: dict[str, int] = field(default_factory=dict)         # band name -> the label (1-based) to mark, e.g. now
+    mark_label: str = "now"                                     # the locale key of the tag on a marked label
 
 
 class Archetype:
@@ -29,6 +30,8 @@ class Archetype:
     required: frozenset[str] = frozenset()   # layout keys the archetype needs
     allowed: frozenset[str] = frozenset()    # layout keys it accepts (chips_at applies to every one)
     router_hints: dict = {}                   # reserved for layouts that prefer certain channels
+    legend_roles: bool = True                 # False when a panel's colour means nothing on this layout
+    cards_are_things: bool = True             # False when cards are steps or verdicts, so their icons do not say who
 
     def placed(self, spec: dict) -> list[str]:
         """Panel ids as the layout names them, duplicates kept so they can be reported."""
@@ -56,6 +59,10 @@ class Archetype:
     def standalone(self, spec: dict) -> set[str]:
         """Panels that may stand without a flow: their place on the plate already says how they relate."""
         return set()
+
+    def expand(self, spec: dict) -> dict:
+        """What the layout implies, filled into a spec that checked clean: arrows a tree draws, numbers a row gives."""
+        return spec
 
 
 # Side columns (rails, side spokes) stay readable: at least SIDE_MIN_PX at a 1600 px canvas (scaled with the canvas),

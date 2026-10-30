@@ -44,6 +44,14 @@ it. Then pick the layout on the reader's question. When unsure, use `column-flow
 | "Where does everything run, and what is inside what?" | `nested-zones` | the question is how things talk, not where they live: column-flow |
 | "What changes, and what does each part become?" | `before-after` | the change has more than about four parts: a series of plates |
 | "What comes when, and where are we now?" | `roadmap` | it is who hands work to whom: swimlane |
+| "Who calls whom, in what order, for this one request?" | `sequence` | people hand work over: swimlane; it is the whole system: column-flow |
+| "What can we do, and where are the gaps?" | `capability-map` | how the parts talk matters: column-flow |
+| "Which option, and why?" | `comparison` | there is one design and no choice: any other |
+| "What is made of what, or who reports to whom?" | `hierarchy` | things have more than one parent: column-flow |
+| "Where does each thing sit on two axes?" | `quadrant` | one axis is time: roadmap |
+
+A `capability-map`, `comparison` or `quadrant` says it by position and needs no arrows; a `hierarchy` draws them from
+its tree. On those, the arrow rules below apply only to the arrows you do draw.
 
 Settle the reader's language (`nl` or `en`, following the user; in `nl` technical terms stay English). More than 6
 panels or 30 cards is two plates, each with its own message: a series (`series`, `part`, `of`); once every part

@@ -13,6 +13,11 @@ Eight cases test the skill's real job: from sources to a truthful plate. Each ca
 | 6-deployment-zones | environments, clusters, namespaces | nested zones |
 | 7-phase-change | today versus phase 2 | change status tags (new, removed, planned) |
 | 8-language-follows-user | a Dutch note, an English request | the plate's language follows the user, not the source |
+| 9-sequence | one payment between systems | picks a sequence; messages along rows |
+| 10-capability-map | a review of what exists and what is missing | picks a map; gaps as `planned` |
+| 11-comparison | options against four criteria, with a recommendation | picks a comparison; every cell filled, the pick marked |
+| 12-hierarchy | a reporting structure | picks a hierarchy |
+| 13-quadrant | ideas scored on two axes | picks a quadrant |
 
 ## Running
 

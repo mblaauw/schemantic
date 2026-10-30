@@ -1,0 +1,27 @@
+archetype: comparison
+
+layout:
+  options: ["TODO: option one", "TODO: option two"]     # the column labels, as they appear in the sources
+  pick: 2                                               # the option the plate recommends; leave out if nothing is decided
+  criteria: [first, second]                             # one row per criterion, top first
+
+# One card per option per criterion; `col` says which option. The icon is the verdict: circle-check, alert-triangle, circle-x.
+panels:
+  - id: first
+    title: "TODO: a criterion"
+    role: data
+    cards:
+      - {icon: alert-triangle, name: "TODO: verdict", note: "TODO: why", col: 1, refs: ["notes: TODO"]}
+      - {icon: circle-check, name: "TODO: verdict", note: "TODO: why", col: 2, refs: ["notes: TODO"]}
+  - id: second
+    title: "TODO: a criterion"
+    role: data
+    cards:
+      - {icon: circle-check, name: "TODO: verdict", note: "TODO: why", col: 1, refs: ["notes: TODO"]}
+      - id: doubt
+        icon: alert-triangle
+        name: "TODO: verdict"
+        note: "TODO: why"
+        col: 2
+        refs: ["notes: TODO"]
+        flag: {kind: warning, text: "TODO: an open choice the sources leave"}

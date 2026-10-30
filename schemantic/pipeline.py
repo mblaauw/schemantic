@@ -13,7 +13,7 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-from . import __version__, outline
+from . import __version__, archetypes, outline
 from .browser import launch, on_sheet, open_plate, rasterise_svg
 from .config import FONTS_DIR, paper_fit
 from .export import export_svg, measure, on_paper
@@ -55,7 +55,7 @@ def prepare(spec_path: Path, theme: str | Path | None, theme_css: str) -> tuple[
     if not issues:
         issues = check(spec, theme_css)
     if not any(i["level"] == "error" for i in issues):
-        spec = number_story(spec)
+        spec = number_story(archetypes.get(spec["archetype"]).expand(spec))
     return spec, theme_css, issues
 
 

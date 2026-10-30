@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../schemantic/schema/plate.schema.json
+# Fictional example: a two-by-two, where the position is the message.
+canvas: {size: landscape-4x3, lang: en}
+title: "Move the portal and the mailer first: high value, little risk"
+subtitle: "Ten applications placed by what moving them gains and what it risks, after the workshop"
+archetype: quadrant
+brief:
+  message: "The first migration wave is the two apps with high value and low risk."
+  reader: "The migration steering group"
+  why: "quadrant: every application placed on the same two axes"
+  assumptions: []
+sources:
+  - {id: workshop, kind: notes, ref: "Migration workshop"}
+layout:
+  x: ["Low risk", "High risk"]
+  y: ["High value", "Low value"]
+  cells: [first, plan, later, leave]
+panels:
+  - id: first
+    title: "Move first"
+    subtitle: "This quarter"
+    role: platform
+    focus: true
+    cards:
+      - {icon: browser, name: "Customer portal", note: "scales with the campaigns", refs: ["workshop: portal"]}
+      - {icon: mail, name: "Mailer", note: "stateless, an easy start", refs: ["workshop: mailer"]}
+  - id: plan
+    title: "Plan carefully"
+    subtitle: "Needs a rehearsal"
+    role: platform
+    cards:
+      - {icon: receipt, name: "Billing", note: "month end cannot slip", refs: ["workshop: billing"]}
+      - {icon: database, name: "Customer database", note: "everything reads it", refs: ["workshop: database"]}
+      - {icon: shopping-cart, name: "Order service", note: "two nightly batches", refs: ["workshop: orders"]}
+  - id: later
+    title: "Move when convenient"
+    subtitle: "With the next upgrade"
+    role: platform
+    cards:
+      - {icon: file-text, name: "Intranet", note: "few users", refs: ["workshop: intranet"]}
+      - {icon: chart-bar, name: "Report viewer", note: "read only", refs: ["workshop: reports"]}
+      - {icon: printer, name: "Print service", note: "small and old", refs: ["workshop: print"]}
+  - id: leave
+    title: "Leave or retire"
+    subtitle: "Not worth moving"
+    role: platform
+    cards:
+      - {icon: archive, name: "Old archive", note: "read twice a year", refs: ["workshop: archive"]}
+      - {icon: device-desktop, name: "Time clock", note: "tied to the hardware", refs: ["workshop: clock"]}
+footer:
+  principles:
+    - "An application moves once; no half-moved systems between waves."
+  legend: auto

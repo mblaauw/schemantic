@@ -1,0 +1,360 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   110
+  ],
+  "body": [
+   40,
+   128,
+   1560,
+   630
+  ],
+  "quality": [
+   40,
+   172,
+   1560,
+   252
+  ],
+  "quality.card0": [
+   224,
+   184,
+   638,
+   240
+  ],
+  "quality.card1": [
+   678,
+   184,
+   1092,
+   240
+  ],
+  "quality.card2": [
+   1132,
+   184,
+   1546,
+   240
+  ],
+  "effort": [
+   40,
+   296,
+   1560,
+   378
+  ],
+  "effort.card0": [
+   224,
+   310,
+   638,
+   366
+  ],
+  "effort.card1": [
+   678,
+   310,
+   1092,
+   366
+  ],
+  "effort.card2": [
+   1132,
+   310,
+   1546,
+   366
+  ],
+  "cost": [
+   40,
+   422,
+   1560,
+   504
+  ],
+  "cost.card0": [
+   224,
+   436,
+   638,
+   490
+  ],
+  "cost.card1": [
+   678,
+   436,
+   1092,
+   490
+  ],
+  "price": [
+   1132,
+   436,
+   1546,
+   490
+  ],
+  "risk": [
+   40,
+   548,
+   1560,
+   630
+  ],
+  "risk.card0": [
+   224,
+   560,
+   638,
+   616
+  ],
+  "risk.card1": [
+   678,
+   560,
+   1092,
+   616
+  ],
+  "risk.card2": [
+   1132,
+   560,
+   1546,
+   616
+  ],
+  "band.options": [
+   40,
+   128,
+   1560,
+   156
+  ],
+  "footer": [
+   40,
+   648,
+   1560,
+   718
+  ],
+  "footer.principles": [
+   40,
+   648,
+   876,
+   690
+  ],
+  "footer.open_questions": [
+   904,
+   648,
+   1560,
+   690
+  ],
+  "footer.legend": [
+   40,
+   700,
+   1560,
+   718
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "Managed search is good and easy to run; only its price needs a decision"
+  ],
+  [
+   40,
+   104,
+   "Three ways to replace the shop's search, against what the review asked for"
+  ],
+  [
+   52,
+   218,
+   "Result quality"
+  ],
+  [
+   266,
+   208,
+   "Weak"
+  ],
+  [
+   266,
+   224,
+   "no typo tolerance, no synonyms"
+  ],
+  [
+   720,
+   208,
+   "Good"
+  ],
+  [
+   720,
+   224,
+   "needs tuning by us"
+  ],
+  [
+   1176,
+   208,
+   "Good"
+  ],
+  [
+   1176,
+   224,
+   "tuned by the supplier"
+  ],
+  [
+   52,
+   342,
+   "Effort to run"
+  ],
+  [
+   266,
+   334,
+   "None"
+  ],
+  [
+   266,
+   350,
+   "already runs"
+  ],
+  [
+   720,
+   334,
+   "High"
+  ],
+  [
+   720,
+   350,
+   "one engineer, on call"
+  ],
+  [
+   1176,
+   334,
+   "Low"
+  ],
+  [
+   1176,
+   350,
+   "an integration, then upgrades"
+  ],
+  [
+   52,
+   468,
+   "Yearly cost"
+  ],
+  [
+   266,
+   460,
+   "Lowest"
+  ],
+  [
+   266,
+   476,
+   "no new licence"
+  ],
+  [
+   720,
+   460,
+   "Middle"
+  ],
+  [
+   720,
+   476,
+   "servers and the engineer"
+  ],
+  [
+   1176,
+   460,
+   "Highest"
+  ],
+  [
+   1238,
+   458,
+   "Q1"
+  ],
+  [
+   1176,
+   476,
+   "priced per query"
+  ],
+  [
+   52,
+   594,
+   "Biggest risk"
+  ],
+  [
+   266,
+   584,
+   "Slow pages"
+  ],
+  [
+   266,
+   602,
+   "search loads the order database"
+  ],
+  [
+   720,
+   584,
+   "Key person"
+  ],
+  [
+   720,
+   602,
+   "one engineer knows it"
+  ],
+  [
+   1176,
+   584,
+   "Lock-in"
+  ],
+  [
+   1176,
+   602,
+   "export is possible, a rewrite is not"
+  ],
+  [
+   224,
+   146,
+   "Database search"
+  ],
+  [
+   678,
+   146,
+   "Self-hosted engine"
+  ],
+  [
+   1132,
+   146,
+   "Managed search"
+  ],
+  [
+   1260,
+   144,
+   "recommended"
+  ],
+  [
+   40,
+   660,
+   "Key principles"
+  ],
+  [
+   50,
+   686,
+   "Search runs on its own copy of the catalogue, whichever option wins."
+  ],
+  [
+   904,
+   660,
+   "Open questions"
+  ],
+  [
+   908,
+   686,
+   "Q1"
+  ],
+  [
+   930,
+   686,
+   "Does the board accept a price per query?"
+  ],
+  [
+   40,
+   714,
+   "Legend"
+  ],
+  [
+   108,
+   714,
+   "Q1"
+  ],
+  [
+   134,
+   714,
+   "Open choice or friction"
+  ]
+ ],
+ "flows": []
+}

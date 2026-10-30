@@ -30,7 +30,10 @@ def test_a_starter_fails_only_on_its_todos(name):
     spec = yaml.safe_load(scaffold.starter(name))
     found = [f for f in sp.check(spec) if f["level"] == "error"]
     assert found and {f["check"] for f in found} == {"placeholder"}
-    assert {"brief", "sources", "flows", "flows_mean", "footer"} <= set(spec)
+    assert {"brief", "sources", "footer"} <= set(spec)
+    arche = archetypes.get(name)
+    if not arche.standalone(spec) or name == "sequence":  # a layout where position says it all, or the tree draws it, needs no flows
+        assert {"flows", "flows_mean"} <= set(spec)
 
 
 @pytest.mark.parametrize("name", archetypes.BUILT)

@@ -12,6 +12,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   what it holds, never "Part 1".
 - `role-fit` warns about a panel that mixes people and systems (at least two of each, more than a third of each), and
   suggests splitting it. It used to warn only when two thirds looked wrong. One person beside a row of tools passes.
+- Five more archetypes, each with a starter, an example and its own checks: `sequence` (one request between lifelines,
+  numbered by row), `capability-map` (what exists by domain, the gaps dashed), `comparison` (options against criteria,
+  the pick marked), `hierarchy` (a tree whose arrows follow from `children`) and `quadrant` (a two-by-two).
 
 ### Fixed
 - The outline of a nested-zones plate left out the zones, the point of such a plate. It now lists them, nested, with

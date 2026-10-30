@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../schemantic/schema/plate.schema.json
+# Fictional example: a capability map, rows of domains with the gaps showing as planned.
+canvas: {size: landscape-4x3, lang: en}
+title: "Selling is covered; the gaps are all in after-sales"
+subtitle: "What the retail platform can do today, by domain, after the spring review"
+archetype: capability-map
+brief:
+  message: "New work belongs in after-sales: three of its five capabilities do not exist yet."
+  reader: "The investment board"
+  why: "capability-map: what we have and where the gaps are, with no flow to tell"
+  assumptions: []
+sources:
+  - {id: review, kind: document, ref: "Spring capability review"}
+layout:
+  domains: [sell, fulfil, aftersales, insight]
+panels:
+  - id: sell
+    title: "Sell"
+    role: platform
+    cards:
+      - {icon: search, name: "Search", refs: ["review: sell"]}
+      - {icon: tag, name: "Pricing", refs: ["review: sell"]}
+      - {icon: shopping-cart, name: "Checkout", refs: ["review: sell"]}
+      - {icon: percentage, name: "Promotions", status: changed, refs: ["review: sell"]}
+      - {icon: gift, name: "Gift cards", refs: ["review: sell"]}
+  - id: fulfil
+    title: "Fulfil"
+    role: platform
+    cards:
+      - {icon: packages, name: "Stock", refs: ["review: fulfil"]}
+      - {icon: truck, name: "Delivery", refs: ["review: fulfil"]}
+      - {icon: building-store, name: "Click and collect", refs: ["review: fulfil"]}
+      - {icon: printer, name: "Label printing", status: deprecated, refs: ["review: fulfil"]}
+  - id: aftersales
+    title: "After-sales"
+    role: platform
+    focus: true
+    cards:
+      - {icon: arrow-back-up, name: "Returns", refs: ["review: after-sales"]}
+      - {icon: receipt-refund, name: "Refunds", refs: ["review: after-sales"]}
+      - {icon: tool, name: "Repairs", status: planned, refs: ["review: after-sales"]}
+      - {icon: message-circle, name: "Customer chat", status: planned, refs: ["review: after-sales"]}
+      - {icon: shield-check, name: "Warranty claims", status: planned, refs: ["review: after-sales"]}
+  - id: insight
+    title: "Insight"
+    role: data
+    cards:
+      - {icon: chart-bar, name: "Sales reports", refs: ["review: insight"]}
+      - {icon: users, name: "Customer profiles", refs: ["review: insight"]}
+      - {icon: trending-up, name: "Demand forecast", status: new, refs: ["review: insight"]}
+footer:
+  principles:
+    - "A capability has one owning domain; another domain calls it."
+  legend: auto

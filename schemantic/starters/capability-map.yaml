@@ -1,0 +1,32 @@
+archetype: capability-map
+
+layout:
+  domains: [first, second, third]     # one row per domain, top first
+
+# No arrows: status is the assessment. planned is a gap, deprecated is on its way out, no status is in place.
+panels:
+  - id: first
+    title: "TODO: a domain"
+    role: platform
+    cards:
+      - {icon: box, name: "TODO: a capability", refs: ["notes: TODO"]}
+      - {icon: box, name: "TODO: a capability", refs: ["notes: TODO"]}
+      - {icon: box, name: "TODO: a capability", refs: ["notes: TODO"]}
+  - id: second
+    title: "TODO: a domain"
+    role: platform
+    cards:
+      - {icon: box, name: "TODO: a capability", refs: ["notes: TODO"]}
+      - {icon: box, name: "TODO: a capability", status: deprecated, refs: ["notes: TODO"]}
+  - id: third
+    title: "TODO: the domain with the gaps"
+    role: platform
+    cards:
+      - {icon: box, name: "TODO: a capability", refs: ["notes: TODO"]}
+      - {icon: box, name: "TODO: a capability that is missing", status: planned, refs: ["notes: TODO"]}
+      - id: gap
+        icon: box
+        name: "TODO: a capability that is missing"
+        status: planned
+        refs: ["notes: TODO"]
+        flag: {kind: warning, text: "TODO: an open choice the sources leave"}

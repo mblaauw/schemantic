@@ -10,6 +10,7 @@ class Swimlane(Archetype):
     name = "swimlane"
     required = frozenset({"lanes"})
     allowed = frozenset({"lanes", "columns", "chips_at"})
+    cards_are_things = False
 
     @staticmethod
     def width(spec: dict) -> int:

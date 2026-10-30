@@ -1,0 +1,29 @@
+archetype: hierarchy
+
+layout:
+  root: top
+  children:     # panel -> the panels directly under it; the arrows follow from this
+    top: [left, right]
+
+panels:
+  - id: top
+    title: "TODO: what everything sits under"
+    role: platform
+    cards:
+      - {icon: box, name: "TODO: what it does", refs: ["notes: TODO"]}
+  - id: left
+    title: "TODO: a part"
+    role: platform
+    cards:
+      - {icon: box, name: "TODO: what it holds", refs: ["notes: TODO"]}
+  - id: right
+    title: "TODO: a part"
+    role: platform
+    cards:
+      - id: doubt
+        icon: box
+        name: "TODO: what it holds"
+        refs: ["notes: TODO"]
+        flag: {kind: warning, text: "TODO: an open choice the sources leave"}
+
+flows_mean: control     # dependency when it says what is made of what
