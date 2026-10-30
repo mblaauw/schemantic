@@ -5,6 +5,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- `evals/judge_prompt.md`: the judges' wording is fixed, and `harness.py blind` writes their prompts. One sentence had
+  added 25% to the defects on the same plates.
+- Evals of the worked series, `role-fit` and the new layouts: series plates improve (4.50 to 3.50 defects), most cases
+  hold, phase change worsens, and nothing invented falls (42/48 to 37/48). See `evals/README.md`.
 - Evals of 0.3.0 (30 October), all eight cases, three runs each, judged blind: 8 of 48 runs pass the judge (4 before), at
   2.12 (Sonnet) and 2.25 (Haiku) defects per plate. Paths fall from 41 to 28 of the defects; holes rise from 15 to 21,
   and series plates get worse. See `evals/README.md`.

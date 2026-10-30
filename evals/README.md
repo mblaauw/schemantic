@@ -32,8 +32,9 @@ python evals/harness.py prepare <runs> --skill <skill copy> --repeats 3   # run 
 
 Start one agent per entry in `prompts.json`, on the model it names, with its prompt and nothing else. When they are
 done, judge them blind: `harness.py blind <runs> <judge dir>` copies every run under a random name with only its case
-named, a separate agent applies `judge.md` (and the review questions it points to) to each and writes `judge.json`
-there, and `harness.py unblind <runs>` brings the verdicts back. Then:
+named and writes one prompt per four runs to `judges.json`. Start one agent per prompt, with nothing else: it applies
+`judge.md` (and the review questions it points to) and writes each `judge.json`. Keep the wording in `judge_prompt.md`:
+changing it moves the numbers. `harness.py unblind <runs>` brings the verdicts back. Then:
 
 ```bash
 python evals/run_all.py <runs>   # both halves, per run, and the totals per model
@@ -44,6 +45,66 @@ components, counts, nothing invented by name) and the judged half (a claim in th
 invented, no defect). One run per case is noisy; take three.
 
 ## Latest results
+
+The skill at `more-archetypes`, unreleased: a worked series in `references/analysis.md`, `role-fit` on mixed panels, the
+#24 fixes, and five new layouts. Eight cases, three runs each, judged blind. In brackets, 0.3.0.
+
+**Judges now use the wording in `judge_prompt.md`.** The first pass of this eval opened with "You are a strict,
+independent reviewer" and reported 0/48 at 3.25 defects per plate. Sixteen 0.3.0 plates judged again under that wording
+went from 2.25 to 2.81, so every run was judged again in the wording of earlier rounds. Those numbers are below.
+
+| Model | Automated | Judged | Nothing invented | Defects per plate |
+| --- | --- | --- | --- | --- |
+| Sonnet 5.5 | 23/24 (24/24) | 2/24 (3/24) | 20/24 (23/24) | 1.88 (2.12) |
+| Haiku 5.5 | 24/24 (24/24) | 3/24 (5/24) | 17/24 (19/24) | 2.17 (2.25) |
+
+Fewer runs pass (5 against 8), with slightly fewer defects (97 against 105). Read that as no clear change: 48 runs is
+few, and judges differ.
+
+| Case | Passed | Defects per plate |
+| --- | --- | --- |
+| 1 notes | 0/6 (1/6) | 1.33 (1.67) |
+| 2 repository | 1/6 (3/6) | 1.50 (1.50) |
+| 3 series | 0/6 (0/6) | 3.50 (4.50) |
+| 4 open choices | 1/6 (0/6) | 2.33 (2.00) |
+| 5 swimlane | 2/6 (3/6) | 0.67 (0.67) |
+| 6 deployment | 0/6 (0/6) | 1.67 (1.67) |
+| 7 phase change | 0/6 (1/6) | 3.50 (2.67) |
+| 8 language | 1/6 (0/6) | 1.67 (2.83) |
+
+What the changes did:
+
+- **Series: better, not solved.** Defects fall from 4.50 to 3.50, and stand-in panels now name what they hold. What is
+  left: a reader's arrow ending on a stand-in panel, and "every area publishes" with data drawn only as a reader.
+- **Role colours: no better.** About 14 of 97 defects against 12 of 105, sorted by keyword. A mixed panel is rarely the
+  problem: it is a whole panel with the wrong role, or one part in two colours across a plate.
+- **Nothing invented: worse, as feared.** 37/48 against 42/48, on eleven runs: mostly a status or chip on a request
+  nobody decided (`gepland` on a report), two arrows between parts the source only names, and groupings the agent
+  named. `references/review.md` excuses what the brief lists as an assumption and `judge.md` does not; they should agree.
+- **Phase change: worse**, 2.67 to 3.50, mostly routes that stop short of the pickers and the carrier.
+
+**The new layouts**, two runs per model and reported apart, since there is nothing to compare them with. Every run
+picked the right layout.
+
+| Case | Layout picked | Passed | Defects per plate |
+| --- | --- | --- | --- |
+| 9 sequence, after raising the card cap | 4/4 | 0/4 | 3.25 |
+| 10 capability map | 4/4 | 1/4 | 1.25 |
+| 11 comparison | 4/4 | 2/4 | 1.00 |
+| 12 hierarchy | 4/4 | 0/4 | 2.50 |
+| 13 quadrant | 4/4 | 1/4 | 1.25 |
+
+Reading these runs led to fixes **not measured yet**: dashed messages read "Reply or event", not "Asynchronous"; a map's
+rows share their width, with no colours or phases in its legend; a hierarchy's arrows read "Leads" and its panels end
+with their content; the quadrant docs no longer ask each panel for a verdict; the `series` hint no longer invites
+relabelling arrows, which two series runs did.
+
+## History
+
+Each run below names what changed before it and what it found; the targets it names are what the following runs
+went after.
+
+### 0.3.0 (30 October)
 
 Version 0.3.0, the released skill: eight cases, three runs each, judged blind with the same judge and review
 questions as the runs below. A run passes when the automated grade passes and the judge finds nothing invented and no
@@ -98,11 +159,6 @@ From the agents' own reports, three things this run found in the tools:
 **Next targets**: inner zones that stack when an account gets wider, so `outside_at: bottom` works; crops that survive
 a rebuild; zones in the outline; a footer limit a short plate can meet; and "draw what the source implies, and list it
 as an assumption" in place of leaving the step out.
-
-## History
-
-Each run below names what changed before it and what it found; the targets it names are what the following runs
-went after.
 
 ### Three runs per case (30 October)
 
