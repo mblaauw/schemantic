@@ -298,7 +298,7 @@ def placeholders(spec) -> list[dict]:
 
     def walk(v, where):
         if isinstance(v, str) and PLACEHOLDER.search(v):
-            out.append(finding("placeholder", where or "(root)", f"'{v}' is a placeholder; write what the sources say"))
+            out.append(finding("placeholder", where or "(root)", f"still a placeholder: '{v}'"))
         elif isinstance(v, dict):
             for k, x in v.items():
                 walk(x, f"{where}/{k}" if where else str(k))

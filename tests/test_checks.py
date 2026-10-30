@@ -112,7 +112,7 @@ def test_layout_check_triggers(check, tmp_path):
     report = pipeline.build(write(tmp_path, mutate(fn, base), "t"), tmp_path, deliver=False, theme_css=theme)
     found = report["errors"] + report["warnings"]
     assert check in {f["check"] for f in found}, [f["check"] for f in found]
-    assert all(f.get("hint") for f in found)
+    assert all(line["hint"] for line in report["summary"])  # every check's hint, once
 
 
 def test_yaml_triggers(tmp_path):
@@ -172,3 +172,15 @@ def test_examples_have_no_voids_and_a_low_footer(path, mode, tmp_path):
     height = float(re.search(r'height="([\d.]+)"', (tmp_path / "_work" / f"{path.stem}.svg").read_text()[:400]).group(1))
     footer = boxes["footer"][3] - boxes["footer"][1]
     assert footer <= 0.13 * height + 2, f"footer {footer}px of {height}px"
+
+
+def test_a_repeated_hint_is_given_once_and_summed_up():
+    """A fresh starter has dozens of TODOs: the report gives their hint once, and a summary line per check, errors
+    first, says how many there are and what to try."""
+    issues = [findings.finding("placeholder", f"panels/{n}", "still a placeholder") for n in range(3)]
+    issues += [findings.finding("void", "data", "empty", level="warning"), findings.finding("story", "stories/0", "breaks")]
+    r = findings.grouped(issues)
+    assert [f.get("hint") is not None for f in r["errors"]] == [True, False, False, True]
+    assert [(line["check"], line["level"], line["count"]) for line in r["summary"]] == [
+        ("placeholder", "error", 3), ("story", "error", 1), ("void", "warning", 1)]
+    assert all(line["hint"] == findings.CHECKS[line["check"]].hint for line in r["summary"])

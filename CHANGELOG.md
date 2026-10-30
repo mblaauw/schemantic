@@ -77,6 +77,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   now use sequence, so their arrows run left to right instead of back against the periods.
 
 ### Changed
+- Grouped findings: the report opens with `summary`, one line per check (errors first, in the order found) with its
+  count and hint, and its first line is the fix to make first. A hint repeated by the same check is given once, on
+  the check's first finding. A placeholder's detail is just the text left (`still a placeholder: '...'`). A fresh
+  starter's report falls from 9.9 KB to 6.4 KB; `series` reports the same way.
 - The review questions say which part of each question lint already answers (story, timeline, role-fit, void,
   footer-share, traceability, series), so the model judges what no check can: the message, words, truth and open
   ends. Later rounds ask the whole-plate questions of the overview and the rest of the new crops only.

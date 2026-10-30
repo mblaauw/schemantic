@@ -17,7 +17,7 @@ from . import __version__, outline
 from .browser import launch, on_sheet, open_plate, rasterise_svg
 from .config import FONTS_DIR, paper_fit
 from .export import export_svg, measure, on_paper
-from .findings import finding, with_hint
+from .findings import finding, grouped
 from .html import build_html
 from .images import image_diff, snapshot
 from .lint import dom_lint, layout_findings
@@ -164,7 +164,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
     round only of the parts changed since the last one, which `review_unchanged` names; review="all" crops every part."""
     spec_path, out = Path(spec_path), Path(out)
     name, work = spec_path.stem, Path(out) / "_work"
-    report = {"spec": str(spec_path), "errors": [], "warnings": [], "density": {}, "voids": {}, "parity": None,
+    report = {"spec": str(spec_path), "summary": [], "errors": [], "warnings": [], "density": {}, "voids": {}, "parity": None,
               "svg": None, "png": None, "outline": None, "snapshot": None, "fonts": [], "flow_problems": [], "build": None, "preview": None,
               "changed": None, "review": None, "review_unchanged": None}
     spec, theme_css, issues = prepare(spec_path, theme, theme_css)
@@ -197,7 +197,6 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                       parity={"pixels": par["count"], "regions": par["regions"], "detail": par["detail"]},
                       flow_problems=[dict(flow=spec["flows"][x["i"]], check=x["check"], problem=x["problem"])
                                      for x in plate["flows"]["problems"]])
-    report["errors"] = [with_hint(i) for i in issues if i["level"] == "error"]
+    report.update(grouped(issues))
     publish(staged, report, out)
-    report["warnings"] = [with_hint(i) for i in issues if i["level"] == "warning"]
     return report
