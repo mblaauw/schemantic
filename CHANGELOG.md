@@ -68,6 +68,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   now use sequence, so their arrows run left to right instead of back against the periods.
 
 ### Changed
+- `evals/README.md` leads with the latest result per model and says what is not measured yet; the earlier runs follow
+  as history.
 - The skill's steps run in an order an agent can follow: settle the message and the layout, then `new` writes the
   file and the brief goes into it first. Before, the brief was written into a spec that only existed two steps later,
   from a starter that needed the layout chosen in between. The audit now also asks that every route the title names

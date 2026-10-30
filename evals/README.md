@@ -25,12 +25,37 @@ python evals/grade.py evals/cases/<case> runs/<model>/<with|without>/<case>   # 
 ```
 
 and have a separate agent apply `judge.md` to the same folder (the judged half). A run passes when both halves pass.
-`run_all.py` grades every run folder and prints the table below.
+`run_all.py` grades every run folder and prints the automated columns of the tables below.
 
-## Results
+## Latest results
 
-Run of 26 October 2026: eight cases, with and without the skill, on Sonnet 5.5 and Haiku 5.5, one run each. A
-case passes when the automated grade passes and the judge finds no invented content and no defect.
+The newest run per model, eight cases with the skill, one run each, judged blind. A case passes when the automated
+grade passes and the judge finds no invented content and no defect; the judge fails a plate on any single defect.
+
+| Model | Run | Automated | Judged | Nothing invented | Defects per plate |
+| --- | --- | --- | --- | --- | --- |
+| Sonnet 5.5 | 29 October, second rerun | 8/8 | 2/8 | 7/8 | 2.1 |
+| Haiku 5.5 | 29 October, third run | 8/8 | 0/8 | 8/8 | 2.5 |
+
+Without the skill neither model builds a spec, a lint-clean plate or traceable cards (26 October: 0/8 automated on
+both); that has not been rerun since.
+
+The most frequent defect left is **paths**: arrows that end on a panel where the title names a card, and steps that
+live only in a card note (7 of Haiku's last 20 defects, 16 of 45 across both models the run before).
+
+**Not yet measured:** everything since these runs. Stories (a route named in the title, checked by lint), starters
+(`schemantic new`), review crops (`build --review`), the skill's reordered steps and worked examples that draw their
+routes, the `sequence` flows and `now` column, and slate arrows. One run per case is noisy; the next rerun should
+take three per case.
+
+## History
+
+Each run below names what changed before it and what it found; the targets it names are what the following runs
+went after.
+
+### First run (26 October 2026)
+
+Eight cases, with and without the skill, on Sonnet 5.5 and Haiku 5.5, one run each. A case passes when the automated grade passes and the judge finds no invented content and no defect.
 
 | Model | Skill | Automated | Judged | Claim title | Nothing invented | Layout fits | Defects per plate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -56,7 +81,7 @@ with the skill, most frequent first:
 
 These are the next targets for lint and the review questions.
 
-### Rerun of 29 October 2026 (0.3.0.dev0, with the skill only)
+### Rerun of 29 October 2026 (with the skill only)
 
 The same eight cases with the skill as it stands after the design tiers (claim titles with a topic line, question
 labels, panels that end with their content, footer and widow lint, series checks, before-after, rails by layer,
