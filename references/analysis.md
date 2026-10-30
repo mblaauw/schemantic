@@ -54,6 +54,8 @@ panel with seven needs splitting.
 
 Write the title as a claim the grouping supports ("Every customer question lands in one Zendesk queue"). If no claim
 fits, the grouping is wrong, or the plate is two plates. The subtitle says how the claim is true.
+When the title or subtitle names a route ("A via B to C"), that route is the claim: connect its cards, not their
+panels, and write it as a `story` so lint checks a finger can follow it. Each worked example below does.
 
 ## 4. The cut
 
@@ -74,7 +76,8 @@ second line (teams); Jira (system); product team (team); help centre (system, ow
 (undecided: open point). Decisions: everything lands in Zendesk; only confirmed bugs go to Jira.
 
 Grouping by stage: where questions come from, where they are handled, where bugs go. Message: one queue, and only
-bugs leave it. Archetype: column-flow, a path from left to right.
+bugs leave it. Archetype: column-flow, a path from left to right. The subtitle names a route (a bug's way out,
+through second line to Jira), so its cards get ids, flows join those cards, and the route is a story.
 
 <!-- lint: full -->
 ```yaml
@@ -93,11 +96,11 @@ layout:
   areas: ["customers support engineering"]
 panels:
   - id: customers
-    title: "Customers"
-    role: actor
+    title: "Ways in"
+    role: external
     cards:
-      - {icon: mail, name: "E-mail", note: "lands in Zendesk as a ticket", refs: ["notes: both land in Zendesk"]}
-      - {icon: forms, name: "Web form", note: "lands in Zendesk as a ticket", refs: ["notes: both land in Zendesk"]}
+      - {id: mail, icon: mail, name: "E-mail", note: "lands in Zendesk as a ticket", refs: ["notes: both land in Zendesk"]}
+      - {id: form, icon: forms, name: "Web form", note: "lands in Zendesk as a ticket", refs: ["notes: both land in Zendesk"]}
       - {icon: book, name: "Help centre", note: "Zendesk Guide; articles out of date", refs: ["notes: articles ... out of date"]}
     chips:
       - {kind: warning, text: "Who owns the help centre articles?"}
@@ -106,21 +109,26 @@ panels:
     subtitle: "All work happens in Zendesk"
     role: platform
     cards:
-      - {icon: ticket, name: "Zendesk", note: "one queue for every question", refs: ["notes: both land in Zendesk"]}
+      - {id: zendesk, icon: ticket, name: "Zendesk", note: "one queue for every question", refs: ["notes: both land in Zendesk"]}
       - {icon: headset, name: "First line", note: "answers questions", refs: ["notes: First line answers questions"]}
-      - {icon: bug, name: "Second line", note: "takes bugs and reproduces them", refs: ["notes: second line takes bugs"]}
-    chips:
-      - {kind: warning, text: "Status page: Statuspage or our own?"}
+      - {id: second, icon: bug, name: "Second line", note: "takes bugs and reproduces them", refs: ["notes: second line takes bugs"]}
   - id: engineering
     title: "Engineering"
     role: platform
     cards:
-      - {icon: list-details, name: "Jira", note: "confirmed bugs, through the integration", refs: ["notes: through the Zendesk integration"]}
+      - {id: jira, icon: list-details, name: "Jira", note: "confirmed bugs, through the integration", refs: ["notes: through the Zendesk integration"]}
       - {icon: users-group, name: "Product team", note: "triages Jira every Monday", refs: ["notes: triages Jira every Monday"]}
+    chips:
+      - {kind: warning, text: "Status page: Statuspage or our own?"}
 flows_mean: request
 flows:
-  - {from: customers, to: support}
-  - {from: support, to: engineering}
+  - {from: mail, to: zendesk}
+  - {from: form, to: zendesk}
+  - {from: zendesk, to: second}
+  - {from: second, to: jira}
+stories:
+  - name: "A bug leaves Zendesk only through Jira"
+    path: [form, zendesk, second, jira]
 footer:
   principles:
     - "Every customer question becomes a Zendesk ticket."
@@ -137,12 +145,13 @@ declares `aws_db_instance.main` (PostgreSQL), `aws_s3_bucket.uploads` and `aws_e
 README says uploads are scanned before they are stored, and a `TODO` in `worker/tasks.py` asks whether scanning
 should move to a managed service.
 
-Inventory, with refs: browser app (`compose: web`), API (`compose: api`), worker (`compose: worker`), PostgreSQL
+Inventory, with refs: browser app and nginx (`compose: web`), API (`compose: api`), worker (`compose: worker`), PostgreSQL
 (`tf: aws_db_instance.main`), upload bucket (`tf: aws_s3_bucket.uploads`), Redis queue (`tf:
 aws_elasticache_cluster.queue`; `compose: redis` locally). Flows from the environment variables: API and worker to
 the database and the queue. Open point: the `TODO`.
 
 Grouping by responsibility. Message: the API takes every request; slow work goes through a queue to the worker.
+That is a route (API, queue, worker, bucket), so the flows join those cards and the route is a story.
 
 <!-- lint: full -->
 ```yaml
@@ -153,7 +162,7 @@ archetype: column-flow
 brief:
   message: "Requests stay fast because the worker does the slow work behind a queue."
   reader: "Engineers joining the team"
-  why: "column-flow: requests travel left to right, with the stores underneath"
+  why: "column-flow: requests travel left to right, into the stores"
   left_out: ["nginx configuration details"]
 sources:
   - {id: compose, kind: repository, ref: "docker-compose.yml"}
@@ -162,18 +171,18 @@ sources:
   - {id: code, kind: repository, ref: "worker/tasks.py"}
 layout:
   areas:
-    - "clients app app"
-    - "clients data data"
+    - "web app data"
 panels:
-  - id: clients
-    title: "Clients"
-    role: external
+  - id: web
+    title: "Front end"
+    role: platform
     cards:
-      - {icon: browser, name: "Browser app", note: "single-page app, served by nginx", refs: ["compose: services.web"]}
+      - {id: browser, icon: browser, name: "Browser app", note: "single-page app, served by nginx", refs: ["compose: services.web"]}
+      - {icon: server, name: "nginx", note: "serves the single-page app", refs: ["compose: services.web"]}
   - id: app
     title: "Application"
     role: platform
-    card_columns: 2
+    card_columns: 1
     cards:
       - {id: api, icon: api, name: "API", qualifier: "FastAPI", note: "takes every request", refs: ["compose: services.api"]}
       - {id: worker, icon: settings, name: "Worker", qualifier: "Celery", note: "scans uploads, then stores them",
@@ -182,15 +191,20 @@ panels:
   - id: data
     title: "Data"
     role: data
-    card_columns: 3
+    card_columns: 1
     cards:
-      - {icon: database, name: "PostgreSQL", note: "orders and accounts", refs: ["tf: aws_db_instance.main"]}
-      - {icon: stack-2, name: "Redis queue", note: "jobs from API to worker", refs: ["tf: aws_elasticache_cluster.queue"]}
-      - {icon: bucket, name: "Upload bucket", note: "scanned files only", refs: ["tf: aws_s3_bucket.uploads"]}
-flows_mean: request
+      - {id: queue, icon: stack-2, name: "Redis queue", note: "jobs from API to worker", refs: ["tf: aws_elasticache_cluster.queue"]}
+      - {icon: database, name: "PostgreSQL", note: "read by the API and the worker", refs: ["tf: aws_db_instance.main", "compose: DATABASE_URL"]}
+      - {id: bucket, icon: bucket, name: "Upload bucket", note: "scanned files only", refs: ["tf: aws_s3_bucket.uploads"]}
+flows_mean: data
 flows:
-  - {from: clients, to: app}
-  - {from: app, to: data}
+  - {from: browser, to: api}
+  - {from: api, to: queue}
+  - {from: queue, to: worker, style: async}
+  - {from: worker, to: bucket}
+stories:
+  - name: "An upload, from the API through the queue to the bucket"
+    path: [api, queue, worker, bucket]
 footer:
   principles:
     - "Nothing slow runs inside a request; it becomes a job on the queue."
@@ -205,8 +219,8 @@ manager approves or rejects it. Finance checks claims over 500 euro against the 
 the next salary run by payroll.*
 
 Inventory: employee, manager, finance, payroll (actors); expense app (system); steps: submit, approve, check over
-500 euro, pay with salary. Handoffs: employee to manager, manager to finance (only over 500 euro), finance to
-payroll.
+500 euro, pay with salary. Handoffs: employee to manager; manager to finance over 500 euro, and straight to payroll
+otherwise; finance to payroll. Both paths are drawn, or the plate says every claim passes finance.
 
 Grouping by actor, in the order of the steps. A process with handoffs between people is a swimlane: one lane per
 actor, steps in phase columns, numbered handoffs.
@@ -214,8 +228,8 @@ actor, steps in phase columns, numbered handoffs.
 <!-- lint: full -->
 ```yaml
 canvas: {size: landscape-4x3, lang: en}
-title: "An expense claim passes three desks before it is paid"
-subtitle: "Manager approval for every claim, a finance check above 500 euro, payment with the next salary"
+title: "Only expense claims over 500 euro wait for finance"
+subtitle: "A manager approves every claim; finance checks the large ones; payroll pays with the next salary"
 archetype: swimlane
 brief:
   message: "Every claim takes the same path; only the finance check depends on the amount."
@@ -237,7 +251,7 @@ panels:
     title: "Manager"
     role: actor
     cards:
-      - {id: approve, icon: circle-check, name: "Approve or reject", note: "every claim", col: 2,
+      - {id: approve, icon: circle-check, name: "Approve or reject", note: "every claim; over 500 euro to finance", col: 2,
          refs: ["process: approves or rejects it"]}
   - id: finance
     title: "Finance"
@@ -256,8 +270,15 @@ flows:
   - {from: submit, to: approve, step: 1}
   - {from: approve, to: check, step: 2}
   - {from: check, to: pay, step: 3}
+  - {from: approve, to: pay}
+stories:
+  - name: "A claim over 500 euro"
+    path: [submit, approve, check, pay]
+  - name: "A claim of 500 euro or less"
+    path: [submit, approve, pay]
 footer:
   principles:
-    - "A claim without a receipt photo cannot be submitted."
+    - "Every claim is approved by the employee's manager."
+    - "Finance checks only the claims over 500 euro."
   legend: auto
 ```

@@ -1,7 +1,8 @@
 # Archetypes
 
 Every archetype uses the same panels, cards, chips, patterns, flows and footer. They differ only in
-`layout`: how panels are placed. Lint names any layout key that does not belong to the chosen archetype.
+`layout`: how panels are placed. Lint names any layout key that does not belong to the chosen archetype. The blocks
+below show `layout` only; `plate.py new <archetype>` writes a whole spec to start from.
 
 Rows take their content height and the canvas fits them (`canvas.height: fit`, the default); with
 `canvas.height: fixed` the preset size stays and spare height goes to the gaps between rows. A panel that spans

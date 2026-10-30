@@ -29,9 +29,37 @@ Read `references/analysis.md` and follow it for the source you have: a conversat
 process description. List every actor, system, data store, decision and open point the sources name, each with
 where it comes from. Do not add what the sources do not name.
 
-## 2. Write the brief, then audit it
+## 2. Settle the message and the layout
 
-Before any panel, write the spec's `brief` and `sources`:
+Decide, in a sentence each, the one claim the plate makes and who reads it. The claim becomes the title: a claim the
+panels support, not a topic ("Architecture overview" is a topic); the subject goes in `topic`, a quiet line above
+it. Then pick the layout on the reader's question. When unsure, use `column-flow`.
+
+| The reader asks… | Archetype | Not this when… |
+| --- | --- | --- |
+| "How does a request or data get from A to Z?" | `column-flow` | everything hangs off one central part: hub-and-spokes |
+| "What sits around the one central thing, and how does it connect?" | `hub-and-spokes` | there is an order to the parts: column-flow |
+| "What builds on what, and what cuts across all of it?" | `layer-cake` | layers talk sideways more than up and down: column-flow |
+| "Who does what, in which order, and where does work change hands?" | `swimlane` | it is about systems, not people: column-flow |
+| "Where does everything run, and what is inside what?" | `nested-zones` | the question is how things talk, not where they live: column-flow |
+| "What changes, and what does each part become?" | `before-after` | the change has more than about four parts: a series of plates |
+| "What comes when, and where are we now?" | `roadmap` | it is who hands work to whom: swimlane |
+
+Settle the reader's language (`nl` or `en`, following the user; in `nl` technical terms stay English). More than 6
+panels or 30 cards is two plates, each with its own message: a series (`series`, `part`, `of`); once every part
+builds, run `"$PY" "$SKILL/scripts/plate.py" series plates/*.yaml` so the parts agree (language, arrows, one colour
+per thing). `references/archetypes.md` has each layout's keys and limits; the schema refuses any other name.
+
+## 3. Start the spec, brief first
+
+Start from the layout's starter, saved where the user keeps their work:
+
+```bash
+"$PY" "$SKILL/scripts/plate.py" new <archetype> plates/<name>.yaml --lang en
+```
+
+It has every part (brief, sources, panels, flows, a story, footer) with TODO wherever the sources must speak; lint
+names each TODO left. Fill the `brief` and `sources` before any panel:
 
 ```yaml
 brief:
@@ -49,42 +77,13 @@ open questions. Then audit the plan against the sources, and fix it before writi
 
 - Every card traces to a source. A card you cannot trace is an assumption or an open question, not a fact.
 - Every uncertainty in the sources is a warning chip, a card flag or an open question.
-- The title is a claim the panels support, not a topic ("Architecture overview" is a topic). The subject goes in
-  `topic`, a quiet line above the title.
+- Every route the title or subtitle names ("A via B to C") is a `story` through cards that exist.
 
-Settle the reader's language (`nl` or `en`, following the user; in `nl` technical terms stay English) and, if the
-story needs more than one plate, the series (`series`, `part`, `of`); once every part builds, run
-`"$PY" "$SKILL/scripts/plate.py" series plates/*.yaml` so the parts agree (language, arrows, one colour per thing).
+## 4. Fill the spec
 
-## 3. Choose the layout
-
-Route on the reader's question. When unsure, use `column-flow`.
-
-| The reader asks… | Archetype | Not this when… |
-| --- | --- | --- |
-| "How does a request or data get from A to Z?" | `column-flow` | everything hangs off one central part: hub-and-spokes |
-| "What sits around the one central thing, and how does it connect?" | `hub-and-spokes` | there is an order to the parts: column-flow |
-| "What builds on what, and what cuts across all of it?" | `layer-cake` | layers talk sideways more than up and down: column-flow |
-| "Who does what, in which order, and where does work change hands?" | `swimlane` | it is about systems, not people: column-flow |
-| "Where does everything run, and what is inside what?" | `nested-zones` | the question is how things talk, not where they live: column-flow |
-| "What changes, and what does each part become?" | `before-after` | the change has more than about four parts: a series of plates |
-| "What comes when, and where are we now?" | `roadmap` | it is who hands work to whom: swimlane |
-
-Series rule: more than 6 panels or 30 cards is two plates, each with its own message. Read
-`references/archetypes.md` for each layout's keys, limits and a skeleton; the schema refuses any other name.
-
-## 4. Write the spec
-
-Start from a starter, saved where the user keeps their work:
-
-```bash
-"$PY" "$SKILL/scripts/plate.py" new <archetype> plates/<name>.yaml --lang en
-```
-
-It has every part (brief, sources, panels, flows, a story, footer) with TODO wherever the sources must speak; lint
-names each TODO left. Replace every one, and rename, add or drop panels and cards as the plan says. The examples in
-`$SKILL/examples/` show finished plates; follow `references/spec-guide.md` for every field, the text budgets and the
-writing rules. The short version:
+Replace every TODO, and rename, add or drop panels and cards as the plan says. The examples in `$SKILL/examples/`
+show finished plates; follow `references/spec-guide.md` for every field, the text budgets and the writing rules. The
+short version:
 
 - 3 to 6 panels, 2 to 6 cards each. A card is a thing with a name; its note says what it does in this story.
 - Say once what arrows mean (`flows_mean`). Connect panels by default; when the title or subtitle names a route

@@ -68,6 +68,12 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   now use sequence, so their arrows run left to right instead of back against the periods.
 
 ### Changed
+- `evals/README.md` leads with the latest result per model and says what is not measured yet; the earlier runs follow
+  as history.
+- The skill's steps run in an order an agent can follow: settle the message and the layout, then `new` writes the
+  file and the brief goes into it first. Before, the brief was written into a spec that only existed two steps later,
+  from a starter that needed the layout chosen in between. The audit now also asks that every route the title names
+  is a story.
 - Arrows and step badges are slate ink instead of blue, so a blue arrow means the focus. Blue is left to the platform
   role and the focus; every plate's arrows change colour.
 - Tests run in parallel (`pytest -n auto`, pytest-xdist), locally and in CI: about 3 minutes become 1.4 on an 8-core
@@ -117,6 +123,19 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - `--scale`: use `--dpi` (96 is one pixel per CSS pixel).
 - `layout.row_heights` and the fixed-row mode behind it: rows take their content height. It is now a schema error.
 - The role name `storage` (it is `data`), and with it the `deprecated` check, since nothing is deprecated.
+
+### Fixed
+- `docs/architecture.md`, "Adding an archetype": it still said to move the name from planned to built, and left out
+  the starter, the `loud` and `standalone` hooks, the schema's enum and the gallery.
+- The worked examples in `references/analysis.md` taught the eval's top defect: titles that name a route, drawn
+  panel to panel with no story. Each now joins the route's cards and writes it as a story. The expense example
+  sent every claim through finance, though its source says only claims over 500 euro go there; both paths are now
+  drawn, and its principle about receipts (not in the source) is gone.
+- The doctor installed pytest and pytest-xdist into every user's venv: `requirements.txt` now holds the runtime
+  dependencies only (contributors install `.[dev]`).
+- The doctor only checked that the dependencies import, so a venv an older release built was used even when a newer
+  release needs newer versions. It now checks each requirement's version and installs again when one is missing or
+  outdated.
 
 ## [0.2.0] - 2026-10-29
 
