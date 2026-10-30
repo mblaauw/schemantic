@@ -5,9 +5,12 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- Evals of all this, judged blind (`evals/README.md`): under one set of rules, 9 of 48 runs pass (3 before), at 2.31 defects
+  per plate (3.54), with nothing invented in 39 of 48 (11). `judge.md` changed, and that alone nearly doubled the defects on
+  the same plates, so last round's numbers do not compare. Corrections change only what was asked in 22 of 24 runs.
 - Corrections: `schemantic baseline` keeps the delivered plate, and each build after it reports `since_baseline`: the outline
   lines gone and new, the parts changed and the parts moved. `SKILL.md` step 8 says how to carry out one sentence and nothing
-  else; `evals/corrections.py` measures it.
+  else; `evals/corrections.py` measures it. A correction cites the user only on a spec that already declares `sources`.
 - `route-end` warns when a route stops short of what it is about: a story through a panel that holds cards, an arrow labelled
   with a card's name that ends on the panel, a card the title names that no arrow reaches. On the last eval's plates, 15 of
   the 19 runs it fires on also had a judged path defect.

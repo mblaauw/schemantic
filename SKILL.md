@@ -163,8 +163,9 @@ A correction is an edit to the spec you have, never a new plate. "Rename this, t
 1. Run this first, once per request. It keeps the plate as delivered; each build after it reports `since_baseline`.
 2. Find the elements the sentence is about and change only those. Leave every other word, id, order and panel alone, even
    what you would now write better; a defect you notice goes in your reply, not in the edit.
-3. What the user tells you is a source. Add `{id: user, kind: conversation, ref: "Correction, <date>"}` once and cite their
-   words: `refs: ["user: <their words>"]`. When they confirm an assumption, its `assumed` gives way to that ref.
+3. What the user tells you is a source. If the spec declares `sources`, add `{id: user, kind: conversation, ref: "Correction,
+   <date>"}` once and cite their words: `refs: ["user: <their words>"]`. When they confirm an assumption, its `assumed` gives
+   way to that ref. A spec without `sources` stays without: declaring one asks a source of everything already on the plate.
 4. Build with `--review`, as in step 5. Read `since_baseline`: every line in `removed` and `added` must come from what they
    asked, and `parts_changed` and `parts_moved` must be parts you expected. Put back anything else. A renumbered question
    (Q2 becoming Q1) follows from a question removed.

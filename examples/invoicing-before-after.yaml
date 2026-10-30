@@ -31,7 +31,7 @@ panels:
     subtitle: "Finance, every morning"
     role: actor
     cards:
-      - {icon: file-spreadsheet, name: "Bank statement", note: "downloaded and opened in a spreadsheet"}
+      - {icon: users, name: "Finance clerks", note: "open the bank statement in a spreadsheet"}
       - {icon: user-check, name: "Match by hand", note: "payment to invoice, line by line"}
 
   - id: invoicing
@@ -57,7 +57,7 @@ panels:
     status: new
     cards:
       - {icon: checks, name: "Matcher", note: "pairs payments and invoices by reference"}
-      - {icon: users, name: "Finance", note: "only the payments that do not match"}
+      - {icon: list-check, name: "Exceptions list", note: "only the payments that do not match, for Finance"}
     chips:
       - {kind: warning, text: "Who owns a payment that matches two invoices?"}
 

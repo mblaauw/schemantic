@@ -96,7 +96,7 @@ panels:
 flows_mean: control
 flows:
   - {from: experience, to: delivery, label: "scaffolding"}
-  - {from: delivery, to: runtime, label: "deploy via GitOps"}
+  - {from: delivery, to: runtime, label: "uitrol via Git"}
   - {from: runtime, to: infra}
   - {from: policy, to: admission}
   - {from: runtime, to: observability, style: async}

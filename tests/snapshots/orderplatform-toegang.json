@@ -279,7 +279,7 @@
   [
    40,
    128,
-   "Mensen loggen in via OIDC, systemen met service accounts; data delen loopt via het lakehouse"
+   "Mensen loggen in via OIDC, systemen met een service account; data delen loopt via het lakehouse"
   ],
   [
    1436,

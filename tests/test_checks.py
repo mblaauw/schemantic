@@ -186,6 +186,8 @@ def test_route_end_finds_an_arrow_about_a_card_and_a_card_the_title_names():
 def test_role_fit_flags_one_thing_in_two_colours():
     spec = mutate(lambda s: panel(s, "clients")["cards"].append({"icon": "server", "name": "Routing"}))
     assert any("one thing" in f["detail"] for f in sp.check(spec) if f["check"] == "role-fit")
+    panel(spec, "clients")["cards"][-1]["status"] = "removed"  # what is going away may sit where it was
+    assert not any("one thing" in f["detail"] for f in sp.check(spec) if f["check"] == "role-fit")
 
 
 def test_role_fit_flags_a_mixed_panel_but_not_one_person_beside_tools():

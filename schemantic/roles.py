@@ -48,7 +48,7 @@ def role_fit_findings(spec: dict) -> list[dict]:
     two cards, two thirds of them pointing the other way; or a panel that mixes the two: a third or more people among systems, or
     half or more things among people. One person beside a row of tools is left alone, and so is an external panel, whose legend
     covers both. And one thing in two colours on one plate: a card
-    or a panel title that recurs under another role. Warnings, since icons and names are only a hint. A layout whose
+    or a panel title that recurs under another role, unless it is marked removed. Warnings, since icons and names are only a hint. A layout whose
     cards are steps or verdicts is left out."""
     if not archetypes.REGISTRY[spec["archetype"]].cards_are_things:
         return []
@@ -74,7 +74,8 @@ def role_fit_findings(spec: dict) -> list[dict]:
 def two_colours(spec: dict) -> list[dict]:
     """The same card name, or the same panel title, under two roles on one plate."""
     out = []
-    for kind, things in (("card", [(c["name"], p["role"], p["id"]) for p in spec["panels"] for c in p.get("cards", [])]),
+    for kind, things in (("card", [(c["name"], p["role"], p["id"]) for p in spec["panels"] for c in p.get("cards", [])
+                                  if c.get("status") != "removed"]),
                          ("panel", [(p["title"], p["role"], p["id"]) for p in spec["panels"]])):
         seen: dict[str, tuple[str, str]] = {}
         for name, role, pid in things:

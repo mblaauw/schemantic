@@ -774,7 +774,7 @@
   [
    808,
    534,
-   "deploy via GitOps"
+   "uitrol via Git"
   ]
  ],
  "flows": [
@@ -808,7 +808,7 @@
      544
     ]
    ],
-   "label": "deploy via GitOps"
+   "label": "uitrol via Git"
   },
   {
    "i": 2,
