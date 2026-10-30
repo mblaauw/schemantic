@@ -10,6 +10,7 @@ class Quadrant(Archetype):
     required = frozenset({"cells", "x", "y"})
     allowed = frozenset({"cells", "x", "y", "chips_at"})
     legend_roles = False
+    cards_are_things = False
 
     def placed(self, spec: dict) -> list[str]:
         return spec["layout"]["cells"]

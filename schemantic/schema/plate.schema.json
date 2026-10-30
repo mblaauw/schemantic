@@ -1251,7 +1251,8 @@
         },
         "cards": {
           "type": "array",
-          "maxItems": 6,
+          "maxItems": 12,
+          "description": "At most 6; a sequence's lifeline, which has one per moment, 12.",
           "items": {
             "$ref": "#/$defs/card"
           }

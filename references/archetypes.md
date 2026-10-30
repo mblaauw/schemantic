@@ -186,7 +186,8 @@ layout:
   participants: [shop, gateway, identity, orders]   # 2 to 6 lifelines, left to right
 ```
 
-- Every card has a `row`; one card per participant per row, one message per row. A step with no message is a card alone.
+- Every card has a `row`; one card per participant per row, one message per row, up to 12 on a lifeline. A step with no
+  message is a card alone. Name a card for what happens, in a word or two: six lifelines leave little width.
 - A message crosses other lifelines only where their row is empty: lint names the card in the way.
 - `style: async` draws a reply or an event dashed. Keep it to one path: a second path is a second plate.
 - The title claims the order that matters ("The gateway checks every token before a request reaches a service").

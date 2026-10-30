@@ -18,7 +18,7 @@ def _spec_command(sub, name: str, help_: str, scale: bool):
         p.add_argument("--dpi", type=float, default=192, help="PNG resolution: 96 is 1 px per CSS px (default 192)")
         p.add_argument("--outline-text", action="store_true", help="write text as glyph outlines (needs uharfbuzz)")
     p.add_argument("--review", nargs="?", const="changed", choices=["changed", "all"],
-                   help="also write crops of the plate a model can read, to <out>/_work/review/: of the parts changed since "
+                   help="also write crops of the plate a model can read, to <out>/_work/review/<name>/: of the parts changed since "
                         "the last review (the first time, and with `--review all`, of every part)")
     return p
 

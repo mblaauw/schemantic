@@ -10,6 +10,7 @@ class CapabilityMap(Archetype):
     name = "capability-map"
     required = frozenset({"domains"})
     allowed = frozenset({"domains", "per_row", "chips_at"})
+    cards_are_things = False
 
     def placed(self, spec: dict) -> list[str]:
         return spec["layout"]["domains"]

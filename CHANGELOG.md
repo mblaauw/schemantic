@@ -17,6 +17,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   the pick marked), `hierarchy` (a tree whose arrows follow from `children`) and `quadrant` (a two-by-two).
 
 ### Fixed
+- Parts of a series built into one folder overwrote each other's review crops, and each was compared with the part
+  before it for what changed. Crops now go to `_work/review/<name>/`.
 - The outline of a nested-zones plate left out the zones, the point of such a plate. It now lists them, nested, with
   the panels in each and those outside every zone.
 - `--review` deleted earlier crops on every build, so an agent that rebuilt before reading never saw the parts that did

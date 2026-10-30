@@ -138,7 +138,10 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
         return out
     out += roles.role_findings(spec, theme_css) + roles.role_fit_findings(spec) + slide_findings(spec)
 
-    for p in spec["panels"]:
+    for i, p in enumerate(spec["panels"]):
+        if len(p.get("cards", [])) > arche.max_cards:
+            out.append(finding("schema", f"panels/{i}/cards", f"{len(p['cards'])} cards; a panel holds {arche.max_cards}: "
+                               "split it, or the plate"))
         if p.get("weights"):
             blocks = len(p.get("patterns", [])) + (1 if p.get("cards") else 0)
             if p.get("arrange") != "row":

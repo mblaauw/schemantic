@@ -40,6 +40,13 @@ def test_sequence_checks(fn, says):
     assert any(says in d for d in details(SEQUENCE, fn))
 
 
+def test_a_lifeline_holds_twelve_cards_and_other_panels_six():
+    many = [{"name": f"Step {n}", "row": n, **({"id": "place"} if n == 4 else {})} for n in range(1, 13)]
+    assert not details(SEQUENCE, lambda s: panel(s, "orders").update(cards=many))
+    assert details(SEQUENCE, lambda s: panel(s, "orders").update(cards=[*many, {"name": "x", "row": 12}]))  # the schema's cap
+    assert any("a panel holds 6" in d for d in details(MAP, lambda s: panel(s, "sell").update(cards=[{"name": f"C{n}"} for n in range(7)])))
+
+
 def test_sequence_numbers_its_messages_by_row_and_a_drawn_story_keeps_its_own():
     arche = archetypes.get("sequence")
     assert [f["step"] for f in arche.expand(SEQUENCE)["flows"]] == [1, 2, 3, 4, 5]
