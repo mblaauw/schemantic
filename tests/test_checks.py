@@ -55,9 +55,9 @@ SPEC_TRIGGERS = {
 LONG_CHIP = "Uitzonderingen op een policy lopen altijd via een pull request met review door security"
 
 
-def admission_last(s):
-    runtime = panel(s, "runtime")
-    runtime["cards"].append(runtime["cards"].pop(0))
+def skip_two_layers(s):
+    """A card in the top layer straight to one in the bottom layer: every way crosses the two layers between."""
+    s["flows"].append({"from": "experience.card1", "to": "infra.card2"})
 
 
 LAYOUT_TRIGGERS = {
@@ -69,7 +69,7 @@ LAYOUT_TRIGGERS = {
     "overlap": (lambda s: None, ".card + .card { margin-top: -30px; }", BASE),
     "type-floor": (lambda s: None, ":root { --t-body: 9px; }", BASE),
     "contrast": (lambda s: None, ":root { --muted: #C8CDD2; }", BASE),
-    "arrow-routing": (admission_last, "", LAYERS),
+    "arrow-routing": (skip_two_layers, "", LAYERS),
     "arrow-label": (lambda s: s["flows"][0].update(label="OIDC"), "", BASE),
     "arrow-crossing": (lambda s: None, "", SKIP),
     "print-size": (lambda s: s["canvas"].update(size="a4-landscape"), "", BASE),

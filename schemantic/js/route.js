@@ -237,6 +237,105 @@ schemantic.route = (flows) => {
         }
       }
     }
+    // L through a gutter: out of A's top or bottom where a vertical channel crosses it, into B's side; or out of A's
+    // side, into B's top or bottom where a channel crosses B (and the same turned a quarter). A wide card under a row
+    // of panels reaches a card in one of them this way, up the gutter beside it, when a chip blocks the line straight up.
+    for (const [c, oc] of chX) {
+      if (c > a.l + 16 && c < a.r - 16 && (c < b.l || c > b.r))
+        for (const [y, o2] of pick(b.t, b.b, cy(a))) {
+          const ex = c < b.l ? b.l - PAD : b.r + PAD;
+          const off = oc + Math.abs(c - cx(a)) + o2;
+          if (y > a.b)
+            add(
+              [
+                [c, a.b + PAD],
+                [c, y],
+                [ex, y],
+              ],
+              off,
+            );
+          if (y < a.t)
+            add(
+              [
+                [c, a.t - PAD],
+                [c, y],
+                [ex, y],
+              ],
+              off,
+            );
+        }
+      if (c > b.l + 16 && c < b.r - 16 && (c < a.l || c > a.r))
+        for (const [y, o1] of pick(a.t, a.b, cy(b))) {
+          const sx = c < a.l ? a.l - PAD : a.r + PAD;
+          const off = oc + o1 + Math.abs(c - cx(b));
+          if (y < b.t)
+            add(
+              [
+                [sx, y],
+                [c, y],
+                [c, b.t - PAD],
+              ],
+              off,
+            );
+          if (y > b.b)
+            add(
+              [
+                [sx, y],
+                [c, y],
+                [c, b.b + PAD],
+              ],
+              off,
+            );
+        }
+    }
+    for (const [c, oc] of chY) {
+      if (c > a.t + 16 && c < a.b - 16 && (c < b.t || c > b.b))
+        for (const [x, o2] of pick(b.l, b.r, cx(a))) {
+          const ey = c < b.t ? b.t - PAD : b.b + PAD;
+          const off = oc + Math.abs(c - cy(a)) + o2;
+          if (x > a.r)
+            add(
+              [
+                [a.r + PAD, c],
+                [x, c],
+                [x, ey],
+              ],
+              off,
+            );
+          if (x < a.l)
+            add(
+              [
+                [a.l - PAD, c],
+                [x, c],
+                [x, ey],
+              ],
+              off,
+            );
+        }
+      if (c > b.t + 16 && c < b.b - 16 && (c < a.t || c > a.b))
+        for (const [x, o1] of pick(a.l, a.r, cx(b))) {
+          const sy = c < a.t ? a.t - PAD : a.b + PAD;
+          const off = oc + o1 + Math.abs(c - cy(b));
+          if (x < b.l)
+            add(
+              [
+                [x, sy],
+                [x, c],
+                [b.l - PAD, c],
+              ],
+              off,
+            );
+          if (x > b.r)
+            add(
+              [
+                [x, sy],
+                [x, c],
+                [b.r + PAD, c],
+              ],
+              off,
+            );
+        }
+    }
     // Z: sideways out of A, along a vertical channel, sideways into B (and the same turned a quarter).
     for (const [c, oc] of chX) {
       for (const [y1, o1] of pick(a.t, a.b, cy(b))) {
@@ -353,6 +452,15 @@ schemantic.route = (flows) => {
       .sort((p, q) => p.cost - q.cost);
   };
 
+  // The boxes of a header's words: its title and subtitle as set (a range, so not the full width of their block), and
+  // its status tag.
+  const words = (ph) =>
+    [...ph.querySelectorAll(".ph-title, .ph-sub, .tag")].map((el) => {
+      if (el.matches(".tag")) return rel(el);
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      return S.rel(range, P);
+    });
   const problems = [];
   const routed = [];
   const jobs = flows
@@ -371,12 +479,15 @@ schemantic.route = (flows) => {
         problems.push({ i, kind: "nested", problem: "connects a card to its own panel; connect it to another box" });
         return null;
       }
+      // The header of a card's own panel blocks only with its words: an arrow to a card in the panel's first row
+      // enters through the empty band beside the title, never through the title itself.
+      const own = (s) => s.el.matches(".ph") && (s.el.parentElement.contains(A) || s.el.parentElement.contains(B));
       const obstacles = solids
         .filter(
           (s) =>
             !(s.el === A || s.el === B || s.el.contains(A) || s.el.contains(B) || A.contains(s.el) || B.contains(s.el)),
         )
-        .map((s) => s.box);
+        .flatMap((s) => (own(s) ? words(s.el) : [s.box]));
       return { i, fl, A, B, obstacles, cands: candidates(rel(A), rel(B)) };
     })
     .filter(Boolean);

@@ -145,6 +145,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - The role name `storage` (it is `data`), and with it the `deprecated` check, since nothing is deprecated.
 
 ### Fixed
+- A card-to-card arrow into a card under its panel's header, or from a wide card under a row of panels, was refused
+  whenever the straight line was blocked (eval agents then joined the panels instead). The router now also tries
+  an L up or down a gutter where it crosses a card, and the header of an arrow's own panel blocks only with its
+  words: the arrow passes through the empty band beside the title, never the title.
 - A flow between two cards of one panel (Bronze to Silver to Gold) left the panel and came back, or was refused:
   the 8 px between cards is shorter than an arrowhead. A panel with such a flow spaces its cards 32 px apart, so
   the arrow runs straight from one card to the next.

@@ -1,0 +1,89 @@
+# Fixture: a wide card under a row of panels reaching a card in one of them (from an eval run: Clinic scheduling to
+# Sync). The line straight up is blocked by a chip; the route goes up the gutter beside the panel and in from the
+# side, through the empty band of its own panel's header beside the title.
+brief:
+  message: "The API takes bookings; confirmations reach customers through a queue and the notifier."
+  reader: "Engineers joining the team: which service does what, what it talks to, and what is still undecided"
+  why: "column-flow: a booking travels left to right, from the web app through the API and queue to the messaging provider"
+  left_out:
+    - "Docker image names, ports and the API_URL wiring: deployment detail, not structure"
+    - "Customers as an actor: the README names them, but no source shows how they reach the web app"
+  assumptions:
+    - "The API publishes to the queue and the notifier consumes from it: compose gives both the same QUEUE_URL, not the direction"
+    - "The API reads clinic availability from the scheduling system: compose gives it CLINIC_API_URL, the README says only that sync reads calendars"
+sources:
+  - {id: readme, kind: document, ref: "README.md"}
+  - {id: compose, kind: repository, ref: "docker-compose.yml"}
+  - {id: tf, kind: repository, ref: "terraform/main.tf"}
+
+canvas: {size: landscape-4x3, lang: en}
+topic: "Bookings service"
+title: "The API takes bookings; a queue hands confirmations to the notifier"
+subtitle: "The web app calls the API, which queues a message; the notifier sends e-mail and SMS through an external provider"
+
+archetype: column-flow
+
+layout:
+  areas:
+    - "web booking data notify"
+    - "outside outside outside outside"
+
+panels:
+  - id: web
+    title: "Front end"
+    subtitle: "What customers use"
+    role: platform
+    cards:
+      - {id: webapp, icon: browser, name: "Web app", note: "customer front end, calls the API", bullets: ["container image bookings/web, port 8080"], refs: ["readme: web app is the customer front end", "compose: services.web API_URL"]}
+      - {icon: cloud, name: "CloudFront and S3", qualifier: "bookings-web", note: "static hosting declared in Terraform", refs: ["tf: aws_s3_bucket.web", "tf: aws_cloudfront_distribution.web"],
+         flag: {kind: warning, text: "Is the web app served from its own container or from S3 and CloudFront?"}}
+  - id: booking
+    title: "Bookings and availability"
+    subtitle: "Both run as ECS services"
+    role: platform
+    card_columns: 1
+    cards:
+      - {id: api, icon: api, name: "API", note: "handles bookings and availability", refs: ["readme: api handles bookings and availability", "tf: aws_ecs_service.api"]}
+      - {id: sync, icon: reload, name: "Sync", note: "reads clinic calendars every 300 seconds", refs: ["compose: services.sync command --every 300", "readme: read every five minutes", "tf: aws_ecs_service.sync"]}
+    chips:
+      - {kind: warning, text: "Move sync from polling to the clinics' webhooks?"}
+  - id: data
+    title: "Data"
+    role: data
+    card_columns: 1
+    cards:
+      - {id: mq, icon: stack-2, name: "RabbitMQ", note: "joins the API and the notifier", refs: ["compose: QUEUE_URL on api and notifier", "tf: aws_mq_broker.events"]}
+      - {id: db, icon: database, name: "PostgreSQL", note: "bookings; read by the API and sync", refs: ["compose: DATABASE_URL on api and sync", "tf: aws_db_instance.bookings"]}
+  - id: notify
+    title: "Confirmations"
+    role: platform
+    cards:
+      - {id: notifier, icon: bell, name: "Notifier", note: "sends confirmation e-mails and SMS", bullets: ["takes messages from the queue", "has no database setting in compose", "calls the messaging provider's API"], refs: ["readme: notifier sends confirmation e-mails and SMS", "tf: aws_ecs_service.notifier"]}
+  - id: outside
+    title: "Outside the team"
+    subtitle: "External APIs we call"
+    role: external
+    cards:
+      - {id: clinics, icon: calendar, name: "Clinic scheduling", qualifier: "v2 API", note: "source of the clinics' calendars", refs: ["compose: CLINIC_API_URL", "readme: scheduling system (an external API)"]}
+      - {id: messaging, icon: message, name: "Messaging provider", note: "delivers the e-mail and SMS", refs: ["compose: MESSAGING_API_URL", "readme: external messaging provider"]}
+
+flows_mean: data
+flows:
+  - {from: webapp, to: api}
+  - {from: api, to: mq, style: async}
+  - {from: mq, to: notifier, style: async}
+  - {from: notifier, to: messaging}
+  - {from: api, to: db}
+  - {from: sync, to: db}
+  - {from: clinics, to: sync, label: "calendars"}
+stories:
+  - name: "A confirmation, from the web app to the provider"
+    path: [webapp, api, mq, notifier, messaging]
+    draw: true
+
+footer:
+  principles:
+    - "The notifier sends confirmations; the API only queues them."
+    - "Sync reads clinic calendars on a timer, not on request."
+  open_questions: {from_chips: true, extra: ["Does the API publish and the notifier consume? Compose shows a shared queue only."]}
+  legend: auto

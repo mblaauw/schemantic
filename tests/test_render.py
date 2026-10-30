@@ -109,13 +109,12 @@ def test_connector_runs_from_a_card_in_one_panel_to_a_card_in_another():
 
 
 def test_unroutable_card_connector_is_reported(tmp_path):
-    # Admission control moved to the far end of its layer: every route from the Security rail crosses other cards.
+    # A card in the top layer straight to one in the bottom layer: every way round crosses the two layers between.
     spec = sp.load_spec(ROOT / "examples" / "ontwikkelplatform-lagen.yaml")
-    runtime = next(p for p in spec["panels"] if p["id"] == "runtime")
-    runtime["cards"].append(runtime["cards"].pop(0))
+    spec["flows"].append({"from": "experience.card1", "to": "infra.card2"})
     code, report = run("build", write(tmp_path, spec, "blocked"), "--out", tmp_path)
     assert code == 1
-    assert [x["flow"]["to"] for x in report["flow_problems"]] == ["admission"]
+    assert [x["flow"]["to"] for x in report["flow_problems"]] == ["infra.card2"]
     # F05: a build with errors publishes nothing; the unpublished files stay in _work/ to look at
     assert report["svg"] is None and report["png"] is None
     assert not list(tmp_path.glob("blocked.svg")) + list(tmp_path.glob("blocked.png"))
@@ -517,3 +516,15 @@ def test_cards_joined_inside_their_panel_get_room_for_a_straight_arrow(tmp_path)
     snap = json.loads((tmp_path / "_work" / "linked.snapshot.json").read_text(encoding="utf-8"))
     (flow,) = [f for f in snap["flows"] if (f["from"], f["to"]) == ("mtls", "accesslog")]
     assert len(flow["points"]) == 2 and flow["points"][0][0] == flow["points"][1][0]  # one vertical run
+
+
+def test_a_card_under_a_header_is_reached_up_the_gutter(renders):
+    """The calendars come from a wide card in the bottom panel to Sync, above a chip: no straight line, and the route
+    starts under its own panel's header. It leaves through the header's empty band and turns in up the gutter."""
+    path = ROOT / "tests" / "fixtures" / "gutter-route.yaml"
+    code, report = run("lint", path, "--out", renders(path))
+    assert (code, report["errors"]) == (0, [])
+    snap = json.loads((renders(path) / "_work" / f"{path.stem}.snapshot.json").read_text(encoding="utf-8"))
+    (route,) = [f for f in snap["flows"] if (f["from"], f["to"]) == ("clinics", "sync")]
+    booking, web = snap["boxes"]["booking"], snap["boxes"]["web"]
+    assert len(route["points"]) == 3 and web[2] < route["points"][0][0] < booking[0]  # one bend, up the gutter between
