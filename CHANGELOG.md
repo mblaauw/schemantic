@@ -81,6 +81,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   now use sequence, so their arrows run left to right instead of back against the periods.
 
 ### Changed
+- The `orphan` hint says never to invent a flow to clear it: when the sources name none, leave the warning and say
+  why, or make the relation an open question. In the eval rerun one agent drew an order of stages the plan never
+  states, only to clear it.
 - `footer-share` warns above an eighth of the plate's height (12.5%), the share review question 6 names; it warned
   at 15%, so the eval judge failed plates at 13 to 15% that lint passed. A footer of a line or two (96 px) passes on
   any plate: on a short plate there is nothing left to cut. The hero plate's roles panel drops the two roles its
