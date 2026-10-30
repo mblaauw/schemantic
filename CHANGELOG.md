@@ -68,6 +68,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   now use sequence, so their arrows run left to right instead of back against the periods.
 
 ### Changed
+- The skill's steps run in an order an agent can follow: settle the message and the layout, then `new` writes the
+  file and the brief goes into it first. Before, the brief was written into a spec that only existed two steps later,
+  from a starter that needed the layout chosen in between. The audit now also asks that every route the title names
+  is a story.
 - Arrows and step badges are slate ink instead of blue, so a blue arrow means the focus. Blue is left to the platform
   role and the focus; every plate's arrows change colour.
 - Tests run in parallel (`pytest -n auto`, pytest-xdist), locally and in CI: about 3 minutes become 1.4 on an 8-core
