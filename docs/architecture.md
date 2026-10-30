@@ -109,9 +109,14 @@ checks the one effect it must have.
 1. Write its section in `references/archetypes.md` and a fictional example in `examples/`.
 2. Add `schemantic/archetypes/<name>.py` defining `ARCHETYPE`: its `name`, `required` and `allowed` layout keys,
    `validate` (its own checks), `grid` (a `GridSpec`: rows of panel ids or group names, column tracks, and any
-   groups, bands or zones) and `panel_defaults`. The registry finds it; no shared code changes.
-3. Add its `layout` keys and an `if/then` block to `schemantic/schema/plate.schema.json`; `tests/test_spec.py` checks that the
-   schema and the registry agree.
+   groups, bands, zones or marks), and where it needs them `panel_defaults`, `loud` (the panels with a filled header
+   when nothing is in focus: the layout's own centre) and `standalone` (panels whose place already says how they
+   relate, so they need no flow). The registry finds it; no shared code changes.
+3. Add its `layout` keys and an `if/then` block to `schemantic/schema/plate.schema.json`, and its name to the
+   `archetype` enum; `tests/test_spec.py` checks that the schema and the registry agree.
 4. Render CSS in `schemantic/templates/components.css` (and template markup only if it needs a new kind of group).
-5. Run `python -m pytest -q --update-golden` for the new example's golden and snapshot, add one negative test per
-   layout check, and move the name from planned to built in `SKILL.md` and the README.
+5. Write its starter, `schemantic/starters/<name>.yaml`: the body between the shared head and foot, with TODO where
+   the sources must speak. `tests/test_scaffold.py` checks that it fails only on its TODOs.
+6. Run `python -m pytest -q --update-golden` for the new example's golden and snapshot, and
+   `python -m schemantic gallery`; add one negative test per layout check, and a row for it in the layout table in
+   `SKILL.md` and in the README.

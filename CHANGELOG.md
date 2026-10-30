@@ -123,6 +123,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - The role name `storage` (it is `data`), and with it the `deprecated` check, since nothing is deprecated.
 
 ### Fixed
+- `docs/architecture.md`, "Adding an archetype": it still said to move the name from planned to built, and left out
+  the starter, the `loud` and `standalone` hooks, the schema's enum and the gallery.
 - The worked examples in `references/analysis.md` taught the eval's top defect: titles that name a route, drawn
   panel to panel with no story. Each now joins the route's cards and writes it as a story. The expense example
   sent every claim through finance, though its source says only claims over 500 euro go there; both paths are now
