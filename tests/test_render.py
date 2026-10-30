@@ -502,3 +502,18 @@ def test_void_checks_empty_cells_spread_cards_and_a_blank_band(tmp_path):
     spec["canvas"].update(size="landscape-16x9", height="fixed")
     report = pipeline.build(write(tmp_path, spec, "band"), tmp_path / "d", deliver=False)
     assert "canvas" in voids(report) and report["voids"]["canvas"] > 96
+
+
+def test_cards_joined_inside_their_panel_get_room_for_a_straight_arrow(tmp_path):
+    """The default gap between cards is shorter than an arrowhead, so a flow from one card to the card below it used to
+    leave the panel and come back; a panel with such a flow spaces its cards so the arrow runs straight down."""
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    proxy = next(p for p in spec["panels"] if p["id"] == "proxy")
+    proxy["cards"][0]["id"], proxy["cards"][1]["id"] = "mtls", "accesslog"
+    spec["flows"].append({"from": "mtls", "to": "accesslog"})
+    spec.pop("stories", None)
+    code, report = run("lint", write(tmp_path, spec, "linked"), "--out", tmp_path)
+    assert code == 0, report["errors"]
+    snap = json.loads((tmp_path / "_work" / "linked.snapshot.json").read_text(encoding="utf-8"))
+    (flow,) = [f for f in snap["flows"] if (f["from"], f["to"]) == ("mtls", "accesslog")]
+    assert len(flow["points"]) == 2 and flow["points"][0][0] == flow["points"][1][0]  # one vertical run

@@ -100,8 +100,11 @@ def panels_for_render(spec: dict) -> list[dict]:
     # A panel spanning several rows (a rail, a side spoke) spreads its cards over its height instead of leaving one hole.
     spread = {n for n in {n for r in rows for n in r} if sum(n in r for r in rows) > 1}
     loud = focal_panels(spec) or arche.loud(spec)
+    # Cards joined to each other by a flow get gaps an arrow fits in (the default gap is shorter than an arrowhead).
+    home = {card_id(p, i, c): p["id"] for p in spec["panels"] for i, c in enumerate(p.get("cards", []))}
+    linked = {home[f["from"]] for f in spec.get("flows", []) if f["from"] in home and home[f["from"]] == home.get(f["to"])}
     return [{**p, "role": p["role"], "chips_bottom": p["id"] in pinned, "spread": p["id"] in spread,
-             "quiet": p["id"] not in loud, **arche.panel_defaults(spec, p)} for p in spec["panels"]]
+             "quiet": p["id"] not in loud, "linked": p["id"] in linked, **arche.panel_defaults(spec, p)} for p in spec["panels"]]
 
 
 def focal_panels(spec: dict) -> set[str] | None:

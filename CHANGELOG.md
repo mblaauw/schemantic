@@ -145,6 +145,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - The role name `storage` (it is `data`), and with it the `deprecated` check, since nothing is deprecated.
 
 ### Fixed
+- A flow between two cards of one panel (Bronze to Silver to Gold) left the panel and came back, or was refused:
+  the 8 px between cards is shorter than an arrowhead. A panel with such a flow spaces its cards 32 px apart, so
+  the arrow runs straight from one card to the next.
 - A swimlane handoff over a lane went round the edge of the plate (every Sonnet swimlane in the eval rerun): a
   lane counted as one box. Only a lane's header and its cards are in the way now, so the handoff crosses the empty
   cell of the lane between, straight down its column; lint lets it, but not through a lane's header.
