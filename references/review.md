@@ -1,24 +1,31 @@
 # Review: defect questions
 
-Answer each question with the review crops in front of you (`build --review`: the whole plate for paths and holes,
-the part crops for words), yes or no. A "yes" is a defect: change the spec and
-build again. Lint has already checked geometry; these check whether the plate works. Stop after three rounds and
-report what is left.
+Answer each question with the review crops in front of you (`build --review`), yes or no. A "yes" is a defect:
+change the spec and build again. Stop after three rounds and report what is left.
 
-1. **Message.** With the subtitle covered, does the picture fail to support the title's claim?
-2. **Path.** Is there a jump where a reader cannot follow the arrows from where the story starts to where it ends?
-   Test it: for each route the title or subtitle describes ("webshop via Kafka to Bronze"), put a finger on its first
-   card and follow arrows to its last. An arrow that ends on a panel instead of the card the route goes through is a
-   jump; so is a step that only a card note mentions. A route without a `story` in the spec is a defect too: write
-   it, and lint checks every step from then on.
+The first round has the whole plate and a crop of every part. Later rounds have the whole plate and crops of the
+parts that changed since (`review_unchanged` names the rest): ask the whole-plate questions (1, 2, 5) of the
+overview again, and the others only of the new crops. `--review all` gives every part again.
+
+Lint has already measured what it can, so a clean build answers part of these; each question says which part is
+left to you.
+
+1. **Message.** With the subtitle covered, does the picture fail to support the title's claim? (No check can.)
+2. **Path.** Is there a jump where a reader cannot follow the route the title or subtitle names, from its first
+   card to its last? Lint (`story`) checks that a flow joins every step of a story; you check that every route the
+   title names has a story, drawn (`draw: true`), and that no step lives only in a card note.
 3. **Arrows.** Does any arrow point against what `flows_mean` says arrows mean (data where requests are meant)?
-4. **Colour.** Does any panel have a role whose legend label is wrong for it (people marked as a system)?
-5. **Holes.** Is any part of the plate visibly empty: a panel emptier than its neighbours, an empty cell in the
-   grid, cards floating apart in a tall panel, or a blank band above or below? (Lint warns at 96 px; a hole you can
-   see is a defect even when lint is clean.)
-6. **Footer.** Does the footer draw the eye before the body, or take more than about an eighth of the plate?
+   Lint catches a roadmap arrow back in time (`timeline`); every other direction is yours.
+4. **Colour.** Does any panel have a role whose legend label is wrong for it? Lint (`role-fit`) judges a panel by
+   its cards' icons; you judge the panels whose icons do not say (a team drawn with system icons).
+5. **Holes.** Is any part of the plate visibly empty: a panel emptier than its neighbours, cards floating apart, a
+   blank band? Lint (`void`) warns at 96 px; a smaller hole you can see is still a defect.
+6. **Footer.** Does the footer draw the eye before the body? Its size is lint's (`footer-share`).
 7. **Words.** Is any name a term the reader would not know, or any note true of every system rather than this one?
-8. **Truth.** Is any card, flow or principle not traceable to the sources (the brief's assumptions aside)?
-9. **Open ends.** Is any warning a question that is already settled, or any principle a slogan nobody could check?
-10. **Series.** If this is one part of a series, does anything carry a different name or colour than on the other
-    parts?
+   (No check can.)
+8. **Truth.** Is any card, flow or principle not supported by the sources (the brief's assumptions aside)? Lint
+   (`traceability`) checks that every card cites a source; you check that the source says it.
+9. **Open ends.** Is any warning a question the sources already settle, or any principle a slogan nobody could
+   check? (No check can.)
+10. **Series.** If this is one part of a series, does anything carry a different name than on the other parts?
+    `plate.py series` checks the language, the arrows' meaning and one colour per thing.

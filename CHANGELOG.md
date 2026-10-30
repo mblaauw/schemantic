@@ -77,6 +77,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   now use sequence, so their arrows run left to right instead of back against the periods.
 
 ### Changed
+- The review questions say which part of each question lint already answers (story, timeline, role-fit, void,
+  footer-share, traceability, series), so the model judges what no check can: the message, words, truth and open
+  ends. Later rounds ask the whole-plate questions of the overview and the rest of the new crops only.
 - `evals/README.md` leads with the latest result per model and says what is not measured yet; the earlier runs follow
   as history.
 - The skill's steps run in an order an agent can follow: settle the message and the layout, then `new` writes the
