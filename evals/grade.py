@@ -3,10 +3,11 @@
 
 Usage: python evals/grade.py <case dir> <run dir>
 
-The run dir holds what the agent produced: one or more spec YAML files (skill runs) and the SVG/PNG images. The
-checks: an image exists; every spec builds without lint errors; the archetype, language and series match the
-rubric; required components appear; enough open questions, warnings, principles, statuses and steps; and no card is
-invented (its name's words, or a quoted ref, must be found in the inputs). The judged half (the title is a claim,
+The run dir holds what the agent produced: one or more spec YAML files (skill runs) and the SVG/PNG images; a spec
+counts when a PNG of the same name was built from it. The checks: an image exists; every spec builds without lint
+errors; the archetype, language and series match the rubric; required components appear; enough open questions,
+warnings, principles, statuses and steps; and no card is invented (its name's words, or a quoted ref, must be found
+in the inputs). The judged half (the title is a claim,
 the review questions find no defect) comes from evals/judge.md.
 """
 from __future__ import annotations
@@ -61,7 +62,11 @@ def grade(case: Path, run: Path) -> dict:
     svgs = sorted(run.rglob("*.svg"))
     pngs = sorted(run.rglob("*.png"))
     specs = []
+    # A delivered spec has a published plate; drafts beside it have none, and a build with errors only previews in _work/.
+    built = {png.stem for png in pngs if "_work" not in png.parts}
     for p in sorted(run.rglob("*.y*ml")):
+        if p.stem not in built:
+            continue
         doc = yaml.safe_load(p.read_text(encoding="utf-8"))
         if isinstance(doc, dict) and "panels" in doc:
             specs.append((p, doc))

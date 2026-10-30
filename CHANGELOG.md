@@ -5,6 +5,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- Evals rerun three times per case (30 October), judged blind: every plate builds clean; 2 of 24 runs pass the
+  judge on each model, at 2.25 (Sonnet) and 2.5 (Haiku) defects per plate, as before. Swimlanes are nearly solved;
+  paths are still a third of all defects, mostly routes the router refuses card to card. `evals/harness.py` sets
+  up the runs, blinds them for the judge and brings the verdicts back. See `evals/README.md`.
 - Change-aware builds: the report's `changed` names the parts (title block, panels, footer) that differ from the
   previous build in the folder, compared from each part's own corner, so a part that only moved down is unchanged.
   After the first review round, `--review` crops only the parts changed since the last round, besides the whole
