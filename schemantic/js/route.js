@@ -637,7 +637,7 @@ schemantic.route = (flows) => {
         kind: "route",
         cards,
         problem: cards
-          ? "no clear route between the two cards; connect their panels instead, or move one so they share a gutter"
+          ? "no clear route between the two cards; move one to the side of its panel nearest the other, or the panels next to each other"
           : "no clear route between the two panels: every way round crosses another box",
       });
       return null;

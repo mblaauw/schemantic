@@ -109,9 +109,9 @@ CHECKS: dict[str, Check] = {
     "contrast": Check("layout", "text colour too close to its background", "only from theme overrides; fix the token pair",
                       "Fix the colour pair in the theme so text reaches 4.5:1."),
     "arrow-routing": Check("layout", "no clear route, or a route crosses a panel or card",
-                           "connect the panels instead of cards; move the target card to the side of its panel nearest "
-                           "the source; place the two panels next to each other",
-                           "Connect the two panels instead of their cards, or move one panel next to the other."),
+                           "move the card to the side of its panel nearest the other end; place the two panels next to each "
+                           "other; only then join the panels, and name the cards the route means in the brief",
+                           "Move the card nearer the other end, or the two panels next to each other, before joining panels."),
     "arrow-label": Check("layout", "no room for a label, or it touches a box",
                          "shorten the label, drop it, or explain the flow in a card note",
                          "Shorten or drop the label, or explain the flow in a card note."),

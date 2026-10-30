@@ -86,9 +86,12 @@ show finished plates; follow `references/spec-guide.md` for every field, the tex
 short version:
 
 - 3 to 6 panels, 2 to 6 cards each. A card is a thing with a name; its note says what it does in this story.
-- Say once what arrows mean (`flows_mean`). Connect panels by default; when the title or subtitle names a route
-  ("A via B to C"), give those cards ids, connect them card to card, and write the route as a `story` with
-  `draw: true`: lint checks that a finger can follow it, and the plate numbers its steps.
+- Say once what arrows mean (`flows_mean`). Connect cards: give them ids and run each arrow from the card that acts
+  to the card it acts on. End an arrow on a panel only when the sources speak of the whole panel, or of every card
+  in it.
+- Everything the title or subtitle says moves, calls, reads or feeds gets an arrow on this plate; a step that lives
+  only in a note is a gap (on a series, draw a stand-in card for what sits on the other part). Write the main route
+  as a `story` with `draw: true`: lint checks that a finger can follow it, and the plate numbers its steps.
 - Show change with `status` (new, changed, planned, deprecated, removed) and the one element that matters with
   `focus`.
 - A `warning` chip or card `flag` marks an open choice; it appears again under open questions.

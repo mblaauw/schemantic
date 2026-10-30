@@ -81,6 +81,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   now use sequence, so their arrows run left to right instead of back against the periods.
 
 ### Changed
+- The skill connects cards by default, ending an arrow on a panel only when the sources speak of the whole panel, and
+  asks for an arrow for every step the title or subtitle states. It said "connect panels by default", and half of all
+  arrows ended on panels; the router fixes alone did not lower path defects (`evals/README.md`). The `arrow-routing`
+  hint no longer starts with joining the panels.
 - The `orphan` hint says never to invent a flow to clear it: when the sources name none, leave the warning and say
   why, or make the relation an open question. In the eval rerun one agent drew an order of stages the plan never
   states, only to clear it.

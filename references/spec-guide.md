@@ -80,9 +80,9 @@ A note says what the card does in this story, not what the product is in general
 ```yaml
 flows_mean: request                                   # data | request | dependency | control | sequence
 flows:
-  - {from: clients, to: identity}                     # panel to panel: the default
+  - {from: portal, to: gateway}                       # card to card: the default; give both cards an id
   - {from: clients, to: data, label: "BI and notebooks"}   # label 28; needs room beside the arrow
-  - {from: dlq, to: oncall}                           # card to card: give both cards an id
+  - {from: clients, to: identity}                     # panel to panel: when the sources speak of the whole panel
   - {from: services, to: bus, style: async}           # sync (solid, default) | async (dashed) | optional (dotted)
   - {from: orders, to: payments, step: 2}             # a numbered badge, for the order things happen
   - {from: services, to: bus, both: true}             # arrowheads at both ends

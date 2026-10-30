@@ -43,7 +43,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `overlap` | two boxes overlap | usually follows from containment; fix that first |
 | `type-floor` | text below 11 px | only from theme overrides; restore the type ramp in `tokens.css` |
 | `contrast` | text colour too close to its background | only from theme overrides; fix the token pair |
-| `arrow-routing` | no clear route, or a route crosses a panel or card | connect the panels instead of cards; move the target card to the side of its panel nearest the source; place the two panels next to each other |
+| `arrow-routing` | no clear route, or a route crosses a panel or card | move the card to the side of its panel nearest the other end; place the two panels next to each other; only then join the panels, and name the cards the route means in the brief |
 | `arrow-label` | no room for a label, or it touches a box | shorten the label, drop it, or explain the flow in a card note |
 | `arrow-crossing` | an arrow crosses another arrow at a right angle | connect a card instead of its panel, or the other way round; swap the two panels so the arrows run side by side; drop a flow the message does not need |
 | `print-size` | on paper the plate is scaled down to fit the sheet, and its smallest text would print below 6 pt | print on a3-landscape, or cut content so the plate is shorter; a4-landscape suits a plate of a few panels |
