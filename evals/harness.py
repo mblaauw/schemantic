@@ -60,7 +60,7 @@ def blind(runs: Path, judge: Path) -> dict:
     key = {}
     for run, name in zip(finished(runs), names, strict=True):
         dest = judge / f"r{name}"
-        shutil.copytree(run, dest, ignore=shutil.ignore_patterns("_work", "inputs", "judge.json"))
+        shutil.copytree(run, dest, ignore=shutil.ignore_patterns("_work", "inputs", "*.json", "*.sh", "*.py"))
         (dest / "case.txt").write_text(run.parent.name + "\n", encoding="utf-8")
         key[dest.name] = str(run)
     (runs / "blind.json").write_text(json.dumps({"judge": str(judge), "key": key}, indent=1) + "\n", encoding="utf-8")
