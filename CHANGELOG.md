@@ -83,6 +83,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   now use sequence, so their arrows run left to right instead of back against the periods.
 
 ### Changed
+- The skill's plan audit asks that the title, subtitle, principles and notes say only what the sources say, and that a
+  question the sources settle is drawn as a fact, not asked; a card with only a name in the sources gets no note; and
+  step 6 asks for every crop, not only the whole plate. All four came up in the eval reruns; none is measured yet.
 - The skill connects cards by default, ending an arrow on a panel only when the sources speak of the whole panel, and
   asks for an arrow for every step the title or subtitle states. It said "connect panels by default", and half of all
   arrows ended on panels; the router fixes alone did not lower path defects (`evals/README.md`). The `arrow-routing`
