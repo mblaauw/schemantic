@@ -121,8 +121,9 @@ progress, restructure: move cards between panels, change the archetype, or split
 
 Once the build is clean, read every crop the report lists under `review`, not only the first: the whole plate, then
 the title block, each panel and the footer, at a size where every note is legible (a full PNG is scaled down until
-small text blurs). Answer the defect questions in `references/review.md`. After the first round, `review` holds the
-whole plate and only the parts that changed since the last round. Every "yes" is a spec change and another build, not
+small text blurs). Answer the defect questions in `references/review.md`. After the first round, `review` lists the
+whole plate and the parts that changed since the last round, and `review_unchanged` the rest: read those too if you
+rebuilt before reading them. Every "yes" is a spec change and another build, not
 a hand edit. Stop after three review rounds; tell the user what is still imperfect rather than looping.
 
 ## 7. Deliver

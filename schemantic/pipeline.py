@@ -21,7 +21,7 @@ from .findings import finding, grouped
 from .html import build_html
 from .images import image_diff, snapshot
 from .lint import dom_lint, layout_findings
-from .review import RASTER_SCALE, changed_parts, part_names, write_crops
+from .review import RASTER_SCALE, changed_parts, write_crops
 from .route import draw_flows, problems_as_findings
 from .spec import check, number_story, read_spec
 
@@ -99,18 +99,19 @@ def parity(page, browser, parity_svg: Path, work: Path, refused: list[str]) -> d
 
 
 def review_crops(browser, layout: dict, spec: dict, svg: dict, work: Path, refused: list[str], every: bool) -> dict:
-    """Optional: crops of the plate a model can read, in _work/review/. After the first round, only of the parts that
-    changed since the last round (the overview always), unless every part is asked for."""
+    """Optional: crops of the plate a model can read, in _work/review/. Every crop is written each time, so one a model
+    has not read yet is never lost to a rebuild; after the first round `crops` holds the whole plate and the parts changed
+    since the last round, and `unchanged` the others, unless every part is asked for."""
     dest, last = work / "review", work / "review" / "snapshot.json"
     previous = None if every or not last.exists() else json.loads(last.read_text(encoding="utf-8"))
     changed = changed_parts(previous, svg["snap"], spec)
     for old in dest.glob("*.png"):
         old.unlink()  # a part renamed or cut differently leaves no stale crop behind
     rasterise_svg(browser, svg["parity_svg"], work / "review.png", scale=RASTER_SCALE, refused=refused)
-    crops = write_crops(layout, spec, work / "review.png", dest, only=changed)
+    crops = write_crops(layout, spec, work / "review.png", dest)
     last.write_text(json.dumps(svg["snap"], ensure_ascii=False), encoding="utf-8")
-    unchanged = [p for p in part_names(spec) if changed is not None and p not in changed]
-    return {"crops": crops, "unchanged": unchanged}
+    keep = lambda c: changed is None or c is crops[0] or c["part"].split(",")[0] in changed  # noqa: E731
+    return {"crops": [c for c in crops if keep(c)], "unchanged": [c for c in crops if not keep(c)]}
 
 
 def deliverables(browser, spec: dict, made: dict, svg_path: Path, fit: dict | None, scale: float, work: Path, name: str,
@@ -161,7 +162,8 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
     published (None when the build has errors; then `preview` names the unpublished files in _work/). `changed` names
     the parts (title block, panels, footer) that differ from the previous build in this folder. With review, `review`
     lists crops of the plate a model can read, in <out>/_work/review/ (also for a build with errors): after the first
-    round only of the parts changed since the last one, which `review_unchanged` names; review="all" crops every part."""
+    round the whole plate and the parts changed since the last one; `review_unchanged` lists the crops of the others,
+    still on disk; review="all" lists every part."""
     spec_path, out = Path(spec_path), Path(out)
     name, work = spec_path.stem, Path(out) / "_work"
     report = {"spec": str(spec_path), "summary": [], "errors": [], "warnings": [], "density": {}, "voids": {}, "parity": None,

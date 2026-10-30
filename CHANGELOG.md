@@ -10,6 +10,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   and series plates get worse. See `evals/README.md`.
 
 ### Fixed
+- `--review` deleted earlier crops on every build, so an agent that rebuilt before reading never saw the parts that did
+  not change last. Every crop is written each time, and `review_unchanged` lists the crops of the other parts with
+  their paths.
 - `outside_at: bottom` could not solve the deployment plate it was made for: wider accounts stood a small zone beside a
   cluster, stretched, and lint called it an error. A zone that holds zones now takes its parent's whole width, so the
   small zone wraps underneath.
