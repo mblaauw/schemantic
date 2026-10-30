@@ -554,3 +554,10 @@ def test_a_zone_that_holds_zones_takes_the_whole_row(tmp_path):
     run("lint", write(tmp_path, spec, "wrap"), "--out", tmp_path)
     boxes = json.loads((tmp_path / "_work" / "wrap.snapshot.json").read_text(encoding="utf-8"))["boxes"]
     assert boxes[f"zone.{moved['id']}"][1] >= boxes["zone.cluster"][3]
+
+
+def test_the_outline_says_where_everything_runs():
+    from schemantic.outline import markdown
+    md = markdown(sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml"))
+    assert "- account: Cloud, production" in md and "  - cluster: Kubernetes" in md
+    assert "(Patient portal)" in md and "Patients, Insurers" in md

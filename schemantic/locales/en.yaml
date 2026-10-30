@@ -10,6 +10,8 @@ footer:
   notes: "Notes"
   flows: "Flows"
   stories: "Routes"
+  zones: "Where it runs"
+  outside: "Outside every zone"
 legend:
   platform: "Platform component"
   data: "Data and storage"

@@ -10,6 +10,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   and series plates get worse. See `evals/README.md`.
 
 ### Fixed
+- The outline of a nested-zones plate left out the zones, the point of such a plate. It now lists them, nested, with
+  the panels in each and those outside every zone.
 - `--review` deleted earlier crops on every build, so an agent that rebuilt before reading never saw the parts that did
   not change last. Every crop is written each time, and `review_unchanged` lists the crops of the other parts with
   their paths.

@@ -55,6 +55,17 @@ def desc(spec: dict) -> str:
     return "\n".join(([spec["subtitle"], ""] if spec.get("subtitle") else []) + lines(spec))
 
 
+def _zone_lines(zones: list[dict], titles: dict, depth: int = 0) -> list[str]:
+    """Where everything runs, as a nested list: each zone with its kind, the panels in it, and the zones inside it."""
+    out = []
+    for z in zones:
+        kind = f"{z['kind']}: " if z.get("kind") else ""
+        held = ", ".join(titles[pid] for pid in z.get("panels", []))
+        out.append("  " * depth + f"- {kind}{z['title']}" + (f" ({held})" if held else ""))
+        out += _zone_lines(z.get("zones", []), titles, depth + 1)
+    return out
+
+
 def markdown(spec: dict) -> str:
     """<name>.md: the title as heading, the claim, panels and cards, flows, stories, open questions, principles."""
     loc = load_locale(spec["canvas"]["lang"])
@@ -74,6 +85,12 @@ def markdown(spec: dict) -> str:
             md.append(f"- {_card(c, cid, flag_of, loc)}")
             md += [f"  - {b}" for b in c.get("bullets", [])]
         md += [f"- *{ch['text']}*" for ch in p.get("chips", [])]
+        md.append("")
+    zones = spec["layout"].get("zones")
+    if zones:
+        md += [f"## {loc['footer']['zones']}", ""] + _zone_lines(zones, {p["id"]: p["title"] for p in spec["panels"]})
+        outside = [p["title"] for p in spec["panels"] if p["id"] in spec["layout"].get("outside", [])]
+        md += [f"- {loc['footer']['outside']}: {', '.join(outside)}"] if outside else []
         md.append("")
     context = (spec.get("footer") or {}).get("context")
     if context:
