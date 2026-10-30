@@ -17,42 +17,85 @@ Eight cases test the skill's real job: from sources to a truthful plate. Each ca
 ## Running
 
 Each run gives an agent the case prompt and inputs in an empty working folder, and nothing else. **With the skill**
-the agent is also given `SKILL.md`'s path; **without** it is not, and may produce the plate any way it can. Collect
-everything it writes into `runs/<model>/<with|without>/<case>/`, then grade:
+the agent is also given the path of a read-only copy of the skill: its runtime files only (`offline.RUNTIME`), so
+neither the rubrics nor the tests are within reach. **Without** it is not, and may produce the plate any way it
+can. Keep the run folders outside the repository, for the same reason.
 
 ```bash
-python evals/grade.py evals/cases/<case> runs/<model>/<with|without>/<case>   # the automated half
+python evals/harness.py prepare <runs> --skill <skill copy> --repeats 3   # run folders and runs/prompts.json
 ```
 
-and have a separate agent apply `judge.md` to the same folder (the judged half). A run passes when both halves pass.
-`run_all.py` grades every run folder and prints the automated columns of the tables below.
+Start one agent per entry in `prompts.json`, on the model it names, with its prompt and nothing else. When they are
+done, judge them blind: `harness.py blind <runs> <judge dir>` copies every run under a random name with only its case
+named, a separate agent applies `judge.md` (and the review questions it points to) to each and writes `judge.json`
+there, and `harness.py unblind <runs>` brings the verdicts back. Then:
+
+```bash
+python evals/run_all.py <runs>   # both halves, per run, and the totals per model
+```
+
+A run passes when both halves pass: the automated half (`grade.py`: the specs lint clean, archetype, language,
+components, counts, nothing invented by name) and the judged half (a claim in the title, a fitting layout, nothing
+invented, no defect). One run per case is noisy; take three.
 
 ## Latest results
 
-The newest run per model, eight cases with the skill, one run each, judged blind. A case passes when the automated
-grade passes and the judge finds no invented content and no defect; the judge fails a plate on any single defect.
+30 October 2026, with the skill as of 0.3.0.dev0 after #17 (drawn stories, starters, review crops of what changed,
+grouped findings, the reordered steps). Eight cases, **three runs each**, judged blind under random names with the
+same judge and review questions as the two runs of 29 October, so the numbers compare. A run passes when the
+automated grade passes and the judge finds nothing invented and no defect; one defect fails it.
 
-| Model | Run | Automated | Judged | Nothing invented | Defects per plate |
+| Model | Runs | Automated | Judged | Nothing invented | Defects per plate (29 Oct, one run per case) |
 | --- | --- | --- | --- | --- | --- |
-| Sonnet 5.5 | 29 October, second rerun | 8/8 | 2/8 | 7/8 | 2.1 |
-| Haiku 5.5 | 29 October, third run | 8/8 | 0/8 | 8/8 | 2.5 |
+| Sonnet 5.5 | 24 | 24/24 | 2/24 | 22/24 | 2.25 (2.1) |
+| Haiku 5.5 | 24 | 24/24 | 2/24 | 22/24 | 2.5 (2.5) |
+
+Every plate built clean, and every title made a claim; the rest has not moved. The four passes are all the
+swimlane case, which is now nearly solved (0.33 defects per plate across six runs); the worst cases are the series
+(3.3), the phase change (3.2), the repository and the open choices (3.0).
+
+By kind, of 114 defects:
+
+- **Paths, 41 (36%)**, the same share as before: drawn stories did not move it. What fails is mostly the other
+  routes a title or subtitle names: arrows that end on a panel instead of the card (the event bus, Bronze and Gold,
+  the carrier integration), and steps that live only in a card note. Several agents said why: a card-to-card route
+  was refused (`arrow-routing`), so they joined the panels instead.
+  Cards stacked in one panel (Bronze, Silver, Gold) and cards in panels that share no gutter are the usual
+  refusals; a swimlane handoff across a lane routes round the edge of the plate (all three Sonnet swimlanes).
+- **Holes, 15**: one short panel alone in a column (the shared tooling account beside two tall accounts), a
+  panel spread over rows it has too few cards for, and before-after rows with nothing on one side.
+- **Truth, 15**: principles and titles that say a little more than the source (an ordering, "only", a variable
+  a service does not have), and a preference centre drawn inside the service that only reads it.
+- **Colour, 12**: people in platform panels and the reverse; `role-fit` judges by icons, and these had none that
+  said so.
+- **Footer, 9**: the review question calls a footer over an eighth (12.5%) a defect, but `footer-share` warns at
+  15%, so plates at 13 to 15% pass lint and fail the judge. One number has to go.
+- **Open ends, 7** (6 of them Haiku): open questions the source settles ("does test mirror production?").
+- **Words, 7**: three channel cards with the same note, notes that repeat their zone's name.
+
+From the agents' own reports: most read only the overview crop, not the part crops; several left an `orphan` or
+`void` warning standing rather than invent an arrow or a card (one invented an order of stages to clear `orphan`);
+two put nine panels on one deployment plate, past the budget of six, which no check counts; and a short zone beside
+tall ones leaves a hole the nested-zones layout cannot close.
 
 Without the skill neither model builds a spec, a lint-clean plate or traceable cards (26 October: 0/8 automated on
 both); that has not been rerun since.
 
-The most frequent defect left is **paths**: arrows that end on a panel where the title names a card, and steps that
-live only in a card note (7 of Haiku's last 20 defects, 16 of 45 across both models the run before).
-
-**Not yet measured:** everything since these runs. Stories (a route named in the title, checked by lint and drawn as
-numbered steps), starters (`schemantic new`), review crops (`build --review`, only of what changed after the first
-round), grouped findings, the skill's reordered steps and worked examples that draw their
-routes, the `sequence` flows and `now` column, and slate arrows. One run per case is noisy; the next rerun should
-take three per case.
+**Next targets**, by what they would remove: card-to-card routes the router refuses today (stacked cards in one
+panel, a lane between two swimlane steps), so routes stay card to card; one footer threshold; a budget check for
+panels and cards on every plate; and a hint on `orphan` that says to leave it, not to invent a flow.
 
 ## History
 
 Each run below names what changed before it and what it found; the targets it names are what the following runs
 went after.
+
+### Latest results before the three-run rerun (29 October)
+
+| Model | Run | Automated | Judged | Nothing invented | Defects per plate |
+| --- | --- | --- | --- | --- | --- |
+| Sonnet 5.5 | 29 October, second rerun | 8/8 | 2/8 | 7/8 | 2.1 |
+| Haiku 5.5 | 29 October, third run | 8/8 | 0/8 | 8/8 | 2.5 |
 
 ### First run (26 October 2026)
 
