@@ -63,7 +63,7 @@ leave the note out; a note written from the name is an invention.
 
 - `tier-strip`: 2–5 tiers (`tier: bronze | silver | gold`, `name`, `note`), for data layers or maturity steps.
 - `process-strip`: 3–7 `steps` (`name` 24, `note` 40, `icon`), numbered left to right, for a short sequence inside
-  one panel; a sequence between actors is a swimlane.
+  one panel; a sequence between actors is a swimlane, one request between systems a sequence.
 - `tree`: up to 10 `lines` of monospace text, indented with two spaces per level, for paths and buckets.
 - `matrix`: `columns` (up to 5) × `rows` (up to 8), cells `full | partial | none`, for access or usage. When the
   locale's key words (full, limited, no access) do not fit, give `key: {full: ..., partial: ..., none: ...}`.

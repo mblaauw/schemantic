@@ -1,0 +1,36 @@
+archetype: sequence
+
+layout:
+  participants: [caller, service, store]     # lifelines, left to right
+
+# A card is what a participant does at one moment (`row`, time runs down); a message joins two cards in one row.
+panels:
+  - id: caller
+    title: "TODO: who starts it"
+    role: external
+    cards:
+      - {id: ask, icon: send, name: "TODO: what it sends", row: 1, refs: ["notes: TODO"]}
+      - {id: done, icon: check, name: "TODO: what it gets back", row: 3, refs: ["notes: TODO"]}
+  - id: service
+    title: "TODO: who answers"
+    role: platform
+    cards:
+      - {id: take, icon: server, name: "TODO: what it does first", row: 1, refs: ["notes: TODO"]}
+      - id: fetch
+        icon: search
+        name: "TODO: what it asks next"
+        row: 2
+        refs: ["notes: TODO"]
+        flag: {kind: warning, text: "TODO: an open choice the sources leave"}
+      - {id: reply, icon: corner-down-left, name: "TODO: what it returns", row: 3, refs: ["notes: TODO"]}
+  - id: store
+    title: "TODO: what it depends on"
+    role: data
+    cards:
+      - {id: read, icon: database, name: "TODO: what it looks up", row: 2, refs: ["notes: TODO"]}
+
+flows_mean: request
+flows:      # numbered by row
+  - {from: ask, to: take}
+  - {from: fetch, to: read}
+  - {from: reply, to: done, style: async}

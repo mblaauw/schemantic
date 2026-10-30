@@ -3,6 +3,7 @@ badge: "Part {part} of {of}"
 markers: {question: "Q", note: "N"}   # open question Q1, note N1
 before_after: ["Before", "After"]
 now: "now"
+pick: "recommended"
 footer:
   principles: "Key principles"
   open_questions: "Open questions"
@@ -27,6 +28,10 @@ legend:
   mean_sequence: "Comes before"
   style_sync: "Synchronous call"
   style_async: "Asynchronous: event or message"
+  style_reply: "Reply or event"
+  status_new_plain: "New"
+  status_changed_plain: "Changed"
+  mean_leads: "Leads"
   style_optional: "Optional or occasional"
   step: "Step in the order things happen"
   status_new: "New in this phase"

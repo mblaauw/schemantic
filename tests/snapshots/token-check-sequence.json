@@ -1,0 +1,367 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   110
+  ],
+  "body": [
+   40,
+   128,
+   1560,
+   548
+  ],
+  "shop": [
+   40,
+   128,
+   384,
+   548
+  ],
+  "send": [
+   92,
+   202,
+   332,
+   258
+  ],
+  "done": [
+   92,
+   486,
+   332,
+   528
+  ],
+  "gateway": [
+   432,
+   128,
+   776,
+   548
+  ],
+  "take": [
+   484,
+   210,
+   724,
+   252
+  ],
+  "ask": [
+   484,
+   278,
+   724,
+   320
+  ],
+  "learn": [
+   484,
+   348,
+   724,
+   390
+  ],
+  "pass": [
+   484,
+   410,
+   724,
+   466
+  ],
+  "reply": [
+   484,
+   486,
+   724,
+   528
+  ],
+  "identity": [
+   824,
+   128,
+   1168,
+   548
+  ],
+  "verify": [
+   876,
+   272,
+   1116,
+   328
+  ],
+  "answer": [
+   876,
+   348,
+   1116,
+   390
+  ],
+  "orders": [
+   1216,
+   128,
+   1560,
+   548
+  ],
+  "place": [
+   1268,
+   418,
+   1508,
+   460
+  ],
+  "footer": [
+   40,
+   566,
+   1560,
+   638
+  ],
+  "footer.principles": [
+   40,
+   566,
+   1560,
+   610
+  ],
+  "footer.legend": [
+   40,
+   620,
+   1560,
+   638
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "The gateway checks every token before a request reaches a service"
+  ],
+  [
+   40,
+   104,
+   "An order request from the web shop, with a valid token; a refused token ends after step 3"
+  ],
+  [
+   52,
+   164,
+   "Web shop"
+  ],
+  [
+   134,
+   226,
+   "Sends the order"
+  ],
+  [
+   134,
+   244,
+   "with its bearer token"
+  ],
+  [
+   134,
+   510,
+   "Shows the order"
+  ],
+  [
+   444,
+   164,
+   "API gateway"
+  ],
+  [
+   526,
+   234,
+   "Takes the request"
+  ],
+  [
+   526,
+   302,
+   "Asks about the token"
+  ],
+  [
+   526,
+   372,
+   "Learns the customer"
+  ],
+  [
+   526,
+   434,
+   "Passes the order on"
+  ],
+  [
+   526,
+   452,
+   "adds the customer id"
+  ],
+  [
+   526,
+   510,
+   "Returns the result"
+  ],
+  [
+   836,
+   164,
+   "Identity service"
+  ],
+  [
+   918,
+   296,
+   "Verifies the token"
+  ],
+  [
+   918,
+   312,
+   "signature and expiry"
+  ],
+  [
+   918,
+   372,
+   "Says who it is"
+  ],
+  [
+   1228,
+   164,
+   "Order service"
+  ],
+  [
+   1310,
+   442,
+   "Places the order"
+  ],
+  [
+   40,
+   580,
+   "Key principles"
+  ],
+  [
+   50,
+   606,
+   "Services trust the customer id the gateway adds; none of them reads a token."
+  ],
+  [
+   40,
+   632,
+   "Legend"
+  ],
+  [
+   134,
+   632,
+   "Clients and external systems"
+  ],
+  [
+   352,
+   632,
+   "Platform component"
+  ],
+  [
+   520,
+   632,
+   "Direction of requests"
+  ],
+  [
+   696,
+   632,
+   "Reply or event"
+  ],
+  [
+   804,
+   632,
+   "1"
+  ],
+  [
+   824,
+   632,
+   "Step in the order things happen"
+  ],
+  [
+   408,
+   234,
+   "1"
+  ],
+  [
+   800,
+   304,
+   "2"
+  ],
+  [
+   800,
+   372,
+   "3"
+  ],
+  [
+   996,
+   442,
+   "4"
+  ],
+  [
+   408,
+   512,
+   "5"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "send",
+   "to": "take",
+   "points": [
+    [
+     340,
+     230
+    ],
+    [
+     476,
+     230
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 1,
+   "from": "ask",
+   "to": "verify",
+   "points": [
+    [
+     732,
+     300
+    ],
+    [
+     868,
+     300
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 2,
+   "from": "answer",
+   "to": "learn",
+   "points": [
+    [
+     868,
+     368
+    ],
+    [
+     732,
+     368
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 3,
+   "from": "pass",
+   "to": "place",
+   "points": [
+    [
+     732,
+     438
+    ],
+    [
+     1260,
+     438
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 4,
+   "from": "reply",
+   "to": "done",
+   "points": [
+    [
+     476,
+     508
+    ],
+    [
+     340,
+     508
+    ]
+   ],
+   "label": null
+  }
+ ]
+}

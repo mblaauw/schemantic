@@ -172,3 +172,104 @@ layout:
   in time; lint warns (`timeline`) when one points back. The `now` period is tinted down through every lane.
 - The title claims the order that matters ("Self-service ships before the new mobile app"), not the year.
 - Example: `examples/portal-roadmap.yaml`.
+
+## sequence
+
+Who calls whom, in what order, for one request. One column per participant with its lifeline, time running down. A
+card is what that participant does at one moment (`row`); a message is a flow between two cards in one row, and the
+messages number themselves by row.
+
+<!-- lint: examples/token-check-sequence.yaml -->
+```yaml
+archetype: sequence
+layout:
+  participants: [shop, gateway, identity, orders]   # 2 to 6 lifelines, left to right
+```
+
+- Every card has a `row`; one card per participant per row, one message per row, up to 12 on a lifeline. A step with no
+  message is a card alone. Name a card for what happens, in a word or two: six lifelines leave little width.
+- A message crosses other lifelines only where their row is empty: lint names the card in the way.
+- `style: async` draws a reply or an event dashed. Keep it to one path: a second path is a second plate.
+- The title claims the order that matters ("The gateway checks every token before a request reaches a service").
+- Example: `examples/token-check-sequence.yaml`.
+
+## capability-map
+
+What we can do, and where the gaps are. One row per domain, its capabilities sharing the row's width. No arrows:
+`status` is the assessment, so the gaps show at a glance.
+
+<!-- lint: examples/retail-capability-map.yaml -->
+```yaml
+archetype: capability-map
+layout:
+  domains: [sell, fulfil, aftersales, insight]   # 2 to 6 rows, top first
+  per_row: 5                                     # optional: columns that line up; a shorter row then ends in a gap
+```
+
+- `planned` is a gap, `deprecated` is on its way out, no status is in place. Only use what the sources assess: a thing
+  that works on a scheduler being replaced is not itself on its way out.
+- `focus: true` on the domain the title is about. Panel colours stay out of the legend. Flows are allowed, but a map that
+  needs many is a column-flow.
+- The title claims the finding ("Selling is covered; the gaps are all in after-sales"), not "capability overview".
+- Example: `examples/retail-capability-map.yaml`.
+
+## comparison
+
+Which option, and why. Options as columns, criteria as rows, one card in every cell with the verdict; `pick` marks the
+option the plate recommends and tints it through every row.
+
+<!-- lint: examples/search-engine-comparison.yaml -->
+```yaml
+archetype: comparison
+layout:
+  options: ["Database search", "Self-hosted engine", "Managed search"]   # 2 to 4
+  pick: 3                                                                # optional: the recommended option
+  criteria: [quality, effort, cost, risk]                                # 2 to 6 rows, top first
+```
+
+- Every criterion has one card per option; `col` names the option. The name is the verdict, the note the reason.
+- The icon carries the verdict: `circle-check`, `alert-triangle`, `circle-x`. Panel colours mean nothing here and stay
+  out of the legend.
+- Nothing decided yet? Leave out `pick`, and put the choice in a flag: the plate still shows the trade-off.
+- Example: `examples/search-engine-comparison.yaml`.
+
+## hierarchy
+
+What is made of what, or who reports to whom. A tree drawn top down from `root`; a parent spans the columns of
+everything under it, so each child stands under its parent. The arrows follow from the tree.
+
+<!-- lint: examples/platform-org-hierarchy.yaml -->
+```yaml
+archetype: hierarchy
+layout:
+  root: head
+  children:                                # panel -> the panels directly under it
+    head: [commerce, foundation]
+    commerce: [shopfront, checkout]
+    foundation: [data, runtime]
+```
+
+- Up to 4 levels and 8 panels at the ends of the tree; each panel has one parent. Say `flows_mean` for what the tree
+  means: `control` for reporting lines (the legend says "Leads"), `dependency` for what is made of what.
+- `flows` are only for what cuts across the tree, and are drawn on top of the tree's own arrows.
+- Example: `examples/platform-org-hierarchy.yaml`.
+
+## quadrant
+
+Where each thing sits on two axes. Four panels in a two-by-two with a label for each half of each axis. The position
+is the message, so arrows are optional.
+
+<!-- lint: examples/migration-quadrant.yaml -->
+```yaml
+archetype: quadrant
+layout:
+  x: ["Low risk", "High risk"]        # over the left and right columns
+  y: ["High value", "Low value"]      # beside the top and bottom rows
+  cells: [first, plan, later, leave]  # left to right, top row first
+```
+
+- Title a panel with what the sources decide about it ("Move first"). Where they decide nothing, name its place ("High
+  value, high effort"): a verdict you made up is an invention, however natural it reads. A note says why a card sits
+  there only if the sources do; repeating the axes adds nothing.
+- `focus: true` on the quadrant the title is about. Panel colours stay out of the legend.
+- Example: `examples/migration-quadrant.yaml`.

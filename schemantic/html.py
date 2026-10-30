@@ -38,7 +38,7 @@ def grid_css(spec: dict) -> dict:
         "columns": " var(--gutter-x) ".join(g.columns),
         "rows": f" {gutter} ".join(["auto"] * m),
         "areas": " ".join('"' + " ".join(line) + '"' for line in lines),
-        "groups": g.groups, "group_kind": g.group_kind, "bands": g.bands, "zones": g.zones, "marks": g.marks,
+        "groups": g.groups, "group_kind": g.group_kind, "bands": g.bands, "zones": g.zones, "marks": g.marks, "mark_label": g.mark_label,
     }
 
 
@@ -62,9 +62,10 @@ def matrix_values(pt: dict) -> list[str]:
 def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
     """The legend, generated from what the plate uses: roles, what arrows mean and their styles, steps, change
     statuses, focus, and chip or flag kinds."""
-    lg, lang = loc["legend"], spec["canvas"]["lang"]
+    arche, lang = archetypes.get(spec["archetype"]), spec["canvas"]["lang"]
+    lg = {k: loc["legend"][arche.legend_keys.get(k, k)] for k in loc["legend"]}
     entries, seen = [], []
-    for p in spec["panels"]:
+    for p in spec["panels"] if arche.legend_roles else []:
         role = p["role"]
         if role not in seen:
             seen.append(role)

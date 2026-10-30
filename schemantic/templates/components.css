@@ -194,6 +194,22 @@ body { background: var(--paper); }
 .now-tag { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 4px; font-size: var(--t-small);
   font-weight: 700; color: var(--on-head); background: var(--accent); vertical-align: 1px; }
 
+/* Quadrant and hierarchy: panels of a row as tall as each other, so the plate reads as one grid */
+.body > .panel.cell { align-self: stretch !important; }
+.band-x { padding: 0; column-gap: var(--gutter-x); margin-bottom: calc(10px - var(--gutter-y)); }
+.band-high, .band-low { padding: 0; margin: 0; align-items: center; }
+.band-high .band-label, .band-low .band-label { padding: 0; border: 0; text-align: right; }
+
+/* Sequence: a lifeline per participant, its header on top; the cards sit on the line, centred in rows shared across the
+   plate. The header's height is fixed, so the rows of every lifeline line up and a message runs dead straight. */
+.panel.lane.lifeline { flex-direction: column; }
+.lifeline > .ph { flex: 0 0 var(--lifeline-head); width: auto; border-radius: 7px 7px 0 0; }
+.lifeline > .pb, .lifeline .blocks, .lifeline .cards { flex: 1 1 auto; }
+.lifeline .blocks { display: flex; flex-direction: column; }
+.lifeline .cards { row-gap: 14px; justify-items: center; align-items: center; align-content: stretch; }
+.lifeline .card { width: var(--lifeline-card); grid-column: 1; position: relative; }
+.lifeline-line { grid-column: 1; width: 2px; height: 100%; background: var(--frame-line); }
+
 /* Before-after: a label over each column; the after side in the accent colour, as the side the plate is heading to */
 .band-before, .band-after { padding: 0; margin-bottom: calc(10px - var(--gutter-y)); }
 .band-before .band-label, .band-after .band-label { font-size: var(--t-head); font-weight: 700; color: var(--ink);

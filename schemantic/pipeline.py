@@ -13,7 +13,7 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-from . import __version__, outline
+from . import __version__, archetypes, outline
 from .browser import launch, on_sheet, open_plate, rasterise_svg
 from .config import FONTS_DIR, paper_fit
 from .export import export_svg, measure, on_paper
@@ -55,7 +55,7 @@ def prepare(spec_path: Path, theme: str | Path | None, theme_css: str) -> tuple[
     if not issues:
         issues = check(spec, theme_css)
     if not any(i["level"] == "error" for i in issues):
-        spec = number_story(spec)
+        spec = number_story(archetypes.get(spec["archetype"]).expand(spec))
     return spec, theme_css, issues
 
 
@@ -98,11 +98,13 @@ def parity(page, browser, parity_svg: Path, work: Path, refused: list[str]) -> d
     return image_diff(work / "html.png", work / "svg.png", work / "parity-diff.png")
 
 
-def review_crops(browser, layout: dict, spec: dict, svg: dict, work: Path, refused: list[str], every: bool) -> dict:
-    """Optional: crops of the plate a model can read, in _work/review/. Every crop is written each time, so one a model
+def review_crops(browser, layout: dict, spec: dict, svg: dict, work: Path, name: str, refused: list[str], every: bool) -> dict:
+    """Optional: crops of the plate a model can read, in _work/review/<name>/, so the parts of a series built into one
+    folder keep their own. Every crop is written each time, so one a model
     has not read yet is never lost to a rebuild; after the first round `crops` holds the whole plate and the parts changed
     since the last round, and `unchanged` the others, unless every part is asked for."""
-    dest, last = work / "review", work / "review" / "snapshot.json"
+    dest = work / "review" / name
+    last = dest / "snapshot.json"
     previous = None if every or not last.exists() else json.loads(last.read_text(encoding="utf-8"))
     changed = changed_parts(previous, svg["snap"], spec)
     for old in dest.glob("*.png"):
@@ -161,7 +163,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
     Returns the report: errors and warnings (each with a hint), density, parity, the build manifest, and the paths
     published (None when the build has errors; then `preview` names the unpublished files in _work/). `changed` names
     the parts (title block, panels, footer) that differ from the previous build in this folder. With review, `review`
-    lists crops of the plate a model can read, in <out>/_work/review/ (also for a build with errors): after the first
+    lists crops of the plate a model can read, in <out>/_work/review/<name>/ (also for a build with errors): after the first
     round the whole plate and the parts changed since the last one; `review_unchanged` lists the crops of the others,
     still on disk; review="all" lists every part."""
     spec_path, out = Path(spec_path), Path(out)
@@ -185,7 +187,7 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                 svg = write_svg(plate, spec, work, name, outline_text)
                 par = parity(page, browser, svg["parity_svg"], work, refused)
                 if review:
-                    shot = review_crops(browser, plate["layout"], spec, svg, work, refused, every=review == "all")
+                    shot = review_crops(browser, plate["layout"], spec, svg, work, name, refused, every=review == "all")
                     report.update(review=shot["crops"], review_unchanged=shot["unchanged"])
                 if deliver:
                     staged = deliverables(browser, spec, report["build"], svg["svg"], plate["fit"], scale, work, name, refused)

@@ -1,0 +1,33 @@
+archetype: quadrant
+
+layout:
+  x: ["TODO: left of the first axis", "TODO: right of the first axis"]
+  y: ["TODO: top of the second axis", "TODO: bottom of the second axis"]
+  cells: [a, b, c, d]     # left to right, top row first
+
+# No arrows: the position is the message. A panel's title is what the sources decide, or its place on the axes.
+panels:
+  - id: a
+    title: "TODO: the decision, or the place on the axes"
+    role: platform
+    cards:
+      - {icon: box, name: "TODO: a thing", refs: ["notes: TODO"]}
+  - id: b
+    title: "TODO: the decision, or the place on the axes"
+    role: platform
+    cards:
+      - id: doubt
+        icon: box
+        name: "TODO: a thing"
+        refs: ["notes: TODO"]
+        flag: {kind: warning, text: "TODO: an open choice the sources leave"}
+  - id: c
+    title: "TODO: the decision, or the place on the axes"
+    role: platform
+    cards:
+      - {icon: box, name: "TODO: a thing", refs: ["notes: TODO"]}
+  - id: d
+    title: "TODO: the decision, or the place on the axes"
+    role: platform
+    cards:
+      - {icon: box, name: "TODO: a thing", refs: ["notes: TODO"]}

@@ -37,7 +37,8 @@ def series_findings(paths: list[str | Path]) -> list[dict]:
 
     hints = {"canvas.of": "Give every part the same canvas.of.", "canvas.part": "Number the parts 1 to `of`, once each.",
              "canvas.lang": "Write every part of a series in one language.",
-             "flows_mean": "Use one flows_mean across the series, or say in each part's subtitle what its arrows show.",
+             "flows_mean": "Fine when it is true (calls here, events there): say in each part's subtitle what its arrows show. "
+                           "Never relabel arrows to quiet this.",
              "canvas.series": "Build the missing parts too, or lower canvas.of."}
 
     def add(level, name, where, detail):

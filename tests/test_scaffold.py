@@ -30,7 +30,10 @@ def test_a_starter_fails_only_on_its_todos(name):
     spec = yaml.safe_load(scaffold.starter(name))
     found = [f for f in sp.check(spec) if f["level"] == "error"]
     assert found and {f["check"] for f in found} == {"placeholder"}
-    assert {"brief", "sources", "flows", "flows_mean", "footer"} <= set(spec)
+    assert {"brief", "sources", "footer"} <= set(spec)
+    arche = archetypes.get(name)
+    if not arche.standalone(spec) or name == "sequence":  # a layout where position says it all, or the tree draws it, needs no flows
+        assert {"flows", "flows_mean"} <= set(spec)
 
 
 @pytest.mark.parametrize("name", archetypes.BUILT)
@@ -50,6 +53,15 @@ def test_new_writes_a_starter_and_never_overwrites(tmp_path):
     assert code == 1 and [e["check"] for e in report["errors"]] == ["yaml"] and target.read_text(encoding="utf-8") == "mine"
     code, report = run("new", "banded-matrix", tmp_path / "other.yaml")
     assert code == 1 and [e["check"] for e in report["errors"]] == ["archetype"]
+
+
+def test_the_parts_of_a_series_keep_their_own_crops(tmp_path):
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    _, first = run("build", write(tmp_path, spec, "one"), "--out", tmp_path / "out", "--review")
+    _, second = run("build", write(tmp_path, spec, "two"), "--out", tmp_path / "out", "--review")
+    assert all(Path(c["path"]).exists() for c in first["review"] + second["review"])
+    assert Path(first["review"][0]["path"]) != Path(second["review"][0]["path"])
+    assert len(second["review"]) == len(first["review"])  # a part built second is not compared with the part before it
 
 
 def test_a_placeholder_is_named_by_its_path():

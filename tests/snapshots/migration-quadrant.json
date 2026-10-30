@@ -1,0 +1,329 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   110
+  ],
+  "body": [
+   40,
+   128,
+   1560,
+   620
+  ],
+  "first": [
+   184,
+   172,
+   848,
+   374
+  ],
+  "first.card0": [
+   198,
+   244,
+   512,
+   298
+  ],
+  "first.card1": [
+   520,
+   244,
+   834,
+   298
+  ],
+  "plan": [
+   896,
+   172,
+   1560,
+   374
+  ],
+  "plan.card0": [
+   910,
+   242,
+   1224,
+   298
+  ],
+  "plan.card1": [
+   1232,
+   242,
+   1548,
+   298
+  ],
+  "plan.card2": [
+   910,
+   306,
+   1224,
+   360
+  ],
+  "later": [
+   184,
+   418,
+   848,
+   620
+  ],
+  "later.card0": [
+   198,
+   488,
+   512,
+   544
+  ],
+  "later.card1": [
+   520,
+   488,
+   836,
+   544
+  ],
+  "later.card2": [
+   198,
+   552,
+   512,
+   608
+  ],
+  "leave": [
+   896,
+   418,
+   1560,
+   620
+  ],
+  "leave.card0": [
+   910,
+   488,
+   1224,
+   544
+  ],
+  "leave.card1": [
+   1232,
+   488,
+   1548,
+   544
+  ],
+  "band.x": [
+   184,
+   128,
+   1560,
+   162
+  ],
+  "band.high": [
+   40,
+   172,
+   136,
+   374
+  ],
+  "band.low": [
+   40,
+   418,
+   136,
+   620
+  ],
+  "footer": [
+   40,
+   638,
+   1560,
+   708
+  ],
+  "footer.principles": [
+   40,
+   638,
+   1560,
+   682
+  ],
+  "footer.legend": [
+   40,
+   692,
+   1560,
+   708
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "Move the portal and the mailer first: high value, little risk"
+  ],
+  [
+   40,
+   104,
+   "Ten applications placed by what moving them gains and what it risks, after the workshop"
+  ],
+  [
+   198,
+   198,
+   "Move first"
+  ],
+  [
+   198,
+   216,
+   "This quarter"
+  ],
+  [
+   240,
+   268,
+   "Customer portal"
+  ],
+  [
+   240,
+   284,
+   "scales with the campaigns"
+  ],
+  [
+   564,
+   268,
+   "Mailer"
+  ],
+  [
+   564,
+   284,
+   "stateless, an easy start"
+  ],
+  [
+   908,
+   198,
+   "Plan carefully"
+  ],
+  [
+   908,
+   216,
+   "Needs a rehearsal"
+  ],
+  [
+   952,
+   266,
+   "Billing"
+  ],
+  [
+   952,
+   282,
+   "month end cannot slip"
+  ],
+  [
+   1276,
+   266,
+   "Customer database"
+  ],
+  [
+   1276,
+   282,
+   "everything reads it"
+  ],
+  [
+   952,
+   330,
+   "Order service"
+  ],
+  [
+   952,
+   346,
+   "two nightly batches"
+  ],
+  [
+   196,
+   444,
+   "Move when convenient"
+  ],
+  [
+   196,
+   462,
+   "With the next upgrade"
+  ],
+  [
+   240,
+   512,
+   "Intranet"
+  ],
+  [
+   240,
+   530,
+   "few users"
+  ],
+  [
+   564,
+   512,
+   "Report viewer"
+  ],
+  [
+   564,
+   530,
+   "read only"
+  ],
+  [
+   240,
+   576,
+   "Print service"
+  ],
+  [
+   240,
+   592,
+   "small and old"
+  ],
+  [
+   908,
+   444,
+   "Leave or retire"
+  ],
+  [
+   908,
+   462,
+   "Not worth moving"
+  ],
+  [
+   952,
+   512,
+   "Old archive"
+  ],
+  [
+   952,
+   530,
+   "read twice a year"
+  ],
+  [
+   1276,
+   512,
+   "Time clock"
+  ],
+  [
+   1276,
+   530,
+   "tied to the hardware"
+  ],
+  [
+   184,
+   152,
+   "Low risk"
+  ],
+  [
+   896,
+   152,
+   "High risk"
+  ],
+  [
+   64,
+   278,
+   "High value"
+  ],
+  [
+   68,
+   524,
+   "Low value"
+  ],
+  [
+   40,
+   652,
+   "Key principles"
+  ],
+  [
+   50,
+   678,
+   "An application moves once; no half-moved systems between waves."
+  ],
+  [
+   40,
+   704,
+   "Legend"
+  ],
+  [
+   134,
+   704,
+   "The point of this plate"
+  ]
+ ],
+ "flows": []
+}

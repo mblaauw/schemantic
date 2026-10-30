@@ -3,6 +3,7 @@ badge: "Deel {part} van {of}"
 markers: {question: "V", note: "N"}   # open vraag V1, noot N1
 before_after: ["Nu", "Straks"]
 now: "nu"
+pick: "aanbevolen"
 footer:
   principles: "Belangrijke uitgangspunten"
   open_questions: "Open vragen"
@@ -27,6 +28,10 @@ legend:
   mean_sequence: "Gaat vooraf aan"
   style_sync: "Synchrone call"
   style_async: "Asynchroon: event of bericht"
+  style_reply: "Antwoord of event"
+  status_new_plain: "Nieuw"
+  status_changed_plain: "Gewijzigd"
+  mean_leads: "Stuurt aan"
   style_optional: "Optioneel of af en toe"
   step: "Stap in de volgorde van gebeuren"
   status_new: "Nieuw in deze fase"

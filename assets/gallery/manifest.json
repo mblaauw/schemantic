@@ -2,8 +2,13 @@
  "incident-swimlane": "cdd3cb2b7e1014e2",
  "invoicing-before-after": "cb09f03c2c1ac37e",
  "kliniek-zones": "6d8485dcc6de4e35",
+ "migration-quadrant": "bf731da1f2ea5cb2",
  "ontwikkelplatform-lagen": "9e89cae0721dc5db",
  "orderplatform-eventbus": "e3db26eda8423b2c",
  "orderplatform-toegang": "d98dde1f34bd9fbb",
- "portal-roadmap": "52f55ad032496cbb"
+ "platform-org-hierarchy": "1f45adc97368f0fc",
+ "portal-roadmap": "52f55ad032496cbb",
+ "retail-capability-map": "2f3663013a1a48ed",
+ "search-engine-comparison": "e6c5a907cd2a4cdc",
+ "token-check-sequence": "70c49ed850c9abf5"
 }

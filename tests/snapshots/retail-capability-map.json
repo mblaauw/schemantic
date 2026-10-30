@@ -1,0 +1,368 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   110
+  ],
+  "body": [
+   40,
+   128,
+   1560,
+   534
+  ],
+  "sell": [
+   40,
+   128,
+   1560,
+   196
+  ],
+  "sell.card0": [
+   224,
+   140,
+   456,
+   182
+  ],
+  "sell.card1": [
+   496,
+   140,
+   728,
+   182
+  ],
+  "sell.card2": [
+   768,
+   140,
+   1002,
+   182
+  ],
+  "sell.card3": [
+   1042,
+   140,
+   1274,
+   182
+  ],
+  "sell.card4": [
+   1314,
+   140,
+   1548,
+   182
+  ],
+  "fulfil": [
+   40,
+   240,
+   1560,
+   308
+  ],
+  "fulfil.card0": [
+   224,
+   252,
+   524,
+   294
+  ],
+  "fulfil.card1": [
+   564,
+   252,
+   866,
+   294
+  ],
+  "fulfil.card2": [
+   906,
+   252,
+   1206,
+   294
+  ],
+  "fulfil.card3": [
+   1246,
+   252,
+   1548,
+   294
+  ],
+  "aftersales": [
+   40,
+   352,
+   1560,
+   422
+  ],
+  "aftersales.card0": [
+   224,
+   366,
+   456,
+   408
+  ],
+  "aftersales.card1": [
+   496,
+   366,
+   728,
+   408
+  ],
+  "aftersales.card2": [
+   768,
+   366,
+   1002,
+   408
+  ],
+  "aftersales.card3": [
+   1042,
+   366,
+   1274,
+   408
+  ],
+  "aftersales.card4": [
+   1314,
+   366,
+   1546,
+   408
+  ],
+  "insight": [
+   40,
+   466,
+   1560,
+   534
+  ],
+  "insight.card0": [
+   224,
+   478,
+   638,
+   520
+  ],
+  "insight.card1": [
+   678,
+   478,
+   1092,
+   520
+  ],
+  "insight.card2": [
+   1132,
+   478,
+   1546,
+   520
+  ],
+  "footer": [
+   40,
+   552,
+   1560,
+   622
+  ],
+  "footer.principles": [
+   40,
+   552,
+   1560,
+   594
+  ],
+  "footer.legend": [
+   40,
+   604,
+   1560,
+   622
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "Selling is covered; the gaps are all in after-sales"
+  ],
+  [
+   40,
+   104,
+   "What the retail platform can do today, by domain, after the spring review"
+  ],
+  [
+   52,
+   166,
+   "Sell"
+  ],
+  [
+   266,
+   164,
+   "Search"
+  ],
+  [
+   538,
+   164,
+   "Pricing"
+  ],
+  [
+   812,
+   164,
+   "Checkout"
+  ],
+  [
+   1084,
+   164,
+   "Promotions"
+  ],
+  [
+   1176,
+   164,
+   "changed"
+  ],
+  [
+   1358,
+   164,
+   "Gift cards"
+  ],
+  [
+   52,
+   278,
+   "Fulfil"
+  ],
+  [
+   266,
+   276,
+   "Stock"
+  ],
+  [
+   608,
+   276,
+   "Delivery"
+  ],
+  [
+   948,
+   276,
+   "Click and collect"
+  ],
+  [
+   1288,
+   276,
+   "Label printing"
+  ],
+  [
+   1396,
+   276,
+   "phasing out"
+  ],
+  [
+   54,
+   392,
+   "After-sales"
+  ],
+  [
+   268,
+   390,
+   "Returns"
+  ],
+  [
+   540,
+   390,
+   "Refunds"
+  ],
+  [
+   812,
+   390,
+   "Repairs"
+  ],
+  [
+   876,
+   388,
+   "planned"
+  ],
+  [
+   1084,
+   390,
+   "Customer chat"
+  ],
+  [
+   1198,
+   388,
+   "planned"
+  ],
+  [
+   1356,
+   390,
+   "Warranty claims"
+  ],
+  [
+   1480,
+   388,
+   "planned"
+  ],
+  [
+   52,
+   504,
+   "Insight"
+  ],
+  [
+   266,
+   502,
+   "Sales reports"
+  ],
+  [
+   720,
+   502,
+   "Customer profiles"
+  ],
+  [
+   1176,
+   502,
+   "Demand forecast"
+  ],
+  [
+   1304,
+   502,
+   "new"
+  ],
+  [
+   40,
+   564,
+   "Key principles"
+  ],
+  [
+   50,
+   590,
+   "A capability has one owning domain; another domain calls it."
+  ],
+  [
+   40,
+   618,
+   "Legend"
+  ],
+  [
+   110,
+   616,
+   "new"
+  ],
+  [
+   146,
+   618,
+   "New"
+  ],
+  [
+   198,
+   616,
+   "changed"
+  ],
+  [
+   258,
+   618,
+   "Changed"
+  ],
+  [
+   336,
+   616,
+   "planned"
+  ],
+  [
+   392,
+   618,
+   "Planned, not built yet"
+  ],
+  [
+   540,
+   616,
+   "phasing out"
+  ],
+  [
+   618,
+   618,
+   "Being phased out"
+  ],
+  [
+   768,
+   618,
+   "The point of this plate"
+  ]
+ ],
+ "flows": []
+}

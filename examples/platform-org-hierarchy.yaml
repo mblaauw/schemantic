@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=../schemantic/schema/plate.schema.json
+# Fictional example: a hierarchy, drawn from a root by each panel's children.
+canvas: {size: landscape-4x3, lang: en}
+title: "Every service belongs to one team, and every team to one group"
+subtitle: "Who owns what in the order platform, from the head of engineering down"
+archetype: hierarchy
+brief:
+  message: "Ownership has no gaps and no overlaps: one team per service."
+  reader: "New team leads"
+  why: "hierarchy: what sits under what, with one parent each"
+  assumptions: []
+sources:
+  - {id: org, kind: document, ref: "Engineering ownership list"}
+layout:
+  root: head
+  children:
+    head: [commerce, foundation]
+    commerce: [shopfront, checkout]
+    foundation: [data, runtime]
+panels:
+  - id: head
+    title: "Head of engineering"
+    role: actor
+    cards:
+      - {icon: user, name: "Engineering lead", note: "sets priorities each quarter", refs: ["org: top"]}
+  - id: commerce
+    title: "Commerce group"
+    role: actor
+    cards:
+      - {icon: users, name: "Two teams", note: "what a customer sees", refs: ["org: commerce"]}
+  - id: foundation
+    title: "Foundation group"
+    role: actor
+    cards:
+      - {icon: users, name: "Two teams", note: "what the other teams build on", refs: ["org: foundation"]}
+  - id: shopfront
+    title: "Shopfront team"
+    role: platform
+    cards:
+      - {icon: browser, name: "Web shop", refs: ["org: shopfront"]}
+      - {icon: search, name: "Search", refs: ["org: shopfront"]}
+  - id: checkout
+    title: "Checkout team"
+    role: platform
+    cards:
+      - {icon: shopping-cart, name: "Order service", refs: ["org: checkout"]}
+      - {icon: credit-card, name: "Payment service", refs: ["org: checkout"]}
+  - id: data
+    title: "Data team"
+    role: data
+    cards:
+      - {icon: database, name: "Lakehouse", refs: ["org: data"]}
+      - {icon: chart-bar, name: "Dashboards", refs: ["org: data"]}
+  - id: runtime
+    title: "Runtime team"
+    role: platform
+    cards:
+      - {icon: server, name: "Kubernetes", refs: ["org: runtime"]}
+      - {icon: route, name: "API gateway", refs: ["org: runtime"]}
+flows_mean: control
+footer:
+  principles:
+    - "A service with no team is a defect, raised at the group lead."
+  legend: auto

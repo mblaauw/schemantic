@@ -5,6 +5,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- `evals/judge_prompt.md`: the judges' wording is fixed, and `harness.py blind` writes their prompts. One sentence had
+  added 25% to the defects on the same plates.
+- Evals of the worked series, `role-fit` and the new layouts: series plates improve (4.50 to 3.50 defects), most cases
+  hold, phase change worsens, and nothing invented falls (42/48 to 37/48). See `evals/README.md`.
 - Evals of 0.3.0 (30 October), all eight cases, three runs each, judged blind: 8 of 48 runs pass the judge (4 before), at
   2.12 (Sonnet) and 2.25 (Haiku) defects per plate. Paths fall from 41 to 28 of the defects; holes rise from 15 to 21,
   and series plates get worse. See `evals/README.md`.
@@ -12,8 +16,17 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   what it holds, never "Part 1".
 - `role-fit` warns about a panel that mixes people and systems (at least two of each, more than a third of each), and
   suggests splitting it. It used to warn only when two thirds looked wrong. One person beside a row of tools passes.
+- Five more archetypes, each with a starter, an example and its own checks: `sequence` (one request between lifelines,
+  numbered by row), `capability-map` (what exists by domain, the gaps dashed), `comparison` (options against criteria,
+  the pick marked), `hierarchy` (a tree whose arrows follow from `children`) and `quadrant` (a two-by-two).
+
+### Changed
+- The `series` hint on arrow meanings says a difference is fine when true and said in the subtitle. Agents were
+  relabelling calls as data to quiet it.
 
 ### Fixed
+- Parts of a series built into one folder overwrote each other's review crops, and each was compared with the part
+  before it for what changed. Crops now go to `_work/review/<name>/`.
 - The outline of a nested-zones plate left out the zones, the point of such a plate. It now lists them, nested, with
   the panels in each and those outside every zone.
 - `--review` deleted earlier crops on every build, so an agent that rebuilt before reading never saw the parts that did

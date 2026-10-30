@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=../schemantic/schema/plate.schema.json
+# Fictional example: a comparison of options against criteria, with the recommended one marked.
+canvas: {size: landscape-4x3, lang: en}
+title: "Managed search is good and easy to run; only its price needs a decision"
+subtitle: "Three ways to replace the shop's search, against what the review asked for"
+archetype: comparison
+brief:
+  message: "Choose managed search, if the board accepts its price."
+  reader: "The architecture board"
+  why: "comparison: a choice between options, with the reasons in one table"
+  assumptions: []
+sources:
+  - {id: review, kind: document, ref: "Search options review"}
+layout:
+  options: ["Database search", "Self-hosted engine", "Managed search"]
+  pick: 3
+  criteria: [quality, effort, cost, risk]
+panels:
+  - id: quality
+    title: "Result quality"
+    role: data
+    cards:
+      - {icon: alert-triangle, name: "Weak", note: "no typo tolerance, no synonyms", col: 1, refs: ["review: quality"]}
+      - {icon: circle-check, name: "Good", note: "needs tuning by us", col: 2, refs: ["review: quality"]}
+      - {icon: circle-check, name: "Good", note: "tuned by the supplier", col: 3, refs: ["review: quality"]}
+  - id: effort
+    title: "Effort to run"
+    role: data
+    cards:
+      - {icon: circle-check, name: "None", note: "already runs", col: 1, refs: ["review: effort"]}
+      - {icon: circle-x, name: "High", note: "one engineer, on call", col: 2, refs: ["review: effort"]}
+      - {icon: circle-check, name: "Low", note: "an integration, then upgrades", col: 3, refs: ["review: effort"]}
+  - id: cost
+    title: "Yearly cost"
+    role: data
+    cards:
+      - {icon: circle-check, name: "Lowest", note: "no new licence", col: 1, refs: ["review: cost"]}
+      - {icon: alert-triangle, name: "Middle", note: "servers and the engineer", col: 2, refs: ["review: cost"]}
+      - {id: price, icon: alert-triangle, name: "Highest", note: "priced per query", col: 3, refs: ["review: cost"], flag: {kind: warning, text: "Does the board accept a price per query?"}}
+  - id: risk
+    title: "Biggest risk"
+    role: data
+    cards:
+      - {icon: circle-x, name: "Slow pages", note: "search loads the order database", col: 1, refs: ["review: risk"]}
+      - {icon: alert-triangle, name: "Key person", note: "one engineer knows it", col: 2, refs: ["review: risk"]}
+      - {icon: alert-triangle, name: "Lock-in", note: "export is possible, a rewrite is not", col: 3, refs: ["review: risk"]}
+footer:
+  principles:
+    - "Search runs on its own copy of the catalogue, whichever option wins."
+  open_questions: {from_chips: true}
+  legend: auto

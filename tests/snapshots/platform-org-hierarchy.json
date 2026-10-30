@@ -1,0 +1,392 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   110
+  ],
+  "body": [
+   40,
+   128,
+   1560,
+   614
+  ],
+  "head": [
+   40,
+   128,
+   1560,
+   248
+  ],
+  "head.card0": [
+   54,
+   180,
+   1548,
+   236
+  ],
+  "commerce": [
+   40,
+   292,
+   776,
+   414
+  ],
+  "commerce.card0": [
+   54,
+   344,
+   764,
+   400
+  ],
+  "foundation": [
+   824,
+   292,
+   1560,
+   414
+  ],
+  "foundation.card0": [
+   838,
+   344,
+   1548,
+   400
+  ],
+  "shopfront": [
+   40,
+   458,
+   384,
+   614
+  ],
+  "shopfront.card0": [
+   54,
+   510,
+   372,
+   552
+  ],
+  "shopfront.card1": [
+   54,
+   560,
+   372,
+   602
+  ],
+  "checkout": [
+   432,
+   458,
+   776,
+   614
+  ],
+  "checkout.card0": [
+   446,
+   510,
+   764,
+   552
+  ],
+  "checkout.card1": [
+   446,
+   560,
+   764,
+   602
+  ],
+  "data": [
+   824,
+   458,
+   1168,
+   614
+  ],
+  "data.card0": [
+   838,
+   510,
+   1156,
+   552
+  ],
+  "data.card1": [
+   838,
+   560,
+   1156,
+   602
+  ],
+  "runtime": [
+   1216,
+   458,
+   1560,
+   614
+  ],
+  "runtime.card0": [
+   1230,
+   510,
+   1548,
+   552
+  ],
+  "runtime.card1": [
+   1230,
+   560,
+   1548,
+   602
+  ],
+  "footer": [
+   40,
+   632,
+   1560,
+   704
+  ],
+  "footer.principles": [
+   40,
+   632,
+   1560,
+   676
+  ],
+  "footer.legend": [
+   40,
+   686,
+   1560,
+   704
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "Every service belongs to one team, and every team to one group"
+  ],
+  [
+   40,
+   104,
+   "Who owns what in the order platform, from the head of engineering down"
+  ],
+  [
+   52,
+   154,
+   "Head of engineering"
+  ],
+  [
+   96,
+   204,
+   "Engineering lead"
+  ],
+  [
+   96,
+   220,
+   "sets priorities each quarter"
+  ],
+  [
+   52,
+   318,
+   "Commerce group"
+  ],
+  [
+   96,
+   368,
+   "Two teams"
+  ],
+  [
+   96,
+   386,
+   "what a customer sees"
+  ],
+  [
+   836,
+   318,
+   "Foundation group"
+  ],
+  [
+   880,
+   368,
+   "Two teams"
+  ],
+  [
+   880,
+   386,
+   "what the other teams build on"
+  ],
+  [
+   52,
+   484,
+   "Shopfront team"
+  ],
+  [
+   96,
+   534,
+   "Web shop"
+  ],
+  [
+   96,
+   584,
+   "Search"
+  ],
+  [
+   444,
+   484,
+   "Checkout team"
+  ],
+  [
+   488,
+   534,
+   "Order service"
+  ],
+  [
+   488,
+   584,
+   "Payment service"
+  ],
+  [
+   836,
+   484,
+   "Data team"
+  ],
+  [
+   880,
+   534,
+   "Lakehouse"
+  ],
+  [
+   880,
+   584,
+   "Dashboards"
+  ],
+  [
+   1228,
+   484,
+   "Runtime team"
+  ],
+  [
+   1272,
+   534,
+   "Kubernetes"
+  ],
+  [
+   1272,
+   584,
+   "API gateway"
+  ],
+  [
+   40,
+   646,
+   "Key principles"
+  ],
+  [
+   50,
+   672,
+   "A service with no team is a defect, raised at the group lead."
+  ],
+  [
+   40,
+   698,
+   "Legend"
+  ],
+  [
+   134,
+   698,
+   "People and teams"
+  ],
+  [
+   288,
+   698,
+   "Platform component"
+  ],
+  [
+   456,
+   698,
+   "Data and storage"
+  ],
+  [
+   606,
+   698,
+   "Leads"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "head",
+   "to": "commerce",
+   "points": [
+    [
+     408,
+     256
+    ],
+    [
+     408,
+     286
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 1,
+   "from": "head",
+   "to": "foundation",
+   "points": [
+    [
+     1192,
+     256
+    ],
+    [
+     1192,
+     286
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 2,
+   "from": "commerce",
+   "to": "shopfront",
+   "points": [
+    [
+     212,
+     420
+    ],
+    [
+     212,
+     450
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 3,
+   "from": "commerce",
+   "to": "checkout",
+   "points": [
+    [
+     604,
+     420
+    ],
+    [
+     604,
+     450
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 4,
+   "from": "foundation",
+   "to": "data",
+   "points": [
+    [
+     996,
+     420
+    ],
+    [
+     996,
+     450
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 5,
+   "from": "foundation",
+   "to": "runtime",
+   "points": [
+    [
+     1388,
+     420
+    ],
+    [
+     1388,
+     450
+    ]
+   ],
+   "label": null
+  }
+ ]
+}

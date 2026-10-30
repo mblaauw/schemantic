@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 
+from . import archetypes
 from .findings import finding
 
 BUILT_IN = ["platform", "data", "external", "actor"]
@@ -45,9 +46,9 @@ def is_person(icon: str | None) -> bool:
 def role_fit_findings(spec: dict) -> list[dict]:
     """A panel coloured as people whose cards look like systems, or the reverse, judged by the cards' icons: at least
     two cards, two thirds of them pointing the other way; or a panel that mixes the two, at least two of each and more
-    than a third of each. One person beside a row of tools is left alone. A warning, since icons are only a hint. Lanes
-    are left out: their cards are steps or items, not things."""
-    if spec["archetype"] in ("swimlane", "roadmap"):
+    than a third of each. One person beside a row of tools is left alone. A warning, since icons are only a hint. A layout
+    whose cards are steps or verdicts is left out."""
+    if not archetypes.REGISTRY[spec["archetype"]].cards_are_things:
         return []
     out = []
     for p in spec["panels"]:
