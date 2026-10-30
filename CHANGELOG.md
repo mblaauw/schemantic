@@ -2,7 +2,13 @@
 
 All notable changes to this project. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.3.0] - 2026-10-30
+
+The skill's own tools and a stronger picture. Stories name the routes a plate claims and can be numbered on it; starters
+(`schemantic new`) and review crops (`build --review`) carry the workflow; the report sums up findings and says what
+changed. The router reaches more cards, and new checks cover holes, role colours, footers and slides. Every eval plate
+builds clean, but few pass the judge yet (`evals/README.md`): the latest skill rules, connecting cards by default among
+them, are not measured.
 
 ### Added
 - `layout.outside_at: bottom` on nested zones: outside panels stand in a row under the zones. A short panel in the
