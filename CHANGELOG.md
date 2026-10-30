@@ -9,6 +9,22 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   2.12 (Sonnet) and 2.25 (Haiku) defects per plate. Paths fall from 41 to 28 of the defects; holes rise from 15 to 21,
   and series plates get worse. See `evals/README.md`.
 
+### Fixed
+- The outline of a nested-zones plate left out the zones, the point of such a plate. It now lists them, nested, with
+  the panels in each and those outside every zone.
+- `--review` deleted earlier crops on every build, so an agent that rebuilt before reading never saw the parts that did
+  not change last. Every crop is written each time, and `review_unchanged` lists the crops of the other parts with
+  their paths.
+- `outside_at: bottom` could not solve the deployment plate it was made for: wider accounts stood a small zone beside a
+  cluster, stretched, and lint called it an error. A zone that holds zones now takes its parent's whole width, so the
+  small zone wraps underneath.
+
+### Changed
+- The skill and the `orphan` hint say to draw a step the sources imply and list it as an assumption, and to leave out
+  only what has no basis. "Never invent" had agents dropping steps such as the arrow out of Bronze.
+- `footer-share` passes a footer of two lines over a two-line legend (116 px) on any plate: eval agents could not cut
+  it further on a short plate, and left the warning standing. The judge's eighth still counts such a footer.
+
 ## [0.3.0] - 2026-10-30
 
 The skill's own tools and a stronger picture. Stories name the routes a plate claims and can be numbered on it; starters

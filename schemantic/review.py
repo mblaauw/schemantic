@@ -3,8 +3,9 @@
 the title block, each panel with a gutter around it (so arrow ends and labels show), and the footer. A part too long
 to stay sharp is cut into overlapping pieces along its long side; the title block stays whole.
 
-After the first round only the parts that changed get crops: each part is compared with the last round's snapshot,
-measured from its own corner, so a part that only moved (because a row above it grew) is still the same part."""
+Every build writes every crop. After the first round the report lists first the parts that changed: each part is
+compared with the last round's snapshot, measured from its own corner, so a part that only moved (because a row above
+it grew) is still the same part."""
 from __future__ import annotations
 
 import json
@@ -83,10 +84,9 @@ def pieces(box: list[float], width: float, height: float, whole: bool = False) -
     return out
 
 
-def write_crops(layout: dict, spec: dict, raster: Path, dest: Path, only: list[str] | None = None) -> list[dict]:
-    """Cut the plate raster (at RASTER_SCALE) into review crops in dest: the parts in `only`, or every part. Returns,
-    in reading order, each crop's part, path and scale (image px per CSS px), and the overview of the whole plate
-    first."""
+def write_crops(layout: dict, spec: dict, raster: Path, dest: Path) -> list[dict]:
+    """Cut the plate raster (at RASTER_SCALE) into review crops in dest. Returns, in reading order, each crop's part,
+    path and scale (image px per CSS px), and the overview of the whole plate first."""
     dest.mkdir(parents=True, exist_ok=True)
     plate = Image.open(raster).convert("RGB")
     k = plate.size[0] / layout["width"]  # the raster's own scale, which a fractional canvas rounds
@@ -102,8 +102,6 @@ def write_crops(layout: dict, spec: dict, raster: Path, dest: Path, only: list[s
 
     save(plate, "00-overview", "the whole plate")
     for i, (name, box) in enumerate(boxes(layout, spec), 1):
-        if only is not None and name not in only:
-            continue
         cut = pieces(box, layout["width"], layout["height"], whole=name == "titleblock")
         for j, piece in enumerate(cut, 1):
             label = name if len(cut) == 1 else f"{name}, piece {j} of {len(cut)}"

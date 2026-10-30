@@ -76,8 +76,10 @@ Plan the panels, their cards (each with `refs: ["<source id>: <path, line or sho
 open questions. Then audit the plan against the sources, and fix it before writing more:
 
 - Every card traces to a source. A card you cannot trace is an assumption or an open question, not a fact.
-- The title, subtitle, principles and notes say only what the sources say. An "only", a "never", an order or a detail
-  you inferred is an assumption: move it to the brief, or leave it out.
+- The title, subtitle, principles and notes say only what the sources say. An "only", a "never" or a detail you inferred
+  is an assumption: move it to the brief, or leave it out.
+- A step the sources imply is drawn, and listed in the brief's assumptions: dbt builds Silver and Gold, so an arrow
+  runs out of Bronze; the WMS books shipments, so an arrow runs to the carrier. Leave out only what has no basis at all.
 - Every uncertainty in the sources is a warning chip, a card flag or an open question. Before you keep a question,
   look for its answer: one the sources settle ("everything publishes", "test mirrors production") is a fact to draw.
 - Every route the title or subtitle names ("A via B to C") is a `story` through cards that exist.
@@ -121,8 +123,9 @@ progress, restructure: move cards between panels, change the archetype, or split
 
 Once the build is clean, read every crop the report lists under `review`, not only the first: the whole plate, then
 the title block, each panel and the footer, at a size where every note is legible (a full PNG is scaled down until
-small text blurs). Answer the defect questions in `references/review.md`. After the first round, `review` holds the
-whole plate and only the parts that changed since the last round. Every "yes" is a spec change and another build, not
+small text blurs). Answer the defect questions in `references/review.md`. After the first round, `review` lists the
+whole plate and the parts that changed since the last round, and `review_unchanged` the rest: read those too if you
+rebuilt before reading them. Every "yes" is a spec change and another build, not
 a hand edit. Stop after three review rounds; tell the user what is still imperfect rather than looping.
 
 ## 7. Deliver

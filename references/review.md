@@ -3,9 +3,10 @@
 Answer each question with the review crops in front of you (`build --review`), yes or no. A "yes" is a defect:
 change the spec and build again. Stop after three rounds and report what is left.
 
-The first round has the whole plate and a crop of every part. Later rounds have the whole plate and crops of the
-parts that changed since (`review_unchanged` names the rest): ask the whole-plate questions (1, 2, 5) of the
-overview again, and the others only of the new crops. `--review all` gives every part again.
+The first round lists the whole plate and a crop of every part. Later rounds list the whole plate and the parts that
+changed since; `review_unchanged` lists the others, whose crops are still there, so read those too if you rebuilt
+before reading them. Ask the whole-plate questions (1, 2, 5) of the overview each round, and the others of the crops
+you have not read yet. `--review all` lists every part again.
 
 Lint has already measured what it can, so a clean build answers part of these; each question says which part is
 left to you.

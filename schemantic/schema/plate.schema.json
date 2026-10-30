@@ -284,7 +284,7 @@
         "outside_at": {
           "type": "string",
           "enum": ["right", "bottom"],
-          "description": "nested-zones: where the outside panels stand. bottom: in a row under the zones, when one or two short panels would float beside tall zones."
+          "description": "nested-zones: where the outside panels stand. bottom: in a row under the zones, when one or two short panels would float beside tall zones; a zone that holds zones then takes its parent's whole width."
         },
         "before": {
           "type": "array",

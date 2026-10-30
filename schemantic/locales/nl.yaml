@@ -10,6 +10,8 @@ footer:
   notes: "Toelichting"
   flows: "Verbindingen"
   stories: "Routes"
+  zones: "Waar het draait"
+  outside: "Buiten elke zone"
 legend:
   platform: "Platformcomponent"
   data: "Data en opslag"

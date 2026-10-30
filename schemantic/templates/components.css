@@ -218,6 +218,9 @@ body { background: var(--paper); }
   align-content: flex-start; }   /* rows keep their content height; spare height stays in the frame, not in a panel */
 .zone-body > .panel { flex: 1 1 220px; min-width: 0; }
 .zone-body > .zone { flex: 1 1 260px; }
+/* A zone that holds zones (a cluster and its namespaces) takes its parent's whole row, so a small zone beside it (managed
+   services) wraps underneath instead of standing beside it, stretched */
+.zone-body > .zone.has-zones { flex-basis: 100%; }
 .stack { display: flex; flex-direction: column; justify-content: space-evenly; gap: var(--gutter-y); min-width: 0; min-height: 0; }
 
 /* Panel pattern: process strip, steps in order with a number */

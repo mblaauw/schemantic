@@ -2,6 +2,7 @@
 import copy
 import json
 import re
+from pathlib import Path
 
 import pytest
 import yaml
@@ -107,6 +108,8 @@ def test_a_second_review_crops_only_what_changed(tmp_path):
     _, report = run("lint", path, "--out", tmp_path, "--review")
     assert report["changed"] == [spec["panels"][1]["id"]]
     assert [c["part"] for c in report["review"]] == ["the whole plate", spec["panels"][1]["id"]]
-    assert spec["panels"][0]["id"] in report["review_unchanged"]
+    # The crops of the rest are still there and still listed, so a model that rebuilt before reading them loses nothing
+    others = {c["part"].split(",")[0]: c["path"] for c in report["review_unchanged"]}
+    assert spec["panels"][0]["id"] in others and Path(others[spec["panels"][0]["id"]]).exists()
     _, report = run("lint", path, "--out", tmp_path, "--review", "all")
     assert len(report["review"]) > 2 and report["review_unchanged"] == []
