@@ -57,6 +57,8 @@
   --tag-planned-bg: #EEF1F5; --tag-planned-text: #3D4A5C;
   --tag-deprecated-bg: #FFF2E8; --tag-deprecated-text: #7A2D0E;
   --tag-removed-bg: #FCE8E8; --tag-removed-text: #8E1B1B;
+  --tag-assumed-bg: #FBF0D9; --tag-assumed-text: #6B4600;
+  --arrow-assumed: #A86A00;
 
   /* Spacing on a 4 px scale */
   --r-panel: 8px; --r-card: 6px;

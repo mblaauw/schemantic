@@ -77,19 +77,28 @@ brief:
   left_out: ["What the sources hold that the plate leaves out, and why"]
   assumptions: ["What is assumed rather than found"]
 sources:
-  - {id: notes, kind: notes, ref: "Design review, 12 May"}
+  - {id: notes, kind: notes, ref: "Design review, 12 May", path: ../inputs/notes.md}
 ```
 
-Plan the panels, their cards (each with `refs: ["<source id>: <path, line or short quote>"]`), the flows and the
-open questions. Then audit the plan against the sources, and fix it before writing more:
+Give a source its `path` when it is on disk (a file, or a folder of files), relative to the spec: lint then checks each
+quote against it. Plan the panels, their cards, the flows and the open questions. Everything that says something about
+the world names its source: `refs: ["<source id>: <path, line or short quote>"]` on cards, arrows and warnings,
+`status_ref` beside a `status`. Quote word for word, in the source's language. Then audit the plan against the sources,
+and fix it before writing more:
 
-- Every card traces to a source. A card you cannot trace is an assumption or an open question, not a fact.
-- The title, subtitle, principles and notes say only what the sources say. An "only", a "never" or a detail you inferred
-  is an assumption: move it to the brief, or leave it out.
-- A step the sources imply is drawn, and listed in the brief's assumptions: dbt builds Silver and Gold, so an arrow
-  runs out of Bronze; the WMS books shipments, so an arrow runs to the carrier. Leave out only what has no basis at all.
+- What the sources do not say is marked or left out. Mark what you have reason to draw with `assumed: <why>`: the plate
+  tags the card or panel and draws the arrow amber and dashed, so a reader can tell it from a fact. dbt builds Silver and
+  Gold, so an arrow runs out of Bronze: `refs` if the notes say so, `assumed` if you worked it out. Leave out what has no
+  basis at all. The brief's `assumptions` are for what cannot be marked on the plate.
+- A `status` is what the sources say about that thing. Someone asking for a report does not make it `planned`, and "not
+  decided" is a warning, not a status: with nothing to quote, draw no status.
+- A panel name uses the sources' words. A grouping you coin that a reader would take for a real domain or team
+  ("Customers and sales") gets `assumed`, or a plainer name.
+- The title, subtitle, principles and notes say only what the sources say. An "only", an "every", a "never" or a detail
+  you inferred goes in the brief, or is left out. Check every "every" against the plate's own open questions.
 - Every uncertainty in the sources is a warning chip, a card flag or an open question. Before you keep a question,
-  look for its answer: one the sources settle ("everything publishes", "test mirrors production") is a fact to draw.
+  look for its answer: one the sources settle ("everything publishes", "test mirrors production") is a fact to draw. A
+  question the sources do not raise goes in your reply to the user, not on the plate.
 - Every route the title or subtitle names ("A via B to C") is a `story` through cards that exist.
 
 ## 4. Fill the spec
@@ -139,8 +148,8 @@ a hand edit. Stop after three review rounds; tell the user what is still imperfe
 
 ## 7. Deliver
 
-Give the user the PNG, SVG, spec and outline (`.md`) paths; the one message; the open questions; and the brief's
-assumptions. If they ask for changes, edit the spec and go back to step 5. For print, build with
+Give the user the PNG, SVG, spec and outline (`.md`) paths; the one message; the open questions; and the `assumptions`
+in the report. If they ask for changes, edit the spec and go back to step 5. For print, build with
 `canvas.size: a3-landscape` and `--dpi 300`; for a meeting, `landscape-16x9` with `canvas.profile: slide`; for hand-off to a design tool, add `--outline-text`.
 
 ## Rules

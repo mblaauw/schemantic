@@ -21,7 +21,7 @@ panels:
       - {icon: search, name: "Search", refs: ["review: sell"]}
       - {icon: tag, name: "Pricing", refs: ["review: sell"]}
       - {icon: shopping-cart, name: "Checkout", refs: ["review: sell"]}
-      - {icon: percentage, name: "Promotions", status: changed, refs: ["review: sell"]}
+      - {icon: percentage, name: "Promotions", status: changed, status_ref: "review: sell", refs: ["review: sell"]}
       - {icon: gift, name: "Gift cards", refs: ["review: sell"]}
   - id: fulfil
     title: "Fulfil"
@@ -30,7 +30,7 @@ panels:
       - {icon: packages, name: "Stock", refs: ["review: fulfil"]}
       - {icon: truck, name: "Delivery", refs: ["review: fulfil"]}
       - {icon: building-store, name: "Click and collect", refs: ["review: fulfil"]}
-      - {icon: printer, name: "Label printing", status: deprecated, refs: ["review: fulfil"]}
+      - {icon: printer, name: "Label printing", status: deprecated, status_ref: "review: fulfil", refs: ["review: fulfil"]}
   - id: aftersales
     title: "After-sales"
     role: platform
@@ -38,16 +38,16 @@ panels:
     cards:
       - {icon: arrow-back-up, name: "Returns", refs: ["review: after-sales"]}
       - {icon: receipt-refund, name: "Refunds", refs: ["review: after-sales"]}
-      - {icon: tool, name: "Repairs", status: planned, refs: ["review: after-sales"]}
-      - {icon: message-circle, name: "Customer chat", status: planned, refs: ["review: after-sales"]}
-      - {icon: shield-check, name: "Warranty claims", status: planned, refs: ["review: after-sales"]}
+      - {icon: tool, name: "Repairs", status: planned, status_ref: "review: after-sales", refs: ["review: after-sales"]}
+      - {icon: message-circle, name: "Customer chat", status: planned, status_ref: "review: after-sales", refs: ["review: after-sales"]}
+      - {icon: shield-check, name: "Warranty claims", status: planned, status_ref: "review: after-sales", refs: ["review: after-sales"]}
   - id: insight
     title: "Insight"
     role: data
     cards:
       - {icon: chart-bar, name: "Sales reports", refs: ["review: insight"]}
       - {icon: users, name: "Customer profiles", refs: ["review: insight"]}
-      - {icon: trending-up, name: "Demand forecast", status: new, refs: ["review: insight"]}
+      - {icon: trending-up, name: "Demand forecast", status: new, status_ref: "review: insight", refs: ["review: insight"]}
 footer:
   principles:
     - "A capability has one owning domain; another domain calls it."

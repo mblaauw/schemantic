@@ -75,8 +75,10 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
         mean = spec.get("flows_mean")
         entries.append({"kind": "arrow", "key": "arrow", "label": lg[f"mean_{mean}"] if mean else lg["arrow"]})
         # The meaning entry already shows a solid arrow, so only the other line styles get an entry.
-        styles = [s for s in ("async", "optional") if any(f.get("style") == s for f in flows)]
+        styles = [s for s in ("async", "optional") if any(f.get("style") == s and not f.get("assumed") for f in flows)]
         entries += [{"kind": "line", "key": s, "label": lg[f"style_{s}"]} for s in styles]
+        if any(f.get("assumed") for f in flows):
+            entries.append({"kind": "line", "key": "assumed", "label": lg["style_assumed"]})
         if any(f.get("step") for f in flows):  # a drawn story's steps are its route: the legend names it
             story = drawn_story(spec)
             entries.append({"kind": "step", "key": "step", "label": story["name"] if story else lg["step"]})
@@ -84,6 +86,8 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
     for st in ("new", "changed", "planned", "deprecated", "removed"):
         if any(t.get("status") == st for t in things):
             entries.append({"kind": "status", "key": st, "label": lg[f"status_{st}"]})
+    if any(t.get("assumed") for t in things):
+        entries.append({"kind": "status", "key": "assumed", "label": lg["status_assumed"]})
     if any(t.get("focus") for t in things + spec.get("flows", [])):
         entries.append({"kind": "focus", "key": "focus", "label": lg["focus"]})
     kinds = [ch["kind"] for p in spec["panels"] for ch in p.get("chips", [])] + [f["kind"] for f in flags(spec)]

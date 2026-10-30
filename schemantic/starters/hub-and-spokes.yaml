@@ -13,7 +13,7 @@ panels:
       - {icon: stack-2, name: "TODO: what it offers", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
       - {icon: settings, name: "TODO: what it offers", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
     chips:
-      - {kind: warning, text: "TODO: an open choice the sources leave"}
+      - {kind: warning, text: "TODO: an open choice the sources leave", refs: ["notes: TODO"]}
   - id: producer
     title: "TODO: a part that feeds the hub"
     role: platform
@@ -37,9 +37,9 @@ panels:
 
 flows_mean: data
 flows:
-  - {from: producer, to: hub}
-  - {from: caller, to: hub}
-  - {from: hub, to: consumer}
-  - {from: hub, to: reader}
+  - {from: producer, to: hub, refs: ["notes: TODO"]}
+  - {from: caller, to: hub, refs: ["notes: TODO"]}
+  - {from: hub, to: consumer, refs: ["notes: TODO"]}
+  - {from: hub, to: reader, refs: ["notes: TODO"]}
 stories:
   - {name: "TODO: the route the title tells", path: [producer, hub, consumer], draw: true}

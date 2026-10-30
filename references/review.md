@@ -24,8 +24,10 @@ left to you.
 6. **Footer.** Does the footer draw the eye before the body? Its size is lint's (`footer-share`).
 7. **Words.** Is any name a term the reader would not know, or any note true of every system rather than this one?
    (No check can.)
-8. **Truth.** Is any card, flow or principle not supported by the sources (the brief's assumptions aside)? Lint
-   (`traceability`) checks that every card cites a source; you check that the source says it.
+8. **Truth.** Is any card, arrow, status, warning, panel name or principle not supported by the sources? What the plate
+   itself marks as assumed (the tag, the amber dashed arrow) is no defect; what only the brief admits still is. Lint
+   (`traceability`) checks that each names a source or says it is assumed, and that a quote from a source with a `path`
+   is really there; you check that the source means it: someone asking for a report does not make it `planned`.
 9. **Open ends.** Is any warning a question the sources already settle, or any principle a slogan nobody could
    check? (No check can.)
 10. **Series.** If this is one part of a series, does anything carry a different name than on the other parts?

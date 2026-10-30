@@ -27,7 +27,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `focus` | more than one panel or card has `focus: true` | keep focus on the one element the title is about |
 | `flows-mean` | the plate has flows but no `flows_mean` (warning) | say what an arrow means: data, request, dependency, control or sequence |
 | `timeline` | on a roadmap, an arrow ends at an item that starts before the item it comes from, so it reads back in time (warning) | point each arrow from what comes first to what builds on it, and say `flows_mean: sequence` |
-| `traceability` | the spec declares `sources`, and a card has no `refs` or names an undeclared source (warning) | add `refs: ["<source id>: <path or quote>"]` from the inventory; a card you cannot trace is an assumption or an open question, not a fact |
+| `traceability` | the spec declares `sources`, and a card, arrow, status or warning has no source and is not marked `assumed`; a ref names an undeclared source; a ref's quote is not in the file a source's `path` names; or more than a third of the cards and arrows are assumed (warning) | add `refs: ["<source id>: <path or quote>"]` from the inventory (`status_ref` for a status); what the sources do not say gets `assumed: <why>`, which the plate shows, or becomes an open question |
 | `chip-mirror` | a warning chip or warning flag is not under open questions | `open_questions: {from_chips: true}` |
 | `icon` | unknown icon | use one of the closest names in the hint, or search: `schemantic icons <word>` |
 | `language` | a translated technical term in an `nl` plate | use the English term (the id of the finding) |

@@ -95,7 +95,7 @@ def run(a) -> tuple[dict, int]:
 
     if a.cmd == "lint":
         r = build(a.spec, a.out, deliver=False, theme=a.theme, review=a.review)
-        keep = ("spec", "summary", "errors", "warnings", "changed", "density", "voids", "parity", "review", "review_unchanged")
+        keep = ("spec", "summary", "errors", "warnings", "changed", "density", "voids", "parity", "review", "review_unchanged", "assumptions")
         return {k: r[k] for k in keep}, 1 if r["errors"] else 0
     r = build(a.spec, a.out, scale=a.dpi / 96, theme=a.theme, outline_text=a.outline_text, review=a.review)
     return r, 1 if r["errors"] else 0

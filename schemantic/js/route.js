@@ -741,7 +741,7 @@ schemantic.route = (flows) => {
   for (const r of routed) {
     const pts = r.pts.map((p) => [...p]);
     // The focused arrow: heavier, in the accent colour
-    const ink = r.fl.focus ? S.token("--accent") : col;
+    const ink = r.fl.focus ? S.token("--accent") : r.fl.assumed ? S.token("--arrow-assumed") : col;
     const width = r.fl.focus ? r2(stroke * 2) : stroke;
     const n = pts.length - 1;
     const end = head(pts[n], pts[n - 1], ink);
@@ -752,7 +752,8 @@ schemantic.route = (flows) => {
       pts[0] = start.base;
       heads = start.svg + heads;
     }
-    const dash = dashes[r.fl.style] ? ` stroke-dasharray="${S.fitDash(dashes[r.fl.style], pts, width)}"` : "";
+    const style = r.fl.assumed ? "async" : r.fl.style; // an assumption is dashed whatever it would have been, in its own colour
+    const dash = dashes[style] ? ` stroke-dasharray="${S.fitDash(dashes[style], pts, width)}"` : "";
     const line =
       pts.length === 2
         ? `<line x1="${r2(pts[0][0])}" y1="${r2(pts[0][1])}" x2="${r2(pts[1][0])}" y2="${r2(pts[1][1])}" stroke="${ink}" stroke-width="${width}" stroke-linecap="round"${dash}/>`

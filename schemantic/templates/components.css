@@ -147,6 +147,7 @@ body { background: var(--paper); }
 .tag-planned { background: var(--tag-planned-bg); color: var(--tag-planned-text); }
 .tag-deprecated { background: var(--tag-deprecated-bg); color: var(--tag-deprecated-text); }
 .tag-removed { background: var(--tag-removed-bg); color: var(--tag-removed-text); }
+.tag-assumed { background: var(--tag-assumed-bg); color: var(--tag-assumed-text); }
 .card.status-deprecated, .card.status-removed { background: var(--frame-body); }
 .status-deprecated .cn, .status-deprecated .cnote, .status-removed .cn, .status-removed .cnote { color: var(--muted); }
 .card.status-deprecated .ic, .card.status-removed .ic { color: var(--muted); }

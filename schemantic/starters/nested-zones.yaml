@@ -17,7 +17,7 @@ panels:
       - {icon: lock, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
       - {icon: server, name: "TODO: a thing with a name", note: "TODO: what it does in this story", refs: ["notes: TODO"]}
     chips:
-      - {kind: warning, text: "TODO: an open choice the sources leave"}
+      - {kind: warning, text: "TODO: an open choice the sources leave", refs: ["notes: TODO"]}
   - id: back
     title: "TODO: what it protects"
     role: data
@@ -32,7 +32,7 @@ panels:
 
 flows_mean: request
 flows:
-  - {from: users, to: front}
-  - {from: front, to: back}
+  - {from: users, to: front, refs: ["notes: TODO"]}
+  - {from: front, to: back, refs: ["notes: TODO"]}
 stories:
   - {name: "TODO: the route the title tells", path: [users, front, back], draw: true}

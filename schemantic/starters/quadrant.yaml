@@ -20,7 +20,7 @@ panels:
         icon: box
         name: "TODO: a thing"
         refs: ["notes: TODO"]
-        flag: {kind: warning, text: "TODO: an open choice the sources leave"}
+        flag: {kind: warning, text: "TODO: an open choice the sources leave", refs: ["notes: TODO"]}
   - id: c
     title: "TODO: the decision, or the place on the axes"
     role: platform

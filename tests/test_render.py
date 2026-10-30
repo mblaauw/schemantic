@@ -418,8 +418,16 @@ def test_refs_reach_the_svg_and_the_outline_is_written(tmp_path):
     spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
     spec["sources"] = [{"id": "adr", "kind": "document", "ref": "docs/adr/0007-gateway.md"}]
     for p in spec["panels"]:
+        for ch in p.get("chips", []):
+            ch["refs"] = ["adr: section 2"]
         for c in p.get("cards", []):
             c["refs"] = ["adr: section 2"]
+            if c.get("status"):
+                c["status_ref"] = "adr: section 2"
+            if c.get("flag"):
+                c["flag"]["refs"] = ["adr: section 2"]
+    for f in spec["flows"]:
+        f["refs"] = ["adr: section 2"]
     code, report = run("build", write(tmp_path, spec, "traced"), "--out", tmp_path)
     assert (code, report["errors"], report["warnings"]) == (0, [], [])
     assert 'data-refs="adr: section 2"' in (tmp_path / "traced.svg").read_text(encoding="utf-8")

@@ -24,6 +24,6 @@ panels:
         icon: box
         name: "TODO: what it holds"
         refs: ["notes: TODO"]
-        flag: {kind: warning, text: "TODO: an open choice the sources leave"}
+        flag: {kind: warning, text: "TODO: an open choice the sources leave", refs: ["notes: TODO"]}
 
 flows_mean: control     # dependency when it says what is made of what

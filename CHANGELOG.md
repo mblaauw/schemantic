@@ -5,6 +5,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- A plate marks what the sources do not say: `assumed: <why>` tags a card or panel and draws an arrow amber and dashed, with a
+  legend entry; the outline and the report's `assumptions` list them.
+- `traceability` now covers arrows, statuses and warnings (`refs`, `status_ref`), and a source's `path` lets lint check
+  that each quote is really in the file. More than a third of a plate assumed is called out.
 - `evals/judge_prompt.md`: the judges' wording is fixed, and `harness.py blind` writes their prompts. One sentence had
   added 25% to the defects on the same plates.
 - Evals of the worked series, `role-fit` and the new layouts: series plates improve (4.50 to 3.50 defects), most cases
