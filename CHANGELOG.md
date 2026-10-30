@@ -5,6 +5,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- `layout.outside_at: bottom` on nested zones: outside panels stand in a row under the zones. A short panel in the
+  side column floats beside tall zones with blank space around it, the hole judges flagged most on deployment plates.
 - Evals rerun three times per case (30 October), judged blind: every plate builds clean; 2 of 24 runs pass the
   judge on each model, at 2.25 (Sonnet) and 2.5 (Haiku) defects per plate, as before. Swimlanes are nearly solved;
   paths are still a third of all defects, mostly routes the router refuses card to card. `evals/harness.py` sets
@@ -81,6 +83,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   now use sequence, so their arrows run left to right instead of back against the periods.
 
 ### Changed
+- The skill's plan audit asks that the title, subtitle, principles and notes say only what the sources say, and that a
+  question the sources settle is drawn as a fact, not asked; a card with only a name in the sources gets no note; and
+  step 6 asks for every crop, not only the whole plate. All four came up in the eval reruns; none is measured yet.
 - The skill connects cards by default, ending an arrow on a panel only when the sources speak of the whole panel, and
   asks for an arrow for every step the title or subtitle states. It said "connect panels by default", and half of all
   arrows ended on panels; the router fixes alone did not lower path defects (`evals/README.md`). The `arrow-routing`

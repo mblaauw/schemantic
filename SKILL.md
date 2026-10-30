@@ -76,7 +76,10 @@ Plan the panels, their cards (each with `refs: ["<source id>: <path, line or sho
 open questions. Then audit the plan against the sources, and fix it before writing more:
 
 - Every card traces to a source. A card you cannot trace is an assumption or an open question, not a fact.
-- Every uncertainty in the sources is a warning chip, a card flag or an open question.
+- The title, subtitle, principles and notes say only what the sources say. An "only", a "never", an order or a detail
+  you inferred is an assumption: move it to the brief, or leave it out.
+- Every uncertainty in the sources is a warning chip, a card flag or an open question. Before you keep a question,
+  look for its answer: one the sources settle ("everything publishes", "test mirrors production") is a fact to draw.
 - Every route the title or subtitle names ("A via B to C") is a `story` through cards that exist.
 
 ## 4. Fill the spec
@@ -85,7 +88,8 @@ Replace every TODO, and rename, add or drop panels and cards as the plan says. T
 show finished plates; follow `references/spec-guide.md` for every field, the text budgets and the writing rules. The
 short version:
 
-- 3 to 6 panels, 2 to 6 cards each. A card is a thing with a name; its note says what it does in this story.
+- 3 to 6 panels, 2 to 6 cards each. A card is a thing with a name; its note says what the sources say it does in
+  this story. When they give only a name, leave the note out: never write one from the name.
 - Say once what arrows mean (`flows_mean`). Connect cards: give them ids and run each arrow from the card that acts
   to the card it acts on. End an arrow on a panel only when the sources speak of the whole panel, or of every card
   in it.
@@ -115,12 +119,11 @@ progress, restructure: move cards between panels, change the archetype, or split
 
 ## 6. Look at it
 
-Once the build is clean, read the crops the report lists under `review` (the whole plate first, then the title
-block, each panel and the footer, at a size where every note is legible; a full PNG is scaled down until small text
-blurs) and answer the defect questions in `references/review.md`. After the first round, `review` holds the whole
-plate and only the parts that changed since the last round.
-Every "yes" is a spec change and another build, not a hand edit. Stop after three review rounds; tell the user what
-is still imperfect rather than looping.
+Once the build is clean, read every crop the report lists under `review`, not only the first: the whole plate, then
+the title block, each panel and the footer, at a size where every note is legible (a full PNG is scaled down until
+small text blurs). Answer the defect questions in `references/review.md`. After the first round, `review` holds the
+whole plate and only the parts that changed since the last round. Every "yes" is a spec change and another build, not
+a hand edit. Stop after three review rounds; tell the user what is still imperfect rather than looping.
 
 ## 7. Deliver
 

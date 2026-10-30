@@ -529,3 +529,15 @@ def test_a_card_under_a_header_is_reached_up_the_gutter(renders):
     (route,) = [f for f in snap["flows"] if (f["from"], f["to"]) == ("clinics", "sync")]
     booking, web = snap["boxes"]["booking"], snap["boxes"]["web"]
     assert len(route["points"]) == 3 and web[2] < route["points"][0][0] < booking[0]  # one bend, up the gutter between
+
+
+def test_outside_panels_can_stand_in_a_row_under_the_zones(tmp_path):
+    """A short panel in the outside column floats beside tall zones with blank space around it; under them it is a row."""
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    spec["layout"]["outside_at"] = "bottom"
+    code, report = run("lint", write(tmp_path, spec, "below"), "--out", tmp_path)
+    assert not [e for e in report["errors"] if e["check"] in ("schema", "layout")], report["errors"]
+    boxes = json.loads((tmp_path / "_work" / "below.snapshot.json").read_text(encoding="utf-8"))["boxes"]
+    frames = [b for k, b in boxes.items() if k.startswith("zone.") and k.count(".") == 1]
+    patients, insurers = boxes["patients"], boxes["insurers"]
+    assert patients[1] >= max(b[3] for b in frames if b) and patients[1] == insurers[1] and patients[2] < insurers[0]

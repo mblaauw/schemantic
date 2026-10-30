@@ -141,7 +141,8 @@ CHECKS: dict[str, Check] = {
                   "blank band under the footer or around a plate on paper (warning over 96 px); or cards a row-spanning "
                   "panel spreads apart by most of a card's height",
                   "add real content (bullets, a pattern, an info chip); move the panel next to one of its height; merge it "
-                  "with a neighbour; let a panel span an empty cell; give a spread panel fewer rows; on paper or a fixed "
+                  "with a neighbour; let a panel span an empty cell; give a spread panel fewer rows; in nested zones, put "
+                  "short panels in a row under the zones (`outside_at: bottom`); on paper or a fixed "
                   "height, let the plate grow taller (fewer `card_columns`, another row) or use `height: fit`; never "
                   "filler", "Add real content to the panel, or place it next to a panel of its height."),
     "svg-parity": Check("layout", "the SVG differs from the measured layout",

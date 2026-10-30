@@ -56,7 +56,8 @@ systems outside the team's control, `actor` for people and teams. A theme can ad
   focus: true                     # optional, as on panels
 ```
 
-A note says what the card does in this story, not what the product is in general.
+A note says what the card does in this story, not what the product is in general. When the sources give only a name,
+leave the note out; a note written from the name is an invention.
 
 ## Patterns
 
