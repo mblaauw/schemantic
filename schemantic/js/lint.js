@@ -128,13 +128,14 @@ schemantic.lint = (cfg) => {
   // Footer: context for the body, so it stays a small share of the plate
   const footer = plate.querySelector('[data-kind="footer"]');
   if (footer) {
-    const share = (rel(footer).b - rel(footer).t) / P.height;
-    if (share > cfg.footerShare)
+    const tall = rel(footer).b - rel(footer).t;
+    const share = tall / P.height;
+    if (share > cfg.footerShare && tall > cfg.footerFloor)
       add(
         "warning",
         "footer-share",
         "footer",
-        `takes ${Math.round(share * 100)}% of the plate's height; keep it under ${Math.round(cfg.footerShare * 100)}%`,
+        `takes ${Math.round(share * 100)}% of the plate's height; keep it under ${cfg.footerShare * 100}%`,
       );
   }
 

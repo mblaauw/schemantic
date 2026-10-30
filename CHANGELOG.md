@@ -81,6 +81,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   now use sequence, so their arrows run left to right instead of back against the periods.
 
 ### Changed
+- `footer-share` warns above an eighth of the plate's height (12.5%), the share review question 6 names; it warned
+  at 15%, so the eval judge failed plates at 13 to 15% that lint passed. A footer of a line or two (96 px) passes on
+  any plate: on a short plate there is nothing left to cut. The hero plate's roles panel drops the two roles its
+  body already shows, to stay under.
 - Grouped findings: the report opens with `summary`, one line per check (errors first, in the order found) with its
   count and hint, and its first line is the fix to make first. A hint repeated by the same check is given once, on
   the check's first finding. A placeholder's detail is just the text left (`still a placeholder: '...'`). A fresh
