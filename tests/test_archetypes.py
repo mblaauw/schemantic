@@ -63,6 +63,12 @@ def test_comparison_checks(fn, says):
     assert any(says in d for d in details(COMPARISON, fn))
 
 
+def test_a_dashed_message_is_a_reply_in_the_legend():
+    from schemantic.html import legend_entries
+    from schemantic.spec import load_locale
+    assert "Reply or event" in {e["label"] for e in legend_entries(SEQUENCE, load_locale("en"))}
+
+
 def test_comparison_and_quadrant_keep_panel_colours_out_of_the_legend():
     from schemantic.html import legend_entries
     from schemantic.spec import load_locale

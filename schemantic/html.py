@@ -75,7 +75,8 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
         entries.append({"kind": "arrow", "key": "arrow", "label": lg[f"mean_{mean}"] if mean else lg["arrow"]})
         # The meaning entry already shows a solid arrow, so only the other line styles get an entry.
         styles = [s for s in ("async", "optional") if any(f.get("style") == s for f in flows)]
-        entries += [{"kind": "line", "key": s, "label": lg[f"style_{s}"]} for s in styles]
+        keys = {"async": archetypes.get(spec["archetype"]).dashed_means, "optional": "style_optional"}
+        entries += [{"kind": "line", "key": s, "label": lg[keys[s]]} for s in styles]
         if any(f.get("step") for f in flows):  # a drawn story's steps are its route: the legend names it
             story = drawn_story(spec)
             entries.append({"kind": "step", "key": "step", "label": story["name"] if story else lg["step"]})

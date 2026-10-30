@@ -58,8 +58,9 @@ CHECKS: dict[str, Check] = {
                    "Add a flow from the first named step to the second, card to card."),
     "series": Check("spec", "parts of one series disagree: numbering, `of`, language, what arrows mean, or one thing drawn in "
                     "two colours (people in one part, a platform component in another)",
-                    "make the parts agree: one language, one `flows_mean`, and the same role for a thing wherever it "
-                    "appears (a panel's role, or the role of the panel a card sits in)",
+                    "make the parts agree: one language, and the same role for a thing wherever it appears (a panel's role, or "
+                    "the role of the panel a card sits in); arrows may mean different things per part when that is true, "
+                    "said in each subtitle",
                     "Give the thing the same role in every part, and the parts one language and one flows_mean."),
     "canvas": Check("spec", "`part` without `of` (or the reverse), `part` larger than `of`, or a theme file that does not exist",
                     "give both, with `1 ≤ part ≤ of`; check the theme path (relative to the spec)",

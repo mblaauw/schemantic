@@ -13,6 +13,7 @@ class Sequence(Archetype):
     allowed = frozenset({"participants", "chips_at"})
     cards_are_things = False
     max_cards = 12
+    dashed_means = "style_reply"
 
     def placed(self, spec: dict) -> list[str]:
         return spec["layout"]["participants"]

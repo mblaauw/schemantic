@@ -28,6 +28,7 @@ legend:
   mean_sequence: "Gaat vooraf aan"
   style_sync: "Synchrone call"
   style_async: "Asynchroon: event of bericht"
+  style_reply: "Antwoord of event"
   style_optional: "Optioneel of af en toe"
   step: "Stap in de volgorde van gebeuren"
   status_new: "Nieuw in deze fase"

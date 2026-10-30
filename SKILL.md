@@ -55,7 +55,7 @@ its tree. On those, the arrow rules below apply only to the arrows you do draw.
 
 Settle the reader's language (`nl` or `en`, following the user; in `nl` technical terms stay English). More than 6
 panels or 30 cards is two plates, each with its own message: a series (`series`, `part`, `of`); once every part
-builds, run `"$PY" "$SKILL/scripts/plate.py" series plates/*.yaml` so the parts agree (language, arrows, one colour
+builds, run `"$PY" "$SKILL/scripts/plate.py" series plates/*.yaml` so the parts agree (language, what arrows mean or a subtitle that says so, one colour
 per thing). `references/archetypes.md` has each layout's keys and limits; the schema refuses any other name.
 
 ## 3. Start the spec, brief first

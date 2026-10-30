@@ -16,6 +16,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   numbered by row), `capability-map` (what exists by domain, the gaps dashed), `comparison` (options against criteria,
   the pick marked), `hierarchy` (a tree whose arrows follow from `children`) and `quadrant` (a two-by-two).
 
+### Changed
+- The `series` hint on arrow meanings says a difference is fine when true and said in the subtitle. Agents were
+  relabelling calls as data to quiet it.
+
 ### Fixed
 - Parts of a series built into one folder overwrote each other's review crops, and each was compared with the part
   before it for what changed. Crops now go to `_work/review/<name>/`.

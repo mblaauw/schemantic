@@ -28,6 +28,7 @@ legend:
   mean_sequence: "Comes before"
   style_sync: "Synchronous call"
   style_async: "Asynchronous: event or message"
+  style_reply: "Reply or event"
   style_optional: "Optional or occasional"
   step: "Step in the order things happen"
   status_new: "New in this phase"
