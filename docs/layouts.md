@@ -1,6 +1,6 @@
 # Layouts
 
-Every layout Schemantic can draw, as a sketch. The sketches show the idea, not a real plate: the words are placeholders. Each
+Every layout Schemantic can draw, and every part a panel can hold, as a sketch. The sketches show the idea, not a real plate: the words are placeholders. Each
 row links to a finished plate built from a fictional spec. The keys and limits of each layout are in
 [`references/archetypes.md`](../references/archetypes.md).
 
@@ -132,8 +132,22 @@ each with its own message.
 
 ## Inside a panel
 
-Any panel can hold a pattern beside or instead of its cards, in any layout. The fields are in
-[`references/spec-guide.md`](../references/spec-guide.md).
+Every layout uses the same panels. This one has every part, each named by its field in the spec. The fields, limits and
+writing rules are in [`references/spec-guide.md`](../references/spec-guide.md).
+
+<img src="img/layouts/panel-anatomy.svg" alt="A panel with each part named: header, cards, a pattern and chips" width="590">
+
+A panel's cards take as many columns as fit. `card_columns` sets the number, and `arrange: row` puts its blocks side by side,
+patterns first and then the cards, with one number in `weights` for each block.
+
+<img src="img/layouts/panel-arrange.svg" alt="The default arrangement, card_columns and arrange: row" width="566">
+
+### Patterns
+
+A panel holds up to two patterns, beside or instead of its cards, in any layout. They suit a layout of boxes best. Where
+position carries the meaning (`swimlane`, `roadmap`, `sequence`, `comparison`, `capability-map`, `quadrant`), a pattern sits
+under the placed cards and has no step, period, moment or option of its own. A pattern takes room: in a narrow block its text
+can overflow, and in a full lane an arrow can lose its route. Lint says so, by name.
 
 | Pattern | | What it shows |
 | --- | --- | --- |
@@ -144,12 +158,30 @@ Any panel can hold a pattern beside or instead of its cards, in any layout. The 
 
 ## Marks on any layout
 
+A `status` or `assumed` goes on a card, as here, or on a panel, where the tag sits at the right of its header.
+
+<img src="img/layouts/marks-status.svg" alt="Each status on a card, and the assumed tag" width="560">
+
+Arrows run between cards, or between panels when the sources speak of the whole panel.
+
+<img src="img/layouts/marks-arrows.svg" alt="The arrow styles: plain, async, optional, both ways, focused, assumed, labelled and numbered" width="560">
+
 | Mark | Means | In the spec |
 | --- | --- | --- |
 | A filled header, or a heavy blue outline | the one point of the plate | `focus` |
 | A tag beside a name | new, changed, planned, phasing out, removed | `status` |
 | A dashed box | planned, not built yet | `status: planned` |
+| A muted card, or a struck-through name | phasing out, or removed | `status: deprecated`, `status: removed` |
 | An amber dashed arrow, or an "assumed" tag | the sources do not say this | `assumed: <why>` |
 | A dashed or dotted arrow | asynchronous, or optional | `style: async`, `style: optional` |
-| A number on an arrow | a step in the route the title tells | a story with `draw: true` |
+| A heavier blue arrow | the one arrow the plate is about | `focus: true` on the flow |
+| A head at both ends of an arrow | it runs both ways | `both: true` |
+| A number on an arrow | a step in the route the title tells | a story with `draw: true`, or `step` |
 | Q1 on a card or chip, again in the footer | an open question | a `warning` chip or card `flag` |
+| N1 on a card, again in the footer | a note on that card | a card `flag` of kind `info` |
+
+## The footer
+
+Under the body of every layout. Each part is optional, and `legend: auto` builds the legend from what the plate uses.
+
+<img src="img/layouts/footer.svg" alt="Context, principles and open questions in columns, with the legend below" width="560">

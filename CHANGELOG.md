@@ -5,7 +5,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
-- `docs/layouts.md`: every layout and pattern as a sketch, with the reader's question it answers and a finished plate.
+- `docs/layouts.md`: every layout and pattern as a sketch, with the reader's question it answers and a finished plate; and
+  the parts of a panel, the marks, the arrows and the footer, each named by its field.
 - Evals of all this, judged blind (`evals/README.md`): under one set of rules, 9 of 48 runs pass (3 before), at 2.31 defects
   per plate (3.54), with nothing invented in 39 of 48 (11). `judge.md` changed, and that alone nearly doubled the defects on
   the same plates, so last round's numbers do not compare. Corrections change only what was asked in 22 of 24 runs.

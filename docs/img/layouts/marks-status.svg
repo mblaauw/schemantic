@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 150" width="560" height="150" role="img" aria-label="The looks of each status on a card, and the assumed tag" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="560" height="150" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<rect x="14" y="14" width="172" height="44" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="22" y="23" width="10" height="10" rx="2" fill="none" stroke="#0F2547" stroke-width="1"/>
+<text x="38" y="32" font-size="9.5" font-weight="700" fill="#0F2547" text-anchor="start">Card name</text>
+<rect x="94" y="24" width="22.7" height="11" rx="3" fill="#E3F4E8" stroke="#E3F4E8" stroke-width="1"/>
+<text x="98" y="32" font-size="7.5" font-weight="600" fill="#1B5E31" text-anchor="start">new</text>
+<text x="38" y="47" font-size="8" font-weight="500" fill="#4F5D6E" text-anchor="start">its note</text>
+<text x="14" y="71" font-size="8.5" font-weight="500" fill="#4F5D6E" text-anchor="start">status: new</text>
+<rect x="196" y="14" width="172" height="44" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="204" y="23" width="10" height="10" rx="2" fill="none" stroke="#0F2547" stroke-width="1"/>
+<text x="220" y="32" font-size="9.5" font-weight="700" fill="#0F2547" text-anchor="start">Card name</text>
+<rect x="276" y="24" width="42.3" height="11" rx="3" fill="#EAF3FC" stroke="#EAF3FC" stroke-width="1"/>
+<text x="280" y="32" font-size="7.5" font-weight="600" fill="#1D3A5E" text-anchor="start">changed</text>
+<text x="220" y="47" font-size="8" font-weight="500" fill="#4F5D6E" text-anchor="start">its note</text>
+<text x="196" y="71" font-size="8.5" font-weight="500" fill="#4F5D6E" text-anchor="start">status: changed</text>
+<rect x="378" y="14" width="172" height="44" rx="3" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1" stroke-dasharray="5 4"/>
+<rect x="386" y="23" width="10" height="10" rx="2" fill="none" stroke="#0F2547" stroke-width="1"/>
+<text x="402" y="32" font-size="9.5" font-weight="700" fill="#0F2547" text-anchor="start">Card name</text>
+<rect x="458" y="24" width="42.3" height="11" rx="3" fill="#EEF1F5" stroke="#EEF1F5" stroke-width="1"/>
+<text x="462" y="32" font-size="7.5" font-weight="600" fill="#3D4A5C" text-anchor="start">planned</text>
+<text x="402" y="47" font-size="8" font-weight="500" fill="#4F5D6E" text-anchor="start">its note</text>
+<text x="378" y="71" font-size="8.5" font-weight="500" fill="#4F5D6E" text-anchor="start">status: planned, a dashed box</text>
+<rect x="14" y="82" width="172" height="44" rx="3" fill="#F3F6F9" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="22" y="91" width="10" height="10" rx="2" fill="none" stroke="#4F5D6E" stroke-width="1"/>
+<text x="38" y="100" font-size="9.5" font-weight="700" fill="#4F5D6E" text-anchor="start">Card name</text>
+<rect x="94" y="92" width="61.9" height="11" rx="3" fill="#FFF2E8" stroke="#FFF2E8" stroke-width="1"/>
+<text x="98" y="100" font-size="7.5" font-weight="600" fill="#7A2D0E" text-anchor="start">phasing out</text>
+<text x="38" y="115" font-size="8" font-weight="500" fill="#4F5D6E" text-anchor="start">its note</text>
+<text x="14" y="139" font-size="8.5" font-weight="500" fill="#4F5D6E" text-anchor="start">status: deprecated, muted</text>
+<rect x="196" y="82" width="172" height="44" rx="3" fill="#F3F6F9" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="204" y="91" width="10" height="10" rx="2" fill="none" stroke="#4F5D6E" stroke-width="1"/>
+<text x="220" y="100" font-size="9.5" font-weight="700" fill="#4F5D6E" text-anchor="start">Card name</text>
+<line x1="220" y1="97" x2="270" y2="97" stroke="#4F5D6E" stroke-width="1"/>
+<rect x="276" y="92" width="42.3" height="11" rx="3" fill="#FCE8E8" stroke="#FCE8E8" stroke-width="1"/>
+<text x="280" y="100" font-size="7.5" font-weight="600" fill="#8E1B1B" text-anchor="start">removed</text>
+<text x="220" y="115" font-size="8" font-weight="500" fill="#4F5D6E" text-anchor="start">its note</text>
+<text x="196" y="139" font-size="8.5" font-weight="500" fill="#4F5D6E" text-anchor="start">status: removed, struck through</text>
+<rect x="378" y="82" width="172" height="44" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="386" y="91" width="10" height="10" rx="2" fill="none" stroke="#0F2547" stroke-width="1"/>
+<text x="402" y="100" font-size="9.5" font-weight="700" fill="#0F2547" text-anchor="start">Card name</text>
+<rect x="458" y="92" width="42.3" height="11" rx="3" fill="#FBF0D9" stroke="#FBF0D9" stroke-width="1"/>
+<text x="462" y="100" font-size="7.5" font-weight="600" fill="#6B4600" text-anchor="start">assumed</text>
+<text x="402" y="115" font-size="8" font-weight="500" fill="#4F5D6E" text-anchor="start">its note</text>
+<text x="378" y="139" font-size="8.5" font-weight="500" fill="#4F5D6E" text-anchor="start">assumed: &lt;why&gt;</text>
+</svg>
