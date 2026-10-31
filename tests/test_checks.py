@@ -315,6 +315,13 @@ def test_the_correction_eval_grades_stray_edits():
     assert corrections.stray(before, after, corrections.CASES["rename"][2]) == ["title"]
 
 
+def test_a_ref_may_quote_a_todo_but_a_starter_ref_is_a_placeholder():
+    spec = mutate(lambda s: panel(s, "services")["cards"][0].update(refs=["tf: TODO in terraform/main.tf"]))
+    assert "placeholder" not in {f["check"] for f in sp.check(spec)}
+    panel(spec, "services")["cards"][0]["refs"] = ["notes: TODO"]
+    assert "placeholder" in {f["check"] for f in sp.check(spec)}
+
+
 def test_a_repeated_hint_is_given_once_and_summed_up():
     """A fresh starter has dozens of TODOs: the report gives their hint once, and a summary line per check, errors
     first, says how many there are and what to try."""

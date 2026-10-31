@@ -47,11 +47,11 @@ CHECKS: dict[str, Check] = {
                   "Point the flow at an existing panel or card id, and at two different boxes."),
     "orphan": Check("spec", "no flow reaches a panel or any of its cards on a plate whose other panels connect (warning; "
                     "roadmap lanes and layer-cake rails are exempt)",
-                    "add the flow the sources describe or imply (an implied one goes in the brief's assumptions); with no "
+                    "add the flow the sources describe, or one they imply with `assumed: <why>`; with no "
                     "basis at all, never invent one to clear this: leave the "
-                    "warning and say why in the brief's assumptions, make the relation an open question, or drop the "
+                    "warning and say why in your reply, make the relation an open question, or drop the "
                     "panel if it does not serve the message",
-                    "Add the flow the sources name or imply; with no basis at all, leave the warning and say why, never invent one."),
+                    "Add the flow the sources name, or mark one they imply `assumed`; with no basis at all, leave the warning and say why."),
     "story": Check("spec", "a story names an id that does not exist, or no flow runs from one of its steps to the next",
                    "add the flow between the two steps the detail names, card to card when the route goes through cards "
                    "(give both cards an id); if the sources name no such step, the story claims too much",
@@ -120,7 +120,7 @@ CHECKS: dict[str, Check] = {
                       "Fix the colour pair in the theme so text reaches 4.5:1."),
     "arrow-routing": Check("layout", "no clear route, or a route crosses a panel or card",
                            "move the card to the side of its panel nearest the other end; place the two panels next to each "
-                           "other; only then join the panels, and name the cards the route means in the brief",
+                           "other; only then join the panels, and say in your reply which cards the route means",
                            "Move the card nearer the other end, or the two panels next to each other, before joining panels."),
     "arrow-label": Check("layout", "no room for a label, or it touches a box",
                          "shorten the label, drop it, or explain the flow in a card note",

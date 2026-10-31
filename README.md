@@ -29,7 +29,8 @@ python -m schemantic build examples/orderplatform-toegang.yaml --out out
 `build` checks the spec, lays the plate out in Chromium, routes the connectors, lints the result, and writes
 `out/<name>.svg`, `.png` and `.md` (the outline). It prints a JSON report and exits 1 on errors; every finding names
 an element, and a summary gives each check's count and first fix. Other commands: `new <archetype> <path>` (a starter spec with TODOs to fill),
-`lint`, `doctor`, `icons <word>`, `gallery`, `docs`, `offline`, `verify`, `smoke`; `--review` adds crops of the
+`lint`, `baseline` (keep a delivered plate before a correction; later builds report what differs), `series` (check the parts of a
+series against each other), `doctor`, `icons <word>`, `gallery`, `docs`, `offline`, `verify`, `smoke`; `--review` adds crops of the
 plate a model can read (after the first round, of the parts that changed). Print with `canvas.size: a3-landscape` and `--dpi 300`; hand off to a design tool with
 `--outline-text`; restyle with a theme (`canvas.theme` or `--theme`, see
 [`examples/themes/warm.css`](examples/themes/warm.css)).
@@ -37,9 +38,18 @@ plate a model can read (after the first round, of the parts that changed). Print
 Rendering needs no network. For a machine without one, `schemantic offline <folder>` writes a kit (pinned and hashed
 wheels, Chromium, checksums, an installer with a smoke test); see [`docs/offline.md`](docs/offline.md).
 
+## Plates that say what they know
+
+A plate names where everything on it comes from. A card, arrow, status or warning cites a source, and when the source is
+on disk, lint checks that the quote is really there. What the sources do not say is drawn with `assumed: <why>`: a tag on the
+card, an amber dashed arrow, a line in the legend, so a reader can tell it from a fact.
+
+A correction is one sentence, not a new plate: the skill changes that element, and the build reports what else moved.
+
 ## Gallery
 
-One plate per archetype, each built from a fictional spec in [`examples/`](examples/).
+One plate per archetype, each built from a fictional spec in [`examples/`](examples/). [`docs/layouts.md`](docs/layouts.md)
+draws every layout as a simple sketch, with when to use it.
 
 | | |
 | --- | --- |
@@ -84,16 +94,17 @@ field guide is [`references/spec-guide.md`](references/spec-guide.md).
 
 ## Status
 
-The latest release is 0.3.0; [`CHANGELOG.md`](CHANGELOG.md) lists what is in it.
+The latest release is 0.3.0; the table below also holds what is unreleased (`CHANGELOG.md` says which).
+[`evals/README.md`](evals/README.md) measures how well an agent uses it.
 
 | Built |
 | --- |
 | Archetypes: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones, before-after, roadmap, sequence, capability-map, comparison, hierarchy, quadrant |
 | Patterns: tier strip, process strip, tree, matrix |
-| Connectors: straight, L, Z and U routes; card endpoints; sync, async, optional; steps; stories |
+| Connectors: straight, L, Z and U routes; card endpoints; sync, async, optional, assumed; steps; stories |
 | Roles, themes, change status, card flags, focus; locales `nl` and `en` |
 | Lint with hints for every check; SVG parity; goldens and snapshots on Linux and macOS |
-| The skill: analysis method, brief and traceability, starters, review crops and questions, evals |
+| The skill: analysis method, brief, sources and assumptions, starters, review crops and questions, corrections, evals |
 
 ## How it works
 

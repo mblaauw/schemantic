@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 230" width="360" height="230" role="img" aria-label="Roadmap: workstreams as lanes over time columns, with the current period marked and planned items dashed" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="360" height="230" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="112" y="22" font-size="9" font-weight="700" fill="#4F5D6E" text-anchor="middle">Q1</text>
+<text x="174" y="22" font-size="9" font-weight="700" fill="#4F5D6E" text-anchor="middle">Q2</text>
+<text x="236" y="22" font-size="9" font-weight="700" fill="#4F5D6E" text-anchor="middle">Q3</text>
+<text x="298" y="22" font-size="9" font-weight="700" fill="#4F5D6E" text-anchor="middle">Q4</text>
+<rect x="14" y="30" width="332" height="56" rx="4" fill="#EEF5FC" stroke="#BCD5EC" stroke-width="1"/>
+<text x="21" y="61" font-size="9" font-weight="600" fill="#0B4F8F" text-anchor="start">Portal</text>
+<rect x="14" y="92" width="332" height="56" rx="4" fill="#EEF5FC" stroke="#BCD5EC" stroke-width="1"/>
+<text x="21" y="123" font-size="9" font-weight="600" fill="#0B4F8F" text-anchor="start">Payments</text>
+<rect x="14" y="154" width="332" height="56" rx="4" fill="#EEF5FC" stroke="#BCD5EC" stroke-width="1"/>
+<text x="21" y="185" font-size="9" font-weight="600" fill="#0B4F8F" text-anchor="start">Support</text>
+<rect x="143" y="28" width="62" height="186" rx="2" fill="#FFF3D0" stroke="#E2B85A" stroke-width="1.2"/>
+<text x="174" y="224" font-size="8" font-weight="700" fill="#A86A00" text-anchor="middle">now</text>
+<rect x="84" y="44" width="118" height="26" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="208" y="44" width="60" height="26" rx="3" fill="#FFFFFF" stroke="#44546A" stroke-width="1" stroke-dasharray="3 2"/>
+<rect x="146" y="106" width="120" height="26" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="84" y="168" width="56" height="26" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="208" y="168" width="120" height="26" rx="3" fill="#FFFFFF" stroke="#44546A" stroke-width="1" stroke-dasharray="3 2"/>
+</svg>

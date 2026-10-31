@@ -6,7 +6,7 @@ brief:
   why: "TODO: why this layout tells it"
   left_out: ["TODO: what the sources hold that the plate leaves out, and why"]
   assumptions: ["TODO: what is assumed rather than found"]
-sources:
+sources:   # add path: <file or folder, relative to this spec> when a source is on disk: lint then checks each quote
   - {id: notes, kind: notes, ref: "TODO: the meeting, document or repository it comes from"}
 
 canvas: {size: landscape-4x3, lang: {lang}}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 90" width="170" height="90" role="img" aria-label="Tree: an indented folder or key listing" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="170" height="90" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="12" y="20" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">s3://bucket/</text>
+<text x="22" y="36" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">orders/</text>
+<text x="32" y="52" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">bronze/ gold/</text>
+<text x="22" y="68" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">payments/</text>
+</svg>

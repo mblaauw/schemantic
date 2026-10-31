@@ -13,8 +13,9 @@ spec.yaml ─► read_spec ─► schema + semantic checks ─► build_html ─
 ```
 
 `schemantic build` runs all of it in one Chromium session (`schemantic/pipeline.py`), one function per stage:
-`prepare`, `lay_out`, `write_svg`, `parity`, `deliverables` and `publish` (`review_crops` with `--review`); `lint` skips
-writing the deliverables. The deliverables (SVG, PNG, outline and a `.build.json` manifest of versions and digests) are written
+`prepare`, `open_routed`, `lay_out`, `write_svg`, `parity`, `deliverables` and `publish` (`review_crops` with `--review`);
+`lint` skips writing the deliverables. `schemantic baseline` keeps a delivered plate, and each build after it reports
+`since_baseline`: the outline lines gone and new, the parts changed and the parts moved. The deliverables (SVG, PNG, outline and a `.build.json` manifest of versions and digests) are written
 to `_work/` and move to the output folder only when the build has no errors. Chromium runs with the network refused
 (see [`offline.md`](offline.md)). Every step reports findings in one shape (`level`, `check`, `id`, `detail`,
 `hint`), and a failure anywhere is a finding, never a traceback.
@@ -23,7 +24,7 @@ to `_work/` and move to the output folder only when the build has no errors. Chr
 
 | Module | Does |
 | --- | --- |
-| `spec.py` | load the YAML, schema check, semantic checks (ids, placement, flows, stories, footer, chips, icons, language, traceability, placeholders) |
+| `spec.py` | load the YAML, schema check, semantic checks (ids, placement, flows, stories, route ends, footer, chips, icons, language, placeholders), and traceability: what backs each claim, and whether a quote is in its source |
 | `archetypes/` | one module per body layout; the registry finds them; each knows its layout keys, checks, grid and panel defaults |
 | `roles.py` | panel roles: colours from tokens, legend labels, theme roles |
 | `html.py` | the template context: grid CSS, legend entries, footer layout, panels with their defaults |
@@ -37,11 +38,13 @@ to `_work/` and move to the output folder only when the build has no errors. Chr
 | `scaffold.py`, `starters/`, `review.py` | for the skill: starter specs per archetype (`new`), and review crops (`--review`), of the parts changed since the last round |
 | `cli.py`, `doctor.py` | the command line; finding a Python and Chromium (standard library only) |
 | `offline.py` | the offline kit: wheels, Chromium, checksums, installer, smoke test |
-| `js/` | page scripts: `common` (helpers), `fit`, `decorate`, `route`, `layout`, `lint`, `fonts-ready` |
+| `js/` | page scripts: `common` (helpers), `fit`, `rails`, `decorate`, `route`, `layout`, `lint`, `fonts-ready` |
 
 ## The JavaScript and Python boundary
 
-Everything that needs the laid-out page runs in the page: sizing the canvas (`fit`), drawing dashes and strikes
+Everything that needs the laid-out page runs in the page: closing small holes and sizing the canvas (`fit`: a last card
+fills its row, and a panel nearly as tall as its row takes up the difference, unless a route then needs that gap, in which case
+`open_routed` lays the plate out again without it), placing rail cards (`rails`), drawing dashes and strikes
 (`decorate`), routing connectors (`route`), measuring for lint (`lint`), measuring the page into a layout document
 (`layout`). Python loads the scripts once per page (`browser.open_plate`) and calls each by name with JSON
 (`browser.call(page, "route", flows)`), and writes the SVG itself. Visual values come from `schemantic/templates/tokens.css` on
@@ -110,13 +113,14 @@ checks the one effect it must have.
 2. Add `schemantic/archetypes/<name>.py` defining `ARCHETYPE`: its `name`, `required` and `allowed` layout keys,
    `validate` (its own checks), `grid` (a `GridSpec`: rows of panel ids or group names, column tracks, and any
    groups, bands, zones or marks), and where it needs them `panel_defaults`, `loud` (the panels with a filled header
-   when nothing is in focus: the layout's own centre) and `expand` (what the layout implies, filled in after the checks: a tree's arrows, numbers by row), `legend_roles` and `cards_are_things` (when panel colours or card icons mean nothing here), and `standalone` (panels whose place already says how they
-   relate, so they need no flow). The registry finds it; no shared code changes.
+   when nothing is in focus: the layout's own centre), `expand` (what the layout implies, filled in after the checks: a
+   tree's arrows, numbers by row), `standalone` (panels that need no flow), `legend_roles`, `legend_keys`, `max_cards` and
+   `cards_are_things`. The registry finds it; no shared code changes.
 3. Add its `layout` keys and an `if/then` block to `schemantic/schema/plate.schema.json`, and its name to the
    `archetype` enum; `tests/test_spec.py` checks that the schema and the registry agree.
 4. Render CSS in `schemantic/templates/components.css` (and template markup only if it needs a new kind of group).
 5. Write its starter, `schemantic/starters/<name>.yaml`: the body between the shared head and foot, with TODO where
-   the sources must speak. `tests/test_scaffold.py` checks that it fails only on its TODOs.
+   the sources must speak; flows and stories run between cards, and name their source. `tests/test_scaffold.py` checks that it fails only on its TODOs.
 6. Run `python -m pytest -q --update-golden` for the new example's golden and snapshot, and
-   `python -m schemantic gallery`; add one negative test per layout check, and a row for it in the layout table in
-   `SKILL.md` and in the README.
+   `python -m schemantic gallery`; add one negative test per layout check, a row for it in the layout table in
+   `SKILL.md` and in the README, and a drawing in `docs/layouts.md` (`docs/img/layouts/<name>.svg`).

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 230" width="360" height="230" role="img" aria-label="Swimlane: a lane per actor, steps in phase columns, numbered handoffs" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="360" height="230" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="110" y="22" font-size="9" font-weight="600" fill="#4F5D6E" text-anchor="middle">Phase 1</text>
+<text x="198" y="22" font-size="9" font-weight="600" fill="#4F5D6E" text-anchor="middle">Phase 2</text>
+<text x="286" y="22" font-size="9" font-weight="600" fill="#4F5D6E" text-anchor="middle">Phase 3</text>
+<rect x="14" y="30" width="332" height="56" rx="4" fill="#F6F3FB" stroke="#D5C9EA" stroke-width="1"/>
+<text x="21" y="61" font-size="9" font-weight="600" fill="#5B3F8C" text-anchor="start">Customer</text>
+<rect x="14" y="92" width="332" height="56" rx="4" fill="#F6F3FB" stroke="#D5C9EA" stroke-width="1"/>
+<text x="21" y="123" font-size="9" font-weight="600" fill="#5B3F8C" text-anchor="start">Support</text>
+<rect x="14" y="154" width="332" height="56" rx="4" fill="#F6F3FB" stroke="#D5C9EA" stroke-width="1"/>
+<text x="21" y="185" font-size="9" font-weight="600" fill="#5B3F8C" text-anchor="start">Engineer</text>
+<rect x="72" y="46" width="76" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="160" y="108" width="76" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="248" y="170" width="76" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="248" y="46" width="76" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<polyline points="110,71 110,120 159,120" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="154,116.8 154,123.2 159,120" fill="#44546A"/>
+<circle cx="110" cy="96" r="6" fill="#44546A"/>
+<text x="110" y="99" font-size="8" font-weight="700" fill="#FFFFFF" text-anchor="middle">1</text>
+<polyline points="198,133 198,182 247,182" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="242,178.8 242,185.2 247,182" fill="#44546A"/>
+<circle cx="198" cy="158" r="6" fill="#44546A"/>
+<text x="198" y="161" font-size="8" font-weight="700" fill="#FFFFFF" text-anchor="middle">2</text>
+<polyline points="286,169 286,71" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="282.8,76 289.2,76 286,71" fill="#44546A"/>
+<circle cx="286" cy="122" r="6" fill="#44546A"/>
+<text x="286" y="125" font-size="8" font-weight="700" fill="#FFFFFF" text-anchor="middle">3</text>
+</svg>
