@@ -170,6 +170,8 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
                 out.append(finding("flow", f"flows/{i}", f"endpoint '{f[end]}' does not exist"))
         if f["from"] == f["to"]:
             out.append(finding("flow", f"flows/{i}", f"from and to are the same element ('{f['from']}')"))
+        if f.get("cardinality") and not arche.relations:
+            out.append(finding("flow", f"flows/{i}", f"cardinality belongs on a data-model, not on a {spec['archetype']}; say it in a label"))
 
     out += orphans(spec, arche) + story_findings(spec, known) + route_ends(spec)
 

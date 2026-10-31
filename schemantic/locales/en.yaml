@@ -30,6 +30,7 @@ legend:
   mean_dependency: "Depends on"
   mean_control: "Controls"
   mean_sequence: "Comes before"
+  mean_relation: "Related; 1:n says how many on each side"
   style_sync: "Synchronous call"
   style_async: "Asynchronous: event or message"
   style_reply: "Reply or event"

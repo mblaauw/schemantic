@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=../schemantic/schema/plate.schema.json
+canvas: {size: landscape-4x3, lang: en}
+topic: "Tool library, member records"
+title: "A loan ties one member to one tool, and every return is kept"
+subtitle: "What the lending desk stores, from member to repair"
+brief:
+  message: "A loan ties one member to one tool, and every return is kept"
+  reader: "Volunteers who will rebuild the lending desk"
+  why: "data-model: the question is what is stored and how it relates"
+archetype: data-model
+layout:
+  areas:
+    - "member loan tool"
+    - "fine   return repair"
+panels:
+  - id: member
+    title: "Member"
+    subtitle: "Someone who may borrow"
+    role: data
+    patterns:
+      - type: fields
+        fields:
+          - {name: member_id, type: uuid, key: primary}
+          - {name: email, type: text, key: unique}
+          - {name: joined_on, type: date}
+  - id: loan
+    title: "Loan"
+    subtitle: "One tool, lent once"
+    role: data
+    focus: true
+    patterns:
+      - type: fields
+        fields:
+          - {name: loan_id, type: uuid, key: primary}
+          - {name: member_id, type: uuid, key: foreign}
+          - {name: tool_id, type: uuid, key: foreign}
+          - {name: due_on, type: date}
+  - id: tool
+    title: "Tool"
+    subtitle: "One physical item on the shelf"
+    role: data
+    patterns:
+      - type: fields
+        fields:
+          - {name: tool_id, type: uuid, key: primary}
+          - {name: tag, type: text, key: unique, note: "the barcode on the handle"}
+          - {name: shelf, type: text}
+  - id: fine
+    title: "Fine"
+    subtitle: "Charged for a late return"
+    role: data
+    patterns:
+      - type: fields
+        fields:
+          - {name: fine_id, type: uuid, key: primary}
+          - {name: member_id, type: uuid, key: foreign}
+          - {name: amount, type: "decimal(6,2)"}
+  - id: return
+    title: "Return"
+    subtitle: "Kept after the loan closes"
+    role: data
+    patterns:
+      - type: fields
+        fields:
+          - {name: return_id, type: uuid, key: primary}
+          - {name: loan_id, type: uuid, key: foreign}
+          - {name: returned_on, type: date}
+          - {name: condition, type: text}
+    chips:
+      - {kind: warning, text: "Keep returns for ever, or for seven years?"}
+  - id: repair
+    title: "Repair"
+    subtitle: "Done by the workshop's own system"
+    role: external
+    patterns:
+      - type: fields
+        fields:
+          - {name: repair_id, type: uuid, key: primary}
+          - {name: tool_id, type: uuid, key: foreign}
+          - {name: finished_on, type: date}
+flows_mean: relation
+flows:
+  - {from: member, to: loan, cardinality: "1:n", label: "borrows"}
+  - {from: tool, to: loan, cardinality: "1:n", label: "lent in"}
+  - {from: loan, to: return, cardinality: "1:1", label: "closed by"}
+  - {from: member, to: fine, cardinality: "1:n", label: "owes"}
+  - {from: tool, to: repair, cardinality: "1:n", label: "sent to"}
+footer:
+  principles:
+    - "A loan is never edited after it closes; a correction is a new record."
+  open_questions: {from_chips: true}
+  legend: auto

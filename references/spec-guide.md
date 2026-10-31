@@ -23,7 +23,7 @@ lint (`placeholder`) names each TODO left.
 | `subtitle` (120) | how the plate makes that claim true |
 | `sources` | where the content comes from: `{id, kind, ref, path}`. Once given, every card, arrow, status and warning names a source or says it is `assumed` (lint: `traceability`). `path`, relative to the spec, is the file or folder on disk: lint then checks that each quote is in it |
 | `archetype`, `layout` | see `archetypes.md` and the drawings in `docs/layouts.md`; `layout.chips_at: bottom` lines chips up at the bottom of a row |
-| `flows_mean` | what every arrow means: `data`, `request`, `dependency`, `control` or `sequence` (what comes before what, for a roadmap); sets the legend (lint warns without it) |
+| `flows_mean` | what every arrow means: `data`, `request`, `dependency`, `control`, `sequence` (what comes before what, for a roadmap) or `relation` (how entities relate, for a data-model); sets the legend (lint warns without it) |
 
 ## Panels
 
@@ -101,13 +101,14 @@ A `process-strip`, `tree`, `matrix`, `table` or `fields` takes an optional `capt
 ## Flows
 
 ```yaml
-flows_mean: request                                   # data | request | dependency | control | sequence
+flows_mean: request                                   # data | request | dependency | control | sequence | relation
 flows:
   - {from: portal, to: gateway}                       # card to card: the default; give both cards an id
   - {from: clients, to: data, label: "BI and notebooks"}   # label 28; needs room beside the arrow
   - {from: clients, to: identity}                     # panel to panel: when the sources speak of the whole panel
   - {from: services, to: bus, style: async}           # sync (solid, default) | async (dashed) | optional (dotted)
   - {from: orders, to: payments, step: 2}             # a numbered badge, for the order things happen
+  - {from: member, to: loan, cardinality: "1:n"}      # data-model: how many on each side; 1:1 | 1:n | n:1 | n:m
   - {from: services, to: bus, both: true}             # arrowheads at both ends
   - {from: integration, to: proxy, focus: true}       # the one arrow the plate is about (one focus per plate)
   - {from: wms, to: carrier, refs: ["plan: WMS books shipments"]}   # where the sources say so

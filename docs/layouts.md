@@ -130,6 +130,16 @@ each with its own message.
 
 **Finished plate:** [`examples/migration-quadrant.yaml`](../examples/migration-quadrant.yaml) ([image](../assets/gallery/migration-quadrant.webp))
 
+## data-model
+
+<img src="img/layouts/data-model.svg" alt="data-model" width="360">
+
+**The reader asks:** What data is there, and how does it relate?
+
+**Not this when:** The question is how data moves: `column-flow`.
+
+**Finished plate:** [`examples/tool-library-data-model.yaml`](../examples/tool-library-data-model.yaml) ([image](../assets/gallery/tool-library-data-model.webp))
+
 ## Inside a panel
 
 Every layout uses the same panels. This one has every part, each named by its field in the spec. The fields, limits and

@@ -30,6 +30,7 @@ legend:
   mean_dependency: "Is afhankelijk van"
   mean_control: "Stuurt aan"
   mean_sequence: "Gaat vooraf aan"
+  mean_relation: "Relatie; 1:n zegt hoeveel aan elke kant"
   style_sync: "Synchrone call"
   style_async: "Asynchroon: event of bericht"
   style_reply: "Antwoord of event"

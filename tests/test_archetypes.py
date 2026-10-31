@@ -123,3 +123,21 @@ def test_capability_map_rows_share_their_width_unless_columns_are_asked_for():
     assert arche.panel_defaults(MAP, panel(MAP, "insight"))["card_columns"] == 3
     lined = {**MAP, "layout": {**MAP["layout"], "per_row": 5}}
     assert arche.panel_defaults(lined, panel(MAP, "insight"))["card_columns"] == 5
+
+
+def test_a_data_model_holds_entities_and_says_how_many_on_each_side():
+    spec = sp.load_spec(ROOT / "examples" / "tool-library-data-model.yaml")
+    labels = {(f["from"], f["to"]): f["label"] for f in archetypes.get("data-model").expand(spec)["flows"]}
+    assert labels["member", "loan"] == "1:n borrows"
+    no_label = copy.deepcopy(spec)
+    no_label["flows"][0].pop("label")
+    assert archetypes.get("data-model").expand(no_label)["flows"][0]["label"] == "1:n"
+    with_cards = copy.deepcopy(spec)
+    with_cards["panels"][0]["cards"] = [{"name": "A card"}]
+    assert any("is an entity and holds cards" in f["detail"] for f in sp.check(with_cards))
+
+
+def test_cardinality_belongs_on_a_data_model():
+    spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
+    spec["flows"][0]["cardinality"] = "1:n"
+    assert any("cardinality belongs on a data-model" in f["detail"] for f in sp.check(spec))

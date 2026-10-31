@@ -1,0 +1,3 @@
+lang: en
+archetype: [data-model]
+components: [variety, batch, member, request, germination]

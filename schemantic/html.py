@@ -35,7 +35,7 @@ def grid_css(spec: dict) -> dict:
     # see js/fit.js).
     gutter = "calc(var(--gutter-y) + var(--gap-extra, 0px))"
     return {
-        "columns": " var(--gutter-x) ".join(g.columns),
+        "columns": f" {g.gutter_x} ".join(g.columns),
         "rows": f" {gutter} ".join(["auto"] * m),
         "areas": " ".join('"' + " ".join(line) + '"' for line in lines),
         "groups": g.groups, "group_kind": g.group_kind, "bands": g.bands, "zones": g.zones, "marks": g.marks, "mark_label": g.mark_label,

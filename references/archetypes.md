@@ -254,6 +254,29 @@ layout:
 - `flows` are only for what cuts across the tree, and are drawn on top of the tree's own arrows.
 - Example: `examples/platform-org-hierarchy.yaml`.
 
+## data-model
+
+What data there is and how it relates. Each panel is an entity holding a `fields` pattern, placed in named grid cells as in
+`column-flow`; each arrow is a relation between two panels.
+
+<!-- lint: examples/tool-library-data-model.yaml -->
+```yaml
+archetype: data-model
+layout:
+  areas:
+    - "member loan tool"
+    - "fine   return repair"
+```
+
+- A panel holds fields, not cards, and its role says who owns the data: `data` for your own, `external` for another system's.
+  Give an entity only the fields the sources name; when they name none, keep the entity with a subtitle.
+- Set `flows_mean: relation` and run each arrow from the one side to the many. `cardinality` (`1:1`, `1:n`, `n:1`, `n:m`) is
+  drawn before the label, which has room for a word or two. When the sources do not say how many, leave it out and make it an
+  open question.
+- An arrow ends on a panel here, since an entity is what relates. A relation to itself cannot be drawn: give the entity a
+  foreign key field whose note says so.
+- Example: `examples/tool-library-data-model.yaml`.
+
 ## quadrant
 
 Where each thing sits on two axes. Four panels in a two-by-two with a label for each half of each axis. The position

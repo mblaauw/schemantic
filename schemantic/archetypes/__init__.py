@@ -23,6 +23,7 @@ class GridSpec:
     zones: list[dict] = field(default_factory=list)             # the zone tree rendered in a "zones" group
     marks: dict[str, int] = field(default_factory=dict)         # band name -> the label (1-based) to mark, e.g. now
     mark_label: str = "now"                                     # the locale key of the tag on a marked label
+    gutter_x: str = "var(--gutter-x)"                           # the track between columns; wider where arrows carry labels
 
 
 class Archetype:
@@ -33,6 +34,7 @@ class Archetype:
     max_cards: int = 6                        # cards in one panel; a lifeline needs more, as it has one per moment
     legend_keys: dict = {}                    # legend locale keys this layout reads differently (a reply, not "async")
     legend_roles: bool = True                 # False when a panel's colour means nothing on this layout
+    relations: bool = False                   # True when an arrow can say how many on each side (cardinality)
     cards_are_things: bool = True             # False when cards are steps or verdicts, so their icons do not say who
 
     def placed(self, spec: dict) -> list[str]:

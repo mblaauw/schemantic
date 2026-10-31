@@ -175,7 +175,8 @@
         "capability-map",
         "comparison",
         "hierarchy",
-        "quadrant"
+        "quadrant",
+        "data-model"
       ],
       "description": "The body layout; references/archetypes.md says when to use each."
     },
@@ -418,6 +419,15 @@
             "maxLength": 28,
             "description": "Short label beside the arrow; needs a run with room."
           },
+          "cardinality": {
+            "enum": [
+              "1:1",
+              "1:n",
+              "n:1",
+              "n:m"
+            ],
+            "description": "data-model: how many on each side, from then to, drawn before the label. Leave it out when the sources do not say."
+          },
           "both": {
             "type": "boolean",
             "description": "Arrowheads at both ends."
@@ -449,7 +459,8 @@
         "request",
         "dependency",
         "control",
-        "sequence"
+        "sequence",
+        "relation"
       ],
       "description": "What every arrow on this plate means; sets the legend label. data: where data goes; request: who calls whom; dependency: what needs what; control: what steers what; sequence: what comes before what (a roadmap's arrows, forward in time)."
     },
@@ -557,6 +568,34 @@
     }
   },
   "allOf": [
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "data-model"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": [
+              "areas"
+            ],
+            "propertyNames": {
+              "enum": [
+                "areas",
+                "column_widths",
+                "chips_at"
+              ]
+            }
+          }
+        }
+      }
+    },
     {
       "if": {
         "properties": {
