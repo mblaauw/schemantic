@@ -1029,7 +1029,7 @@
       "required": [
         "type"
       ],
-      "description": "A structured block inside a panel: tier strip, process strip, tree, matrix or table.",
+      "description": "A structured block inside a panel: tier strip, process strip, tree, matrix, table or field list.",
       "properties": {
         "type": {
           "enum": [
@@ -1037,7 +1037,8 @@
             "tree",
             "matrix",
             "process-strip",
-            "table"
+            "table",
+            "fields"
           ]
         }
       },
@@ -1111,6 +1112,72 @@
                 "maxItems": 10,
                 "items": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "fields"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "fields"
+            ],
+            "properties": {
+              "caption": {
+                "type": "string"
+              },
+              "refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Where this comes from: '<source id>: <path, line or short quote>'. Not rendered."
+              },
+              "assumed": {
+                "type": "string",
+                "maxLength": 160,
+                "description": "The sources do not say this; why it is drawn anyway. The plate tags it."
+              },
+              "fields": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 10,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "name"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "maxLength": 28
+                    },
+                    "type": {
+                      "type": "string",
+                      "maxLength": 16,
+                      "description": "As the sources give it; leave it out when they do not."
+                    },
+                    "key": {
+                      "enum": [
+                        "primary",
+                        "foreign",
+                        "unique"
+                      ],
+                      "description": "A marker before the name: PK, FK or UQ, explained in the legend."
+                    },
+                    "note": {
+                      "type": "string",
+                      "maxLength": 40
+                    }
+                  }
                 }
               }
             }

@@ -5,6 +5,7 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- The `fields` pattern: names, types and keys, for what a table, event or API holds. Its key markers are in the legend.
 - The `table` pattern: rows of text under column names, for the facts a `matrix` cannot hold. It names its source or says it
   is `assumed`, and its rows are in the outline.
 - `docs/layouts.md`: every layout and pattern as a sketch, with the reader's question it answers and a finished plate; and

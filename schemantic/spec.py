@@ -304,7 +304,7 @@ def number_story(spec: dict) -> dict:
     return {**spec, "flows": flows}
 
 
-CLAIMING_PATTERNS = ("table",)  # patterns that take `refs` and `assumed`, because their text states facts
+CLAIMING_PATTERNS = ("table", "fields")  # patterns that take `refs` and `assumed`, because their text states facts
 
 
 def claims(spec: dict):

@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=../../schemantic/schema/plate.schema.json
+# Fixture: the fields pattern, with every key marker, a note, a field without a type and an assumed tag.
+canvas: {size: landscape-4x3, lang: en}
+title: "A ferry booking points at one crossing and one customer"
+subtitle: "What the booking service keeps, and the event it sends"
+archetype: column-flow
+layout:
+  areas: ["booking event"]
+panels:
+  - id: booking
+    title: "Booking"
+    role: data
+    patterns:
+      - type: fields
+        caption: "Table bookings"
+        fields:
+          - {name: booking_id, type: uuid, key: primary}
+          - {name: crossing_id, type: uuid, key: foreign, note: "the sailing this seat is on"}
+          - {name: customer_id, type: uuid, key: foreign}
+          - {name: reference, type: varchar(8), key: unique, note: "printed on the ticket"}
+          - {name: status}
+  - id: event
+    title: "Booking confirmed"
+    role: platform
+    patterns:
+      - type: fields
+        assumed: "the event is not documented; read from the producer"
+        fields:
+          - {name: booking_id, type: uuid}
+          - {name: confirmed_at, type: timestamp}
+flows_mean: data
+flows:
+  - {from: booking, to: event}

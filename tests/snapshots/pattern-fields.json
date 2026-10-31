@@ -1,0 +1,257 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   110
+  ],
+  "body": [
+   40,
+   128,
+   1560,
+   378
+  ],
+  "booking": [
+   40,
+   128,
+   776,
+   378
+  ],
+  "booking.fields0": [
+   54,
+   180,
+   764,
+   364
+  ],
+  "event": [
+   824,
+   128,
+   1560,
+   268
+  ],
+  "event.fields0": [
+   838,
+   180,
+   1548,
+   256
+  ],
+  "footer": [
+   40,
+   396,
+   1560,
+   414
+  ],
+  "footer.legend": [
+   40,
+   396,
+   1560,
+   414
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "A ferry booking points at one crossing and one customer"
+  ],
+  [
+   40,
+   104,
+   "What the booking service keeps, and the event it sends"
+  ],
+  [
+   52,
+   154,
+   "Booking"
+  ],
+  [
+   64,
+   200,
+   "Table bookings"
+  ],
+  [
+   68,
+   224,
+   "PK"
+  ],
+  [
+   98,
+   224,
+   "booking_id"
+  ],
+  [
+   686,
+   224,
+   "uuid"
+  ],
+  [
+   68,
+   250,
+   "FK"
+  ],
+  [
+   98,
+   250,
+   "crossing_id"
+  ],
+  [
+   98,
+   266,
+   "the sailing this seat is on"
+  ],
+  [
+   686,
+   250,
+   "uuid"
+  ],
+  [
+   68,
+   290,
+   "FK"
+  ],
+  [
+   98,
+   290,
+   "customer_id"
+  ],
+  [
+   686,
+   290,
+   "uuid"
+  ],
+  [
+   68,
+   316,
+   "UQ"
+  ],
+  [
+   98,
+   316,
+   "reference"
+  ],
+  [
+   98,
+   332,
+   "printed on the ticket"
+  ],
+  [
+   686,
+   316,
+   "varchar(8)"
+  ],
+  [
+   98,
+   352,
+   "status"
+  ],
+  [
+   836,
+   154,
+   "Booking confirmed"
+  ],
+  [
+   1482,
+   200,
+   "assumed"
+  ],
+  [
+   876,
+   222,
+   "booking_id"
+  ],
+  [
+   1476,
+   222,
+   "uuid"
+  ],
+  [
+   876,
+   242,
+   "confirmed_at"
+  ],
+  [
+   1476,
+   242,
+   "timestamp"
+  ],
+  [
+   40,
+   408,
+   "Legend"
+  ],
+  [
+   134,
+   408,
+   "Data and storage"
+  ],
+  [
+   284,
+   408,
+   "Platform component"
+  ],
+  [
+   452,
+   408,
+   "Direction of data"
+  ],
+  [
+   574,
+   408,
+   "assumed"
+  ],
+  [
+   636,
+   408,
+   "Assumed: the sources do not say so"
+  ],
+  [
+   872,
+   408,
+   "PK"
+  ],
+  [
+   900,
+   408,
+   "Primary key"
+  ],
+  [
+   992,
+   408,
+   "FK"
+  ],
+  [
+   1020,
+   408,
+   "Foreign key: points at another entity"
+  ],
+  [
+   1254,
+   408,
+   "UQ"
+  ],
+  [
+   1284,
+   408,
+   "Unique"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "booking",
+   "to": "event",
+   "points": [
+    [
+     784,
+     198
+    ],
+    [
+     816,
+     198
+    ]
+   ],
+   "label": null
+  }
+ ]
+}

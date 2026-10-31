@@ -59,6 +59,17 @@
 <div class="trow" style="padding-left: {{ (row.depth - 1) * 14 if row.depth > 0 else 0 }}px">{% if row.depth > 0 %}<span class="tk"></span>{% endif %}<span>{{ row.text }}</span></div>
 {%- endfor -%}
 </div>
+{%- elif pt.type == 'fields' -%}
+<div class="blk fields" data-kind="pattern" data-id="{{ bid }}"{{ st | safe }}>
+{{- pattern_head(pt) -}}
+<div class="fd-grid">
+{%- for f in pt.fields -%}
+<div class="fd-mark">{% if f.key %}<span class="fd-key fd-{{ f.key }}">{{ L.fields[f.key] }}</span>{% endif %}</div>
+<div class="fd-main"><div class="fd-name">{{ f.name }}</div>{% if f.note %}<div class="fd-note">{{ f.note }}</div>{% endif %}</div>
+<div class="fd-type">{{ f.type or '' }}</div>
+{%- endfor -%}
+</div>
+</div>
 {%- elif pt.type == 'table' -%}
 <div class="blk table" data-kind="pattern" data-id="{{ bid }}"{{ st | safe }}>
 {{- pattern_head(pt) -}}
@@ -166,6 +177,7 @@
 {%- elif e.kind == 'line' %}<div class="lg"><span class="ls" data-line="{{ e.key }}"></span><span>{{ e.label }}</span></div>
 {%- elif e.kind == 'step' %}<div class="lg"><span class="flag flag-step">1</span><span>{{ e.label }}</span></div>
 {%- elif e.kind == 'status' %}<div class="lg">{{ tag(e.key) }}<span>{{ e.label }}</span></div>
+{%- elif e.kind == 'field-key' %}<div class="lg"><span class="fd-key fd-{{ e.key }}">{{ L.fields[e.key] }}</span><span>{{ e.label }}</span></div>
 {%- elif e.kind == 'focus' %}<div class="lg"><span class="sw focus-sw"></span><span>{{ e.label }}</span></div>
 {%- elif e.key == 'warning' and open_questions %}<div class="lg"><span class="flag flag-warning">{{ open_questions[0].label }}</span><span>{{ e.label }}</span></div>
 {%- else %}<div class="lg">{{ icon('alert-triangle' if e.key == 'warning' else 'info-circle', 'ic', ' lg-' ~ e.key) }}<span>{{ e.label }}</span></div>{% endif -%}

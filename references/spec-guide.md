@@ -82,7 +82,11 @@ leave the note out; a note written from the name is an invention.
   column is bold. For facts a `matrix` cannot hold: versions, limits, owners. Once `sources` are declared it needs `refs`, or
   `assumed: <why>`, which tags it.
 
-A `process-strip`, `tree`, `matrix` or `table` takes an optional `caption`, a short line above it.
+- `fields`: up to 10 `fields`, each with a `name` (28), and optionally a `type` (16), a `key` (`primary | foreign | unique`,
+  drawn PK, FK, UQ) and a `note` (40). For what a table, event or API holds. Give only the fields, types and keys the sources
+  name; once `sources` are declared it needs `refs`, or `assumed: <why>`, which tags it.
+
+A `process-strip`, `tree`, `matrix`, `table` or `fields` takes an optional `caption`, a short line above it.
 
 ## Chips
 

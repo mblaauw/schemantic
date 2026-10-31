@@ -15,6 +15,9 @@ footer:
   zones: "Waar het draait"
   outside: "Buiten elke zone"
 legend:
+  key_primary: "Primary key"
+  key_foreign: "Foreign key: verwijst naar een andere entiteit"
+  key_unique: "Uniek"
   platform: "Platformcomponent"
   data: "Data en opslag"
   external: "Clients en externe systemen"
@@ -50,6 +53,10 @@ status:
   planned: "gepland"
   deprecated: "uitfaseren"
   removed: "verwijderd"
+fields:
+  primary: "PK"
+  foreign: "FK"
+  unique: "UQ"
 matrix:
   full: "volledig"
   partial: "beperkt"

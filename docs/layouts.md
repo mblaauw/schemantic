@@ -156,6 +156,7 @@ can overflow, and in a full lane an arrow can lose its route. Lint says so, by n
 | `tree` | <img src="img/layouts/pattern-tree.svg" alt="tree" width="170"> | An indented listing: folders, keys, topics. |
 | `matrix` | <img src="img/layouts/pattern-matrix.svg" alt="matrix" width="170"> | Rows against columns, each cell full, partial or none: who may do what. |
 | `table` | <img src="img/layouts/pattern-table.svg" alt="table" width="170"> | Rows of text under column names: versions, limits, owners. |
+| `fields` | <img src="img/layouts/pattern-fields.svg" alt="fields" width="170"> | What a table, event or API holds: names, types and keys. |
 
 ## Marks on any layout
 

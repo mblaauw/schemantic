@@ -30,11 +30,17 @@ def pattern_lines(p: dict, loc: dict) -> list[str]:
     """A pattern whose text states facts, as plain lines: a caption, then its rows."""
     out = []
     for pt in p.get("patterns", []):
-        if pt["type"] != "table":
-            continue
         mark = f" [{loc['status']['assumed']}]" if pt.get("assumed") else ""
-        out.append((pt.get("caption") or "Table") + mark + ": " + " | ".join(pt["columns"]))
-        out += [f"  {' | '.join(r)}" for r in pt["rows"]]
+        if pt["type"] == "table":
+            out.append((pt.get("caption") or "Table") + mark + ": " + " | ".join(pt["columns"]))
+            out += [f"  {' | '.join(r)}" for r in pt["rows"]]
+        elif pt["type"] == "fields":
+            out.append((pt.get("caption") or "Fields") + mark + ":")
+            for f in pt["fields"]:
+                key = f"{loc['fields'][f['key']]} " if f.get("key") else ""
+                kind = f": {f['type']}" if f.get("type") else ""
+                note = f" — {f['note']}" if f.get("note") else ""
+                out.append(f"  {key}{f['name']}{kind}{note}")
     return out
 
 

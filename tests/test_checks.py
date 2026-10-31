@@ -349,3 +349,14 @@ def test_a_table_states_facts_so_it_names_a_source():
     panel(spec, "gateway")["patterns"][-1] = table
     assert not any(f["detail"].startswith("table in panel") for f in sp.traceability(spec))
     assert any("from the rota" in item for item in sp.assumed_items(spec))
+
+
+def test_fields_name_a_source_and_their_keys_reach_the_legend():
+    fields = {"type": "fields", "fields": [{"name": "order_id", "type": "uuid", "key": "primary"}, {"name": "status"}]}
+    spec = mutate(lambda s: panel(s, "gateway").setdefault("patterns", []).append(fields))
+    assert not sp.schema_errors(spec)
+    spec["sources"] = [{"id": "notes", "kind": "notes", "ref": "Review"}]
+    assert any(f["detail"].startswith("fields in panel") for f in sp.traceability(spec))
+    from schemantic.html import legend_entries
+    keys = [e["key"] for e in legend_entries(spec, sp.load_locale("en")) if e["kind"] == "field-key"]
+    assert keys == ["primary"]
