@@ -10,6 +10,8 @@ lint (`placeholder`) names each TODO left.
 
 | Field | Rule |
 | --- | --- |
+| `spec_version` | optional; the only value is `1` |
+| `brief` | the plan behind the plate, not drawn: `message` (the one claim), `reader`, `why` (this archetype), `left_out` (what the sources hold that the plate leaves out, and why), `assumptions` (what is assumed and cannot be marked on the plate; the report repeats them) |
 | `canvas.size` | `landscape-4x3` (1600 wide, the default choice), `landscape-16x9` (1920×1080, for slides), or `a3-landscape` / `a4-landscape` for print: laid out at the sheet's width (96 px per inch, so type prints at its own size), as tall as the content, then centred on the sheet and scaled down when taller; lint fails it when the smallest text would print under 6 pt (`print-size`). Build with `--dpi 300`; the SVG is the sheet in mm |
 | `canvas.lang` | `nl` or `en` |
 | `canvas.profile` | `document` (default: read up close) or `slide` (shown in a meeting, usually with `landscape-16x9`): a larger type ramp, a 13 px type floor, and lint warns past 5 panels or 18 cards (`slide-budget`) |
@@ -59,19 +61,24 @@ systems outside the team's control, `actor` for people and teams. A theme can ad
   assumed: "the plan implies it"  # optional: not in the sources, and why; the plate tags it
   flag: {kind: warning, text: "Rate limits per tenant or per client?"}   # optional: numbered marker, text in the footer
   focus: true                     # optional, as on panels
+  refs: ["notes: queue for failed events"]   # where it comes from; needed once `sources` are declared, unless it is `assumed`
 ```
+
+Some layouts place a card with `col`, `row`, `layer` or `span`; `archetypes.md` says which.
 
 A note says what the card does in this story, not what the product is in general. When the sources give only a name,
 leave the note out; a note written from the name is an invention.
 
 ## Patterns
 
-- `tier-strip`: 2–5 tiers (`tier: bronze | silver | gold`, `name`, `note`), for data layers or maturity steps.
+- `tier-strip`: 2–5 tiers (`tier: bronze | silver | gold`, `name`, `note`, `icon`), for data layers or maturity steps.
 - `process-strip`: 3–7 `steps` (`name` 24, `note` 40, `icon`), numbered left to right, for a short sequence inside
   one panel; a sequence between actors is a swimlane, one request between systems a sequence.
 - `tree`: up to 10 `lines` of monospace text, indented with two spaces per level, for paths and buckets.
 - `matrix`: `columns` (up to 5) × `rows` (up to 8), cells `full | partial | none`, for access or usage. When the
   locale's key words (full, limited, no access) do not fit, give `key: {full: ..., partial: ..., none: ...}`.
+
+A `process-strip`, `tree` or `matrix` takes an optional `caption`, a short line above it.
 
 ## Chips
 

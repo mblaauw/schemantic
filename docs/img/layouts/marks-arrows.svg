@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 150" width="560" height="150" role="img" aria-label="The arrow styles: plain, async, optional, both ways, focused, assumed, labelled and numbered" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="560" height="150" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<rect x="14" y="14" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="122" y="14" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<polyline points="37,25 121,25" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="116,21.8 116,28.2 121,25" fill="#44546A"/>
+<text x="152" y="29" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">plain, sync (default)</text>
+<rect x="288" y="14" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="396" y="14" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<polyline points="311,25 395,25" fill="none" stroke="#44546A" stroke-width="1.3" stroke-dasharray="7 5"/>
+<polygon points="390,21.8 390,28.2 395,25" fill="#44546A"/>
+<text x="426" y="29" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">style: async</text>
+<rect x="14" y="48" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="122" y="48" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<polyline points="37,59 121,59" fill="none" stroke="#44546A" stroke-width="1.3" stroke-dasharray="0.5 5"/>
+<polygon points="116,55.8 116,62.2 121,59" fill="#44546A"/>
+<text x="152" y="63" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">style: optional</text>
+<rect x="288" y="48" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="396" y="48" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<polyline points="316,59 395,59" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="390,55.8 390,62.2 395,59" fill="#44546A"/>
+<polygon points="316,55.8 316,62.2 311,59" fill="#44546A"/>
+<text x="426" y="63" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">both: true</text>
+<rect x="14" y="82" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="122" y="82" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<polyline points="37,93 121,93" fill="none" stroke="#1763C4" stroke-width="2.4"/>
+<polygon points="116,89.8 116,96.2 121,93" fill="#1763C4"/>
+<text x="152" y="97" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">focus: true</text>
+<rect x="288" y="82" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="396" y="82" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<polyline points="311,93 395,93" fill="none" stroke="#A86A00" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="390,89.8 390,96.2 395,93" fill="#A86A00"/>
+<text x="426" y="97" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">assumed: &lt;why&gt;</text>
+<rect x="14" y="116" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="122" y="116" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<polyline points="37,127 121,127" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="116,123.8 116,130.2 121,127" fill="#44546A"/>
+<text x="79.0" y="123" font-size="8" font-weight="500" fill="#4F5D6E" text-anchor="middle">orders</text>
+<text x="152" y="131" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">label: "orders"</text>
+<rect x="288" y="116" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="396" y="116" width="22" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<polyline points="311,127 395,127" fill="none" stroke="#44546A" stroke-width="1.3"/>
+<polygon points="390,123.8 390,130.2 395,127" fill="#44546A"/>
+<circle cx="353" cy="127" r="6" fill="#44546A"/>
+<text x="353" y="130" font-size="8" font-weight="700" fill="#FFFFFF" text-anchor="middle">2</text>
+<text x="426" y="131" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">step: 2, or a drawn story</text>
+</svg>

@@ -92,6 +92,29 @@ def test_docs_list_what_is_built():
     for p in patterns:
         assert p.replace("-", " ") in pattern_row.split("|")[1], p
         assert f"`{p}`" in layouts and (ROOT / "docs" / "img" / "layouts" / f"pattern-{p}.svg").exists(), p
+    for src in re.findall(r'src="(img/layouts/[^"]+)"', layouts):
+        assert (ROOT / "docs" / src).exists(), src
+
+
+def test_the_guides_name_every_field_a_spec_can_have():
+    """A field in the schema that no guide names is a field an agent cannot find."""
+    import json
+
+    schema = json.loads((ROOT / "schemantic" / "schema" / "plate.schema.json").read_text())
+    fields = set()
+
+    def walk(node):
+        if isinstance(node, dict):
+            fields.update(node.get("properties", {}))
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+
+    walk(schema)
+    guides = "".join((ROOT / "references" / name).read_text(encoding="utf-8") for name in ("spec-guide.md", "archetypes.md"))
+    assert fields and [f for f in sorted(fields) if not re.search(rf"(?<![\w-]){re.escape(f)}(?![\w-])", guides)] == []
 
 
 def test_the_wheel_carries_every_file_a_render_reads():

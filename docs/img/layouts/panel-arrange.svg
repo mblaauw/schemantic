@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 566 136" width="566" height="136" role="img" aria-label="Three ways to arrange a panel: the default, a set number of card columns, and blocks side by side" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="566" height="136" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="14" y="20" font-size="9.5" font-weight="600" fill="#0F2547" text-anchor="start">default</text>
+<rect x="14" y="28" width="170" height="96" rx="4" fill="#EEF5FC" stroke="#BCD5EC" stroke-width="1"/>
+<path d="M14.5 44V32a3.5 3.5 0 0 1 3.5-3.5H180a3.5 3.5 0 0 1 3.5 3.5V44Z" fill="#D6E7F7"/>
+<text x="20" y="39.5" font-size="9" font-weight="600" fill="#0B4F8F" text-anchor="start">As many as fit</text>
+<rect x="19.0" y="48" width="78.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="101.0" y="48" width="78.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="19.0" y="86" width="78.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="101.0" y="86" width="78.0" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="198" y="20" font-size="9.5" font-weight="600" fill="#0F2547" text-anchor="start">card_columns: 3</text>
+<rect x="198" y="28" width="170" height="96" rx="4" fill="#EEF5FC" stroke="#BCD5EC" stroke-width="1"/>
+<path d="M198.5 44V32a3.5 3.5 0 0 1 3.5-3.5H364a3.5 3.5 0 0 1 3.5 3.5V44Z" fill="#D6E7F7"/>
+<text x="204" y="39.5" font-size="9" font-weight="600" fill="#0B4F8F" text-anchor="start">Three across</text>
+<rect x="203.0" y="48" width="50.7" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="257.7" y="48" width="50.7" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="312.3" y="48" width="50.7" height="24" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="382" y="20" font-size="9.5" font-weight="600" fill="#0F2547" text-anchor="start">arrange: row, weights: [1, 2]</text>
+<rect x="382" y="28" width="170" height="96" rx="4" fill="#EEF5FC" stroke="#BCD5EC" stroke-width="1"/>
+<path d="M382.5 44V32a3.5 3.5 0 0 1 3.5-3.5H548a3.5 3.5 0 0 1 3.5 3.5V44Z" fill="#D6E7F7"/>
+<text x="388" y="39.5" font-size="9" font-weight="600" fill="#0B4F8F" text-anchor="start">Side by side</text>
+<rect x="388" y="50" width="48" height="68" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<line x1="394" y1="62" x2="430" y2="62" stroke="#CBD5E1" stroke-width="3"/>
+<line x1="394" y1="80" x2="430" y2="80" stroke="#CBD5E1" stroke-width="3"/>
+<line x1="394" y1="98" x2="430" y2="98" stroke="#CBD5E1" stroke-width="3"/>
+<rect x="442" y="50" width="48" height="32" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="494" y="50" width="48" height="32" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="442" y="86" width="48" height="32" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="494" y="86" width="48" height="32" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+</svg>
