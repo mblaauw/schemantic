@@ -100,7 +100,7 @@ The latest release is 0.3.0; the table below also holds what is unreleased (`CHA
 | Built |
 | --- |
 | Archetypes: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones, before-after, roadmap, sequence, capability-map, comparison, hierarchy, quadrant |
-| Patterns: tier strip, process strip, tree, matrix |
+| Patterns: tier strip, process strip, tree, matrix, table |
 | Connectors: straight, L, Z and U routes; card endpoints; sync, async, optional, assumed; steps; stories |
 | Roles, themes, change status, card flags, focus; locales `nl` and `en` |
 | Lint with hints for every check; SVG parity; goldens and snapshots on Linux and macOS |

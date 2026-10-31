@@ -82,7 +82,7 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
         if any(f.get("step") for f in flows):  # a drawn story's steps are its route: the legend names it
             story = drawn_story(spec)
             entries.append({"kind": "step", "key": "step", "label": story["name"] if story else lg["step"]})
-    things = [p for p in spec["panels"]] + [c for p in spec["panels"] for c in p.get("cards", [])]
+    things = [p for p in spec["panels"]] + [c for p in spec["panels"] for c in p.get("cards", []) + p.get("patterns", [])]
     for st in ("new", "changed", "planned", "deprecated", "removed"):
         if any(t.get("status") == st for t in things):
             entries.append({"kind": "status", "key": st, "label": lg[f"status_{st}"]})

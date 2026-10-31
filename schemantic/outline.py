@@ -26,6 +26,18 @@ def _card(c: dict, cid: str, flag_of: dict, loc: dict) -> str:
     return " ".join(bits)
 
 
+def pattern_lines(p: dict, loc: dict) -> list[str]:
+    """A pattern whose text states facts, as plain lines: a caption, then its rows."""
+    out = []
+    for pt in p.get("patterns", []):
+        if pt["type"] != "table":
+            continue
+        mark = f" [{loc['status']['assumed']}]" if pt.get("assumed") else ""
+        out.append((pt.get("caption") or "Table") + mark + ": " + " | ".join(pt["columns"]))
+        out += [f"  {' | '.join(r)}" for r in pt["rows"]]
+    return out
+
+
 def lines(spec: dict) -> list[str]:
     """Plain outline lines, indented two spaces per level."""
     loc = load_locale(spec["canvas"]["lang"])
@@ -42,6 +54,7 @@ def lines(spec: dict) -> list[str]:
             names[cid] = c["name"]
             out.append("  " + _card(c, cid, flag_of, loc))
             out += [f"    {b}" for b in c.get("bullets", [])]
+        out += [f"  {line}" for line in pattern_lines(p, loc)]
         for ch in p.get("chips", []):
             out.append(f"  ({ch['kind']}) {ch['text']}")
     for f in spec.get("flows", []):
@@ -87,6 +100,7 @@ def markdown(spec: dict) -> str:
             names[cid] = c["name"]
             md.append(f"- {_card(c, cid, flag_of, loc)}")
             md += [f"  - {b}" for b in c.get("bullets", [])]
+        md += [f"  {line}" if line.startswith(" ") else f"- {line}" for line in pattern_lines(p, loc)]
         md += [f"- *{ch['text']}*" for ch in p.get("chips", [])]
         md.append("")
     zones = spec["layout"].get("zones")

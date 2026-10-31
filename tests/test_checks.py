@@ -332,3 +332,20 @@ def test_a_repeated_hint_is_given_once_and_summed_up():
     assert [(line["check"], line["level"], line["count"]) for line in r["summary"]] == [
         ("placeholder", "error", 3), ("story", "error", 1), ("void", "warning", 1)]
     assert all(line["hint"] == findings.CHECKS[line["check"]].hint for line in r["summary"])
+
+
+def test_a_table_row_has_one_cell_per_column():
+    table = {"type": "table", "columns": ["Service", "Owner"], "rows": [["Desk", "Harbour"], ["Shop"]]}
+    spec = mutate(lambda s: panel(s, "gateway").setdefault("patterns", []).append(table))
+    assert any(f["check"] == "pattern" and "table row 2 has 1 cells for 2 columns" in f["detail"] for f in sp.check(spec))
+
+
+def test_a_table_states_facts_so_it_names_a_source():
+    table = {"type": "table", "columns": ["Service", "Owner"], "rows": [["Desk", "Harbour"]]}
+    spec = mutate(lambda s: panel(s, "gateway").setdefault("patterns", []).append(table))
+    spec["sources"] = [{"id": "notes", "kind": "notes", "ref": "Review"}]
+    assert any(f["detail"].startswith("table in panel") for f in sp.traceability(spec))
+    table = {**table, "assumed": "from the rota"}
+    panel(spec, "gateway")["patterns"][-1] = table
+    assert not any(f["detail"].startswith("table in panel") for f in sp.traceability(spec))
+    assert any("from the rota" in item for item in sp.assumed_items(spec))

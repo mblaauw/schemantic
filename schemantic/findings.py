@@ -41,7 +41,8 @@ CHECKS: dict[str, Check] = {
                     "footer panels", "follow the detail; every panel id appears in the layout exactly once",
                     "Place every panel id exactly once in the layout, using the keys of this archetype."),
     "budget": Check("spec", "more than 5 columns", "split the plate or merge panels", "Split the plate into a series, or merge panels."),
-    "pattern": Check("spec", "a matrix row has the wrong number of cells", "one cell per column", "Give every matrix row one cell per column."),
+    "pattern": Check("spec", "a matrix or table row has the wrong number of cells", "one cell per column",
+                     "Give every row one cell per column."),
     "flow": Check("spec", "a flow names an id that does not exist, connects an element to itself, or connects a card "
                   "to its own panel", "use a panel id, or give the card an `id`; connect two different boxes",
                   "Point the flow at an existing panel or card id, and at two different boxes."),

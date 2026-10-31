@@ -94,6 +94,17 @@ body { background: var(--paper); }
 .trow > span:last-child { white-space: pre; }
 .tk { flex: 0 0 auto; width: 9px; height: 9px; margin: 3px 5px 0 0; border-left: 1px solid var(--muted); border-bottom: 1px solid var(--muted); }
 
+/* Panel patterns that make claims: a caption, with the assumed tag beside it */
+.pt-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+.pt-cap { font-size: var(--t-small); font-weight: 600; color: var(--muted); }
+
+/* Panel pattern: table. Rows of text, as wide as the panel */
+.table { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card); padding: 8px 12px; }
+.tb-grid { display: grid; }
+.tb-col { font-size: var(--t-small); font-weight: 600; color: var(--muted); padding: 0 12px 4px 0; line-height: 1.25; }
+.tb-cell { font-size: var(--t-body); color: var(--text); padding: 4px 12px 4px 0; line-height: 1.3; border-top: 1px solid var(--card-line); }
+.tb-first { font-weight: 600; color: var(--ink); }
+
 /* Panel pattern: matrix */
 /* A matrix is as wide as its content, left-aligned: columns of at least 72 px, never stretched across the panel */
 .matrix { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card); padding: 8px 12px;

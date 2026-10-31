@@ -160,6 +160,10 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
                     if len(r["cells"]) != len(pt["columns"]):
                         out.append(finding("pattern", p["id"],
                                            f"matrix row '{r['name']}' has {len(r['cells'])} cells for {len(pt['columns'])} columns"))
+            if pt["type"] == "table":
+                for n, r in enumerate(pt["rows"], 1):
+                    if len(r) != len(pt["columns"]):
+                        out.append(finding("pattern", p["id"], f"table row {n} has {len(r)} cells for {len(pt['columns'])} columns"))
     for i, f in enumerate(spec.get("flows", [])):
         for end in ("from", "to"):
             if f[end] not in known:
@@ -300,6 +304,9 @@ def number_story(spec: dict) -> dict:
     return {**spec, "flows": flows}
 
 
+CLAIMING_PATTERNS = ("table",)  # patterns that take `refs` and `assumed`, because their text states facts
+
+
 def claims(spec: dict):
     """What a plate says about the world, with what backs it: (id, what it is, refs, assumed)."""
     for p in spec["panels"]:
@@ -315,6 +322,9 @@ def claims(spec: dict):
                 yield cid, f"status '{c['status']}' on card '{c['name']}'", [c["status_ref"]] if c.get("status_ref") else [], c.get("assumed")
             if c.get("flag", {}).get("kind") == "warning":
                 yield cid, f"warning '{c['flag']['text']}'", c["flag"].get("refs", []), None
+        for n, pt in enumerate(p.get("patterns", [])):
+            if pt["type"] in CLAIMING_PATTERNS:
+                yield f"{p['id']}.{pt['type']}{n}", f"{pt['type']} in panel '{p['title']}'", pt.get("refs", []), pt.get("assumed")
     for n, f in enumerate(spec.get("flows", [])):
         yield f"flows/{n}", f"arrow {f['from']} to {f['to']}", f.get("refs", []), f.get("assumed")
 
@@ -323,6 +333,7 @@ def assumed_items(spec: dict) -> list[str]:
     """Everything the plate itself marks as assumed, and why."""
     panels = [(p["title"], p["assumed"]) for p in spec["panels"] if p.get("assumed")]
     cards = [(c["name"], c["assumed"]) for p in spec["panels"] for c in p.get("cards", []) if c.get("assumed")]
+    cards += [(f"{pt['type']} in {p['title']}", pt["assumed"]) for p in spec["panels"] for pt in p.get("patterns", []) if pt.get("assumed")]
     names = {p["id"]: p["title"] for p in spec["panels"]}
     names |= {card_id(p, i, c): c["name"] for p in spec["panels"] for i, c in enumerate(p.get("cards", []))}
     flows = [(f"{names.get(f['from'], f['from'])} -> {names.get(f['to'], f['to'])}", f["assumed"])

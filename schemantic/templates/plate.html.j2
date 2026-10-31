@@ -27,6 +27,11 @@
 </div>
 {%- endmacro -%}
 
+{#- A pattern that makes claims says what is assumed about it, beside its caption. -#}
+{%- macro pattern_head(pt) -%}
+{%- if pt.caption or pt.assumed %}<div class="pt-head"><span class="pt-cap">{{ pt.caption or '' }}</span>{% if pt.assumed %}{{ tag('assumed') }}{% endif %}</div>{% endif -%}
+{%- endmacro -%}
+
 {%- macro pattern(pt, pid, i, flex='') -%}
 {%- set bid = pid ~ '.' ~ pt.type ~ i -%}
 {%- set st = (' style="' ~ flex[2:] ~ '"') if flex else '' -%}
@@ -53,6 +58,14 @@
 {%- for row in tree_rows(pt.lines) -%}
 <div class="trow" style="padding-left: {{ (row.depth - 1) * 14 if row.depth > 0 else 0 }}px">{% if row.depth > 0 %}<span class="tk"></span>{% endif %}<span>{{ row.text }}</span></div>
 {%- endfor -%}
+</div>
+{%- elif pt.type == 'table' -%}
+<div class="blk table" data-kind="pattern" data-id="{{ bid }}"{{ st | safe }}>
+{{- pattern_head(pt) -}}
+<div class="tb-grid" style="grid-template-columns: repeat({{ pt.columns | length }}, minmax(0, auto))">
+{%- for col in pt.columns %}<div class="tb-col">{{ col }}</div>{% endfor -%}
+{%- for r in pt.rows -%}{%- for v in r %}<div class="tb-cell{% if loop.first %} tb-first{% endif %}">{{ v }}</div>{% endfor -%}{%- endfor -%}
+</div>
 </div>
 {%- elif pt.type == 'matrix' -%}
 <div class="blk matrix" data-kind="pattern" data-id="{{ bid }}"{{ st | safe }}>

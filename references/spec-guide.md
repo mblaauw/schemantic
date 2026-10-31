@@ -78,7 +78,11 @@ leave the note out; a note written from the name is an invention.
 - `matrix`: `columns` (up to 5) × `rows` (up to 8), cells `full | partial | none`, for access or usage. When the
   locale's key words (full, limited, no access) do not fit, give `key: {full: ..., partial: ..., none: ...}`.
 
-A `process-strip`, `tree` or `matrix` takes an optional `caption`, a short line above it.
+- `table`: `columns` (2 to 5, 28 each) and `rows` (up to 8), each row a list with one text per column (48 each); the first
+  column is bold. For facts a `matrix` cannot hold: versions, limits, owners. Once `sources` are declared it needs `refs`, or
+  `assumed: <why>`, which tags it.
+
+A `process-strip`, `tree`, `matrix` or `table` takes an optional `caption`, a short line above it.
 
 ## Chips
 

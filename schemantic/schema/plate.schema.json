@@ -1029,14 +1029,15 @@
       "required": [
         "type"
       ],
-      "description": "A structured block inside a panel: tier strip, process strip, tree or matrix.",
+      "description": "A structured block inside a panel: tier strip, process strip, tree, matrix or table.",
       "properties": {
         "type": {
           "enum": [
             "tier-strip",
             "tree",
             "matrix",
-            "process-strip"
+            "process-strip",
+            "table"
           ]
         }
       },
@@ -1110,6 +1111,60 @@
                 "maxItems": 10,
                 "items": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "table"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "columns",
+              "rows"
+            ],
+            "properties": {
+              "caption": {
+                "type": "string"
+              },
+              "refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Where this comes from: '<source id>: <path, line or short quote>'. Not rendered."
+              },
+              "assumed": {
+                "type": "string",
+                "maxLength": 160,
+                "description": "The sources do not say this; why it is drawn anyway. The plate tags it."
+              },
+              "columns": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 5,
+                "items": {
+                  "type": "string",
+                  "maxLength": 28
+                }
+              },
+              "rows": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 8,
+                "description": "One list per row, one text per column. The first column is drawn bold.",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 48
+                  }
                 }
               }
             }

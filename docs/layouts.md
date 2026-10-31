@@ -155,6 +155,7 @@ can overflow, and in a full lane an arrow can lose its route. Lint says so, by n
 | `process-strip` | <img src="img/layouts/pattern-process-strip.svg" alt="process-strip" width="170"> | Numbered steps in a row, inside one panel. |
 | `tree` | <img src="img/layouts/pattern-tree.svg" alt="tree" width="170"> | An indented listing: folders, keys, topics. |
 | `matrix` | <img src="img/layouts/pattern-matrix.svg" alt="matrix" width="170"> | Rows against columns, each cell full, partial or none: who may do what. |
+| `table` | <img src="img/layouts/pattern-table.svg" alt="table" width="170"> | Rows of text under column names: versions, limits, owners. |
 
 ## Marks on any layout
 
