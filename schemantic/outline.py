@@ -2,6 +2,8 @@
 <desc>, as the <name>.md written next to the images, and as review input. The focus element comes first."""
 from __future__ import annotations
 
+import re
+
 from .spec import assumed_items, card_id, flags, load_locale, open_questions
 
 
@@ -26,21 +28,31 @@ def _card(c: dict, cid: str, flag_of: dict, loc: dict) -> str:
     return " ".join(bits)
 
 
+def _pattern_rows(pt: dict, loc: dict) -> list[str]:
+    if pt["type"] == "table":
+        return [" | ".join(r) for r in pt["rows"]]
+    if pt["type"] == "fields":
+        return [(f"{loc['fields'][f['key']]} " if f.get("key") else "") + f["name"] + (f": {f['type']}" if f.get("type") else "")
+                + (f" — {f['note']}" if f.get("note") else "") for f in pt["fields"]]
+    if pt["type"] == "matrix":
+        said = {**loc["matrix"], **pt.get("key", {})}
+        return [f"{r['name']} — " + ", ".join(f"{col}: {said[v]}" for col, v in zip(pt["columns"], r["cells"], strict=True))
+                for r in pt["rows"]]
+    if pt["type"] == "tree":
+        return pt["lines"]
+    numbered = pt["type"] == "process-strip"
+    return [(f"{n}. " if numbered else "") + t["name"] + (f" — {t['note']}" if t.get("note") else "")
+            for n, t in enumerate(pt["steps"] if numbered else pt["tiers"], 1)]
+
+
 def pattern_lines(p: dict, loc: dict) -> list[str]:
-    """A pattern whose text states facts, as plain lines: a caption, then its rows."""
+    """Each pattern as plain lines: a caption, then its rows, indented."""
     out = []
     for pt in p.get("patterns", []):
         mark = f" [{loc['status']['assumed']}]" if pt.get("assumed") else ""
-        if pt["type"] == "table":
-            out.append((pt.get("caption") or "Table") + mark + ": " + " | ".join(pt["columns"]))
-            out += [f"  {' | '.join(r)}" for r in pt["rows"]]
-        elif pt["type"] == "fields":
-            out.append((pt.get("caption") or "Fields") + mark + ":")
-            for f in pt["fields"]:
-                key = f"{loc['fields'][f['key']]} " if f.get("key") else ""
-                kind = f": {f['type']}" if f.get("type") else ""
-                note = f" — {f['note']}" if f.get("note") else ""
-                out.append(f"  {key}{f['name']}{kind}{note}")
+        columns = ": " + " | ".join(pt["columns"]) if pt["type"] == "table" else ":"
+        out.append((pt.get("caption") or loc["patterns"][pt["type"]]) + mark + columns)
+        out += [f"  {row}" for row in _pattern_rows(pt, loc)]
     return out
 
 
@@ -106,7 +118,7 @@ def markdown(spec: dict) -> str:
             names[cid] = c["name"]
             md.append(f"- {_card(c, cid, flag_of, loc)}")
             md += [f"  - {b}" for b in c.get("bullets", [])]
-        md += [f"  {line}" if line.startswith(" ") else f"- {line}" for line in pattern_lines(p, loc)]
+        md += [re.sub(r"^( *)", r"\1- ", line) for line in pattern_lines(p, loc)]
         md += [f"- *{ch['text']}*" for ch in p.get("chips", [])]
         md.append("")
     zones = spec["layout"].get("zones")

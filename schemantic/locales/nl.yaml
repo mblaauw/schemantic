@@ -23,7 +23,7 @@ legend:
   external: "Clients en externe systemen"
   actor: "Mensen en teams"
   warning: "Open keuze of frictie"
-  info: "Aanname of toelichting"
+  info: "Toelichting"
   arrow: "Richting van request of data"
   mean_data: "Richting van de data"
   mean_request: "Richting van requests"
@@ -58,6 +58,13 @@ fields:
   primary: "PK"
   foreign: "FK"
   unique: "UQ"
+patterns:
+  tier-strip: "Lagen"
+  process-strip: "Stappen"
+  tree: "Boom"
+  matrix: "Matrix"
+  table: "Tabel"
+  fields: "Velden"
 matrix:
   full: "volledig"
   partial: "beperkt"

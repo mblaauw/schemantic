@@ -23,7 +23,7 @@ legend:
   external: "Clients and external systems"
   actor: "People and teams"
   warning: "Open choice or friction"
-  info: "Assumption or note"
+  info: "Note"
   arrow: "Direction of request or data"
   mean_data: "Direction of data"
   mean_request: "Direction of requests"
@@ -58,6 +58,13 @@ fields:
   primary: "PK"
   foreign: "FK"
   unique: "UQ"
+patterns:
+  tier-strip: "Tiers"
+  process-strip: "Steps"
+  tree: "Tree"
+  matrix: "Matrix"
+  table: "Table"
+  fields: "Fields"
 matrix:
   full: "full"
   partial: "limited"
