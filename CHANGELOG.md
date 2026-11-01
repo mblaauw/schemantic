@@ -4,6 +4,13 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Changed
+- Every pattern now reaches the outline and the source checks, not only `table` and `fields`: tiers, steps, tree lines and matrix
+  cells are in the `.md` and the SVG's description, and once a plate declares `sources`, each pattern needs `refs` or `assumed`.
+  A plate with sources and older patterns gets new `traceability` warnings. A `tier-strip` also takes a `caption`.
+- The outline's patterns are nested lists in Markdown, and name an uncaptioned pattern in the plate's language.
+- The legend calls an info chip "Note" ("Toelichting"), since an assumption now has its own tag.
+
 ### Added
 - The `data-model` layout: entities with fields, joined by arrows that say how many on each side (`cardinality`,
   `flows_mean: relation`), with a starter, an example and an eval case.

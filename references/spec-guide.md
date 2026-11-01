@@ -21,7 +21,7 @@ lint (`placeholder`) names each TODO left.
 | `topic` (60) | optional: what the plate is about, in a few words ("Order platform after phase 2"); a quiet line above the title, so the title is free to make the claim |
 | `title` (80) | the one message, as a claim. Not "Architecture overview": that is a topic. Lint warns when its last line is one word |
 | `subtitle` (120) | how the plate makes that claim true |
-| `sources` | where the content comes from: `{id, kind, ref, path}`. Once given, every card, arrow, status and warning names a source or says it is `assumed` (lint: `traceability`). `path`, relative to the spec, is the file or folder on disk: lint then checks that each quote is in it |
+| `sources` | where the content comes from: `{id, kind, ref, path}`. Once given, every card, pattern, arrow, status and warning names a source or says it is `assumed` (lint: `traceability`). `path`, relative to the spec, is the file or folder on disk: lint then checks that each quote is in it |
 | `archetype`, `layout` | see `archetypes.md` and the drawings in `docs/layouts.md`; `layout.chips_at: bottom` lines chips up at the bottom of a row |
 | `flows_mean` | what every arrow means: `data`, `request`, `dependency`, `control`, `sequence` (what comes before what, for a roadmap) or `relation` (how entities relate, for a data-model); sets the legend (lint warns without it) |
 
@@ -79,14 +79,14 @@ leave the note out; a note written from the name is an invention.
   locale's key words (full, limited, no access) do not fit, give `key: {full: ..., partial: ..., none: ...}`.
 
 - `table`: `columns` (2 to 5, 28 each) and `rows` (up to 8), each row a list with one text per column (48 each); the first
-  column is bold. For facts a `matrix` cannot hold: versions, limits, owners. Once `sources` are declared it needs `refs`, or
-  `assumed: <why>`, which tags it.
+  column is bold. For facts a `matrix` cannot hold: versions, limits, owners.
 
 - `fields`: up to 10 `fields`, each with a `name` (28), and optionally a `type` (16), a `key` (`primary | foreign | unique`,
   drawn PK, FK, UQ) and a `note` (40). For what a table, event or API holds. Give only the fields, types and keys the sources
-  name; once `sources` are declared it needs `refs`, or `assumed: <why>`, which tags it.
+  name.
 
-A `process-strip`, `tree`, `matrix`, `table` or `fields` takes an optional `caption`, a short line above it.
+Any pattern takes an optional `caption`, a short line above it. A pattern states facts too: once `sources` are declared it
+needs `refs`, or `assumed: <why>`, which tags it beside the caption.
 
 ## Chips
 

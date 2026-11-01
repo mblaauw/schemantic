@@ -426,6 +426,8 @@ def test_refs_reach_the_svg_and_the_outline_is_written(tmp_path):
                 c["status_ref"] = "adr: section 2"
             if c.get("flag"):
                 c["flag"]["refs"] = ["adr: section 2"]
+        for pt in p.get("patterns", []):
+            pt["refs"] = ["adr: section 2"]
     for f in spec["flows"]:
         f["refs"] = ["adr: section 2"]
     code, report = run("build", write(tmp_path, spec, "traced"), "--out", tmp_path)

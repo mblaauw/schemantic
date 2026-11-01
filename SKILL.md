@@ -85,7 +85,7 @@ sources:
 
 Give a source its `path` when it is on disk (a file, or a folder of files), relative to the spec: lint then checks each
 quote against it. Plan the panels, their cards, the flows and the open questions. Everything that says something about
-the world names its source: `refs: ["<source id>: <path, line or short quote>"]` on cards, arrows and warnings,
+the world names its source: `refs: ["<source id>: <path, line or short quote>"]` on cards, patterns, arrows and warnings,
 `status_ref` beside a `status`. Quote word for word, in the source's language. Then audit the plan against the sources,
 and fix it before writing more:
 

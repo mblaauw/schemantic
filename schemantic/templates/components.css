@@ -77,7 +77,8 @@ body { background: var(--paper); }
 .chip-info .ic { color: var(--info-icon); }
 
 /* Panel pattern: tier strip */
-.tiers { display: flex; align-items: stretch; gap: 4px; }
+.tier-strip { display: flex; flex-direction: column; }
+.tiers { flex: 1 1 auto; display: flex; align-items: stretch; gap: 4px; }
 .tier { flex: 1 1 0; min-width: 0; display: flex; gap: 8px; align-items: center; border-radius: var(--r-card); padding: 10px; }
 .tier-bronze { background: var(--bronze-bg); border: 1px solid var(--bronze-line); } .tier-bronze .ic { color: var(--bronze-icon); }
 .tier-silver { background: var(--silver-bg); border: 1px solid var(--silver-line); } .tier-silver .ic { color: var(--silver-icon); }
@@ -89,12 +90,12 @@ body { background: var(--paper); }
 /* Panel pattern: tree */
 .tree { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card);
   padding: 8px 10px; font-family: var(--mono); font-size: var(--t-mono); color: var(--text); }
-.tree-cap { font-family: var(--font); font-size: var(--t-small); font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+.tree .pt-head { font-family: var(--font); margin-bottom: 4px; }
 .trow { display: flex; align-items: flex-start; line-height: 1.5; }
 .trow > span:last-child { white-space: pre; }
 .tk { flex: 0 0 auto; width: 9px; height: 9px; margin: 3px 5px 0 0; border-left: 1px solid var(--muted); border-bottom: 1px solid var(--muted); }
 
-/* Panel patterns that make claims: a caption, with the assumed tag beside it */
+/* A pattern's caption, with the assumed tag beside it */
 .pt-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
 .pt-cap { font-size: var(--t-small); font-weight: 600; color: var(--muted); }
 
@@ -121,7 +122,6 @@ body { background: var(--paper); }
 /* A matrix is as wide as its content, left-aligned: columns of at least 72 px, never stretched across the panel */
 .matrix { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card); padding: 8px 12px;
   width: fit-content; max-width: 100%; align-self: flex-start; }
-.mx-cap { font-size: var(--t-small); font-weight: 600; color: var(--muted); margin-bottom: 6px; }
 .mx-grid { display: grid; row-gap: 6px; column-gap: 14px; align-items: center; }
 .mx-col { font-size: var(--t-small); font-weight: 600; color: var(--muted); text-align: center; line-height: 1.25; }
 .mx-row { font-size: var(--t-body); font-weight: 600; color: var(--ink); }
@@ -268,7 +268,6 @@ body { background: var(--paper); }
 .stack { display: flex; flex-direction: column; justify-content: space-evenly; gap: var(--gutter-y); min-width: 0; min-height: 0; }
 
 /* Panel pattern: process strip, steps in order with a number */
-.steps-cap { font-size: var(--t-small); font-weight: 600; color: var(--muted); margin-bottom: 6px; }
 .steps-row { display: flex; align-items: stretch; gap: 4px; }
 .step { flex: 1 1 0; min-width: 0; display: flex; gap: 7px; align-items: flex-start; padding: 8px 9px;
   background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card); }

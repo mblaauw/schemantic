@@ -306,9 +306,6 @@ def number_story(spec: dict) -> dict:
     return {**spec, "flows": flows}
 
 
-CLAIMING_PATTERNS = ("table", "fields")  # patterns that take `refs` and `assumed`, because their text states facts
-
-
 def claims(spec: dict):
     """What a plate says about the world, with what backs it: (id, what it is, refs, assumed)."""
     for p in spec["panels"]:
@@ -325,8 +322,7 @@ def claims(spec: dict):
             if c.get("flag", {}).get("kind") == "warning":
                 yield cid, f"warning '{c['flag']['text']}'", c["flag"].get("refs", []), None
         for n, pt in enumerate(p.get("patterns", [])):
-            if pt["type"] in CLAIMING_PATTERNS:
-                yield f"{p['id']}.{pt['type']}{n}", f"{pt['type']} in panel '{p['title']}'", pt.get("refs", []), pt.get("assumed")
+            yield f"{p['id']}.{pt['type']}{n}", f"{pt['type']} in panel '{p['title']}'", pt.get("refs", []), pt.get("assumed")
     for n, f in enumerate(spec.get("flows", [])):
         yield f"flows/{n}", f"arrow {f['from']} to {f['to']}", f.get("refs", []), f.get("assumed")
 

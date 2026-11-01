@@ -210,6 +210,8 @@ def traced(**extra):
             c["refs"] = ["notes: line 1"]
             c.pop("status", None)
             c.get("flag", {}).update(refs=["notes: line 1"])
+        for pt in p.get("patterns", []):
+            pt["refs"] = ["notes: line 1"]
     for f in spec["flows"]:
         f["refs"] = ["notes: line 1"]
     return spec
@@ -349,6 +351,59 @@ def test_a_table_states_facts_so_it_names_a_source():
     panel(spec, "gateway")["patterns"][-1] = table
     assert not any(f["detail"].startswith("table in panel") for f in sp.traceability(spec))
     assert any("from the rota" in item for item in sp.assumed_items(spec))
+
+
+EVERY_PATTERN = [
+    ({"type": "tier-strip", "tiers": [{"tier": "bronze", "name": "Raw", "note": "as landed"}, {"tier": "gold", "name": "Served"}]},
+     ["  Raw — as landed", "  Served"]),
+    ({"type": "process-strip", "steps": [{"name": "Pack", "note": "by hand"}, {"name": "Scan"}, {"name": "Ship"}]},
+     ["  1. Pack — by hand", "  2. Scan", "  3. Ship"]),
+    ({"type": "tree", "lines": ["orders/", "  bronze/"]}, ["  orders/", "    bronze/"]),
+    ({"type": "matrix", "columns": ["Read", "Write"], "rows": [{"name": "Desk", "cells": ["full", "none"]}], "key": {"none": "refused"}},
+     ["  Desk — Read: full, Write: refused"]),
+    ({"type": "table", "columns": ["Service", "Owner"], "rows": [["Desk", "Harbour"]]}, ["  Desk | Harbour"]),
+    ({"type": "fields", "fields": [{"name": "order_id", "type": "uuid", "key": "primary"}]}, ["  PK order_id: uuid"]),
+]
+
+
+@pytest.mark.parametrize(("pattern", "rows"), EVERY_PATTERN, ids=lambda v: v["type"] if isinstance(v, dict) else "")
+def test_every_pattern_reaches_the_outline_and_the_source_checks(pattern, rows):
+    from schemantic.html import build_html
+    from schemantic.outline import lines, markdown
+
+    def with_pattern(**extra):
+        spec = mutate(lambda s: panel(s, "gateway").setdefault("patterns", []).append({**pattern, "caption": "Held here", **extra}))
+        spec["canvas"]["lang"] = "en"
+        return spec
+
+    def unsourced(spec):
+        return [f for f in sp.traceability(spec) if f["id"].startswith(f"gateway.{pattern['type']}")]
+
+    outline = lines(with_pattern())
+    head = outline.index("  Held here:" if pattern["type"] != "table" else "  Held here: Service | Owner")
+    assert outline[head + 1:head + 1 + len(rows)] == [f"  {row}" for row in rows]
+    assert f"  - {rows[0].strip()}" in markdown(with_pattern())
+
+    spec = with_pattern()
+    assert not sp.schema_errors(spec)
+    spec["sources"] = [{"id": "notes", "kind": "notes", "ref": "Review"}]
+    assert unsourced(spec)
+
+    spec = with_pattern(assumed="from the rota")
+    spec["sources"] = [{"id": "notes", "kind": "notes", "ref": "Review"}]
+    assert not sp.schema_errors(spec)
+    assert not unsourced(spec)
+    assert "tag-assumed" in build_html(spec)
+    assert any("  Held here [assumed]" in line for line in lines(spec))
+
+
+def test_a_pattern_without_a_caption_is_named_in_the_plates_language():
+    from schemantic.outline import lines
+
+    spec = mutate(lambda s: panel(s, "gateway").setdefault("patterns", []).append({"type": "tree", "lines": ["orders/"]}))
+    assert "  Boom:" in lines(spec)
+    spec["canvas"]["lang"] = "en"
+    assert "  Tree:" in lines(spec)
 
 
 def test_fields_name_a_source_and_their_keys_reach_the_legend():
