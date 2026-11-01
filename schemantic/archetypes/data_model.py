@@ -12,6 +12,7 @@ from .column_flow import ColumnFlow
 class DataModel(ColumnFlow):
     name = "data-model"
     relations = True
+    ends_on_panels = True
 
     def validate(self, spec: dict) -> list[dict]:
         return super().validate(spec) + [

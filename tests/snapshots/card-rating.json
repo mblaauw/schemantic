@@ -1,0 +1,158 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   110
+  ],
+  "body": [
+   40,
+   128,
+   1560,
+   358
+  ],
+  "sell": [
+   40,
+   128,
+   1560,
+   220
+  ],
+  "sell.card0": [
+   224,
+   140,
+   638,
+   208
+  ],
+  "sell.card1": [
+   678,
+   140,
+   1092,
+   208
+  ],
+  "sell.card2": [
+   1132,
+   140,
+   1546,
+   208
+  ],
+  "sail": [
+   40,
+   264,
+   1560,
+   358
+  ],
+  "sail.card0": [
+   224,
+   278,
+   866,
+   346
+  ],
+  "sail.card1": [
+   906,
+   278,
+   1548,
+   346
+  ],
+  "footer": [
+   40,
+   376,
+   1560,
+   394
+  ],
+  "footer.legend": [
+   40,
+   376,
+   1560,
+   394
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "Ferry operations measure their bookings but still guess at their crews"
+  ],
+  [
+   40,
+   104,
+   "How far each capability has come, from the operations review"
+  ],
+  [
+   52,
+   180,
+   "Selling"
+  ],
+  [
+   266,
+   164,
+   "Booking"
+  ],
+  [
+   266,
+   192,
+   "measured every week"
+  ],
+  [
+   720,
+   164,
+   "Refunds"
+  ],
+  [
+   1176,
+   164,
+   "Web shop"
+  ],
+  [
+   52,
+   316,
+   "Sailing"
+  ],
+  [
+   266,
+   302,
+   "Crew planning"
+  ],
+  [
+   266,
+   330,
+   "on paper"
+  ],
+  [
+   948,
+   302,
+   "Timetable"
+  ],
+  [
+   1030,
+   300,
+   "assumed"
+  ],
+  [
+   948,
+   330,
+   "changes twice a year"
+  ],
+  [
+   40,
+   390,
+   "Legend"
+  ],
+  [
+   110,
+   388,
+   "assumed"
+  ],
+  [
+   172,
+   390,
+   "Assumed: the sources do not say so"
+  ],
+  [
+   444,
+   390,
+   "Maturity: 1 on paper, 5 measured"
+  ]
+ ],
+ "flows": []
+}

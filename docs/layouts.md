@@ -140,6 +140,26 @@ each with its own message.
 
 **Finished plate:** [`examples/tool-library-data-model.yaml`](../examples/tool-library-data-model.yaml) ([image](../assets/gallery/tool-library-data-model.webp))
 
+## state-machine
+
+<img src="img/layouts/state-machine.svg" alt="state-machine" width="360">
+
+**The reader asks:** What states can it be in, and what moves it on?
+
+**Not this when:** It only ever goes forward: `column-flow`; people hand work over: `swimlane`.
+
+**Finished plate:** [`examples/ferry-booking-state-machine.yaml`](../examples/ferry-booking-state-machine.yaml) ([image](../assets/gallery/ferry-booking-state-machine.webp))
+
+## decision-tree
+
+<img src="img/layouts/decision-tree.svg" alt="decision-tree" width="360">
+
+**The reader asks:** Which path applies to my case?
+
+**Not this when:** It says what is made of what, with no questions: `hierarchy`.
+
+**Finished plate:** [`examples/harbour-permit-decision-tree.yaml`](../examples/harbour-permit-decision-tree.yaml) ([image](../assets/gallery/harbour-permit-decision-tree.webp))
+
 ## Inside a panel
 
 Every layout uses the same panels. This one has every part, each named by its field in the spec. The fields, limits and
@@ -167,6 +187,7 @@ can overflow, and in a full lane an arrow can lose its route. Lint says so, by n
 | `matrix` | <img src="img/layouts/pattern-matrix.svg" alt="matrix" width="170"> | Rows against columns, each cell full, partial or none: who may do what. |
 | `table` | <img src="img/layouts/pattern-table.svg" alt="table" width="170"> | Rows of text under column names: versions, limits, owners. |
 | `fields` | <img src="img/layouts/pattern-fields.svg" alt="fields" width="170"> | What a table, event or API holds: names, types and keys. |
+| `metric` | <img src="img/layouts/pattern-metric.svg" alt="metric" width="170"> | A number with what it counts: an SLO, a cost, a volume. Always names its source. |
 
 ## Marks on any layout
 
@@ -186,6 +207,7 @@ Arrows run between cards, or between panels when the sources speak of the whole 
 | A muted card, or a struck-through name | phasing out, or removed | `status: deprecated`, `status: removed` |
 | An amber dashed arrow, or an "assumed" tag | the sources do not say this | `assumed: <why>` |
 | A dashed or dotted arrow | asynchronous, or optional | `style: async`, `style: optional` |
+| Five pips on a card | a level from 1 to 5, with what it means in the legend | `rating`, `rating_means` |
 | A heavier blue arrow | the one arrow the plate is about | `focus: true` on the flow |
 | A head at both ends of an arrow | it runs both ways | `both: true` |
 | A number on an arrow | a step in the route the title tells | a story with `draw: true`, or `step` |

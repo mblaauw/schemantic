@@ -1,0 +1,224 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   110
+  ],
+  "body": [
+   40,
+   128,
+   1560,
+   406
+  ],
+  "safe": [
+   40,
+   128,
+   1560,
+   168
+  ],
+  "have": [
+   40,
+   212,
+   1038,
+   254
+  ],
+  "recycle": [
+   1086,
+   298,
+   1560,
+   406
+  ],
+  "recycle.card0": [
+   1098,
+   350,
+   1546,
+   392
+  ],
+  "sell": [
+   40,
+   298,
+   514,
+   406
+  ],
+  "sell.card0": [
+   54,
+   350,
+   502,
+   392
+  ],
+  "lend": [
+   562,
+   298,
+   1038,
+   406
+  ],
+  "lend.card0": [
+   576,
+   350,
+   1024,
+   392
+  ],
+  "footer": [
+   40,
+   424,
+   1560,
+   442
+  ],
+  "footer.legend": [
+   40,
+   424,
+   1560,
+   442
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "A safe tool goes on the shelf only if we lack one"
+  ],
+  [
+   40,
+   104,
+   "What the desk does with a donated tool"
+  ],
+  [
+   52,
+   154,
+   "Is it safe to use?"
+  ],
+  [
+   52,
+   238,
+   "Do we have three already?"
+  ],
+  [
+   1098,
+   324,
+   "Recycle it"
+  ],
+  [
+   1142,
+   374,
+   "At the town depot"
+  ],
+  [
+   52,
+   324,
+   "Sell it"
+  ],
+  [
+   96,
+   374,
+   "At the spring fair"
+  ],
+  [
+   576,
+   324,
+   "Lend it"
+  ],
+  [
+   618,
+   374,
+   "Once it has a label"
+  ],
+  [
+   40,
+   436,
+   "Legend"
+  ],
+  [
+   134,
+   436,
+   "Which way, by the answer on the arrow"
+  ],
+  [
+   548,
+   194,
+   "yes"
+  ],
+  [
+   1332,
+   238,
+   "no"
+  ],
+  [
+   286,
+   280,
+   "yes"
+  ],
+  [
+   808,
+   280,
+   "no"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "safe",
+   "to": "have",
+   "points": [
+    [
+     538,
+     176
+    ],
+    [
+     538,
+     206
+    ]
+   ],
+   "label": "yes"
+  },
+  {
+   "i": 1,
+   "from": "safe",
+   "to": "recycle",
+   "points": [
+    [
+     1322,
+     176
+    ],
+    [
+     1322,
+     292
+    ]
+   ],
+   "label": "no"
+  },
+  {
+   "i": 2,
+   "from": "have",
+   "to": "sell",
+   "points": [
+    [
+     278,
+     262
+    ],
+    [
+     278,
+     292
+    ]
+   ],
+   "label": "yes"
+  },
+  {
+   "i": 3,
+   "from": "have",
+   "to": "lend",
+   "points": [
+    [
+     800,
+     262
+    ],
+    [
+     800,
+     292
+    ]
+   ],
+   "label": "no"
+  }
+ ]
+}

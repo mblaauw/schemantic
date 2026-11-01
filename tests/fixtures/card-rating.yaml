@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=../../schemantic/schema/plate.schema.json
+# Fixture: ratings on cards, as a maturity map, with one assumed.
+canvas: {size: landscape-4x3, lang: en}
+title: "Ferry operations measure their bookings but still guess at their crews"
+subtitle: "How far each capability has come, from the operations review"
+archetype: capability-map
+layout:
+  domains: [sell, sail]
+panels:
+  - id: sell
+    title: "Selling"
+    role: platform
+    cards:
+      - {icon: ticket, name: "Booking", rating: 5, rating_ref: "Review, page 2", note: "measured every week"}
+      - {icon: receipt, name: "Refunds", rating: 3, rating_ref: "Review, page 3"}
+      - {icon: world, name: "Web shop", rating: 4, rating_ref: "Review, page 2"}
+  - id: sail
+    title: "Sailing"
+    role: data
+    cards:
+      - {icon: users, name: "Crew planning", rating: 1, rating_ref: "Review, page 5", note: "on paper"}
+      - {icon: calendar, name: "Timetable", rating: 2, assumed: "the review does not rate it; ops think so", note: "changes twice a year"}
+rating_means: "Maturity: 1 on paper, 5 measured"

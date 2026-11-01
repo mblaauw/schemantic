@@ -1,0 +1,37 @@
+archetype: state-machine
+
+layout:
+  areas:
+    - "first middle"
+    - "failed last"
+  start: first
+  ends: [failed, last]
+
+panels:
+  - id: first
+    title: "TODO: the state it starts in"
+    role: platform
+    cards:
+      - {icon: circle, name: "TODO: what holds in this state", refs: ["notes: TODO"]}
+  - id: middle
+    title: "TODO: the state that follows"
+    role: platform
+    cards:
+      - {icon: circle, name: "TODO: what holds in this state", refs: ["notes: TODO"]}
+  - id: failed
+    title: "TODO: a state it can end in"
+    role: external
+    cards:
+      - {icon: circle, name: "TODO: what holds in this state", refs: ["notes: TODO"]}
+  - id: last
+    title: "TODO: a state it can end in"
+    role: platform
+    cards:
+      - {icon: circle, name: "TODO: what holds in this state", refs: ["notes: TODO"]}
+
+flows_mean: transition
+flows:
+  - {from: first, to: middle, label: "TODO: event", refs: ["notes: TODO"]}
+  - {from: middle, to: first, label: "TODO: event back", refs: ["notes: TODO"]}
+  - {from: middle, to: last, label: "TODO: event", refs: ["notes: TODO"]}
+  - {from: first, to: failed, label: "TODO: event", refs: ["notes: TODO"]}

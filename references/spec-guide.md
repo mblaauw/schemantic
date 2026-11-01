@@ -23,7 +23,8 @@ lint (`placeholder`) names each TODO left.
 | `subtitle` (120) | how the plate makes that claim true |
 | `sources` | where the content comes from: `{id, kind, ref, path}`. Once given, every card, pattern, arrow, status and warning names a source or says it is `assumed` (lint: `traceability`). `path`, relative to the spec, is the file or folder on disk: lint then checks that each quote is in it |
 | `archetype`, `layout` | see `archetypes.md` and the drawings in `docs/layouts.md`; `layout.chips_at: bottom` lines chips up at the bottom of a row |
-| `flows_mean` | what every arrow means: `data`, `request`, `dependency`, `control`, `sequence` (what comes before what, for a roadmap) or `relation` (how entities relate, for a data-model); sets the legend (lint warns without it) |
+| `rating_means` | what a card's `rating` says, in the legend (48): `"Maturity: 1 ad hoc, 5 measured"`. Needed once any card has a rating |
+| `flows_mean` | what every arrow means: `data`, `request`, `dependency`, `control`, `sequence` (what comes before what, for a roadmap) `relation` (how entities relate, for a data-model), `decision` (which way, for a decision-tree) or `transition` (what moves a state on, for a state-machine); sets the legend (lint warns without it) |
 
 ## Panels
 
@@ -59,6 +60,8 @@ systems outside the team's control, `actor` for people and teams. A theme can ad
   status: planned                 # optional: a tag after the name; planned is dashed, deprecated muted, removed struck
   status_ref: "plan: built in phase 2"   # where the sources give the status; needed once `sources` are declared
   assumed: "the plan implies it"  # optional: not in the sources, and why; the plate tags it
+  rating: 3                       # optional: a level from 1 to 5, drawn as five pips; the plate's `rating_means` says what it means
+  rating_ref: "review: level 3"   # where the sources give the rating; always needed, unless the card is `assumed`
   flag: {kind: warning, text: "Rate limits per tenant or per client?"}   # optional: numbered marker, text in the footer
   focus: true                     # optional, as on panels
   refs: ["notes: queue for failed events"]   # where it comes from; needed once `sources` are declared, unless it is `assumed`
@@ -84,6 +87,10 @@ leave the note out; a note written from the name is an invention.
 - `fields`: up to 10 `fields`, each with a `name` (28), and optionally a `type` (16), a `key` (`primary | foreign | unique`,
   drawn PK, FK, UQ) and a `note` (40). For what a table, event or API holds. Give only the fields, types and keys the sources
   name.
+
+- `metric`: 1 to 4 `metrics`, each a `value` (12), a `label` (32) and optionally a `note` (40): an SLO, a cost, a volume. Copy the
+  number from the sources. It always needs `refs` or `assumed: <why>`, with or without declared `sources`, since an invented
+  number does more harm than an invented box.
 
 Any pattern takes an optional `caption`, a short line above it. A pattern states facts too: once `sources` are declared it
 needs `refs`, or `assumed: <why>`, which tags it beside the caption.

@@ -277,7 +277,7 @@ schemantic.lint = (cfg) => {
   // resolved tracks.
   const body = plate.querySelector("#body");
   const bcs = body ? getComputedStyle(body) : null;
-  if (bcs && bcs.gridTemplateAreas !== "none") {
+  if (bcs && bcs.gridTemplateAreas !== "none" && !("openCells" in body.dataset)) {
     const cells = [...bcs.gridTemplateAreas.matchAll(/"([^"]*)"/g)].map((m) => m[1].trim().split(/\s+/));
     const hs = bcs.gridTemplateRows.split(/\s+/).map(num);
     const ws = bcs.gridTemplateColumns.split(/\s+/).map(num);

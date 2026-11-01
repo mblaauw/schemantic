@@ -1,0 +1,219 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   110
+  ],
+  "body": [
+   40,
+   128,
+   1560,
+   388
+  ],
+  "sales": [
+   40,
+   128,
+   530,
+   324
+  ],
+  "desk": [
+   54,
+   180,
+   518,
+   236
+  ],
+  "sales.metric0": [
+   54,
+   246,
+   518,
+   310
+  ],
+  "numbers": [
+   578,
+   128,
+   1560,
+   388
+  ],
+  "numbers.metric0": [
+   592,
+   180,
+   1548,
+   280
+  ],
+  "numbers.metric1": [
+   592,
+   290,
+   1548,
+   376
+  ],
+  "footer": [
+   40,
+   406,
+   1560,
+   426
+  ],
+  "footer.legend": [
+   40,
+   406,
+   1560,
+   426
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "The ferry booking desk answers fast enough, at a cost we can carry"
+  ],
+  [
+   40,
+   104,
+   "What the booking service promises and what it costs to run"
+  ],
+  [
+   52,
+   154,
+   "Booking"
+  ],
+  [
+   96,
+   204,
+   "Booking desk"
+  ],
+  [
+   96,
+   220,
+   "sells crossings"
+  ],
+  [
+   64,
+   280,
+   "2,400"
+  ],
+  [
+   64,
+   298,
+   "bookings a day"
+  ],
+  [
+   592,
+   154,
+   "What it promises"
+  ],
+  [
+   592,
+   190,
+   "Service levels"
+  ],
+  [
+   602,
+   234,
+   "99.9%"
+  ],
+  [
+   602,
+   252,
+   "availability"
+  ],
+  [
+   602,
+   266,
+   "per month, excluding planned work"
+  ],
+  [
+   924,
+   234,
+   "300 ms"
+  ],
+  [
+   924,
+   252,
+   "response time"
+  ],
+  [
+   924,
+   266,
+   "95th percentile"
+  ],
+  [
+   1244,
+   234,
+   "€1,800"
+  ],
+  [
+   1244,
+   252,
+   "hosting a month"
+  ],
+  [
+   592,
+   300,
+   "Next year"
+  ],
+  [
+   1492,
+   300,
+   "assumed"
+  ],
+  [
+   602,
+   344,
+   "3,000"
+  ],
+  [
+   602,
+   364,
+   "bookings a day"
+  ],
+  [
+   40,
+   420,
+   "Legend"
+  ],
+  [
+   134,
+   420,
+   "Platform component"
+  ],
+  [
+   302,
+   420,
+   "Data and storage"
+  ],
+  [
+   452,
+   420,
+   "Direction of requests"
+  ],
+  [
+   598,
+   420,
+   "assumed"
+  ],
+  [
+   662,
+   420,
+   "Assumed: the sources do not say so"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "desk",
+   "to": "numbers",
+   "points": [
+    [
+     524,
+     208
+    ],
+    [
+     572,
+     208
+    ]
+   ],
+   "label": null
+  }
+ ]
+}

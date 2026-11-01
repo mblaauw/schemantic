@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=../../schemantic/schema/plate.schema.json
+# Fixture: a decision tree where two answers meet at one outcome, so one arrow is drawn across the tree.
+canvas: {size: landscape-4x3, lang: en}
+title: "Anything urgent reaches a person within the hour"
+subtitle: "What the desk does with a report from a ferry crew"
+archetype: decision-tree
+layout: {root: urgent}
+panels:
+  - {id: urgent, title: "Is it urgent?", role: platform}
+  - {id: safety, title: "Is anyone in danger?", role: platform}
+  - {id: passenger, title: "Does a passenger feel it?", role: platform}
+  - {id: page, title: "Call the duty officer", role: data, cards: [{icon: bell, name: "Within five minutes"}]}
+  - {id: ticket, title: "Open a ticket", role: data, cards: [{icon: ticket, name: "Next working day"}]}
+  - {id: log, title: "Write it in the log", role: data, cards: [{icon: note, name: "Read at the weekly review"}]}
+flows_mean: decision
+flows:
+  - {from: urgent, to: safety, label: "yes"}
+  - {from: urgent, to: passenger, label: "no"}
+  - {from: safety, to: page, label: "yes"}
+  - {from: safety, to: ticket, label: "no"}
+  - {from: passenger, to: ticket, label: "yes"}
+  - {from: passenger, to: log, label: "no"}

@@ -15,12 +15,15 @@ class Hierarchy(Archetype):
     allowed = frozenset({"root", "children", "chips_at"})
     legend_keys = {"mean_control": "mean_leads"}
 
+    def children(self, spec: dict) -> dict[str, list[str]]:
+        return spec["layout"]["children"]
+
     def placed(self, spec: dict) -> list[str]:
-        return [spec["layout"]["root"]] + [c for kids in spec["layout"]["children"].values() for c in kids]
+        return [spec["layout"]["root"]] + [c for kids in self.children(spec).values() for c in kids]
 
     def validate(self, spec: dict) -> list[dict]:
         lay, out = spec["layout"], []
-        for parent in lay["children"]:
+        for parent in self.children(spec):
             if parent not in self.placed(spec):
                 out.append(finding("layout", f"layout.children.{parent}", f"'{parent}' has children but is not in the tree"))
         if out or len(set(self.placed(spec))) != len(self.placed(spec)):
@@ -35,15 +38,15 @@ class Hierarchy(Archetype):
         return out
 
     def leaves(self, spec: dict, pid: str) -> list[str]:
-        kids = spec["layout"]["children"].get(pid) or []
+        kids = self.children(spec).get(pid) or []
         return [leaf for k in kids for leaf in self.leaves(spec, k)] or [pid]
 
     def levels(self, spec: dict) -> list[list[str]]:
-        lay = spec["layout"]
-        out, level = [], [lay["root"]]
+        tree = self.children(spec)
+        out, level = [], [spec["layout"]["root"]]
         while level:
             out.append(level)
-            level = [c for p in level for c in lay["children"].get(p) or []]
+            level = [c for p in level for c in tree.get(p) or []]
         return out
 
     def grid(self, spec: dict) -> GridSpec:

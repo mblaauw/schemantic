@@ -65,6 +65,8 @@ schemantic.route = (flows) => {
       for (const [o, cost] of [
         [0, OUTER],
         [out * LANE, OUTER + LANE],
+        [out * 2 * LANE, OUTER + 2 * LANE],
+        [out * 3 * LANE, OUTER + 3 * LANE],
       ])
         if (c + o > CLEAR && c + o < limit - CLEAR) set.set(r2(c + o), cost);
   };
@@ -103,6 +105,7 @@ schemantic.route = (flows) => {
       : Math.abs(p[0] - u[0]) < LANE - 2 && span(p[1], q[1], u[1], v[1]) > 0;
   };
   const runs = (pts) => pts.slice(1).map((q, k) => [pts[k], q]);
+  const runLength = ([p, q]) => Math.abs(q[0] - p[0]) + Math.abs(q[1] - p[1]);
   const placed = [];
   // Clear of boxes, labels and the routes already placed, except those in `ignore` (routes that may be moved).
   const clear = (pts, obstacles, both, labels = true, ignore = []) => {
@@ -452,6 +455,56 @@ schemantic.route = (flows) => {
       .sort((p, q) => p.cost - q.cost);
   };
 
+  // An arrow back to its own box: out of one side and in again a little further along. Over the top or under the bottom
+  // first, wide enough for the label above or below it; on a side, its label would need the gutter's whole width.
+  const loops = (a, label) => {
+    const out = [];
+    const reach = PAD + HEAD + 8;
+    const wide = label ? label.length * labelSize * 0.62 + 28 : 3 * LANE;
+    const add = (pts, off) => out.push({ pts, cost: runs(pts).reduce((s, run) => s + runLength(run), 0) + off });
+    if (a.r - a.l > wide + 32) {
+      const room = (a.r - a.l - wide) / 2 - 16;
+      for (const [o, off] of [
+        [0, 0],
+        [room / 2, room / 2],
+        [-room / 2, room / 2],
+        [room, room],
+        [-room, room],
+      ]) {
+        const [x1, x2] = [mid(a.l, a.r) + o - wide / 2, mid(a.l, a.r) + o + wide / 2];
+        for (const [y0, s] of [
+          [a.b, 1],
+          [a.t, -1],
+        ])
+          add(
+            [
+              [x1, y0 + s * PAD],
+              [x1, y0 + s * reach],
+              [x2, y0 + s * reach],
+              [x2, y0 + s * PAD],
+            ],
+            off + (s < 0 ? 10 : 0),
+          );
+      }
+    }
+    const tall = Math.min(4 * LANE, a.b - a.t - 16);
+    const [y1, y2] = [mid(a.t, a.b) - tall / 2, mid(a.t, a.b) + tall / 2];
+    for (const [x0, s] of [
+      [a.r, 1],
+      [a.l, -1],
+    ])
+      add(
+        [
+          [x0 + s * PAD, y1],
+          [x0 + s * reach, y1],
+          [x0 + s * reach, y2],
+          [x0 + s * PAD, y2],
+        ],
+        4 * BEND,
+      );
+    return out.sort((p, q) => p.cost - q.cost);
+  };
+
   // The boxes of a header's words: its title and subtitle as set (a range, so not the full width of their block), and
   // its status tag.
   const words = (ph) =>
@@ -471,11 +524,7 @@ schemantic.route = (flows) => {
         problems.push({ i, kind: "endpoint", problem: "endpoint not found" });
         return null;
       }
-      if (A === B) {
-        problems.push({ i, kind: "self", problem: "from and to are the same element" });
-        return null;
-      }
-      if (A.contains(B) || B.contains(A)) {
+      if (A !== B && (A.contains(B) || B.contains(A))) {
         problems.push({ i, kind: "nested", problem: "connects a card to its own panel; connect it to another box" });
         return null;
       }
@@ -488,7 +537,7 @@ schemantic.route = (flows) => {
             !(s.el === A || s.el === B || s.el.contains(A) || s.el.contains(B) || A.contains(s.el) || B.contains(s.el)),
         )
         .flatMap((s) => (own(s) ? words(s.el) : [s.box]));
-      return { i, fl, A, B, obstacles, cands: candidates(rel(A), rel(B)) };
+      return { i, fl, A, B, obstacles, cands: A === B ? loops(rel(A), fl.label) : candidates(rel(A), rel(B)) };
     })
     .filter(Boolean);
   const ov = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -509,7 +558,6 @@ schemantic.route = (flows) => {
     ov.innerHTML = "";
     return { w: r.width, asc: P.top - r.top, desc: r.bottom - P.top };
   };
-  const runLength = ([p, q]) => Math.abs(q[0] - p[0]) + Math.abs(q[1] - p[1]);
   const longestFirst = (pts) => runs(pts).sort((s, t) => runLength(t) - runLength(s));
   const placeLabel = (r) => {
     if (!r.fl.label) return;
@@ -556,7 +604,9 @@ schemantic.route = (flows) => {
   // A flow is straight when a straight candidate clears every box (other routes aside).
   const free = (pts, obstacles) => runs(pts).every(([p, q]) => !obstacles.some((o) => hits(segBox(p, q, CLEAR), o)));
   const bent = (j) => (j.cands.some((c) => c.pts.length === 2 && free(c.pts, j.obstacles)) ? 0 : 1);
-  jobs.sort((p, q) => bent(p) - bent(q) || p.i - q.i);
+  // Among bent ones, an arrow back to its own box goes first: it hugs the box, and has nowhere else to go.
+  const looped = (j) => (j.A === j.B ? 0 : 1);
+  jobs.sort((p, q) => bent(p) - bent(q) || looped(p) - looped(q) || p.i - q.i);
   // Take a label off the plate, so it can be placed again around a route that needed its spot.
   const unplace = (r) => {
     const at = labelBoxes.indexOf(r.labelBox);

@@ -1,6 +1,6 @@
 # Skill evals
 
-Fourteen cases test the skill's real job, from sources to a truthful plate: eight in the main comparison, and six
+Sixteen cases test the skill's real job, from sources to a truthful plate: eight in the main comparison, and eight
 that test whether an agent picks and fills the newer layouts. Each case in `cases/` has a `prompt.md`
 (what the user asks), `inputs/` (fictional sources) and a `rubric.yaml` (what a good plate must have).
 
@@ -19,6 +19,9 @@ that test whether an agent picks and fills the newer layouts. Each case in `case
 | 11-comparison | options against four criteria, with a recommendation | picks a comparison; every cell filled, the pick marked |
 | 12-hierarchy | a reporting structure | picks a hierarchy |
 | 13-quadrant | ideas scored on two axes | picks a quadrant |
+| 14-data-model | a design note on what is stored | picks a data model; only the fields the source names |
+| 15-state-machine | rules for how a loan moves on | picks a state machine; a transition back and one to its own state |
+| 16-decision-tree | a policy in prose | picks a decision tree; the answers on the arrows |
 
 ## Running
 

@@ -31,6 +31,8 @@ legend:
   mean_control: "Controls"
   mean_sequence: "Comes before"
   mean_relation: "Related; 1:n says how many on each side"
+  mean_decision: "Which way, by the answer on the arrow"
+  mean_transition: "What moves one state to the next"
   style_sync: "Synchronous call"
   style_async: "Asynchronous: event or message"
   style_reply: "Reply or event"
@@ -49,6 +51,8 @@ legend:
   focus: "The point of this plate"
 status:
   assumed: "assumed"
+  start: "start"
+  end: "end"
   new: "new"
   changed: "changed"
   planned: "planned"
@@ -65,6 +69,7 @@ patterns:
   matrix: "Matrix"
   table: "Table"
   fields: "Fields"
+  metric: "Metrics"
 matrix:
   full: "full"
   partial: "limited"

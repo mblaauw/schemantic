@@ -24,6 +24,9 @@ class GridSpec:
     marks: dict[str, int] = field(default_factory=dict)         # band name -> the label (1-based) to mark, e.g. now
     mark_label: str = "now"                                     # the locale key of the tag on a marked label
     gutter_x: str = "var(--gutter-x)"                           # the track between columns; wider where arrows carry labels
+    gutter_y: str = "var(--gutter-y)"                           # the track between rows
+    open_cells: bool = False                                    # empty cells are expected: arrows run through them
+    room_below: str = "0"                                       # free space under the grid, for arrows that go around it
 
 
 class Archetype:
@@ -35,6 +38,8 @@ class Archetype:
     legend_keys: dict = {}                    # legend locale keys this layout reads differently (a reply, not "async")
     legend_roles: bool = True                 # False when a panel's colour means nothing on this layout
     relations: bool = False                   # True when an arrow can say how many on each side (cardinality)
+    ends_on_panels: bool = False              # True when an arrow joins panels by rule, so it is never short of a card
+    self_loops: bool = False                  # True when an arrow can leave a box and come back to it
     cards_are_things: bool = True             # False when cards are steps or verdicts, so their icons do not say who
 
     def placed(self, spec: dict) -> list[str]:
@@ -59,6 +64,10 @@ class Archetype:
     def loud(self, spec: dict) -> set[str]:
         """Panels with a filled header when the plate has no focus: the layout's own centre, if it has one."""
         return set()
+
+    def advice(self, spec: dict) -> list[dict]:
+        """Warnings of this layout, on a plate whose layout checked clean."""
+        return []
 
     def standalone(self, spec: dict) -> set[str]:
         """Panels that may stand without a flow: their place on the plate already says how they relate."""

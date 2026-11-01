@@ -31,6 +31,8 @@ legend:
   mean_control: "Stuurt aan"
   mean_sequence: "Gaat vooraf aan"
   mean_relation: "Relatie; 1:n zegt hoeveel aan elke kant"
+  mean_decision: "Welke kant op, naar het antwoord op de pijl"
+  mean_transition: "Wat de ene toestand naar de volgende brengt"
   style_sync: "Synchrone call"
   style_async: "Asynchroon: event of bericht"
   style_reply: "Antwoord of event"
@@ -49,6 +51,8 @@ legend:
   focus: "Waar deze plaat om draait"
 status:
   assumed: "aanname"
+  start: "start"
+  end: "eind"
   new: "nieuw"
   changed: "gewijzigd"
   planned: "gepland"
@@ -65,6 +69,7 @@ patterns:
   matrix: "Matrix"
   table: "Tabel"
   fields: "Velden"
+  metric: "Cijfers"
 matrix:
   full: "volledig"
   partial: "beperkt"

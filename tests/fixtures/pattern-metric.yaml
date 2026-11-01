@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=../../schemantic/schema/plate.schema.json
+# Fixture: the metric pattern beside cards, with a caption and an assumed tag, in a panel of its own and under cards.
+canvas: {size: landscape-4x3, lang: en}
+title: "The ferry booking desk answers fast enough, at a cost we can carry"
+subtitle: "What the booking service promises and what it costs to run"
+archetype: column-flow
+layout:
+  areas: ["sales numbers"]
+  column_widths: [1, 2]
+panels:
+  - id: sales
+    title: "Booking"
+    role: platform
+    cards:
+      - {id: desk, icon: ticket, name: "Booking desk", note: "sells crossings"}
+    patterns:
+      - type: metric
+        refs: ["Service review, table 2"]
+        metrics:
+          - {value: "2,400", label: "bookings a day"}
+  - id: numbers
+    title: "What it promises"
+    role: data
+    patterns:
+      - type: metric
+        caption: "Service levels"
+        refs: ["Service review, table 1"]
+        metrics:
+          - {value: "99.9%", label: "availability", note: "per month, excluding planned work"}
+          - {value: "300 ms", label: "response time", note: "95th percentile"}
+          - {value: "€1,800", label: "hosting a month"}
+      - type: metric
+        caption: "Next year"
+        assumed: "extrapolated from last summer's growth"
+        metrics:
+          - {value: "3,000", label: "bookings a day"}
+flows_mean: request
+flows:
+  - {from: desk, to: numbers}

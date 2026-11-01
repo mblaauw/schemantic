@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=../../schemantic/schema/plate.schema.json
+# Fixture: states in one row with no cards, so an arrow back and an arrow to its own state both go under the row.
+canvas: {size: landscape-4x3, lang: nl}
+title: "Een melding gaat terug zodra de test faalt"
+subtitle: "De toestanden van een melding, van nieuw tot klaar"
+archetype: state-machine
+layout:
+  areas: ["nieuw open bezig getest klaar"]
+  start: nieuw
+  ends: [klaar]
+panels:
+  - {id: nieuw, title: "Nieuw", role: platform}
+  - {id: open, title: "Open", role: platform}
+  - {id: bezig, title: "Bezig", role: platform}
+  - {id: getest, title: "Getest", role: platform}
+  - {id: klaar, title: "Klaar", role: platform}
+flows_mean: transition
+flows:
+  - {from: nieuw, to: open, label: "gezien"}
+  - {from: open, to: bezig, label: "gepakt"}
+  - {from: bezig, to: getest, label: "af"}
+  - {from: getest, to: klaar, label: "goed"}
+  - {from: getest, to: open, label: "fout gevonden"}
+  - {from: bezig, to: bezig, label: "wacht"}

@@ -33,12 +33,13 @@ def grid_css(spec: dict) -> dict:
             lines.append(gap)
     # Rows take their content height; the canvas fits them (or a fixed canvas spreads its surplus over the gutters,
     # see js/fit.js).
-    gutter = "calc(var(--gutter-y) + var(--gap-extra, 0px))"
+    gutter = f"calc({g.gutter_y} + var(--gap-extra, 0px))"
     return {
         "columns": f" {g.gutter_x} ".join(g.columns),
         "rows": f" {gutter} ".join(["auto"] * m),
         "areas": " ".join('"' + " ".join(line) + '"' for line in lines),
         "groups": g.groups, "group_kind": g.group_kind, "bands": g.bands, "zones": g.zones, "marks": g.marks, "mark_label": g.mark_label,
+        "room_below": g.room_below, "open_cells": g.open_cells,
     }
 
 
@@ -90,6 +91,8 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
         entries.append({"kind": "status", "key": "assumed", "label": lg["status_assumed"]})
     used = {f.get("key") for p in spec["panels"] for pt in p.get("patterns", []) for f in pt.get("fields", [])}
     entries += [{"kind": "field-key", "key": k, "label": lg[f"key_{k}"]} for k in ("primary", "foreign", "unique") if k in used]
+    if spec.get("rating_means"):
+        entries.append({"kind": "rating", "key": "rating", "label": spec["rating_means"]})
     if any(t.get("focus") for t in things + spec.get("flows", [])):
         entries.append({"kind": "focus", "key": "focus", "label": lg["focus"]})
     kinds = [ch["kind"] for p in spec["panels"] for ch in p.get("chips", [])] + [f["kind"] for f in flags(spec)]

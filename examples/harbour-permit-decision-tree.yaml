@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../schemantic/schema/plate.schema.json
+# Fictional example: a decision tree, with questions as panels and answers as labelled arrows.
+canvas: {size: landscape-4x3, lang: en}
+topic: "Visiting vessels"
+title: "Two questions decide which permit a visiting vessel needs"
+subtitle: "Length first, then cargo or length of stay, from the harbour rules"
+archetype: decision-tree
+brief:
+  message: "Two questions lead every visitor to one of four permits."
+  reader: "Skippers planning a visit, and the harbour office"
+  why: "decision-tree: the reader wants the path that applies to their own vessel"
+  assumptions: []
+sources:
+  - {id: rules, kind: document, ref: "Harbour rules 2026"}
+layout:
+  root: length
+panels:
+  - id: length
+    title: "Is the vessel longer than 24 m?"
+    role: platform
+  - id: cargo
+    title: "Does it carry cargo?"
+    role: platform
+  - id: stay
+    title: "Staying over three nights?"
+    role: platform
+  - id: commercial
+    title: "Commercial berth permit"
+    role: data
+    cards:
+      - {icon: file-certificate, name: "From the harbour master", note: "apply two weeks ahead", refs: ["rules: 4.1"]}
+  - id: large
+    title: "Large vessel notice"
+    role: data
+    cards:
+      - {icon: file-description, name: "From the harbour office", note: "notify one day ahead", refs: ["rules: 4.2"]}
+  - id: long
+    title: "Seasonal mooring permit"
+    role: data
+    cards:
+      - {icon: calendar, name: "From the harbour office", note: "paid by the week", refs: ["rules: 5.1"]}
+  - id: short
+    title: "Visitor's ticket"
+    role: data
+    cards:
+      - {icon: ticket, name: "From the machine on the quay", note: "paid by the night", refs: ["rules: 5.2"]}
+flows_mean: decision
+flows:
+  - {from: length, to: cargo, label: "yes", refs: ["rules: 3"]}
+  - {from: length, to: stay, label: "no", refs: ["rules: 3"]}
+  - {from: cargo, to: commercial, label: "yes", refs: ["rules: 4.1"]}
+  - {from: cargo, to: large, label: "no", refs: ["rules: 4.2"]}
+  - {from: stay, to: long, label: "yes", refs: ["rules: 5.1"]}
+  - {from: stay, to: short, label: "no", refs: ["rules: 5.2"]}
