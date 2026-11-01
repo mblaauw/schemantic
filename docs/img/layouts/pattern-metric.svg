@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 90" width="170" height="90" role="img" aria-label="Metric: a number with what it counts" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="170" height="90" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<rect x="10" y="18" width="72" height="54" rx="3" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="17" y="39" font-size="16" font-weight="700" fill="#0F2547">99.9%</text>
+<text x="17" y="52" font-size="8" font-weight="600" fill="#0F2547">availability</text>
+<text x="17" y="63" font-size="7.5" fill="#4F5D6E">per month</text>
+<rect x="88" y="18" width="72" height="54" rx="3" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="95" y="39" font-size="16" font-weight="700" fill="#0F2547">300 ms</text>
+<text x="95" y="52" font-size="8" font-weight="600" fill="#0F2547">response</text>
+<text x="95" y="63" font-size="7.5" fill="#4F5D6E">95th pct</text>
+</svg>

@@ -42,6 +42,7 @@ SPEC_TRIGGERS = {
     "icon": lambda s: s["panels"][0]["cards"][0].update(icon="unicorn"),
     "role": lambda s: s["panels"][0].update(role="security"),
     "focus": lambda s: (panel(s, "gateway").update(focus=True), panel(s, "identity").update(focus=True)),
+    "rating": lambda s: panel(s, "gateway")["cards"][0].update(rating=3),
     "traceability": lambda s: s.update(sources=[{"id": "notes", "kind": "notes", "ref": "review notes"}]),
     "flows-mean": lambda s: s.pop("flows_mean"),
     "slide-budget": lambda s: s["canvas"].update(profile="slide"),
@@ -363,6 +364,7 @@ EVERY_PATTERN = [
      ["  Desk — Read: full, Write: refused"]),
     ({"type": "table", "columns": ["Service", "Owner"], "rows": [["Desk", "Harbour"]]}, ["  Desk | Harbour"]),
     ({"type": "fields", "fields": [{"name": "order_id", "type": "uuid", "key": "primary"}]}, ["  PK order_id: uuid"]),
+    ({"type": "metric", "metrics": [{"value": "99.9%", "label": "availability", "note": "a month"}]}, ["  99.9% availability — a month"]),
 ]
 
 
@@ -395,6 +397,35 @@ def test_every_pattern_reaches_the_outline_and_the_source_checks(pattern, rows):
     assert not unsourced(spec)
     assert "tag-assumed" in build_html(spec)
     assert any("  Held here [assumed]" in line for line in lines(spec))
+
+
+def test_a_metric_always_names_its_source():
+    metric = {"type": "metric", "metrics": [{"value": "99.9%", "label": "availability"}]}
+    assert any(f["check"] == "pattern" and "a metric states numbers" in f["detail"]
+               for f in sp.check(mutate(lambda s: panel(s, "gateway").setdefault("patterns", []).append(metric))))
+    for backed in ({"refs": ["review: table 1"]}, {"assumed": "from last year"}):
+        spec = mutate(lambda s: panel(s, "gateway").setdefault("patterns", []).append({**metric, **backed}))
+        assert not any("a metric states numbers" in f["detail"] for f in sp.check(spec))
+
+
+def test_a_rating_names_its_source_and_the_plate_says_what_it_means():
+    from schemantic.html import legend_entries
+    from schemantic.outline import lines
+
+    def rated(**extra):
+        return mutate(lambda s: panel(s, "gateway")["cards"][0].update(rating=3, **extra))
+
+    details = [f["detail"] for f in sp.check(rated()) if f["check"] == "rating"]
+    assert len(details) == 2 and "rating_ref" in details[0] and "1 and 5" in details[1]
+    spec = rated(rating_ref="review: level 3")
+    spec["rating_means"] = "Maturity: 1 low, 5 high"
+    assert not [f for f in sp.check(spec) if f["check"] == "rating"]
+    assert any("[3/5]" in line for line in lines(spec))
+    assert {"kind": "rating", "key": "rating", "label": "Maturity: 1 low, 5 high"} in legend_entries(spec, sp.load_locale("en"))
+    spec["sources"] = [{"id": "review", "kind": "document", "ref": "Review"}]
+    assert not any(f["detail"].startswith("rating") for f in sp.traceability(spec))
+    panel(spec, "gateway")["cards"][0].pop("rating_ref")
+    assert any(f["detail"].startswith("rating 3") for f in sp.traceability(spec))
 
 
 def test_a_pattern_without_a_caption_is_named_in_the_plates_language():

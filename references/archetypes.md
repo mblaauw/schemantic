@@ -211,6 +211,7 @@ layout:
 - `focus: true` on the domain the title is about. Panel colours stay out of the legend. Flows are allowed, but a map that
   needs many is a column-flow.
 - The title claims the finding ("Selling is covered; the gaps are all in after-sales"), not "capability overview".
+- A `rating` on each card makes it a maturity map, where the gaps show at a glance: `references/spec-guide.md` has the field.
 - Example: `examples/retail-capability-map.yaml`.
 
 ## comparison

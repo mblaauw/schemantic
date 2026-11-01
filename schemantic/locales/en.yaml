@@ -65,6 +65,7 @@ patterns:
   matrix: "Matrix"
   table: "Table"
   fields: "Fields"
+  metric: "Metrics"
 matrix:
   full: "full"
   partial: "limited"

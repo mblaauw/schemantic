@@ -65,6 +65,7 @@ patterns:
   matrix: "Matrix"
   table: "Tabel"
   fields: "Velden"
+  metric: "Cijfers"
 matrix:
   full: "volledig"
   partial: "beperkt"

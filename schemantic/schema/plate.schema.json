@@ -453,6 +453,11 @@
         }
       }
     },
+    "rating_means": {
+      "type": "string",
+      "maxLength": 48,
+      "description": "What a card's rating says, in the legend: 'Maturity: 1 ad hoc, 5 measured'. Needed when any card has a rating."
+    },
     "flows_mean": {
       "enum": [
         "data",
@@ -927,6 +932,16 @@
           "maxLength": 160,
           "description": "The sources do not say this; why it is drawn anyway. The plate marks it, so a reader can tell it from a fact. Not rendered."
         },
+        "rating": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "A level from 1 to 5, drawn as five pips. Needs rating_ref or assumed, and rating_means on the plate."
+        },
+        "rating_ref": {
+          "type": "string",
+          "description": "Where the sources give this rating: '<source id>: <path, line or short quote>'. Not rendered."
+        },
         "status_ref": {
           "type": "string",
           "description": "Where the sources give this status: '<source id>: <path, line or short quote>'. Not rendered."
@@ -1068,7 +1083,7 @@
       "required": [
         "type"
       ],
-      "description": "A structured block inside a panel: tier strip, process strip, tree, matrix, table or field list.",
+      "description": "A structured block inside a panel: tier strip, process strip, tree, matrix, table, field list or metric.",
       "properties": {
         "type": {
           "enum": [
@@ -1077,7 +1092,8 @@
             "matrix",
             "process-strip",
             "table",
-            "fields"
+            "fields",
+            "metric"
           ]
         },
         "caption": {
@@ -1097,6 +1113,50 @@
         }
       },
       "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "metric"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "metrics"
+            ],
+            "properties": {
+              "metrics": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 4,
+                "description": "Numbers the sources give. The pattern always needs refs or assumed.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "value",
+                    "label"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {
+                      "type": "string",
+                      "maxLength": 12
+                    },
+                    "label": {
+                      "type": "string",
+                      "maxLength": 32
+                    },
+                    "note": {
+                      "type": "string",
+                      "maxLength": 40
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         {
           "if": {
             "properties": {

@@ -118,6 +118,19 @@ body { background: var(--paper); }
 .fd-note { font-size: var(--t-small); color: var(--muted); line-height: 1.3; }
 .fd-type { font-family: var(--mono); font-size: var(--t-small); color: var(--muted); }
 
+/* A card's rating: five pips, as many filled as its level */
+.rating { display: inline-flex; gap: 3px; align-items: center; }
+.ct > .rating { display: flex; margin: 3px 0 2px; }
+.pip { width: 8px; height: 8px; border-radius: 4px; border: 1.5px solid var(--head); }
+.pip.on { background: var(--head); }
+
+/* Panel pattern: metric, a number with what it counts */
+.mt-row { display: flex; gap: 6px; }
+.metric { flex: 1 1 0; min-width: 0; padding: 8px 10px; background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card); }
+.mt-value { font-size: calc(1.6 * var(--t-head)); font-weight: 700; line-height: 1.15; color: var(--ink); }
+.mt-label { font-size: var(--t-body); font-weight: 600; line-height: 1.25; color: var(--text); }
+.mt-note { font-size: var(--t-small); line-height: 1.3; color: var(--muted); }
+
 /* Panel pattern: matrix */
 /* A matrix is as wide as its content, left-aligned: columns of at least 72 px, never stretched across the panel */
 .matrix { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card); padding: 8px 12px;

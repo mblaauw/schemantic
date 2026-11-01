@@ -90,6 +90,8 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
         entries.append({"kind": "status", "key": "assumed", "label": lg["status_assumed"]})
     used = {f.get("key") for p in spec["panels"] for pt in p.get("patterns", []) for f in pt.get("fields", [])}
     entries += [{"kind": "field-key", "key": k, "label": lg[f"key_{k}"]} for k in ("primary", "foreign", "unique") if k in used]
+    if spec.get("rating_means"):
+        entries.append({"kind": "rating", "key": "rating", "label": spec["rating_means"]})
     if any(t.get("focus") for t in things + spec.get("flows", [])):
         entries.append({"kind": "focus", "key": "focus", "label": lg["focus"]})
     kinds = [ch["kind"] for p in spec["panels"] for ch in p.get("chips", [])] + [f["kind"] for f in flags(spec)]

@@ -14,6 +14,7 @@
 {%- macro card(c, cid) -%}
 {%- set fl = flag_of.get(cid) -%}
 <div class="card{% if c.status %} status-{{ c.status }}{% endif %}{% if c.focus %} focus{% endif %}" data-kind="card" data-id="{{ cid }}"{% if c.col %} style="grid-column: {{ c.col }}{% if c.span %} / span {{ c.span }}{% endif %}; grid-row: 1"{% elif c.row %} style="grid-row: {{ c.row }}"{% endif %}{% if c.layer %} data-layer="{{ c.layer }}"{% endif %}{% if c.refs %} data-refs="{{ c.refs | join(' | ') }}"{% endif %}{% if c.status == 'planned' %} data-dash{% endif %}>{{ icon(c.icon or 'box') }}<div class="ct"><div class="cn"><span{% if c.status == 'removed' %} data-strike{% endif %}>{{ c.name }}</span>{% if c.qualifier %} <span class="cq">({{ c.qualifier }})</span>{% endif %}{% if fl %}<span class="flag flag-{{ fl.kind }}">{{ fl.label }}</span>{% endif %}{% if c.status %} {{ tag(c.status) }}{% endif %}{% if c.assumed %} {{ tag('assumed') }}{% endif %}</div>
+{%- if c.rating %}<div class="rating">{% for n in range(5) %}<span class="pip{% if n < c.rating %} on{% endif %}"></span>{% endfor %}</div>{% endif -%}
 {%- if c.note %}<div class="cnote">{{ c.note }}</div>{% endif -%}
 {%- if c.bullets %}<div class="cb">{{ bullets(c.bullets) }}</div>{% endif -%}
 </div></div>
@@ -79,6 +80,13 @@
 <div class="tb-grid" style="grid-template-columns: repeat({{ pt.columns | length }}, minmax(0, auto))">
 {%- for col in pt.columns %}<div class="tb-col">{{ col }}</div>{% endfor -%}
 {%- for r in pt.rows -%}{%- for v in r %}<div class="tb-cell{% if loop.first %} tb-first{% endif %}">{{ v }}</div>{% endfor -%}{%- endfor -%}
+</div>
+</div>
+{%- elif pt.type == 'metric' -%}
+<div class="blk metrics" data-kind="pattern" data-id="{{ bid }}"{{ st | safe }}>
+{{- pattern_head(pt) -}}
+<div class="mt-row">
+{%- for m in pt.metrics %}<div class="metric"><div class="mt-value">{{ m.value }}</div><div class="mt-label">{{ m.label }}</div>{% if m.note %}<div class="mt-note">{{ m.note }}</div>{% endif %}</div>{% endfor -%}
 </div>
 </div>
 {%- elif pt.type == 'matrix' -%}
@@ -181,6 +189,7 @@
 {%- elif e.kind == 'step' %}<div class="lg"><span class="flag flag-step">1</span><span>{{ e.label }}</span></div>
 {%- elif e.kind == 'status' %}<div class="lg">{{ tag(e.key) }}<span>{{ e.label }}</span></div>
 {%- elif e.kind == 'field-key' %}<div class="lg"><span class="fd-key fd-{{ e.key }}">{{ L.fields[e.key] }}</span><span>{{ e.label }}</span></div>
+{%- elif e.kind == 'rating' %}<div class="lg"><span class="rating"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></span><span>{{ e.label }}</span></div>
 {%- elif e.kind == 'focus' %}<div class="lg"><span class="sw focus-sw"></span><span>{{ e.label }}</span></div>
 {%- elif e.key == 'warning' and open_questions %}<div class="lg"><span class="flag flag-warning">{{ open_questions[0].label }}</span><span>{{ e.label }}</span></div>
 {%- else %}<div class="lg">{{ icon('alert-triangle' if e.key == 'warning' else 'info-circle', 'ic', ' lg-' ~ e.key) }}<span>{{ e.label }}</span></div>{% endif -%}

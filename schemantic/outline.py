@@ -19,6 +19,8 @@ def _card(c: dict, cid: str, flag_of: dict, loc: dict) -> str:
         bits.append(f"[{loc['status'][c['status']]}]")
     if c.get("assumed"):
         bits.append(f"[{loc['status']['assumed']}]")
+    if c.get("rating"):
+        bits.append(f"[{c['rating']}/5]")
     if c.get("note"):
         bits.append(f"— {c['note']}")
     if cid in flag_of:
@@ -40,6 +42,8 @@ def _pattern_rows(pt: dict, loc: dict) -> list[str]:
                 for r in pt["rows"]]
     if pt["type"] == "tree":
         return pt["lines"]
+    if pt["type"] == "metric":
+        return [f"{m['value']} {m['label']}" + (f" — {m['note']}" if m.get("note") else "") for m in pt["metrics"]]
     numbered = pt["type"] == "process-strip"
     return [(f"{n}. " if numbered else "") + t["name"] + (f" — {t['note']}" if t.get("note") else "")
             for n, t in enumerate(pt["steps"] if numbered else pt["tiers"], 1)]

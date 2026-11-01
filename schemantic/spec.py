@@ -164,6 +164,14 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
                 for n, r in enumerate(pt["rows"], 1):
                     if len(r) != len(pt["columns"]):
                         out.append(finding("pattern", p["id"], f"table row {n} has {len(r)} cells for {len(pt['columns'])} columns"))
+            if pt["type"] == "metric" and not pt.get("refs") and not pt.get("assumed"):
+                out.append(finding("pattern", p["id"], "a metric states numbers; give its refs, or say why it is assumed"))
+    rated = [(p, i, c) for p in spec["panels"] for i, c in enumerate(p.get("cards", [])) if c.get("rating")]
+    for p, i, c in rated:
+        if not c.get("rating_ref") and not c.get("assumed"):
+            out.append(finding("rating", card_id(p, i, c), f"rating on card '{c['name']}'; give its rating_ref, or say why it is assumed"))
+    if rated and not spec.get("rating_means"):
+        out.append(finding("rating", "rating_means", "the plate has ratings but does not say what 1 and 5 mean"))
     for i, f in enumerate(spec.get("flows", [])):
         for end in ("from", "to"):
             if f[end] not in known:
@@ -319,6 +327,8 @@ def claims(spec: dict):
             yield cid, f"card '{c['name']}'", c.get("refs", []), c.get("assumed")
             if c.get("status"):
                 yield cid, f"status '{c['status']}' on card '{c['name']}'", [c["status_ref"]] if c.get("status_ref") else [], c.get("assumed")
+            if c.get("rating"):
+                yield cid, f"rating {c['rating']} on card '{c['name']}'", [c["rating_ref"]] if c.get("rating_ref") else [], c.get("assumed")
             if c.get("flag", {}).get("kind") == "warning":
                 yield cid, f"warning '{c['flag']['text']}'", c["flag"].get("refs", []), None
         for n, pt in enumerate(p.get("patterns", [])):
@@ -534,7 +544,7 @@ def iter_strings(obj):
         yield obj
     elif isinstance(obj, dict):
         for k, v in obj.items():
-            if k not in ("id", "icon", "role", "kind", "type", "tier", "layout", "from", "to", "refs", "status_ref", "assumed", "sources",
+            if k not in ("id", "icon", "role", "kind", "type", "tier", "layout", "from", "to", "refs", "status_ref", "rating_ref", "assumed", "sources",
                          "brief", "path"):
                 yield from iter_strings(v)
     elif isinstance(obj, list):

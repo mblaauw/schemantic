@@ -167,6 +167,7 @@ can overflow, and in a full lane an arrow can lose its route. Lint says so, by n
 | `matrix` | <img src="img/layouts/pattern-matrix.svg" alt="matrix" width="170"> | Rows against columns, each cell full, partial or none: who may do what. |
 | `table` | <img src="img/layouts/pattern-table.svg" alt="table" width="170"> | Rows of text under column names: versions, limits, owners. |
 | `fields` | <img src="img/layouts/pattern-fields.svg" alt="fields" width="170"> | What a table, event or API holds: names, types and keys. |
+| `metric` | <img src="img/layouts/pattern-metric.svg" alt="metric" width="170"> | A number with what it counts: an SLO, a cost, a volume. Always names its source. |
 
 ## Marks on any layout
 
@@ -186,6 +187,7 @@ Arrows run between cards, or between panels when the sources speak of the whole 
 | A muted card, or a struck-through name | phasing out, or removed | `status: deprecated`, `status: removed` |
 | An amber dashed arrow, or an "assumed" tag | the sources do not say this | `assumed: <why>` |
 | A dashed or dotted arrow | asynchronous, or optional | `style: async`, `style: optional` |
+| Five pips on a card | a level from 1 to 5, with what it means in the legend | `rating`, `rating_means` |
 | A heavier blue arrow | the one arrow the plate is about | `focus: true` on the flow |
 | A head at both ends of an arrow | it runs both ways | `both: true` |
 | A number on an arrow | a step in the route the title tells | a story with `draw: true`, or `step` |
