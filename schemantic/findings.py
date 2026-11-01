@@ -47,7 +47,7 @@ CHECKS: dict[str, Check] = {
     "rating": Check("spec", "a card's `rating` has no source, or the plate does not say what its ratings mean",
                     "give the card `rating_ref`, or `assumed: <why>`; give the plate `rating_means`",
                     "Give each rating a rating_ref or an assumed reason, and the plate a rating_means."),
-    "flow": Check("spec", "a flow names an id that does not exist, connects an element to itself, or connects a card "
+    "flow": Check("spec", "a flow names an id that does not exist, connects an element to itself outside a state-machine, or connects a card "
                   "to its own panel", "use a panel id, or give the card an `id`; connect two different boxes",
                   "Point the flow at an existing panel or card id, and at two different boxes."),
     "orphan": Check("spec", "no flow reaches a panel or any of its cards on a plate whose other panels connect (warning; "

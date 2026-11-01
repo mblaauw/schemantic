@@ -24,7 +24,7 @@ lint (`placeholder`) names each TODO left.
 | `sources` | where the content comes from: `{id, kind, ref, path}`. Once given, every card, pattern, arrow, status and warning names a source or says it is `assumed` (lint: `traceability`). `path`, relative to the spec, is the file or folder on disk: lint then checks that each quote is in it |
 | `archetype`, `layout` | see `archetypes.md` and the drawings in `docs/layouts.md`; `layout.chips_at: bottom` lines chips up at the bottom of a row |
 | `rating_means` | what a card's `rating` says, in the legend (48): `"Maturity: 1 ad hoc, 5 measured"`. Needed once any card has a rating |
-| `flows_mean` | what every arrow means: `data`, `request`, `dependency`, `control`, `sequence` (what comes before what, for a roadmap) or `relation` (how entities relate, for a data-model); sets the legend (lint warns without it) |
+| `flows_mean` | what every arrow means: `data`, `request`, `dependency`, `control`, `sequence` (what comes before what, for a roadmap) `relation` (how entities relate, for a data-model), `decision` (which way, for a decision-tree) or `transition` (what moves a state on, for a state-machine); sets the legend (lint warns without it) |
 
 ## Panels
 

@@ -403,8 +403,8 @@ def test_a_metric_always_names_its_source():
     metric = {"type": "metric", "metrics": [{"value": "99.9%", "label": "availability"}]}
     assert any(f["check"] == "pattern" and "a metric states numbers" in f["detail"]
                for f in sp.check(mutate(lambda s: panel(s, "gateway").setdefault("patterns", []).append(metric))))
-    for backed in ({"refs": ["review: table 1"]}, {"assumed": "from last year"}):
-        spec = mutate(lambda s: panel(s, "gateway").setdefault("patterns", []).append({**metric, **backed}))
+    for backed in ({**metric, "refs": ["review: table 1"]}, {**metric, "assumed": "from last year"}):
+        spec = mutate(lambda s, pt=backed: panel(s, "gateway").setdefault("patterns", []).append(pt))
         assert not any("a metric states numbers" in f["detail"] for f in sp.check(spec))
 
 

@@ -59,7 +59,8 @@ draws every layout as a simple sketch, with when to use it.
 | ![roadmap](assets/gallery/portal-roadmap.webp) **roadmap**: workstreams over quarters, with now marked | ![sequence](assets/gallery/token-check-sequence.webp) **sequence**: one request between lifelines, numbered by row |
 | ![capability-map](assets/gallery/retail-capability-map.webp) **capability-map**: what exists by domain, with the gaps dashed | ![comparison](assets/gallery/search-engine-comparison.webp) **comparison**: options against criteria, with the pick marked |
 | ![hierarchy](assets/gallery/platform-org-hierarchy.webp) **hierarchy**: a tree whose arrows follow from its children | ![quadrant](assets/gallery/migration-quadrant.webp) **quadrant**: a two-by-two, where the position is the message |
-| ![data-model](assets/gallery/tool-library-data-model.webp) **data-model**: entities with fields and keys, and how many on each side | |
+| ![data-model](assets/gallery/tool-library-data-model.webp) **data-model**: entities with fields and keys, and how many on each side | ![state-machine](assets/gallery/ferry-booking-state-machine.webp) **state-machine**: states and what moves them on, back and round as well as forward |
+| ![decision-tree](assets/gallery/harbour-permit-decision-tree.webp) **decision-tree**: questions down to outcomes, with the answer on each arrow | |
 
 ## The spec in one look
 
@@ -100,7 +101,7 @@ The latest release is 0.3.0; the table below also holds what is unreleased (`CHA
 
 | Built |
 | --- |
-| Archetypes: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones, before-after, roadmap, sequence, capability-map, comparison, hierarchy, quadrant, data-model |
+| Archetypes: column-flow, hub-and-spokes, layer-cake, swimlane, nested-zones, before-after, roadmap, sequence, capability-map, comparison, hierarchy, quadrant, data-model, state-machine, decision-tree |
 | Patterns: tier strip, process strip, tree, matrix, table, fields, metric |
 | Connectors: straight, L, Z and U routes; card endpoints; sync, async, optional, assumed; steps; stories |
 | Roles, themes, change status, card flags, focus; locales `nl` and `en` |

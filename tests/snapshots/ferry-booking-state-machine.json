@@ -1,0 +1,431 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   134
+  ],
+  "body": [
+   40,
+   152,
+   1560,
+   472
+  ],
+  "requested": [
+   40,
+   152,
+   450,
+   274
+  ],
+  "requested.card0": [
+   54,
+   204,
+   438,
+   262
+  ],
+  "held": [
+   594,
+   152,
+   1006,
+   274
+  ],
+  "held.card0": [
+   608,
+   204,
+   992,
+   262
+  ],
+  "confirmed": [
+   1150,
+   152,
+   1560,
+   274
+  ],
+  "confirmed.card0": [
+   1164,
+   204,
+   1546,
+   260
+  ],
+  "expired": [
+   40,
+   352,
+   450,
+   472
+  ],
+  "expired.card0": [
+   54,
+   404,
+   438,
+   460
+  ],
+  "cancelled": [
+   594,
+   352,
+   1006,
+   472
+  ],
+  "cancelled.card0": [
+   608,
+   404,
+   992,
+   460
+  ],
+  "boarded": [
+   1150,
+   352,
+   1560,
+   472
+  ],
+  "boarded.card0": [
+   1162,
+   404,
+   1546,
+   460
+  ],
+  "footer": [
+   40,
+   490,
+   1560,
+   562
+  ],
+  "footer.principles": [
+   40,
+   490,
+   1560,
+   534
+  ],
+  "footer.legend": [
+   40,
+   544,
+   1560,
+   562
+  ]
+ },
+ "text": [
+  [
+   40,
+   46,
+   "Ferry booking"
+  ],
+  [
+   40,
+   92,
+   "A booking holds a seat until it is paid, and a paid one can still fall back"
+  ],
+  [
+   40,
+   128,
+   "Every state of a ferry booking and what moves it on, from the booking rules"
+  ],
+  [
+   52,
+   178,
+   "Requested"
+  ],
+  [
+   406,
+   172,
+   "start"
+  ],
+  [
+   96,
+   228,
+   "Seat asked for"
+  ],
+  [
+   96,
+   244,
+   "no seat is reserved yet"
+  ],
+  [
+   608,
+   178,
+   "Held"
+  ],
+  [
+   650,
+   228,
+   "Seat reserved"
+  ],
+  [
+   650,
+   244,
+   "for thirty minutes"
+  ],
+  [
+   1164,
+   178,
+   "Confirmed"
+  ],
+  [
+   1206,
+   228,
+   "Seat paid for"
+  ],
+  [
+   1206,
+   246,
+   "the passenger gets a ticket"
+  ],
+  [
+   52,
+   378,
+   "Expired"
+  ],
+  [
+   412,
+   372,
+   "end"
+  ],
+  [
+   96,
+   428,
+   "Seat released"
+  ],
+  [
+   96,
+   444,
+   "nothing was paid"
+  ],
+  [
+   608,
+   378,
+   "Cancelled"
+  ],
+  [
+   966,
+   372,
+   "end"
+  ],
+  [
+   650,
+   428,
+   "Money returned"
+  ],
+  [
+   650,
+   444,
+   "minus the cancellation fee"
+  ],
+  [
+   1162,
+   378,
+   "Boarded"
+  ],
+  [
+   1520,
+   372,
+   "end"
+  ],
+  [
+   1206,
+   428,
+   "Ticket used"
+  ],
+  [
+   1206,
+   444,
+   "at the gate"
+  ],
+  [
+   40,
+   504,
+   "Key principles"
+  ],
+  [
+   50,
+   528,
+   "A seat is either held for one booking or free, never both."
+  ],
+  [
+   40,
+   556,
+   "Legend"
+  ],
+  [
+   134,
+   556,
+   "What moves one state to the next"
+  ],
+  [
+   380,
+   556,
+   "The point of this plate"
+  ],
+  [
+   498,
+   204,
+   "seat free"
+  ],
+  [
+   1066,
+   230,
+   "paid"
+  ],
+  [
+   1028,
+   188,
+   "payment reversed"
+  ],
+  [
+   760,
+   290,
+   "hold extended"
+  ],
+  [
+   470,
+   304,
+   "thirty minutes pass"
+  ],
+  [
+   1032,
+   304,
+   "refund approved"
+  ],
+  [
+   1364,
+   316,
+   "scanned at gate"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "requested",
+   "to": "held",
+   "points": [
+    [
+     458,
+     212
+    ],
+    [
+     588,
+     212
+    ]
+   ],
+   "label": "seat free"
+  },
+  {
+   "i": 1,
+   "from": "held",
+   "to": "confirmed",
+   "points": [
+    [
+     1012,
+     212
+    ],
+    [
+     1142,
+     212
+    ]
+   ],
+   "label": "paid"
+  },
+  {
+   "i": 2,
+   "from": "confirmed",
+   "to": "held",
+   "points": [
+    [
+     1142,
+     196
+    ],
+    [
+     1012,
+     196
+    ]
+   ],
+   "label": "payment reversed"
+  },
+  {
+   "i": 3,
+   "from": "held",
+   "to": "held",
+   "points": [
+    [
+     740,
+     282
+    ],
+    [
+     740,
+     300
+    ],
+    [
+     860,
+     300
+    ],
+    [
+     860,
+     282
+    ]
+   ],
+   "label": "hold extended"
+  },
+  {
+   "i": 4,
+   "from": "held",
+   "to": "expired",
+   "points": [
+    [
+     610,
+     282
+    ],
+    [
+     610,
+     312
+    ],
+    [
+     434,
+     312
+    ],
+    [
+     434,
+     344
+    ]
+   ],
+   "label": "thirty minutes pass"
+  },
+  {
+   "i": 5,
+   "from": "confirmed",
+   "to": "cancelled",
+   "points": [
+    [
+     1166,
+     282
+    ],
+    [
+     1166,
+     312
+    ],
+    [
+     990,
+     312
+    ],
+    [
+     990,
+     344
+    ]
+   ],
+   "label": "refund approved"
+  },
+  {
+   "i": 6,
+   "from": "confirmed",
+   "to": "boarded",
+   "points": [
+    [
+     1354,
+     282
+    ],
+    [
+     1354,
+     344
+    ]
+   ],
+   "label": "scanned at gate"
+  }
+ ]
+}

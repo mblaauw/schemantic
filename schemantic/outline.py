@@ -68,8 +68,8 @@ def lines(spec: dict) -> list[str]:
     out = []
     for p in _focus_first(spec):
         head = p["title"] + (f" — {p['subtitle']}" if p.get("subtitle") else "")
-        if p.get("status"):
-            head += f" [{loc['status'][p['status']]}]"
+        for mark in (p.get("mark"), p.get("status")):
+            head += f" [{loc['status'][mark]}]" if mark else ""
         out.append(head + (" (focus)" if p.get("focus") else ""))
         for i, c in enumerate(p.get("cards", [])):
             cid = card_id(p, i, c)
@@ -113,7 +113,7 @@ def markdown(spec: dict) -> str:
     if spec.get("subtitle"):
         md += [spec["subtitle"], ""]
     for p in _focus_first(spec):
-        status = f" [{loc['status'][p['status']]}]" if p.get("status") else ""
+        status = "".join(f" [{loc['status'][mark]}]" for mark in (p.get("mark"), p.get("status")) if mark)
         md += [f"## {p['title']}{status}" + (" (focus)" if p.get("focus") else ""), ""]
         if p.get("subtitle"):
             md += [p["subtitle"], ""]

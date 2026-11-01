@@ -1,0 +1,259 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   110
+  ],
+  "body": [
+   40,
+   128,
+   1560,
+   168
+  ],
+  "nieuw": [
+   40,
+   128,
+   228,
+   168
+  ],
+  "open": [
+   372,
+   128,
+   562,
+   168
+  ],
+  "bezig": [
+   706,
+   128,
+   894,
+   168
+  ],
+  "getest": [
+   1038,
+   128,
+   1228,
+   168
+  ],
+  "klaar": [
+   1372,
+   128,
+   1560,
+   168
+  ],
+  "footer": [
+   40,
+   264,
+   1560,
+   282
+  ],
+  "footer.legend": [
+   40,
+   264,
+   1560,
+   282
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "Een melding gaat terug zodra de test faalt"
+  ],
+  [
+   40,
+   104,
+   "De toestanden van een melding, van nieuw tot klaar"
+  ],
+  [
+   52,
+   154,
+   "Nieuw"
+  ],
+  [
+   186,
+   148,
+   "start"
+  ],
+  [
+   386,
+   154,
+   "Open"
+  ],
+  [
+   718,
+   154,
+   "Bezig"
+  ],
+  [
+   1052,
+   154,
+   "Getest"
+  ],
+  [
+   1384,
+   154,
+   "Klaar"
+  ],
+  [
+   1518,
+   148,
+   "eind"
+  ],
+  [
+   40,
+   276,
+   "Legenda"
+  ],
+  [
+   142,
+   276,
+   "Wat de ene toestand naar de volgende brengt"
+  ],
+  [
+   282,
+   140,
+   "gezien"
+  ],
+  [
+   614,
+   140,
+   "gepakt"
+  ],
+  [
+   960,
+   140,
+   "af"
+  ],
+  [
+   1286,
+   140,
+   "goed"
+  ],
+  [
+   760,
+   224,
+   "fout gevonden"
+  ],
+  [
+   784,
+   184,
+   "wacht"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "nieuw",
+   "to": "open",
+   "points": [
+    [
+     236,
+     148
+    ],
+    [
+     366,
+     148
+    ]
+   ],
+   "label": "gezien"
+  },
+  {
+   "i": 1,
+   "from": "open",
+   "to": "bezig",
+   "points": [
+    [
+     568,
+     148
+    ],
+    [
+     698,
+     148
+    ]
+   ],
+   "label": "gepakt"
+  },
+  {
+   "i": 2,
+   "from": "bezig",
+   "to": "getest",
+   "points": [
+    [
+     902,
+     148
+    ],
+    [
+     1032,
+     148
+    ]
+   ],
+   "label": "af"
+  },
+  {
+   "i": 3,
+   "from": "getest",
+   "to": "klaar",
+   "points": [
+    [
+     1234,
+     148
+    ],
+    [
+     1364,
+     148
+    ]
+   ],
+   "label": "goed"
+  },
+  {
+   "i": 4,
+   "from": "getest",
+   "to": "open",
+   "points": [
+    [
+     1054,
+     176
+    ],
+    [
+     1054,
+     208
+    ],
+    [
+     546,
+     208
+    ],
+    [
+     546,
+     176
+    ]
+   ],
+   "label": "fout gevonden"
+  },
+  {
+   "i": 5,
+   "from": "bezig",
+   "to": "bezig",
+   "points": [
+    [
+     768,
+     176
+    ],
+    [
+     768,
+     194
+    ],
+    [
+     832,
+     194
+    ],
+    [
+     832,
+     176
+    ]
+   ],
+   "label": "wacht"
+  }
+ ]
+}

@@ -140,6 +140,26 @@ each with its own message.
 
 **Finished plate:** [`examples/tool-library-data-model.yaml`](../examples/tool-library-data-model.yaml) ([image](../assets/gallery/tool-library-data-model.webp))
 
+## state-machine
+
+<img src="img/layouts/state-machine.svg" alt="state-machine" width="360">
+
+**The reader asks:** What states can it be in, and what moves it on?
+
+**Not this when:** It only ever goes forward: `column-flow`; people hand work over: `swimlane`.
+
+**Finished plate:** [`examples/ferry-booking-state-machine.yaml`](../examples/ferry-booking-state-machine.yaml) ([image](../assets/gallery/ferry-booking-state-machine.webp))
+
+## decision-tree
+
+<img src="img/layouts/decision-tree.svg" alt="decision-tree" width="360">
+
+**The reader asks:** Which path applies to my case?
+
+**Not this when:** It says what is made of what, with no questions: `hierarchy`.
+
+**Finished plate:** [`examples/harbour-permit-decision-tree.yaml`](../examples/harbour-permit-decision-tree.yaml) ([image](../assets/gallery/harbour-permit-decision-tree.webp))
+
 ## Inside a panel
 
 Every layout uses the same panels. This one has every part, each named by its field in the spec. The fields, limits and

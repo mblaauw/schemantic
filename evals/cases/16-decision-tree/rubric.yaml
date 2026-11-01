@@ -1,0 +1,3 @@
+lang: en
+archetype: [decision-tree]
+components: [repair, lend, recycle, sell]

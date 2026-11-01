@@ -1,0 +1,324 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   134
+  ],
+  "body": [
+   40,
+   152,
+   1560,
+   444
+  ],
+  "length": [
+   40,
+   152,
+   1560,
+   192
+  ],
+  "cargo": [
+   40,
+   236,
+   776,
+   278
+  ],
+  "stay": [
+   824,
+   236,
+   1560,
+   278
+  ],
+  "commercial": [
+   40,
+   322,
+   384,
+   444
+  ],
+  "commercial.card0": [
+   54,
+   374,
+   372,
+   430
+  ],
+  "large": [
+   432,
+   322,
+   776,
+   444
+  ],
+  "large.card0": [
+   446,
+   374,
+   764,
+   430
+  ],
+  "long": [
+   824,
+   322,
+   1168,
+   444
+  ],
+  "long.card0": [
+   838,
+   374,
+   1156,
+   430
+  ],
+  "short": [
+   1216,
+   322,
+   1560,
+   444
+  ],
+  "short.card0": [
+   1230,
+   374,
+   1548,
+   430
+  ],
+  "footer": [
+   40,
+   462,
+   1560,
+   480
+  ],
+  "footer.legend": [
+   40,
+   462,
+   1560,
+   480
+  ]
+ },
+ "text": [
+  [
+   40,
+   46,
+   "Visiting vessels"
+  ],
+  [
+   40,
+   92,
+   "Two questions decide which permit a visiting vessel needs"
+  ],
+  [
+   40,
+   128,
+   "Length first, then cargo or length of stay, from the harbour rules"
+  ],
+  [
+   52,
+   178,
+   "Is the vessel longer than 24 m?"
+  ],
+  [
+   52,
+   262,
+   "Does it carry cargo?"
+  ],
+  [
+   836,
+   262,
+   "Staying over three nights?"
+  ],
+  [
+   52,
+   348,
+   "Commercial berth permit"
+  ],
+  [
+   96,
+   398,
+   "From the harbour master"
+  ],
+  [
+   96,
+   416,
+   "apply two weeks ahead"
+  ],
+  [
+   444,
+   348,
+   "Large vessel notice"
+  ],
+  [
+   488,
+   398,
+   "From the harbour office"
+  ],
+  [
+   488,
+   416,
+   "notify one day ahead"
+  ],
+  [
+   836,
+   348,
+   "Seasonal mooring permit"
+  ],
+  [
+   880,
+   398,
+   "From the harbour office"
+  ],
+  [
+   880,
+   416,
+   "paid by the week"
+  ],
+  [
+   1228,
+   348,
+   "Visitor's ticket"
+  ],
+  [
+   1272,
+   398,
+   "From the machine on the quay"
+  ],
+  [
+   1272,
+   416,
+   "paid by the night"
+  ],
+  [
+   40,
+   474,
+   "Legend"
+  ],
+  [
+   134,
+   474,
+   "Which way, by the answer on the arrow"
+  ],
+  [
+   416,
+   218,
+   "yes"
+  ],
+  [
+   1200,
+   218,
+   "no"
+  ],
+  [
+   220,
+   304,
+   "yes"
+  ],
+  [
+   612,
+   304,
+   "no"
+  ],
+  [
+   1004,
+   304,
+   "yes"
+  ],
+  [
+   1396,
+   304,
+   "no"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "length",
+   "to": "cargo",
+   "points": [
+    [
+     408,
+     200
+    ],
+    [
+     408,
+     230
+    ]
+   ],
+   "label": "yes"
+  },
+  {
+   "i": 1,
+   "from": "length",
+   "to": "stay",
+   "points": [
+    [
+     1192,
+     200
+    ],
+    [
+     1192,
+     230
+    ]
+   ],
+   "label": "no"
+  },
+  {
+   "i": 2,
+   "from": "cargo",
+   "to": "commercial",
+   "points": [
+    [
+     212,
+     286
+    ],
+    [
+     212,
+     316
+    ]
+   ],
+   "label": "yes"
+  },
+  {
+   "i": 3,
+   "from": "cargo",
+   "to": "large",
+   "points": [
+    [
+     604,
+     286
+    ],
+    [
+     604,
+     316
+    ]
+   ],
+   "label": "no"
+  },
+  {
+   "i": 4,
+   "from": "stay",
+   "to": "long",
+   "points": [
+    [
+     996,
+     286
+    ],
+    [
+     996,
+     316
+    ]
+   ],
+   "label": "yes"
+  },
+  {
+   "i": 5,
+   "from": "stay",
+   "to": "short",
+   "points": [
+    [
+     1388,
+     286
+    ],
+    [
+     1388,
+     316
+    ]
+   ],
+   "label": "no"
+  }
+ ]
+}

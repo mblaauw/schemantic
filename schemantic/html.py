@@ -33,12 +33,13 @@ def grid_css(spec: dict) -> dict:
             lines.append(gap)
     # Rows take their content height; the canvas fits them (or a fixed canvas spreads its surplus over the gutters,
     # see js/fit.js).
-    gutter = "calc(var(--gutter-y) + var(--gap-extra, 0px))"
+    gutter = f"calc({g.gutter_y} + var(--gap-extra, 0px))"
     return {
         "columns": f" {g.gutter_x} ".join(g.columns),
         "rows": f" {gutter} ".join(["auto"] * m),
         "areas": " ".join('"' + " ".join(line) + '"' for line in lines),
         "groups": g.groups, "group_kind": g.group_kind, "bands": g.bands, "zones": g.zones, "marks": g.marks, "mark_label": g.mark_label,
+        "room_below": g.room_below, "open_cells": g.open_cells,
     }
 
 

@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=../schemantic/schema/plate.schema.json
+# Fictional example: a state machine, with states as panels and a transition back to its own state.
+canvas: {size: landscape-4x3, lang: en}
+topic: "Ferry booking"
+title: "A booking holds a seat until it is paid, and a paid one can still fall back"
+subtitle: "Every state of a ferry booking and what moves it on, from the booking rules"
+archetype: state-machine
+brief:
+  message: "Payment confirms a booking, but a reversed payment puts it back on hold."
+  reader: "Desk staff and the developers of the booking service"
+  why: "state-machine: a booking moves back as well as forward, so a column-flow would mislead"
+  assumptions: []
+sources:
+  - {id: rules, kind: document, ref: "Booking rules, version 4"}
+layout:
+  areas:
+    - "requested held confirmed"
+    - "expired cancelled boarded"
+  start: requested
+  ends: [expired, cancelled, boarded]
+panels:
+  - id: requested
+    title: "Requested"
+    role: platform
+    cards:
+      - {icon: ticket, name: "Seat asked for", note: "no seat is reserved yet", refs: ["rules: 2.1"]}
+  - id: held
+    title: "Held"
+    role: platform
+    cards:
+      - {icon: clock, name: "Seat reserved", note: "for thirty minutes", refs: ["rules: 2.2"]}
+  - id: confirmed
+    title: "Confirmed"
+    role: platform
+    focus: true
+    cards:
+      - {icon: circle-check, name: "Seat paid for", note: "the passenger gets a ticket", refs: ["rules: 2.3"]}
+  - id: expired
+    title: "Expired"
+    role: external
+    cards:
+      - {icon: clock-x, name: "Seat released", note: "nothing was paid", refs: ["rules: 2.4"]}
+  - id: cancelled
+    title: "Cancelled"
+    role: external
+    cards:
+      - {icon: receipt-refund, name: "Money returned", note: "minus the cancellation fee", refs: ["rules: 2.5"]}
+  - id: boarded
+    title: "Boarded"
+    role: platform
+    cards:
+      - {icon: ship, name: "Ticket used", note: "at the gate", refs: ["rules: 2.6"]}
+flows_mean: transition
+flows:
+  - {from: requested, to: held, label: "seat free", refs: ["rules: 2.2"]}
+  - {from: held, to: confirmed, label: "paid", refs: ["rules: 2.3"]}
+  - {from: confirmed, to: held, label: "payment reversed", refs: ["rules: 3.1"]}
+  - {from: held, to: held, label: "hold extended", refs: ["rules: 3.2"]}
+  - {from: held, to: expired, label: "thirty minutes pass", refs: ["rules: 2.4"]}
+  - {from: confirmed, to: cancelled, label: "refund approved", refs: ["rules: 2.5"]}
+  - {from: confirmed, to: boarded, label: "scanned at gate", refs: ["rules: 2.6"]}
+footer:
+  principles: ["A seat is either held for one booking or free, never both."]

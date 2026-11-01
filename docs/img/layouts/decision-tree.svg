@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 230" width="360" height="230" role="img" aria-label="Decision tree: questions above, outcomes below, each arrow labelled with its answer" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="360" height="230" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<rect x="14" y="14" width="332" height="26" rx="4" fill="#DBE8F7" stroke="#A9C4E6"/>
+<text x="24" y="31" font-size="10" font-weight="600" fill="#0F4C8A">A question?</text>
+<line x1="97" y1="44" x2="97" y2="72" stroke="#4F5D6E" stroke-width="1.5"/><path d="M97 80l-4-8h8z" fill="#4F5D6E"/>
+<text x="103" y="63" font-size="9" font-weight="500" fill="#4F5D6E">yes</text>
+<line x1="263" y1="44" x2="263" y2="72" stroke="#4F5D6E" stroke-width="1.5"/><path d="M263 80l-4-8h8z" fill="#4F5D6E"/>
+<text x="269" y="63" font-size="9" font-weight="500" fill="#4F5D6E">no</text>
+<rect x="14" y="84" width="166" height="26" rx="4" fill="#DBE8F7" stroke="#A9C4E6"/>
+<text x="24" y="101" font-size="10" font-weight="600" fill="#0F4C8A">The next question?</text>
+<line x1="55" y1="114" x2="55" y2="142" stroke="#4F5D6E" stroke-width="1.5"/><path d="M55 150l-4-8h8z" fill="#4F5D6E"/>
+<text x="61" y="133" font-size="9" font-weight="500" fill="#4F5D6E">yes</text>
+<line x1="139" y1="114" x2="139" y2="142" stroke="#4F5D6E" stroke-width="1.5"/><path d="M139 150l-4-8h8z" fill="#4F5D6E"/>
+<text x="145" y="133" font-size="9" font-weight="500" fill="#4F5D6E">no</text>
+<rect x="14" y="154" width="80" height="60" rx="4" fill="#ECF7F4" stroke="#A9D6CB"/>
+<path d="M14.5 174V158a3.5 3.5 0 0 1 3.5-3.5H90a3.5 3.5 0 0 1 3.5 3.5V174Z" fill="#0D6457"/>
+<text x="20" y="168" font-size="9" font-weight="600" fill="#FFFFFF">Outcome</text>
+<rect x="100" y="154" width="80" height="60" rx="4" fill="#ECF7F4" stroke="#A9D6CB"/>
+<path d="M100.5 174V158a3.5 3.5 0 0 1 3.5-3.5H176a3.5 3.5 0 0 1 3.5 3.5V174Z" fill="#0D6457"/>
+<text x="106" y="168" font-size="9" font-weight="600" fill="#FFFFFF">Outcome</text>
+<rect x="186" y="84" width="160" height="60" rx="4" fill="#ECF7F4" stroke="#A9D6CB"/>
+<path d="M186.5 104V88a3.5 3.5 0 0 1 3.5-3.5H342a3.5 3.5 0 0 1 3.5 3.5V104Z" fill="#0D6457"/>
+<text x="192" y="98" font-size="9" font-weight="600" fill="#FFFFFF">Outcome</text>
+</svg>

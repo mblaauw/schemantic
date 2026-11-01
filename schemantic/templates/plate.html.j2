@@ -116,7 +116,7 @@
 
 {%- macro panel(p) -%}
 <section class="panel role-{{ p.role }}{% if p.lane %} lane{% endif %}{% if p.lifeline %} lifeline{% endif %}{% if p.cell %} cell{% endif %}{% if p.hub %} panel-hub{% endif %}{% if p.status %} status-{{ p.status }}{% endif %}{% if p.focus %} focus{% endif %}{% if p.quiet %} quiet{% endif %}{% if p.spread %} spread{% endif %}" data-kind="panel" data-id="{{ p.id }}"{% if not p.nested %} style="grid-area: {{ p.id }}"{% endif %}{% if p.status == 'planned' %} data-dash{% endif %}>
-<div class="ph"><div class="ph-row"><div class="ph-title">{{ p.title }}</div>{{ tag(p.status) }}{% if p.assumed %}{{ tag('assumed') }}{% endif %}</div>{% if p.subtitle %}<div class="ph-sub">{{ p.subtitle }}</div>{% endif %}</div>
+<div class="ph"><div class="ph-row"><div class="ph-title">{{ p.title }}</div>{{ tag(p.mark) }}{{ tag(p.status) }}{% if p.assumed %}{{ tag('assumed') }}{% endif %}</div>{% if p.subtitle %}<div class="ph-sub">{{ p.subtitle }}</div>{% endif %}</div>
 <div class="pb">
 <div class="blocks arrange-{{ p.arrange or 'column' }}">
 {#- In a row, blocks share the width by `weights` (patterns first, then cards). -#}
@@ -137,7 +137,7 @@
 <!doctype html>
 <html lang="{{ lang }}"><head><meta charset="utf-8"><title>{{ spec.title }}</title>
 <style>{{ css | safe }}
-#body { grid-template-columns: {{ grid.columns }}; grid-template-rows: {{ grid.rows }}; grid-template-areas: {{ grid.areas | safe }}; }
+#body { grid-template-columns: {{ grid.columns }}; grid-template-rows: {{ grid.rows }}; grid-template-areas: {{ grid.areas | safe }}; margin-bottom: {{ grid.room_below }}; }
 .footer { grid-template-columns: {{ footer_columns }}; }
 </style></head>
 <body>
@@ -146,7 +146,7 @@
 <div>{% if spec.topic %}<p class="topic">{{ spec.topic }}</p>{% endif %}<h1 class="title">{{ spec.title }}</h1>{% if spec.subtitle %}<p class="subtitle">{{ spec.subtitle }}</p>{% endif %}</div>
 {%- if badge %}<div class="badge">{{ badge }}</div>{% endif -%}
 </header>
-<main class="body" id="body" data-kind="body" data-id="body">
+<main class="body" id="body" data-kind="body" data-id="body"{% if grid.open_cells %} data-open-cells{% endif %}>
 {%- for p in panels if not p.nested %}{{ panel(p) }}{% endfor -%}
 {%- for g, ids in grid.groups.items() -%}
 {%- set kind = grid.group_kind.get(g, 'row') -%}

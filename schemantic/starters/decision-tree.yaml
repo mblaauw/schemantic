@@ -1,0 +1,34 @@
+archetype: decision-tree
+
+layout:
+  root: first   # the tree follows from the flows: an arrow's end hangs under the first panel that reaches it
+
+panels:
+  - id: first
+    title: "TODO: the first question the sources ask"
+    role: platform
+  - id: second
+    title: "TODO: the question that follows one answer"
+    role: platform
+  - id: one
+    title: "TODO: an outcome"
+    role: data
+    cards:
+      - {icon: circle-check, name: "TODO: what follows", refs: ["notes: TODO"]}
+  - id: two
+    title: "TODO: an outcome"
+    role: data
+    cards:
+      - {icon: circle-check, name: "TODO: what follows", refs: ["notes: TODO"]}
+  - id: three
+    title: "TODO: an outcome"
+    role: data
+    cards:
+      - {icon: circle-check, name: "TODO: what follows", refs: ["notes: TODO"]}
+
+flows_mean: decision
+flows:
+  - {from: first, to: second, label: "TODO: an answer", refs: ["notes: TODO"]}
+  - {from: first, to: three, label: "TODO: the other", refs: ["notes: TODO"]}
+  - {from: second, to: one, label: "TODO: an answer", refs: ["notes: TODO"]}
+  - {from: second, to: two, label: "TODO: the other", refs: ["notes: TODO"]}

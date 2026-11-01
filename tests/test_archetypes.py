@@ -137,6 +137,80 @@ def test_a_data_model_holds_entities_and_says_how_many_on_each_side():
     assert any("is an entity and holds cards" in f["detail"] for f in sp.check(with_cards))
 
 
+def test_a_decision_tree_follows_from_its_answers():
+    spec = sp.load_spec(ROOT / "examples" / "harbour-permit-decision-tree.yaml")
+    arche = archetypes.get("decision-tree")
+    assert arche.children(spec) == {"length": ["cargo", "stay"], "cargo": ["commercial", "large"], "stay": ["long", "short"]}
+    assert arche.grid(spec).rows[0] == ["length"] * 4
+    assert arche.loud(spec) == {"commercial", "large", "long", "short"}
+    assert arche.expand(spec)["flows"] == spec["flows"]
+    uneven = copy.deepcopy(spec)
+    uneven["flows"] = [f for f in uneven["flows"] if f["from"] != "stay"]
+    uneven["flows"][1]["to"] = "short"
+    uneven["panels"] = [p for p in uneven["panels"] if p["id"] not in ("stay", "long")]
+    assert arche.grid(uneven).rows == [["length"] * 3, ["cargo", "cargo", "."], ["commercial", "large", "short"]]
+    converging = sp.load_spec(ROOT / "tests" / "fixtures" / "decision-converging.yaml")
+    assert arche.children(converging)["safety"] == ["page", "ticket"] and arche.children(converging)["passenger"] == ["log"]
+
+
+@pytest.mark.parametrize(("fn", "says"), [
+    (lambda s: s["flows"][0].pop("label"), "does not say which answer"),
+    (lambda s: s["flows"][1].update(label="yes"), "say the same"),
+    (lambda s: s["flows"].pop(1), "one answer"),
+    (lambda s: s["flows"][0].update(to="cargo.card0"), "not to or from a card"),
+    (lambda s: s["panels"].append({"id": "spare", "title": "Spare", "role": "data"}), "no answer leads"),
+])
+def test_decision_tree_checks(fn, says):
+    spec = sp.load_spec(ROOT / "examples" / "harbour-permit-decision-tree.yaml")
+    fn(spec)
+    assert any(says in f["detail"] for f in sp.check(spec))
+
+
+def test_only_a_state_machine_draws_an_arrow_to_its_own_box():
+    spec = sp.load_spec(ROOT / "examples" / "ferry-booking-state-machine.yaml")
+    assert not [f for f in sp.check(spec) if f["check"] == "flow"]
+    spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
+    spec["flows"][0]["to"] = spec["flows"][0]["from"]
+    assert any("are the same element" in f["detail"] for f in sp.check(spec))
+
+
+def test_a_state_machine_marks_its_start_and_ends():
+    from schemantic.outline import lines
+    spec = archetypes.get("state-machine").expand(sp.load_spec(ROOT / "examples" / "ferry-booking-state-machine.yaml"))
+    assert {p["id"]: p.get("mark") for p in spec["panels"]} == {
+        "requested": "start", "held": None, "confirmed": None, "expired": "end", "cancelled": "end", "boarded": "end"}
+    assert any(line.startswith("Requested [start]") for line in lines(spec))
+
+
+@pytest.mark.parametrize(("fn", "says"), [
+    (lambda s: s["flows"][0].pop("label"), "does not say what causes it"),
+    (lambda s: s["flows"][0].update(to="held.card0"), "which are panels"),
+    (lambda s: s["layout"].update(start="nowhere"), "named as a start or end"),
+    (lambda s: s.pop("flows"), "no transitions"),
+])
+def test_state_machine_checks(fn, says):
+    spec = sp.load_spec(ROOT / "examples" / "ferry-booking-state-machine.yaml")
+    fn(spec)
+    assert any(says in f["detail"] for f in sp.check(spec))
+
+
+@pytest.mark.parametrize(("fn", "says"), [
+    (lambda s: s["flows"].remove(next(f for f in s["flows"] if f["to"] == "expired")), "nothing leads from the start"),
+    (lambda s: s["layout"]["ends"].remove("boarded"), "nothing leaves state 'boarded'"),
+    (lambda s: s["layout"]["ends"].append("held"), "a transition leaves it"),
+])
+def test_a_state_machine_warns_about_states_it_cannot_reach_or_leave(fn, says):
+    spec = sp.load_spec(ROOT / "examples" / "ferry-booking-state-machine.yaml")
+    fn(spec)
+    assert any(says in f["detail"] and f["level"] == "warning" for f in sp.check(spec))
+
+
+def test_only_a_single_row_of_states_gets_room_under_it():
+    arche = archetypes.get("state-machine")
+    assert arche.grid(sp.load_spec(ROOT / "examples" / "ferry-booking-state-machine.yaml")).room_below == "0"
+    assert arche.grid(sp.load_spec(ROOT / "tests" / "fixtures" / "state-single-row.yaml")).room_below != "0"
+
+
 def test_cardinality_belongs_on_a_data_model():
     spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
     spec["flows"][0]["cardinality"] = "1:n"

@@ -12,6 +12,11 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - The legend calls an info chip "Note" ("Toelichting"), since an assumption now has its own tag.
 
 ### Added
+- The `state-machine` layout: states as panels, with labelled transitions that may go back or return to their own state, and
+  `start` and `ends` tagged. Lint warns about states that cannot be reached or left. The router now draws an arrow from a box
+  back to itself, and a single row of states gets room under it for arrows that go back.
+- The `decision-tree` layout: questions down to outcomes, with the answer on each arrow and the tree worked out from the flows.
+  A panel may be only its header. Both layouts have a starter, an example and an eval case.
 - The `metric` pattern: a number with what it counts, and `rating` on a card: a level from 1 to 5, explained by the plate's
   `rating_means`. Both are errors without a source or an `assumed` reason, even on a plate that declares no `sources`.
 - The `data-model` layout: entities with fields, joined by arrows that say how many on each side (`cardinality`,

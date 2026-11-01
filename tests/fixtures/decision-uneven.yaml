@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=../../schemantic/schema/plate.schema.json
+# Fixture: an uneven decision tree, whose early outcome still sits in the last row, with its arrow through the empty cells.
+canvas: {size: landscape-4x3, lang: en}
+title: "A safe tool goes on the shelf only if we lack one"
+subtitle: "What the desk does with a donated tool"
+archetype: decision-tree
+layout: {root: safe}
+panels:
+  - {id: safe, title: "Is it safe to use?", role: platform}
+  - {id: have, title: "Do we have three already?", role: platform}
+  - {id: recycle, title: "Recycle it", role: data, cards: [{icon: recycle, name: "At the town depot"}]}
+  - {id: sell, title: "Sell it", role: data, cards: [{icon: tag, name: "At the spring fair"}]}
+  - {id: lend, title: "Lend it", role: data, cards: [{icon: tool, name: "Once it has a label"}]}
+flows_mean: decision
+flows:
+  - {from: safe, to: have, label: "yes"}
+  - {from: safe, to: recycle, label: "no"}
+  - {from: have, to: sell, label: "yes"}
+  - {from: have, to: lend, label: "no"}

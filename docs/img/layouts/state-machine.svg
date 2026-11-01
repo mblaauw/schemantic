@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 230" width="360" height="230" role="img" aria-label="State machine: states as panels, transitions forward, back and to the same state, each labelled with its cause" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="360" height="230" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<rect x="14" y="20" width="84" height="56" rx="4" fill="#EDF4FB" stroke="#A9C4E6"/>
+<path d="M14.5 40V24a3.5 3.5 0 0 1 3.5-3.5H94a3.5 3.5 0 0 1 3.5 3.5V40Z" fill="#DBE8F7"/>
+<text x="20" y="34" font-size="9" font-weight="600" fill="#0F4C8A">Draft</text>
+<rect x="66" y="26" width="26" height="10" rx="2" fill="#FFFFFF"/><text x="79" y="34" font-size="7.5" font-weight="600" fill="#0F2547" text-anchor="middle">start</text>
+<rect x="138" y="20" width="84" height="56" rx="4" fill="#EDF4FB" stroke="#A9C4E6"/>
+<path d="M138.5 40V24a3.5 3.5 0 0 1 3.5-3.5H218a3.5 3.5 0 0 1 3.5 3.5V40Z" fill="#DBE8F7"/>
+<text x="144" y="34" font-size="9" font-weight="600" fill="#0F4C8A">Review</text>
+<rect x="262" y="20" width="84" height="56" rx="4" fill="#EDF4FB" stroke="#A9C4E6"/>
+<path d="M262.5 40V24a3.5 3.5 0 0 1 3.5-3.5H342a3.5 3.5 0 0 1 3.5 3.5V40Z" fill="#DBE8F7"/>
+<text x="268" y="34" font-size="9" font-weight="600" fill="#0F4C8A">Live</text>
+<rect x="318" y="26" width="22" height="10" rx="2" fill="#FFFFFF"/><text x="329" y="34" font-size="7.5" font-weight="600" fill="#0F2547" text-anchor="middle">end</text>
+<line x1="100" y1="42" x2="130" y2="42" stroke="#4F5D6E" stroke-width="1.5"/><path d="M136 42l-7-4v8z" fill="#4F5D6E"/>
+<text x="117" y="37" font-size="8" fill="#4F5D6E" text-anchor="middle">sent</text>
+<line x1="136" y1="58" x2="106" y2="58" stroke="#4F5D6E" stroke-width="1.5"/><path d="M100 58l7-4v8z" fill="#4F5D6E"/>
+<text x="118" y="69" font-size="8" fill="#4F5D6E" text-anchor="middle">back</text>
+<line x1="224" y1="48" x2="254" y2="48" stroke="#4F5D6E" stroke-width="1.5"/><path d="M260 48l-7-4v8z" fill="#4F5D6E"/>
+<text x="241" y="43" font-size="8" fill="#4F5D6E" text-anchor="middle">passed</text>
+<path d="M155 80v12q0 4 4 4h42q4 0 4-4v-6" fill="none" stroke="#4F5D6E" stroke-width="1.5"/><path d="M205 79l-4 7h8z" fill="#4F5D6E"/>
+<text x="180" y="108" font-size="8" fill="#4F5D6E" text-anchor="middle">reassigned</text>
+<line x1="180" y1="114" x2="180" y2="146" stroke="#4F5D6E" stroke-width="1.5"/><path d="M180 154l-4-8h8z" fill="#4F5D6E"/>
+<text x="186" y="136" font-size="8" fill="#4F5D6E">refused</text>
+<rect x="138" y="156" width="84" height="56" rx="4" fill="#F1F5F9" stroke="#CBD5E1"/>
+<path d="M138.5 176V160a3.5 3.5 0 0 1 3.5-3.5H218a3.5 3.5 0 0 1 3.5 3.5V176Z" fill="#E2E8F0"/>
+<text x="144" y="170" font-size="9" font-weight="600" fill="#4F5D6E">Refused</text>
+<rect x="194" y="162" width="22" height="10" rx="2" fill="#FFFFFF"/><text x="205" y="170" font-size="7.5" font-weight="600" fill="#0F2547" text-anchor="middle">end</text>
+</svg>
