@@ -166,6 +166,19 @@ def test_decision_tree_checks(fn, says):
     assert any(says in f["detail"] for f in sp.check(spec))
 
 
+@pytest.mark.parametrize(("example", "colours"), [
+    ("harbour-permit-decision-tree", {"length": "platform", "commercial": "data"}),
+    ("ferry-booking-state-machine", {"held": "platform", "expired": "external", "boarded": "external"}),
+])
+def test_these_layouts_set_the_colours_since_the_legend_does_not_explain_them(example, colours):
+    from schemantic.html import panels_for_render
+    spec = sp.load_spec(ROOT / "examples" / f"{example}.yaml")
+    for p in spec["panels"]:
+        p["role"] = "actor"
+    rendered = {p["id"]: p["role"] for p in panels_for_render(spec)}
+    assert colours.items() <= rendered.items()
+
+
 def test_only_a_state_machine_draws_an_arrow_to_its_own_box():
     spec = sp.load_spec(ROOT / "examples" / "ferry-booking-state-machine.yaml")
     assert not [f for f in sp.check(spec) if f["check"] == "flow"]

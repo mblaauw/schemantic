@@ -58,8 +58,7 @@ its tree. On those, the arrow rules below apply only to the arrows you do draw. 
 holds `fields` instead of cards, and its arrows end on panels. On a `state-machine` and a `decision-tree`, a panel is a state,
 or a question or outcome; each arrow ends on a panel and must say in its label what causes it, or which answer it is.
 
-Settle the reader's language (`nl` or `en`, following the user; in `nl` technical terms stay English). More than 6
-panels or 30 cards is two plates, each with its own message: a series (`series`, `part`, `of`); once every part
+Settle the reader's language (`nl` or `en`, following the user; in `nl` technical terms stay English). More than 6 panels (on a `hierarchy` or `decision-tree`, more than 8 at the ends of the tree) or 30 cards is two plates, each with its own message: a series (`series`, `part`, `of`); once every part
 builds, run `"$PY" "$SKILL/scripts/plate.py" series plates/*.yaml` so the parts agree (language, what arrows mean or a subtitle that says so, one colour
 per thing). `references/archetypes.md` has each layout's keys and limits, and `docs/layouts.md` a drawing of each; the
 schema refuses any other name.

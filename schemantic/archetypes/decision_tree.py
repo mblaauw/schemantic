@@ -13,7 +13,7 @@ class DecisionTree(Hierarchy):
     required = frozenset({"root"})
     allowed = frozenset({"root", "chips_at"})
     legend_keys = {}
-    legend_roles = False  # a filled header marks an outcome; the colours say nothing else
+    legend_roles = False  # the colour says question or outcome, and the filled header says it too
     cards_are_things = False
     ends_on_panels = True
 
@@ -64,6 +64,9 @@ class DecisionTree(Hierarchy):
                 for leaf in self.leaves(spec, pid):
                     row[leaves.index(leaf)] = pid
         return GridSpec(rows=rows, columns=["minmax(0, 1fr)"] * len(leaves), open_cells=True)
+
+    def panel_defaults(self, spec: dict, panel: dict) -> dict:
+        return {"role": "data" if panel["id"] in self.loud(spec) else "platform"}
 
     def loud(self, spec: dict) -> set[str]:
         return {p["id"] for p in spec["panels"]} - {f["from"] for f in spec.get("flows", [])}

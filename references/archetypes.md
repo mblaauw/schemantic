@@ -296,7 +296,8 @@ layout:
 
 - Set `flows_mean: transition`. Every arrow runs between panels and has a `label`, the event that causes it, in a word or two.
   `{from: held, to: held, label: "hold extended"}` draws an arrow back to its own state.
-- A panel's cards say what holds in that state; give it none when the sources say nothing more.
+- A panel's cards say what holds in that state; give it none when the sources say nothing more. The layout sets the colours, one for
+  a state and one for an end, whatever `role` a panel names.
 - Lint warns about a state the start cannot reach, a state nothing leaves that is not in `ends`, and an end that something leaves.
 - Lay out the main path along the first row, and the states it can fall out to under it. When an arrow crosses or a label has no
   room, move a state; past about ten transitions on one plate, labels start to run out of room.
@@ -317,7 +318,8 @@ layout:
 - Set `flows_mean: decision`. Every arrow runs between panels and has a `label`, the answer: `{from: length, to: cargo, label: "yes"}`.
   A question has at least two answers, each different. Order the flows the way the answers should read, left to right.
 - A question's title is the question, and it may stand without cards. A panel nothing leaves is an outcome and gets a filled
-  header; give it a card saying what follows.
+  header; give it a card saying what follows. The layout sets the colours, one for a question and one for an outcome, whatever
+  `role` a panel names.
 - Every outcome sits in the last row, however early it is reached, with its arrow running down to it. An arrow's end hangs under
   the first panel that reaches it; a second answer leading to the same panel is drawn across the tree.
 - Up to 4 levels and 8 panels at the ends of the tree.

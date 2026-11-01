@@ -15,7 +15,7 @@ class StateMachine(ColumnFlow):
     allowed = frozenset({"areas", "start", "ends", "column_widths", "chips_at"})
     self_loops = True
     ends_on_panels = True
-    legend_roles = False  # the start and end tags say what matters about a state
+    legend_roles = False  # the colour says only whether a state is an end, which its tag says too
     cards_are_things = False
 
     def validate(self, spec: dict) -> list[dict]:
@@ -57,6 +57,9 @@ class StateMachine(ColumnFlow):
             if p["id"] in leaving and p["id"] in lay.get("ends", []):
                 out.append(finding("flow", p["id"], f"state '{p['id']}' is in layout.ends, but a transition leaves it", level="warning"))
         return out
+
+    def panel_defaults(self, spec: dict, panel: dict) -> dict:
+        return {"role": "external" if panel["id"] in spec["layout"].get("ends", []) else "platform"}
 
     def expand(self, spec: dict) -> dict:
         lay = spec["layout"]
