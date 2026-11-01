@@ -15,7 +15,7 @@ Every finding names an element id (`gateway`, `services.card2`, `flows/3`, `foot
 | `archetype` | `schemantic new` names an archetype there is no starter for | use one of the names in the detail; `references/archetypes.md` says when to use each |
 | `layout` | layout keys do not fit the archetype, a panel is placed twice or not at all, an area is not a rectangle, widths/heights do not match the grid, or `footer.columns` does not match the footer panels | follow the detail; every panel id appears in the layout exactly once |
 | `budget` | more than 5 columns | split the plate or merge panels |
-| `pattern` | a matrix row has the wrong number of cells | one cell per column |
+| `pattern` | a matrix or table row has the wrong number of cells | one cell per column |
 | `flow` | a flow names an id that does not exist, connects an element to itself, or connects a card to its own panel | use a panel id, or give the card an `id`; connect two different boxes |
 | `orphan` | no flow reaches a panel or any of its cards on a plate whose other panels connect (warning; roadmap lanes and layer-cake rails are exempt) | add the flow the sources describe, or one they imply with `assumed: <why>`; with no basis at all, never invent one to clear this: leave the warning and say why in your reply, make the relation an open question, or drop the panel if it does not serve the message |
 | `story` | a story names an id that does not exist, or no flow runs from one of its steps to the next | add the flow between the two steps the detail names, card to card when the route goes through cards (give both cards an id); if the sources name no such step, the story claims too much |

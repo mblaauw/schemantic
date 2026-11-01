@@ -1,6 +1,6 @@
 # Skill evals
 
-Thirteen cases test the skill's real job, from sources to a truthful plate: eight in the main comparison, and five
+Fourteen cases test the skill's real job, from sources to a truthful plate: eight in the main comparison, and six
 that test whether an agent picks and fills the newer layouts. Each case in `cases/` has a `prompt.md`
 (what the user asks), `inputs/` (fictional sources) and a `rubric.yaml` (what a good plate must have).
 

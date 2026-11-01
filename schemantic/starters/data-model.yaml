@@ -1,0 +1,37 @@
+archetype: data-model
+
+layout:
+  areas:
+    - "parent child other"
+
+panels:
+  - id: parent
+    title: "TODO: an entity the sources name"
+    role: data
+    patterns:
+      - type: fields
+        refs: ["notes: TODO"]
+        fields:
+          - {name: "TODO: a field", key: primary}
+  - id: child
+    title: "TODO: an entity the sources name"
+    role: data
+    patterns:
+      - type: fields
+        refs: ["notes: TODO"]
+        fields:
+          - {name: "TODO: a field", key: primary}
+          - {name: "TODO: the parent key", key: foreign}
+  - id: other
+    title: "TODO: an entity the sources name"
+    role: external
+    patterns:
+      - type: fields
+        refs: ["notes: TODO"]
+        fields:
+          - {name: "TODO: a field", key: primary}
+
+flows_mean: relation
+flows:
+  - {from: parent, to: child, cardinality: "1:n", label: "TODO: a verb", refs: ["notes: TODO"]}
+  - {from: other, to: child, cardinality: "1:n", refs: ["notes: TODO"]}

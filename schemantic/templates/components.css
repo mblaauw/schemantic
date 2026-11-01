@@ -94,6 +94,29 @@ body { background: var(--paper); }
 .trow > span:last-child { white-space: pre; }
 .tk { flex: 0 0 auto; width: 9px; height: 9px; margin: 3px 5px 0 0; border-left: 1px solid var(--muted); border-bottom: 1px solid var(--muted); }
 
+/* Panel patterns that make claims: a caption, with the assumed tag beside it */
+.pt-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+.pt-cap { font-size: var(--t-small); font-weight: 600; color: var(--muted); }
+
+/* Panel pattern: table. Rows of text, as wide as the panel */
+.table { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card); padding: 8px 12px; }
+.tb-grid { display: grid; }
+.tb-col { font-size: var(--t-small); font-weight: 600; color: var(--muted); padding: 0 12px 4px 0; line-height: 1.25; }
+.tb-cell { font-size: var(--t-body); color: var(--text); padding: 4px 12px 4px 0; line-height: 1.3; border-top: 1px solid var(--card-line); }
+.tb-first { font-weight: 600; color: var(--ink); }
+
+/* Panel pattern: field list. A key marker, the name with its note, the type on the right */
+.fields { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card); padding: 8px 10px; }
+.fd-grid { display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content; column-gap: 8px; row-gap: 5px; align-items: baseline; }
+.fd-mark { min-width: 20px; }
+.fd-key { display: inline-block; font-size: var(--t-small); font-weight: 700; line-height: 1.25; padding: 0 4px; border-radius: 3px; }
+.fd-primary { background: var(--head); color: var(--card-bg); }
+.fd-foreign { background: var(--card-bg); color: var(--text); border: 1px solid var(--muted); }
+.fd-unique { background: var(--frame-body); color: var(--text); border: 1px solid var(--card-line); }
+.fd-name { font-family: var(--mono); font-size: var(--t-mono); color: var(--ink); line-height: 1.3; }
+.fd-note { font-size: var(--t-small); color: var(--muted); line-height: 1.3; }
+.fd-type { font-family: var(--mono); font-size: var(--t-small); color: var(--muted); }
+
 /* Panel pattern: matrix */
 /* A matrix is as wide as its content, left-aligned: columns of at least 72 px, never stretched across the panel */
 .matrix { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-card); padding: 8px 12px;

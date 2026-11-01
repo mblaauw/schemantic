@@ -1,6 +1,6 @@
 ---
 name: schemantic
-description: Turns a description of a system, process or platform into a finished one-page architecture plate (SVG, PNG and a text outline) that engineers, architects and management can read. Use it when someone asks for an architecture plate, overview diagram, system landscape, C4 context or container view, deployment view, process overview, infographic or one-pager, or in Dutch an architectuurplaat, overzichtsplaat or plaat, or wants to "draw how these parts fit together", from a conversation, meeting notes, a design document, a repository or a process description. Builds an inventory from the sources, writes a brief, writes a small YAML spec without coordinates, renders it in Chromium and fixes the spec until lint is clean.
+description: Turns a description of a system, process or platform into a finished one-page architecture plate (SVG, PNG and a text outline) that engineers, architects and management can read. Use it when someone asks for an architecture plate, overview diagram, system landscape, C4 context or container view, deployment view, process overview, infographic or one-pager, data model or entity-relationship diagram, or in Dutch an architectuurplaat, overzichtsplaat or plaat, or wants to "draw how these parts fit together", from a conversation, meeting notes, a design document, a repository or a process description. Builds an inventory from the sources, writes a brief, writes a small YAML spec without coordinates, renders it in Chromium and fixes the spec until lint is clean.
 ---
 
 # Schemantic: from sources to a finished plate
@@ -49,9 +49,11 @@ it. Then pick the layout on the reader's question. When unsure, use `column-flow
 | "Which option, and why?" | `comparison` | there is one design and no choice: any other |
 | "What is made of what, or who reports to whom?" | `hierarchy` | things have more than one parent: column-flow |
 | "Where does each thing sit on two axes?" | `quadrant` | one axis is time: roadmap |
+| "What data is there, and how does it relate?" | `data-model` | the question is how data moves: column-flow |
 
 A `capability-map`, `comparison` or `quadrant` says it by position and needs no arrows; a `hierarchy` draws them from
-its tree. On those, the arrow rules below apply only to the arrows you do draw.
+its tree. On those, the arrow rules below apply only to the arrows you do draw. On a `data-model`, a panel is an entity that
+holds `fields` instead of cards, and its arrows end on panels.
 
 Settle the reader's language (`nl` or `en`, following the user; in `nl` technical terms stay English). More than 6
 panels or 30 cards is two plates, each with its own message: a series (`series`, `part`, `of`); once every part

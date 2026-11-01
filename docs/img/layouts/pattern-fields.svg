@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 90" width="170" height="90" role="img" aria-label="Fields: names with key markers and types" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="170" height="90" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<rect x="12" y="13" width="20" height="12" rx="2" fill="#0D6457" stroke="#0D6457" stroke-width="1"/>
+<text x="22" y="22" font-size="7.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">PK</text>
+<text x="38" y="22" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">order_id</text>
+<text x="158" y="22" font-size="8" font-weight="500" fill="#4F5D6E" text-anchor="end">uuid</text>
+<rect x="12" y="35" width="20" height="12" rx="2" fill="#FFFFFF" stroke="#4F5D6E" stroke-width="1"/>
+<text x="22" y="44" font-size="7.5" font-weight="700" fill="#0F2547" text-anchor="middle">FK</text>
+<text x="38" y="44" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">customer</text>
+<text x="158" y="44" font-size="8" font-weight="500" fill="#4F5D6E" text-anchor="end">uuid</text>
+<text x="38" y="66" font-size="9" font-weight="500" fill="#0F2547" text-anchor="start">status</text>
+<text x="158" y="66" font-size="8" font-weight="500" fill="#4F5D6E" text-anchor="end">text</text>
+</svg>

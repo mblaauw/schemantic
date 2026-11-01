@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=../../schemantic/schema/plate.schema.json
+# Fixture: the table pattern beside cards, with a caption and an assumed tag, in a panel of its own and under cards.
+canvas: {size: landscape-4x3, lang: en}
+title: "Every ferry booking runs on one supported database version"
+subtitle: "Which versions each booking service runs, and who owns them"
+archetype: column-flow
+layout:
+  areas: ["sales versions"]
+  column_widths: [1, 2]
+panels:
+  - id: sales
+    title: "Booking"
+    role: platform
+    cards:
+      - {id: desk, icon: ticket, name: "Booking desk", note: "sells crossings"}
+      - {icon: world, name: "Web shop", note: "sells crossings online"}
+  - id: versions
+    title: "What runs where"
+    role: data
+    patterns:
+      - type: table
+        caption: "Supported until the end of next year"
+        columns: ["Service", "Database", "Owner"]
+        rows:
+          - ["Booking desk", "PostgreSQL 16", "Harbour team"]
+          - ["Web shop", "PostgreSQL 16, moving to managed hosting", "Online team"]
+          - ["Timetable", "PostgreSQL 15", "Harbour team"]
+      - type: table
+        assumed: "the owners did not say; read from the on-call rota"
+        columns: ["Service", "On call"]
+        rows:
+          - ["Booking desk", "Harbour team"]
+flows_mean: dependency
+flows:
+  - {from: desk, to: versions}

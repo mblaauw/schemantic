@@ -130,6 +130,16 @@ each with its own message.
 
 **Finished plate:** [`examples/migration-quadrant.yaml`](../examples/migration-quadrant.yaml) ([image](../assets/gallery/migration-quadrant.webp))
 
+## data-model
+
+<img src="img/layouts/data-model.svg" alt="data-model" width="360">
+
+**The reader asks:** What data is there, and how does it relate?
+
+**Not this when:** The question is how data moves: `column-flow`.
+
+**Finished plate:** [`examples/tool-library-data-model.yaml`](../examples/tool-library-data-model.yaml) ([image](../assets/gallery/tool-library-data-model.webp))
+
 ## Inside a panel
 
 Every layout uses the same panels. This one has every part, each named by its field in the spec. The fields, limits and
@@ -155,6 +165,8 @@ can overflow, and in a full lane an arrow can lose its route. Lint says so, by n
 | `process-strip` | <img src="img/layouts/pattern-process-strip.svg" alt="process-strip" width="170"> | Numbered steps in a row, inside one panel. |
 | `tree` | <img src="img/layouts/pattern-tree.svg" alt="tree" width="170"> | An indented listing: folders, keys, topics. |
 | `matrix` | <img src="img/layouts/pattern-matrix.svg" alt="matrix" width="170"> | Rows against columns, each cell full, partial or none: who may do what. |
+| `table` | <img src="img/layouts/pattern-table.svg" alt="table" width="170"> | Rows of text under column names: versions, limits, owners. |
+| `fields` | <img src="img/layouts/pattern-fields.svg" alt="fields" width="170"> | What a table, event or API holds: names, types and keys. |
 
 ## Marks on any layout
 

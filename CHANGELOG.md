@@ -5,6 +5,11 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- The `data-model` layout: entities with fields, joined by arrows that say how many on each side (`cardinality`,
+  `flows_mean: relation`), with a starter, an example and an eval case.
+- The `fields` pattern: names, types and keys, for what a table, event or API holds. Its key markers are in the legend.
+- The `table` pattern: rows of text under column names, for the facts a `matrix` cannot hold. It names its source or says it
+  is `assumed`, and its rows are in the outline.
 - `docs/layouts.md`: every layout and pattern as a sketch, with the reader's question it answers and a finished plate; and
   the parts of a panel, the marks, the arrows and the footer, each named by its field.
 - Evals of all this, judged blind (`evals/README.md`): under one set of rules, 9 of 48 runs pass (3 before), at 2.31 defects

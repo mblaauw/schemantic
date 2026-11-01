@@ -15,6 +15,9 @@ footer:
   zones: "Waar het draait"
   outside: "Buiten elke zone"
 legend:
+  key_primary: "Primary key"
+  key_foreign: "Foreign key: verwijst naar een andere entiteit"
+  key_unique: "Uniek"
   platform: "Platformcomponent"
   data: "Data en opslag"
   external: "Clients en externe systemen"
@@ -27,6 +30,7 @@ legend:
   mean_dependency: "Is afhankelijk van"
   mean_control: "Stuurt aan"
   mean_sequence: "Gaat vooraf aan"
+  mean_relation: "Relatie; 1:n zegt hoeveel aan elke kant"
   style_sync: "Synchrone call"
   style_async: "Asynchroon: event of bericht"
   style_reply: "Antwoord of event"
@@ -50,6 +54,10 @@ status:
   planned: "gepland"
   deprecated: "uitfaseren"
   removed: "verwijderd"
+fields:
+  primary: "PK"
+  foreign: "FK"
+  unique: "UQ"
 matrix:
   full: "volledig"
   partial: "beperkt"

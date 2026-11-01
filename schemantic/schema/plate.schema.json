@@ -175,7 +175,8 @@
         "capability-map",
         "comparison",
         "hierarchy",
-        "quadrant"
+        "quadrant",
+        "data-model"
       ],
       "description": "The body layout; references/archetypes.md says when to use each."
     },
@@ -418,6 +419,15 @@
             "maxLength": 28,
             "description": "Short label beside the arrow; needs a run with room."
           },
+          "cardinality": {
+            "enum": [
+              "1:1",
+              "1:n",
+              "n:1",
+              "n:m"
+            ],
+            "description": "data-model: how many on each side, from then to, drawn before the label. Leave it out when the sources do not say."
+          },
           "both": {
             "type": "boolean",
             "description": "Arrowheads at both ends."
@@ -449,7 +459,8 @@
         "request",
         "dependency",
         "control",
-        "sequence"
+        "sequence",
+        "relation"
       ],
       "description": "What every arrow on this plate means; sets the legend label. data: where data goes; request: who calls whom; dependency: what needs what; control: what steers what; sequence: what comes before what (a roadmap's arrows, forward in time)."
     },
@@ -557,6 +568,34 @@
     }
   },
   "allOf": [
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "data-model"
+          }
+        },
+        "required": [
+          "archetype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "layout": {
+            "required": [
+              "areas"
+            ],
+            "propertyNames": {
+              "enum": [
+                "areas",
+                "column_widths",
+                "chips_at"
+              ]
+            }
+          }
+        }
+      }
+    },
     {
       "if": {
         "properties": {
@@ -1029,14 +1068,16 @@
       "required": [
         "type"
       ],
-      "description": "A structured block inside a panel: tier strip, process strip, tree or matrix.",
+      "description": "A structured block inside a panel: tier strip, process strip, tree, matrix, table or field list.",
       "properties": {
         "type": {
           "enum": [
             "tier-strip",
             "tree",
             "matrix",
-            "process-strip"
+            "process-strip",
+            "table",
+            "fields"
           ]
         }
       },
@@ -1110,6 +1151,126 @@
                 "maxItems": 10,
                 "items": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "fields"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "fields"
+            ],
+            "properties": {
+              "caption": {
+                "type": "string"
+              },
+              "refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Where this comes from: '<source id>: <path, line or short quote>'. Not rendered."
+              },
+              "assumed": {
+                "type": "string",
+                "maxLength": 160,
+                "description": "The sources do not say this; why it is drawn anyway. The plate tags it."
+              },
+              "fields": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 10,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "name"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "maxLength": 28
+                    },
+                    "type": {
+                      "type": "string",
+                      "maxLength": 16,
+                      "description": "As the sources give it; leave it out when they do not."
+                    },
+                    "key": {
+                      "enum": [
+                        "primary",
+                        "foreign",
+                        "unique"
+                      ],
+                      "description": "A marker before the name: PK, FK or UQ, explained in the legend."
+                    },
+                    "note": {
+                      "type": "string",
+                      "maxLength": 40
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "table"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "columns",
+              "rows"
+            ],
+            "properties": {
+              "caption": {
+                "type": "string"
+              },
+              "refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Where this comes from: '<source id>: <path, line or short quote>'. Not rendered."
+              },
+              "assumed": {
+                "type": "string",
+                "maxLength": 160,
+                "description": "The sources do not say this; why it is drawn anyway. The plate tags it."
+              },
+              "columns": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 5,
+                "items": {
+                  "type": "string",
+                  "maxLength": 28
+                }
+              },
+              "rows": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 8,
+                "description": "One list per row, one text per column. The first column is drawn bold.",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 48
+                  }
                 }
               }
             }

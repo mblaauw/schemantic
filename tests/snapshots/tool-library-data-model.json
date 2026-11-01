@@ -1,0 +1,672 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   134
+  ],
+  "body": [
+   40,
+   152,
+   1560,
+   626
+  ],
+  "member": [
+   40,
+   152,
+   466,
+   320
+  ],
+  "member.fields0": [
+   54,
+   222,
+   454,
+   308
+  ],
+  "loan": [
+   586,
+   152,
+   1014,
+   348
+  ],
+  "loan.fields0": [
+   600,
+   224,
+   1000,
+   334
+  ],
+  "tool": [
+   1134,
+   152,
+   1560,
+   334
+  ],
+  "tool.fields0": [
+   1146,
+   222,
+   1546,
+   322
+  ],
+  "fine": [
+   40,
+   392,
+   466,
+   560
+  ],
+  "fine.fields0": [
+   54,
+   462,
+   454,
+   548
+  ],
+  "return": [
+   586,
+   392,
+   1014,
+   626
+  ],
+  "return.fields0": [
+   600,
+   462,
+   1000,
+   568
+  ],
+  "return.chip0": [
+   600,
+   578,
+   1000,
+   614
+  ],
+  "repair": [
+   1134,
+   392,
+   1560,
+   560
+  ],
+  "repair.fields0": [
+   1146,
+   462,
+   1546,
+   548
+  ],
+  "footer": [
+   40,
+   644,
+   1560,
+   734
+  ],
+  "footer.principles": [
+   40,
+   644,
+   876,
+   688
+  ],
+  "footer.open_questions": [
+   904,
+   644,
+   1560,
+   688
+  ],
+  "footer.legend": [
+   40,
+   698,
+   1560,
+   734
+  ]
+ },
+ "text": [
+  [
+   40,
+   46,
+   "Tool library, member records"
+  ],
+  [
+   40,
+   92,
+   "A loan ties one member to one tool, and every return is kept"
+  ],
+  [
+   40,
+   128,
+   "What the lending desk stores, from member to repair"
+  ],
+  [
+   52,
+   178,
+   "Member"
+  ],
+  [
+   52,
+   196,
+   "Someone who may borrow"
+  ],
+  [
+   68,
+   248,
+   "PK"
+  ],
+  [
+   98,
+   248,
+   "member_id"
+  ],
+  [
+   416,
+   248,
+   "uuid"
+  ],
+  [
+   68,
+   272,
+   "UQ"
+  ],
+  [
+   98,
+   272,
+   "email"
+  ],
+  [
+   416,
+   272,
+   "text"
+  ],
+  [
+   98,
+   294,
+   "joined_on"
+  ],
+  [
+   416,
+   294,
+   "date"
+  ],
+  [
+   600,
+   178,
+   "Loan"
+  ],
+  [
+   600,
+   196,
+   "One tool, lent once"
+  ],
+  [
+   616,
+   248,
+   "PK"
+  ],
+  [
+   644,
+   248,
+   "loan_id"
+  ],
+  [
+   962,
+   248,
+   "uuid"
+  ],
+  [
+   616,
+   274,
+   "FK"
+  ],
+  [
+   644,
+   274,
+   "member_id"
+  ],
+  [
+   962,
+   274,
+   "uuid"
+  ],
+  [
+   616,
+   300,
+   "FK"
+  ],
+  [
+   644,
+   300,
+   "tool_id"
+  ],
+  [
+   962,
+   300,
+   "uuid"
+  ],
+  [
+   644,
+   320,
+   "due_on"
+  ],
+  [
+   962,
+   320,
+   "date"
+  ],
+  [
+   1146,
+   178,
+   "Tool"
+  ],
+  [
+   1146,
+   196,
+   "One physical item on the shelf"
+  ],
+  [
+   1162,
+   248,
+   "PK"
+  ],
+  [
+   1192,
+   248,
+   "tool_id"
+  ],
+  [
+   1510,
+   248,
+   "uuid"
+  ],
+  [
+   1162,
+   272,
+   "UQ"
+  ],
+  [
+   1192,
+   272,
+   "tag"
+  ],
+  [
+   1192,
+   288,
+   "the barcode on the handle"
+  ],
+  [
+   1510,
+   272,
+   "text"
+  ],
+  [
+   1192,
+   308,
+   "shelf"
+  ],
+  [
+   1510,
+   308,
+   "text"
+  ],
+  [
+   52,
+   418,
+   "Fine"
+  ],
+  [
+   52,
+   436,
+   "Charged for a late return"
+  ],
+  [
+   68,
+   488,
+   "PK"
+  ],
+  [
+   96,
+   488,
+   "fine_id"
+  ],
+  [
+   364,
+   488,
+   "uuid"
+  ],
+  [
+   68,
+   514,
+   "FK"
+  ],
+  [
+   96,
+   514,
+   "member_id"
+  ],
+  [
+   364,
+   514,
+   "uuid"
+  ],
+  [
+   96,
+   534,
+   "amount"
+  ],
+  [
+   364,
+   534,
+   "decimal(6,2)"
+  ],
+  [
+   600,
+   418,
+   "Return"
+  ],
+  [
+   600,
+   436,
+   "Kept after the loan closes"
+  ],
+  [
+   614,
+   488,
+   "PK"
+  ],
+  [
+   644,
+   488,
+   "return_id"
+  ],
+  [
+   962,
+   488,
+   "uuid"
+  ],
+  [
+   616,
+   514,
+   "FK"
+  ],
+  [
+   644,
+   514,
+   "loan_id"
+  ],
+  [
+   962,
+   514,
+   "uuid"
+  ],
+  [
+   644,
+   534,
+   "returned_on"
+  ],
+  [
+   962,
+   534,
+   "date"
+  ],
+  [
+   644,
+   554,
+   "condition"
+  ],
+  [
+   962,
+   554,
+   "text"
+  ],
+  [
+   614,
+   600,
+   "Q1"
+  ],
+  [
+   640,
+   600,
+   "Keep returns for ever, or for seven years?"
+  ],
+  [
+   1146,
+   418,
+   "Repair"
+  ],
+  [
+   1146,
+   436,
+   "Done by the workshop's own system"
+  ],
+  [
+   1162,
+   488,
+   "PK"
+  ],
+  [
+   1190,
+   488,
+   "repair_id"
+  ],
+  [
+   1510,
+   488,
+   "uuid"
+  ],
+  [
+   1162,
+   514,
+   "FK"
+  ],
+  [
+   1190,
+   514,
+   "tool_id"
+  ],
+  [
+   1510,
+   514,
+   "uuid"
+  ],
+  [
+   1190,
+   534,
+   "finished_on"
+  ],
+  [
+   1510,
+   534,
+   "date"
+  ],
+  [
+   40,
+   656,
+   "Key principles"
+  ],
+  [
+   50,
+   682,
+   "A loan is never edited after it closes; a correction is a new record."
+  ],
+  [
+   904,
+   656,
+   "Open questions"
+  ],
+  [
+   908,
+   684,
+   "Q1"
+  ],
+  [
+   930,
+   682,
+   "Keep returns for ever, or for seven years?"
+  ],
+  [
+   40,
+   710,
+   "Legend"
+  ],
+  [
+   134,
+   710,
+   "Data and storage"
+  ],
+  [
+   284,
+   710,
+   "Clients and external systems"
+  ],
+  [
+   502,
+   710,
+   "Related; 1:n says how many on each side"
+  ],
+  [
+   764,
+   710,
+   "PK"
+  ],
+  [
+   792,
+   710,
+   "Primary key"
+  ],
+  [
+   884,
+   710,
+   "FK"
+  ],
+  [
+   912,
+   710,
+   "Foreign key: points at another entity"
+  ],
+  [
+   1146,
+   710,
+   "UQ"
+  ],
+  [
+   1176,
+   710,
+   "Unique"
+  ],
+  [
+   1266,
+   710,
+   "The point of this plate"
+  ],
+  [
+   108,
+   728,
+   "Q1"
+  ],
+  [
+   134,
+   728,
+   "Open choice or friction"
+  ],
+  [
+   494,
+   226,
+   "1:n borrows"
+  ],
+  [
+   1048,
+   234,
+   "1:n lent in"
+  ],
+  [
+   808,
+   374,
+   "1:1 closed by"
+  ],
+  [
+   262,
+   360,
+   "1:n owes"
+  ],
+  [
+   1356,
+   368,
+   "1:n sent to"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "member",
+   "to": "loan",
+   "points": [
+    [
+     474,
+     236
+    ],
+    [
+     580,
+     236
+    ]
+   ],
+   "label": "1:n borrows"
+  },
+  {
+   "i": 1,
+   "from": "tool",
+   "to": "loan",
+   "points": [
+    [
+     1126,
+     242
+    ],
+    [
+     1020,
+     242
+    ]
+   ],
+   "label": "1:n lent in"
+  },
+  {
+   "i": 2,
+   "from": "loan",
+   "to": "return",
+   "points": [
+    [
+     800,
+     354
+    ],
+    [
+     800,
+     384
+    ]
+   ],
+   "label": "1:1 closed by"
+  },
+  {
+   "i": 3,
+   "from": "member",
+   "to": "fine",
+   "points": [
+    [
+     254,
+     328
+    ],
+    [
+     254,
+     384
+    ]
+   ],
+   "label": "1:n owes"
+  },
+  {
+   "i": 4,
+   "from": "tool",
+   "to": "repair",
+   "points": [
+    [
+     1346,
+     342
+    ],
+    [
+     1346,
+     384
+    ]
+   ],
+   "label": "1:n sent to"
+  }
+ ]
+}

@@ -35,7 +35,7 @@ def grid_css(spec: dict) -> dict:
     # see js/fit.js).
     gutter = "calc(var(--gutter-y) + var(--gap-extra, 0px))"
     return {
-        "columns": " var(--gutter-x) ".join(g.columns),
+        "columns": f" {g.gutter_x} ".join(g.columns),
         "rows": f" {gutter} ".join(["auto"] * m),
         "areas": " ".join('"' + " ".join(line) + '"' for line in lines),
         "groups": g.groups, "group_kind": g.group_kind, "bands": g.bands, "zones": g.zones, "marks": g.marks, "mark_label": g.mark_label,
@@ -82,12 +82,14 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
         if any(f.get("step") for f in flows):  # a drawn story's steps are its route: the legend names it
             story = drawn_story(spec)
             entries.append({"kind": "step", "key": "step", "label": story["name"] if story else lg["step"]})
-    things = [p for p in spec["panels"]] + [c for p in spec["panels"] for c in p.get("cards", [])]
+    things = [p for p in spec["panels"]] + [c for p in spec["panels"] for c in p.get("cards", []) + p.get("patterns", [])]
     for st in ("new", "changed", "planned", "deprecated", "removed"):
         if any(t.get("status") == st for t in things):
             entries.append({"kind": "status", "key": st, "label": lg[f"status_{st}"]})
     if any(t.get("assumed") for t in things):
         entries.append({"kind": "status", "key": "assumed", "label": lg["status_assumed"]})
+    used = {f.get("key") for p in spec["panels"] for pt in p.get("patterns", []) for f in pt.get("fields", [])}
+    entries += [{"kind": "field-key", "key": k, "label": lg[f"key_{k}"]} for k in ("primary", "foreign", "unique") if k in used]
     if any(t.get("focus") for t in things + spec.get("flows", [])):
         entries.append({"kind": "focus", "key": "focus", "label": lg["focus"]})
     kinds = [ch["kind"] for p in spec["panels"] for ch in p.get("chips", [])] + [f["kind"] for f in flags(spec)]

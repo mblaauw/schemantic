@@ -1,0 +1,244 @@
+{
+ "boxes": {
+  "titleblock": [
+   40,
+   32,
+   1560,
+   110
+  ],
+  "body": [
+   40,
+   128,
+   1560,
+   418
+  ],
+  "sales": [
+   40,
+   128,
+   530,
+   312
+  ],
+  "desk": [
+   54,
+   180,
+   518,
+   236
+  ],
+  "sales.card1": [
+   54,
+   244,
+   518,
+   298
+  ],
+  "versions": [
+   578,
+   128,
+   1560,
+   418
+  ],
+  "versions.table0": [
+   592,
+   180,
+   1548,
+   312
+  ],
+  "versions.table1": [
+   592,
+   322,
+   1548,
+   404
+  ],
+  "footer": [
+   40,
+   436,
+   1560,
+   454
+  ],
+  "footer.legend": [
+   40,
+   436,
+   1560,
+   454
+  ]
+ },
+ "text": [
+  [
+   40,
+   68,
+   "Every ferry booking runs on one supported database version"
+  ],
+  [
+   40,
+   104,
+   "Which versions each booking service runs, and who owns them"
+  ],
+  [
+   52,
+   154,
+   "Booking"
+  ],
+  [
+   96,
+   204,
+   "Booking desk"
+  ],
+  [
+   96,
+   220,
+   "sells crossings"
+  ],
+  [
+   96,
+   268,
+   "Web shop"
+  ],
+  [
+   96,
+   284,
+   "sells crossings online"
+  ],
+  [
+   592,
+   154,
+   "What runs where"
+  ],
+  [
+   604,
+   200,
+   "Supported until the end of next year"
+  ],
+  [
+   604,
+   218,
+   "Service"
+  ],
+  [
+   856,
+   218,
+   "Database"
+  ],
+  [
+   1282,
+   218,
+   "Owner"
+  ],
+  [
+   604,
+   244,
+   "Booking desk"
+  ],
+  [
+   856,
+   244,
+   "PostgreSQL 16"
+  ],
+  [
+   1282,
+   244,
+   "Harbour team"
+  ],
+  [
+   604,
+   268,
+   "Web shop"
+  ],
+  [
+   856,
+   268,
+   "PostgreSQL 16, moving to managed hosting"
+  ],
+  [
+   1282,
+   268,
+   "Online team"
+  ],
+  [
+   604,
+   294,
+   "Timetable"
+  ],
+  [
+   856,
+   294,
+   "PostgreSQL 15"
+  ],
+  [
+   1282,
+   294,
+   "Harbour team"
+  ],
+  [
+   1480,
+   342,
+   "assumed"
+  ],
+  [
+   604,
+   362,
+   "Service"
+  ],
+  [
+   1070,
+   362,
+   "On call"
+  ],
+  [
+   604,
+   386,
+   "Booking desk"
+  ],
+  [
+   1070,
+   386,
+   "Harbour team"
+  ],
+  [
+   40,
+   448,
+   "Legend"
+  ],
+  [
+   134,
+   448,
+   "Platform component"
+  ],
+  [
+   302,
+   448,
+   "Data and storage"
+  ],
+  [
+   452,
+   448,
+   "Depends on"
+  ],
+  [
+   546,
+   448,
+   "assumed"
+  ],
+  [
+   610,
+   448,
+   "Assumed: the sources do not say so"
+  ]
+ ],
+ "flows": [
+  {
+   "i": 0,
+   "from": "desk",
+   "to": "versions",
+   "points": [
+    [
+     524,
+     208
+    ],
+    [
+     572,
+     208
+    ]
+   ],
+   "label": null
+  }
+ ]
+}
