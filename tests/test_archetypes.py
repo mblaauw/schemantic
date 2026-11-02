@@ -242,3 +242,15 @@ def test_the_panels_of_a_row_end_level_where_rows_read_as_one_line(name, tmp_pat
     report = pipeline.build(write(tmp_path, spec, name), tmp_path, deliver=False)
     boxes = json.loads(Path(report["snapshot"]).read_text(encoding="utf-8"))["boxes"]
     assert len({boxes[pid][3] for pid in rows[-1] if pid != "."}) == 1
+
+
+def test_a_data_model_may_leave_a_cell_empty_but_warns_about_a_wide_entity(tmp_path):
+    spec = sp.load_spec(ROOT / "examples" / "tool-library-data-model.yaml")
+    first, *rest = spec["layout"]["areas"][-1].split()
+    spec["layout"]["areas"][-1] = " ".join([first, *rest[:-1], "."])
+    spec["panels"] = [p for p in spec["panels"] if p["id"] != rest[-1]]
+    spec["flows"] = [f for f in spec["flows"] if rest[-1] not in (f["from"], f["to"])]
+    assert not archetypes.get("data-model").advice(spec)
+    assert archetypes.get("data-model").grid(spec).open_cells
+    spec["layout"]["areas"][-1] = " ".join([first, *rest[:-1], rest[-2]])
+    assert [f["id"] for f in archetypes.get("data-model").advice(spec)] == [rest[-2]]
