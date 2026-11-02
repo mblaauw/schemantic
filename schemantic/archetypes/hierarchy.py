@@ -14,6 +14,7 @@ class Hierarchy(Archetype):
     required = frozenset({"root", "children"})
     allowed = frozenset({"root", "children", "chips_at"})
     legend_keys = {"mean_control": "mean_leads"}
+    level_rows = True
 
     def children(self, spec: dict) -> dict[str, list[str]]:
         return spec["layout"]["children"]

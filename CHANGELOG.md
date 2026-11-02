@@ -5,6 +5,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Changed
+- Panels in a row now end level on `hierarchy`, `decision-tree`, `state-machine` and `data-model`, however much shorter one is:
+  the last eval's largest defect group was holes, many of them a blank band under the shorter panels of a row. The cards or the
+  last block take up the height, and a panel of only a header is all header.
 - Every pattern now reaches the outline and the source checks, not only `table` and `fields`: tiers, steps, tree lines and matrix
   cells are in the `.md` and the SVG's description, and once a plate declares `sources`, each pattern needs `refs` or `assumed`.
   A plate with sources and older patterns gets new `traceability` warnings. A `tier-strip` also takes a `caption`.

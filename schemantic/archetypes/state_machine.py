@@ -14,6 +14,7 @@ class StateMachine(ColumnFlow):
     required = frozenset({"areas", "start"})
     allowed = frozenset({"areas", "start", "ends", "column_widths", "chips_at"})
     self_loops = True
+    level_rows = True
     ends_on_panels = True
     legend_roles = False  # the colour says only whether a state is an end, which its tag says too
     cards_are_things = False

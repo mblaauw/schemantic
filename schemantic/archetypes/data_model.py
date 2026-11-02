@@ -13,6 +13,7 @@ class DataModel(ColumnFlow):
     name = "data-model"
     relations = True
     ends_on_panels = True
+    level_rows = True
 
     def validate(self, spec: dict) -> list[dict]:
         return super().validate(spec) + [

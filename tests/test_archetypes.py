@@ -1,5 +1,7 @@
 """The layouts added after the first seven: each one's own checks, and what it derives from the spec."""
 import copy
+import json
+from pathlib import Path
 
 import pytest
 from conftest import ROOT, sp
@@ -228,3 +230,15 @@ def test_cardinality_belongs_on_a_data_model():
     spec = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
     spec["flows"][0]["cardinality"] = "1:n"
     assert any("cardinality belongs on a data-model" in f["detail"] for f in sp.check(spec))
+
+
+@pytest.mark.parametrize("name", ["platform-org-hierarchy", "harbour-permit-decision-tree", "ferry-booking-state-machine",
+                                  "tool-library-data-model"])
+def test_the_panels_of_a_row_end_level_where_rows_read_as_one_line(name, tmp_path):
+    spec = sp.load_spec(ROOT / "examples" / f"{name}.yaml")
+    rows = archetypes.get(spec["archetype"]).grid(spec).rows
+    tall = next(pid for pid in rows[-1] if pid != ".")
+    panel(spec, tall)["chips"] = [{"kind": "info", "text": "A note that makes this one panel taller than the panels beside it"}]
+    report = pipeline.build(write(tmp_path, spec, name), tmp_path, deliver=False)
+    boxes = json.loads(Path(report["snapshot"]).read_text(encoding="utf-8"))["boxes"]
+    assert len({boxes[pid][3] for pid in rows[-1] if pid != "."}) == 1
