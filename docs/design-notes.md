@@ -51,6 +51,8 @@ No coordinates does not mean the layout designs itself. Three parts decide three
   frame, and reviewers read it as missing content. The same space below a panel that ends with its content reads
   as rhythm, so panels now end with their content; only panels spanning rows still fill them, and a panel a little shorter
   than its row, whose cards take up the difference. A later eval found reviewers count a small gap beside a panel as a hole too.
+  On trees, state machines and data models a row reads as one line, and a blank band under its short panels was the most common
+  hole, so those rows end level whatever the difference; the height goes to the cards, not to an empty stretch of frame.
 - **Holes are the common defect, and the fix is content.** A density ratio missed panels that looked empty; the
   void check (the largest empty run inside a panel) matches what reviewers see. Most voids came from a fixed canvas
   dumping its spare height into one row, which `canvas.height: fit` removes.

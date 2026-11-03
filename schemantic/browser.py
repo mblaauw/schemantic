@@ -65,11 +65,12 @@ def open_plate(browser, html: str, spec: dict, scale: float = 1, refused: list[s
     page.set_content(html)
     page.evaluate(fonts_ready())
     page.add_script_tag(content=page_scripts())
-    gaps = len(archetypes.get(spec["archetype"]).grid(spec).rows)  # row gutters plus the gap above the footer
+    arche = archetypes.get(spec["archetype"])
+    gaps = len(arche.grid(spec).rows)  # row gutters plus the gap above the footer
     # A slide keeps its 16:9 shape even when the content is short.
     min_height = round(width * 9 / 16) if spec["canvas"]["size"] == "landscape-16x9" else 0
     h = call(page, "fit", {"mode": height_mode(spec), "height": height, "gaps": gaps, "cap": GAP_CAP,
-                           "minHeight": min_height, "even": even})
+                           "minHeight": min_height, "even": even, "level": arche.level_rows})
     page.set_viewport_size({"width": math.ceil(width), "height": math.ceil(h)})
     call(page, "rails")
     call(page, "decorate")

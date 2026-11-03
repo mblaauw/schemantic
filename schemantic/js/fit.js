@@ -4,7 +4,7 @@
 // panel.
 const EVEN_ROW_PX = 36;
 
-schemantic.fit = ({ mode, height, gaps, cap, minHeight, even }) => {
+schemantic.fit = ({ mode, height, gaps, cap, minHeight, even, level }) => {
   const plate = schemantic.plate();
   // A last row that does not fill the grid leaves a hole beside its last card: that card takes the rest of the row. Cards
   // a layout places itself (a column, a row) stay where they are, and so do grids whose rows must line up.
@@ -18,7 +18,8 @@ schemantic.fit = ({ mode, height, gaps, cap, minHeight, even }) => {
     if (over) cards[cards.length - 1].style.gridColumn = `span ${columns - over + 1}`;
   }
   // A panel a little shorter than the tallest beside it ends in a hole of its own: its cards take up the difference, when
-  // that adds little to each row. A much shorter panel stays as it is, and lint says so.
+  // that adds little to each row. A much shorter panel stays as it is, and lint says so, unless the layout's rows read as
+  // one line (level): there every panel ends with its row.
   const rowmates = [...plate.querySelectorAll("#body > .panel:not(.spread), .spoke-row > .panel")];
   const box = (el) => el.getBoundingClientRect();
   const tallest = rowmates.map((p) =>
@@ -30,8 +31,13 @@ schemantic.fit = ({ mode, height, gaps, cap, minHeight, even }) => {
   );
   rowmates.forEach((p, i) => {
     if (!even) return;
+    if (p.querySelector(".chips-bottom")) return;
+    if (level) {
+      if (tallest[i] - box(p).bottom > 1) p.classList.add("evened");
+      return;
+    }
     const grid = p.querySelector(":scope > .pb > .blocks > .cards");
-    if (!grid || p.querySelector(".chips-bottom")) return;
+    if (!grid) return;
     const rows = getComputedStyle(grid).gridTemplateRows.split(/\s+/).length;
     if (tallest[i] - box(p).bottom <= EVEN_ROW_PX * rows) p.classList.add("evened");
   });

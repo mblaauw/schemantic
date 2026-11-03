@@ -25,7 +25,8 @@ body { background: var(--paper); }
   border-radius: var(--r-panel); background: var(--body); }
 /* A panel ends with its content: empty space inside a frame reads as something missing, the same space outside it
    as rhythm. Panels spanning several rows (rails, side spokes) still fill them, and so do rows that pin their chips
-   to the bottom (layout.chips_at), which only line up in panels of one height. */
+   to the bottom (layout.chips_at), which only line up in panels of one height. A layout whose rows read as one line
+   ends them level (level_rows, in js/fit.js). */
 .body > .panel:not(.spread):not(:has(.chips-bottom)), .spoke-row > .panel:not(:has(.chips-bottom)) { align-self: start; }
 /* .role-<name> rules are generated from the role tokens (schemantic/roles.py), so a theme can add roles. */
 /* A row of spokes above or below the hub: its own grid, so the row divides the hub's width evenly */
@@ -70,6 +71,9 @@ body { background: var(--paper); }
 .body > .panel.evened, .spoke-row > .panel.evened { align-self: stretch !important; }
 .evened .blocks, .evened .blocks > .cards { flex: 1 1 auto; }
 .evened .blocks > .cards { align-content: stretch; }
+/* What cannot share out the height keeps it inside: the last block grows, and a panel of only a header is all header */
+.evened .blocks:not(.arrange-row, :has(> .cards)) > .blk:last-child { flex: 1 1 auto; }
+#body .panel.evened:not(:has(.blk, [data-kind="chip"])) > .ph { flex: 1 1 auto; }
 .chip { display: flex; gap: 8px; align-items: flex-start; border-radius: var(--r-card); padding: 8px 10px;
   font-size: var(--t-body); line-height: 1.35; font-weight: 600; }
 .chip .ic { width: 18px; height: 18px; }

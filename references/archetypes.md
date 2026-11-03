@@ -274,6 +274,8 @@ layout:
 - Set `flows_mean: relation` and run each arrow from the one side to the many. `cardinality` (`1:1`, `1:n`, `n:1`, `n:m`) is
   drawn before the label, which has room for a word or two. When the sources do not say how many, leave it out and make it an
   open question.
+- An entity takes one cell, since its fields never fill two. Leave a cell empty rather than stretch a panel into it: `.` in
+  `areas` is fine here, and build warns about an entity spanning columns. Panels in a row end level, so a short one needs nothing.
 - An arrow ends on a panel here, since an entity is what relates. A relation to itself cannot be drawn: give the entity a
   foreign key field whose note says so.
 - Example: `examples/tool-library-data-model.yaml`.

@@ -41,6 +41,7 @@ class Archetype:
     ends_on_panels: bool = False              # True when an arrow joins panels by rule, so it is never short of a card
     self_loops: bool = False                  # True when an arrow can leave a box and come back to it
     cards_are_things: bool = True             # False when cards are steps or verdicts, so their icons do not say who
+    level_rows: bool = False                  # True when the panels of a row read as one line, so they end level
 
     def placed(self, spec: dict) -> list[str]:
         """Panel ids as the layout names them, duplicates kept so they can be reported."""

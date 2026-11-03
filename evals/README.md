@@ -56,6 +56,81 @@ python evals/corrections.py grade <runs>                          # by code: don
 
 ## Latest results
 
+The skill at 93a49d3 (2 November), unreleased: 15 layouts, every pattern in the outline and source checks, and the arrows the
+last round left open. Sixteen cases, three runs per model on each, so 96 plates, judged blind. `judge.md`, `review.md` and the
+judge prompt had not changed since the last round, so the eight cases both rounds ran compare.
+
+| Eight original cases | Last round | This round |
+| --- | --- | --- |
+| Judged pass | 9/48 | 11/48 |
+| Defects per plate | 2.31 | 2.08 |
+| Nothing invented | 39/48 | 38/48 |
+| Truth defects | 24 | 17 |
+| Path defects | 30 | 28 |
+| Hole defects | 28 | 29 |
+| Colour defects | 11 | 12 |
+
+| Model, all 16 cases | Automated | Judged | Both | Nothing invented | Defects per plate |
+| --- | --- | --- | --- | --- | --- |
+| Sonnet 5.5 | 47/48 | 10/48 | 10/48 | 41/48 | 1.48 |
+| Haiku 5.5 | 44/48 | 14/48 | 13/48 | 42/48 | 1.62 |
+
+| Case | Judged pass | Defects per plate | Last round |
+| --- | --- | --- | --- |
+| 1 notes | 0/6 | 3.33 | 1/6, 3.50 |
+| 2 repository | 1/6 | 2.33 | 0/6, 3.33 |
+| 3 series | 0/6 | 3.17 | 0/6, 2.67 |
+| 4 open choices | 0/6 | 2.00 | 0/6, 2.50 |
+| 5 swimlane | 6/6 | 0.00 | 3/6, 0.50 |
+| 6 deployment | 3/6 | 0.83 | 4/6, 0.67 |
+| 7 phase change | 0/6 | 3.50 | 0/6, 2.50 |
+| 8 language | 1/6 | 1.50 | 1/6, 2.83 |
+| 9 sequence | 0/6 | 1.50 | |
+| 10 capability map | 2/6 | 0.67 | |
+| 11 comparison | 1/6 | 1.33 | |
+| 12 hierarchy | 1/6 | 1.33 | |
+| 13 quadrant | 6/6 | 0.00 | |
+| 14 data model | 0/6 | 1.17 | |
+| 15 state machine | 1/6 | 1.17 | |
+| 16 decision tree | 2/6 | 1.00 | |
+
+What it says: the new layouts did not cost the old ones anything, and every run took a layout the judges found fitting, with a
+claim in its title. The goals of one defect per plate and half of all runs passing are not met. A small gain on 48 plates is a
+direction, not a measurement, and judges differ. Kinds are sorted by keyword, so they are approximate: of 149 defects, holes 54,
+paths 34, truth 30, colour 16. Two of the five automated fails look like the grader's: an assumed card counted as invented, and
+"VMs" not matching "virtual machines".
+
+**Since then, not judged again.** Holes were the largest group, and on trees, state machines and data models most were a blank
+band under the short panels of a row, or an entity stretched into an empty cell. Rows there now end level, and a data model may
+leave a cell empty. Built again from the same 24 specs, the largest gap under a panel went from 62 to 82 px per case to 0, with
+no new warnings beyond the wide-entity one, which all six data models get. `review.md` gained a clause saying so. What the judges
+make of it needs the next round.
+
+### Corrections
+
+`evals/corrections.py`: a delivered plate, one sentence from the user, graded by code. Six cases, two models, two runs each.
+
+| Case | Passed | Parts changed | Parts moved |
+| --- | --- | --- | --- |
+| Rename a card | 4/4 | 1 | 0 |
+| Move an arrow | 2/4 | 3 to 7 | 0 |
+| Drop a card | 4/4 | 2 | 0 |
+| A settled question off the plate | 4/4 | 6 | 4 |
+| Change a status | 4/4 | 2 | 0 |
+| Add a card | 4/4 | 2 | 1 |
+
+22 of 24 changed only what was asked, and all 24 took a baseline first. The two others, both Haiku, also corrected a matrix row the
+new arrow had made false, and said so: arguably right, and the grader counts it against them. "Changed" counts a part whose
+arrow was rerouted. Runs showed that citing the user on a plate without `sources` set off 21 warnings across it, and that
+two examples mixed people and systems; both are fixed since, and not measured.
+
+## History
+
+Each run below names what changed before it and what it found; the targets it names are what the following runs
+went after.
+
+### Truthful plates (30 October)
+
 The skill at `truthful-plates`, unreleased: plates mark what the sources do not say, `route-end`, `role-fit` on one thing in
 two colours, cards that fill their row, panels evened out, and corrections. Eight cases, three runs each, judged blind.
 
@@ -96,29 +171,6 @@ and nearly every source got a `path`. Nothing invented is the clearest gain, and
 goals of one defect per plate and half of all runs passing are not met. Holes and routes that stop short are still the largest
 groups, and Haiku is well behind Sonnet. `route-end` also has a cost: asked for a route to "the channels", some agents end
 it on one channel they pick, or draw no story at all.
-
-### Corrections
-
-`evals/corrections.py`: a delivered plate, one sentence from the user, graded by code. Six cases, two models, two runs each.
-
-| Case | Passed | Parts changed | Parts moved |
-| --- | --- | --- | --- |
-| Rename a card | 4/4 | 1 | 0 |
-| Move an arrow | 2/4 | 3 to 7 | 0 |
-| Drop a card | 4/4 | 2 | 0 |
-| A settled question off the plate | 4/4 | 6 | 4 |
-| Change a status | 4/4 | 2 | 0 |
-| Add a card | 4/4 | 2 | 1 |
-
-22 of 24 changed only what was asked, and all 24 took a baseline first. The two others, both Haiku, also corrected a matrix row the
-new arrow had made false, and said so: arguably right, and the grader counts it against them. "Changed" counts a part whose
-arrow was rerouted. Runs showed that citing the user on a plate without `sources` set off 21 warnings across it, and that
-two examples mixed people and systems; both are fixed since, and not measured.
-
-## History
-
-Each run below names what changed before it and what it found; the targets it names are what the following runs
-went after.
 
 ### After the new layouts (30 October)
 
