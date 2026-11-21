@@ -1,5 +1,6 @@
 # yaml-language-server: $schema=../schemantic/schema/plate.schema.json
-# Fictional example: a state machine, with states as panels and a transition back to its own state.
+# Fictional example: a state machine, with states as panels and a transition back to its own state. A state is its
+# name and, in the subtitle, what holds in it: no card, since a card needs a name the sources do not give.
 canvas: {size: landscape-4x3, lang: en}
 topic: "Ferry booking"
 title: "A booking holds a seat until it is paid, and a paid one can still fall back"
@@ -21,35 +22,29 @@ layout:
 panels:
   - id: requested
     title: "Requested"
+    subtitle: "No seat is reserved yet"
     role: platform
-    cards:
-      - {icon: ticket, name: "Seat asked for", note: "no seat is reserved yet", refs: ["rules: 2.1"]}
   - id: held
     title: "Held"
+    subtitle: "A seat is reserved for thirty minutes"
     role: platform
-    cards:
-      - {icon: clock, name: "Seat reserved", note: "for thirty minutes", refs: ["rules: 2.2"]}
   - id: confirmed
     title: "Confirmed"
+    subtitle: "Paid for; the passenger has a ticket"
     role: platform
     focus: true
-    cards:
-      - {icon: circle-check, name: "Seat paid for", note: "the passenger gets a ticket", refs: ["rules: 2.3"]}
   - id: expired
     title: "Expired"
+    subtitle: "The seat is released; nothing was paid"
     role: external
-    cards:
-      - {icon: clock-x, name: "Seat released", note: "nothing was paid", refs: ["rules: 2.4"]}
   - id: cancelled
     title: "Cancelled"
+    subtitle: "Money returned, minus the cancellation fee"
     role: external
-    cards:
-      - {icon: receipt-refund, name: "Money returned", note: "minus the cancellation fee", refs: ["rules: 2.5"]}
   - id: boarded
     title: "Boarded"
+    subtitle: "The ticket was used at the gate"
     role: platform
-    cards:
-      - {icon: ship, name: "Ticket used", note: "at the gate", refs: ["rules: 2.6"]}
 flows_mean: transition
 flows:
   - {from: requested, to: held, label: "seat free", refs: ["rules: 2.2"]}

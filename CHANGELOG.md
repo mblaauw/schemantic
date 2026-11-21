@@ -26,6 +26,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   judges said, so a new check is tried on a hundred judged plates before any agent runs.
 
 ### Changed
+- A state in a `state-machine` is its title and a subtitle, without cards. The starter and the example gave every state a card
+  with a coined name ("Seat asked for"), and agents followed: two runs in the last eval failed for invented card names, and a
+  third invented where a tool waits. Both are redrawn, and the guide says why.
 - A step badge sits beside a short dashed arrow, not on it: across one gutter the disc hid the whole shaft, so an assumed
   arrow or a reply on a numbered route could not be told from a fact. Solid arrows and long runs keep the badge on the line.
 - `void` warns sooner at a panel: from 48 px below a panel or zone that ends above its row, and from 64 px inside a panel; an

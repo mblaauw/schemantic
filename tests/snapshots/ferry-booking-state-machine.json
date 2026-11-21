@@ -10,97 +10,61 @@
    40,
    152,
    1560,
-   472
+   350
   ],
   "requested": [
    40,
    152,
    450,
-   274
-  ],
-  "requested.card0": [
-   54,
-   204,
-   438,
-   262
+   214
   ],
   "held": [
    594,
    152,
    1006,
-   274
-  ],
-  "held.card0": [
-   608,
-   204,
-   992,
-   262
+   214
   ],
   "confirmed": [
    1150,
    152,
    1560,
-   274
-  ],
-  "confirmed.card0": [
-   1164,
-   204,
-   1546,
-   260
+   214
   ],
   "expired": [
    40,
-   352,
+   290,
    450,
-   472
-  ],
-  "expired.card0": [
-   54,
-   404,
-   438,
-   460
+   350
   ],
   "cancelled": [
    594,
-   352,
+   290,
    1006,
-   472
-  ],
-  "cancelled.card0": [
-   608,
-   404,
-   992,
-   460
+   350
   ],
   "boarded": [
    1150,
-   352,
+   290,
    1560,
-   472
-  ],
-  "boarded.card0": [
-   1162,
-   404,
-   1546,
-   460
+   350
   ],
   "footer": [
    40,
-   490,
+   368,
    1560,
-   562
+   440
   ],
   "footer.principles": [
    40,
-   490,
+   368,
    1560,
-   534
+   410
   ],
   "footer.legend": [
    40,
-   544,
+   420,
    1560,
-   562
+   440
   ]
  },
  "text": [
@@ -130,14 +94,9 @@
    "start"
   ],
   [
-   96,
-   228,
-   "Seat asked for"
-  ],
-  [
-   96,
-   244,
-   "no seat is reserved yet"
+   52,
+   196,
+   "No seat is reserved yet"
   ],
   [
    608,
@@ -145,14 +104,9 @@
    "Held"
   ],
   [
-   650,
-   228,
-   "Seat reserved"
-  ],
-  [
-   650,
-   244,
-   "for thirty minutes"
+   608,
+   196,
+   "A seat is reserved for thirty minutes"
   ],
   [
    1164,
@@ -160,133 +114,113 @@
    "Confirmed"
   ],
   [
-   1206,
-   228,
-   "Seat paid for"
-  ],
-  [
-   1206,
-   246,
-   "the passenger gets a ticket"
+   1164,
+   196,
+   "Paid for; the passenger has a ticket"
   ],
   [
    52,
-   378,
+   316,
    "Expired"
   ],
   [
    412,
-   372,
+   312,
    "end"
   ],
   [
-   96,
-   428,
-   "Seat released"
-  ],
-  [
-   96,
-   444,
-   "nothing was paid"
+   52,
+   334,
+   "The seat is released; nothing was paid"
   ],
   [
    608,
-   378,
+   316,
    "Cancelled"
   ],
   [
    966,
-   372,
+   312,
    "end"
   ],
   [
-   650,
-   428,
-   "Money returned"
-  ],
-  [
-   650,
-   444,
-   "minus the cancellation fee"
+   608,
+   334,
+   "Money returned, minus the cancellation fee"
   ],
   [
    1162,
-   378,
+   316,
    "Boarded"
   ],
   [
    1520,
-   372,
+   312,
    "end"
   ],
   [
-   1206,
-   428,
-   "Ticket used"
-  ],
-  [
-   1206,
-   444,
-   "at the gate"
+   1162,
+   334,
+   "The ticket was used at the gate"
   ],
   [
    40,
-   504,
+   380,
    "Key principles"
   ],
   [
    50,
-   528,
+   406,
    "A seat is either held for one booking or free, never both."
   ],
   [
    40,
-   556,
+   434,
    "Legend"
   ],
   [
    134,
-   556,
+   434,
    "What moves one state to the next"
   ],
   [
    380,
-   556,
+   434,
    "The point of this plate"
   ],
   [
    498,
-   204,
+   174,
    "seat free"
   ],
   [
    1066,
-   230,
+   200,
    "paid"
   ],
   [
    1028,
-   188,
+   158,
    "payment reversed"
   ],
   [
    760,
-   290,
+   230,
    "hold extended"
   ],
   [
    470,
-   304,
+   242,
    "thirty minutes pass"
   ],
   [
    1032,
-   304,
+   242,
    "refund approved"
   ],
   [
    1364,
-   316,
+   256,
    "scanned at gate"
   ]
  ],
@@ -298,11 +232,11 @@
    "points": [
     [
      458,
-     212
+     182
     ],
     [
      588,
-     212
+     182
     ]
    ],
    "label": "seat free"
@@ -314,11 +248,11 @@
    "points": [
     [
      1012,
-     212
+     182
     ],
     [
      1142,
-     212
+     182
     ]
    ],
    "label": "paid"
@@ -330,11 +264,11 @@
    "points": [
     [
      1142,
-     196
+     166
     ],
     [
      1012,
-     196
+     166
     ]
    ],
    "label": "payment reversed"
@@ -346,19 +280,19 @@
    "points": [
     [
      740,
-     282
+     220
     ],
     [
      740,
-     300
+     238
     ],
     [
      860,
-     300
+     238
     ],
     [
      860,
-     282
+     220
     ]
    ],
    "label": "hold extended"
@@ -370,19 +304,19 @@
    "points": [
     [
      610,
-     282
+     220
     ],
     [
      610,
-     312
+     252
     ],
     [
      434,
-     312
+     252
     ],
     [
      434,
-     344
+     284
     ]
    ],
    "label": "thirty minutes pass"
@@ -394,19 +328,19 @@
    "points": [
     [
      1166,
-     282
+     220
     ],
     [
      1166,
-     312
+     252
     ],
     [
      990,
-     312
+     252
     ],
     [
      990,
-     344
+     284
     ]
    ],
    "label": "refund approved"
@@ -418,11 +352,11 @@
    "points": [
     [
      1354,
-     282
+     220
     ],
     [
      1354,
-     344
+     284
     ]
    ],
    "label": "scanned at gate"

@@ -201,7 +201,7 @@ def test_a_state_machine_marks_its_start_and_ends():
     spec = archetypes.get("state-machine").expand(sp.load_spec(ROOT / "examples" / "ferry-booking-state-machine.yaml"))
     assert {p["id"]: p.get("mark") for p in spec["panels"]} == {
         "requested": "start", "held": None, "confirmed": None, "expired": "end", "cancelled": "end", "boarded": "end"}
-    assert any(line.startswith("Requested [start]") for line in lines(spec))
+    assert any(line.startswith("Requested") and line.endswith("[start]") for line in lines(spec))
 
 
 @pytest.mark.parametrize(("fn", "says"), [

@@ -304,8 +304,9 @@ layout:
 
 - Set `flows_mean: transition`. Every arrow runs between panels and has a `label`, the event that causes it, in a word or two.
   `{from: held, to: held, label: "hold extended"}` draws an arrow back to its own state.
-- A panel's cards say what holds in that state; give it none when the sources say nothing more. The layout sets the colours, one for
-  a state and one for an end, whatever `role` a panel names.
+- A state is its title, and its `subtitle` says what holds in it. Give it no cards: a card needs a name, and for a state the
+  sources give none, so one would be coined ("Seat asked for"). A thing the sources do name in a state (a hold timer, a fee)
+  may be a card. The layout sets the colours, one for a state and one for an end, whatever `role` a panel names.
 - Lint warns about a state the start cannot reach, a state nothing leaves that is not in `ends`, and an end that something leaves.
 - Lay out the main path along the first row, and the states it can fall out to under it. When an arrow crosses or a label has no
   room, move a state; past about ten transitions on one plate, labels start to run out of room.
