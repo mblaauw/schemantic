@@ -234,8 +234,9 @@ layout:
 ```
 
 - Every criterion has one card per option; `col` names the option. The name is the verdict, the note the reason.
-- The icon carries the verdict: `circle-check`, `alert-triangle`, `circle-x`. Panel colours mean nothing here and stay
-  out of the legend.
+- The icon carries the verdict: `circle-check`, `alert-triangle`, `circle-x`. A verdict is a judgement, so the legend says
+  whose: yours ("our reading of the sources") unless the sources give the verdicts themselves, and then you say so with
+  `verdicts: "The review board's verdict"`. Panel colours mean nothing here and stay out of the legend.
 - Nothing decided yet? Leave out `pick`, and put the choice in a flag: the plate still shows the trade-off.
 - Example: `examples/search-engine-comparison.yaml`.
 

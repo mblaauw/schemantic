@@ -180,6 +180,8 @@ body { background: var(--paper); }
 .sw { flex: 0 0 auto; width: 22px; height: 14px; border-radius: 3px; }
 .lg .ic { width: 18px; height: 18px; margin: 0 2px; }
 .lg-arrow { color: var(--arrow); }
+.lg-verdict { display: inline-flex; color: var(--head); }
+.lg .lg-verdict .ic { margin: 0 1px; }
 .lg-warning { color: var(--warn-icon); }
 .lg-info { color: var(--info-icon); }
 

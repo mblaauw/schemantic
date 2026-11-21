@@ -5,6 +5,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- A `comparison` says in its legend whose verdicts its icons give: "our reading of the sources", or `layout.verdicts` when
+  the sources rate the options themselves. Half the comparison plates in the last eval were faulted for drawing their own
+  reading as fact, admitted only in the brief.
 - A `sequence` draws one branch: a drawn story there is a branch off the numbered order (a decline, a refusal), lettered A, B
   while the numbers pass over it, and named in the legend. Five of six sequence plates in the last eval named a decline in
   the subtitle and drew nothing, as the example itself did; the example now draws its refused token.

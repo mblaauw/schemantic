@@ -99,6 +99,7 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
         entries.append({"kind": "rating", "key": "rating", "label": spec["rating_means"]})
     if any(t.get("focus") for t in things + spec.get("flows", [])):
         entries.append({"kind": "focus", "key": "focus", "label": lg["focus"]})
+    entries += arche.legend(spec, lg)
     kinds = [ch["kind"] for p in spec["panels"] for ch in p.get("chips", [])] + [f["kind"] for f in flags(spec)]
     for k in ("warning", "info"):
         if k in kinds:

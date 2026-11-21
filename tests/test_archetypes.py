@@ -261,3 +261,15 @@ def test_a_data_model_may_leave_a_cell_empty_but_warns_about_a_wide_entity(tmp_p
     assert archetypes.get("data-model").grid(spec).open_cells
     spec["layout"]["areas"][-1] = " ".join([first, *rest[:-1], rest[-2]])
     assert [f["id"] for f in archetypes.get("data-model").advice(spec)] == [rest[-2]]
+
+
+def test_a_comparison_says_whose_verdicts_its_icons_give():
+    from schemantic.html import legend_entries
+    verdict = lambda s: [e for e in legend_entries(s, sp.load_locale("en")) if e["kind"] == "verdict"]  # noqa: E731
+    mine = verdict(COMPARISON)
+    assert [e["label"] for e in mine] == ["Verdict: our reading of the sources"]
+    assert mine[0]["icons"] == ["circle-check", "alert-triangle", "circle-x"]
+    board = copy.deepcopy(COMPARISON)
+    board["layout"]["verdicts"] = "The review board's verdict"
+    assert not sp.check(board) and [e["label"] for e in verdict(board)] == ["The review board's verdict"]
+    assert not verdict(SEQUENCE)

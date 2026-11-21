@@ -118,7 +118,7 @@
    40,
    648,
    1560,
-   718
+   720
   ],
   "footer.principles": [
    40,
@@ -136,7 +136,7 @@
    40,
    700,
    1560,
-   718
+   720
   ]
  },
  "text": [
@@ -346,12 +346,17 @@
    "Legend"
   ],
   [
-   108,
+   172,
+   714,
+   "Verdict: our reading of the sources"
+  ],
+  [
+   400,
    714,
    "Q1"
   ],
   [
-   134,
+   424,
    714,
    "Open choice or friction"
   ]

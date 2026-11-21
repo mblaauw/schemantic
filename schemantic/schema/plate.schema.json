@@ -282,6 +282,10 @@
           "type": "integer", "minimum": 1,
           "description": "comparison: the option recommended (1 is the first), marked and tinted."
         },
+        "verdicts": {
+          "type": "string", "maxLength": 60,
+          "description": "comparison: whose verdicts the check, warning and cross icons give, for the legend (\"The review board's verdict\"). Without it the legend says they are your reading of the sources."
+        },
         "root": {
           "type": "string",
           "description": "hierarchy, decision-tree: the panel at the top of the tree."
@@ -879,7 +883,7 @@
           "layout": {
             "required": ["criteria", "options"],
             "propertyNames": {
-              "enum": ["criteria", "options", "pick", "chips_at"]
+              "enum": ["criteria", "options", "pick", "verdicts", "chips_at"]
             }
           }
         }

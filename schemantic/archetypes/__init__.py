@@ -67,6 +67,10 @@ class Archetype:
         """Panels with a filled header when the plate has no focus: the layout's own centre, if it has one."""
         return set()
 
+    def legend(self, spec: dict, labels: dict) -> list[dict]:
+        """Legend entries only this layout has, given the legend's labels in the plate's language."""
+        return []
+
     def advice(self, spec: dict) -> list[dict]:
         """Warnings of this layout, on a plate whose layout checked clean."""
         return []
