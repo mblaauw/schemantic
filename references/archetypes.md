@@ -150,6 +150,8 @@ layout:
 - `labels: ["Today", "Phase 2"]` overrides the column labels (default Before / After; in Dutch Nu / Straks).
 - Leave a row's other side empty by giving one side more panels: a part that is new, or gone.
 - The title claims the difference ("Invoices reach the bank the same day"), not the topic.
+- Work people do by hand on the before side (paper lists, booking by phone) is a panel of people, `actor`, and the people
+  who do it stay on the after side when they still do the work: a reader looks for them there.
 - Example: `examples/invoicing-before-after.yaml`.
 
 ## roadmap

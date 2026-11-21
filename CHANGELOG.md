@@ -31,6 +31,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   judges said, so a new check is tried on a hundred judged plates before any agent runs.
 
 ### Changed
+- Guidance for three defects no check can see, each found on several plates of the last eval: a hedge ("by our estimate") is
+  not an open question; a thing stays in the group the sources give it (an event bus listed under Data is not a panel of its
+  own); and on a `before-after`, work done by hand is a panel of people, who stay on the after side when they still do it.
 - A state in a `state-machine` is its title and a subtitle, without cards. The starter and the example gave every state a card
   with a coined name ("Seat asked for"), and agents followed: two runs in the last eval failed for invented card names, and a
   third invented where a tool waits. Both are redrawn, and the guide says why.

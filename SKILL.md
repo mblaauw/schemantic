@@ -100,13 +100,15 @@ and fix it before writing more:
 - A `status` is what the sources say about that thing. Someone asking for a report does not make it `planned`, and "not
   decided" is a warning, not a status: with nothing to quote, draw no status.
 - A panel name uses the sources' words. A grouping you coin that a reader would take for a real domain or team
-  ("Customers and sales") gets `assumed`, or a plainer name.
+  ("Customers and sales") gets `assumed`, or a plainer name. A thing stays in the group the sources give it: an event bus
+  listed under Data is a card in Data, also when it is the hub of the story. A panel of its own ("Events") is a claim.
 - The title, subtitle, principles and notes say only what the sources say. An "only", an "every", a "never" or a detail
   you inferred goes in the brief, or is left out. Check every "every" against the plate's own open questions.
 - Every uncertainty in the sources is a warning chip, a card flag or an open question. Before you keep a question,
   look for its answer: one the sources settle ("everything publishes", "test mirrors production") is a fact to draw. A
-  question the sources do not raise goes in your reply to the user, not on the plate.
-- Every route the title or subtitle names ("A via B to C") is a `story` through cards that exist.
+  hedge ("by our estimate", "roughly") is the source's wording, not a question: quote it in the note. A question the
+  sources do not raise goes in your reply to the user, not on the plate.
+- Every route the title or subtitle names ("A via B to C") is a `story` through cards that exist, and is drawn.
 
 ## 4. Fill the spec
 

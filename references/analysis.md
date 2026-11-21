@@ -299,7 +299,8 @@ calls members; branches call lending.*
 The inventory tells two stories, the calls between areas and the events across them, and one plate carries one message.
 Part 1 takes the calls between lending, members and branches. Part 2, below, takes the events. Its title makes two
 claims, so both get arrows: a stand-in panel holds what part 1 owns, named for what it holds, and the hub is a card of
-its own in the middle. An arrow from a whole panel is right here: every card in it publishes, so one arrow says it
+its own in the middle. It may stand alone because this inventory lists the hub under no area; had it said "Reporting:
+dashboards, exports, the event hub", the hub would stay a card in Reporting, and Reporting would take the middle. An arrow from a whole panel is right here: every card in it publishes, so one arrow says it
 without seven. The inventory names no owner or status, so no card has a note and nothing is asked about either.
 
 <!-- lint: full -->

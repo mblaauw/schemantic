@@ -33,7 +33,7 @@ left to you.
    itself marks as assumed (the tag, the amber dashed arrow) is no defect; what only the brief admits still is. Lint
    (`traceability`) checks that each names a source or says it is assumed, and that a quote from a source with a `path`
    is really there; you check that the source means it: someone asking for a report does not make it `planned`.
-9. **Open ends.** Is any warning a question the sources already settle, or any principle a slogan nobody could
-   check? (No check can.)
+9. **Open ends.** Is any warning a question the sources already settle or never raise (a hedge such as "by our estimate"
+   is no question), or any principle a slogan nobody could check? (No check can.)
 10. **Series.** If this is one part of a series, does anything carry a different name than on the other parts?
     `plate.py series` checks the language, the arrows' meaning and one colour per thing.
