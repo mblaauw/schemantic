@@ -81,9 +81,10 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
         if any(f.get("assumed") for f in flows):
             entries.append({"kind": "line", "key": "assumed", "label": lg["style_assumed"]})
         # A drawn story's steps are its route, so the legend names it: the first by its numbers, a second by its letters.
-        drawn = drawn_stories(spec)
+        # Where the layout numbers the arrows itself (a sequence), a drawn story is a branch, and takes the letters.
+        drawn = ([None] if arche.numbers_itself else []) + drawn_stories(spec)
         if any(isinstance(f.get("step"), int) for f in flows):
-            entries.append({"kind": "step", "key": "step", "mark": "1", "label": drawn[0]["name"] if drawn else lg["step"]})
+            entries.append({"kind": "step", "key": "step", "mark": "1", "label": drawn[0]["name"] if drawn and drawn[0] else lg["step"]})
         if any(isinstance(f.get("step"), str) for f in flows):
             entries.append({"kind": "step", "key": "step-second", "mark": "A", "label": drawn[1]["name"]})
     things = [p for p in spec["panels"]] + [c for p in spec["panels"] for c in p.get("cards", []) + p.get("patterns", [])]

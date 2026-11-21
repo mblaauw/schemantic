@@ -30,7 +30,7 @@ panels:
       - {id: read, icon: database, name: "TODO: what it looks up", row: 2, refs: ["notes: TODO"]}
 
 flows_mean: request
-flows:      # numbered by row
+flows:      # numbered by row; a branch the title names is a story with `draw: true`: lettered, the numbers pass over it
   - {from: ask, to: take, refs: ["notes: TODO"]}
   - {from: fetch, to: read, refs: ["notes: TODO"]}
   - {from: reply, to: done, style: async, refs: ["notes: TODO"]}

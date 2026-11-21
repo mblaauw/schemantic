@@ -466,7 +466,7 @@ def test_a_plate_draws_two_stories_at_most_and_they_own_the_steps():
     spec["flows"][0]["step"] = 7
     found = [(f["id"], f["detail"]) for f in sp.check(spec) if f["check"] == "story"]
     assert [i for i, _ in found if i.startswith("stories")] == ["stories/2"]
-    assert ("flows/0", "the drawn story numbers its own flows; drop this flow's step 7") in found
+    assert ("flows/0", "a drawn story marks its own flows; drop this flow's step 7") in found
 
 
 def test_roadmap_lanes_tint_now_and_arrows_run_forward():

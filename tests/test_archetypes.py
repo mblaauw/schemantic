@@ -43,17 +43,24 @@ def test_sequence_checks(fn, says):
 
 
 def test_a_lifeline_holds_twelve_cards_and_other_panels_six():
-    many = [{"name": f"Step {n}", "row": n, **({"id": "place"} if n == 4 else {})} for n in range(1, 13)]
+    many = [{"name": f"Step {n}", "row": n, **({"id": "place"} if n == 5 else {})} for n in range(1, 13)]
     assert not details(SEQUENCE, lambda s: panel(s, "orders").update(cards=many))
     assert details(SEQUENCE, lambda s: panel(s, "orders").update(cards=[*many, {"name": "x", "row": 12}]))  # the schema's cap
     assert any("a panel holds 6" in d for d in details(MAP, lambda s: panel(s, "sell").update(cards=[{"name": f"C{n}"} for n in range(7)])))
 
 
-def test_sequence_numbers_its_messages_by_row_and_a_drawn_story_keeps_its_own():
+def test_sequence_numbers_its_messages_by_row_and_letters_one_branch():
+    """The example's refused token is a drawn story: its message is lettered, and the numbers pass over it."""
     arche = archetypes.get("sequence")
-    assert [f["step"] for f in arche.expand(SEQUENCE)["flows"]] == [1, 2, 3, 4, 5]
-    drawn = {**SEQUENCE, "stories": [{"name": "Out", "path": ["send", "take"], "draw": True}]}
-    assert "step" not in arche.expand(drawn)["flows"][0]
+    expanded = sp.number_story(arche.expand(SEQUENCE))
+    assert [f["step"] for f in expanded["flows"]] == [1, 2, 3, "A", 4, 5]
+    from schemantic.html import legend_entries
+    steps = [(e["mark"], e["label"]) for e in legend_entries(expanded, sp.load_locale("en")) if e["kind"] == "step"]
+    assert steps == [("1", "Step in the order things happen"), ("A", "A refused token")]
+    plain = {**SEQUENCE, "stories": []}
+    assert [f["step"] for f in arche.expand(plain)["flows"]] == [1, 2, 3, 4, 5, 6]
+    two = {**SEQUENCE, "stories": SEQUENCE["stories"] + [{"name": "Out", "path": ["send", "take"], "draw": True}]}
+    assert any("letters one branch" in f["detail"] for f in sp.check(two))
 
 
 @pytest.mark.parametrize("fn, says", [

@@ -5,6 +5,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- A `sequence` draws one branch: a drawn story there is a branch off the numbered order (a decline, a refusal), lettered A, B
+  while the numbers pass over it, and named in the legend. Five of six sequence plates in the last eval named a decline in
+  the subtitle and drew nothing, as the example itself did; the example now draws its refused token.
 - Lint warns when the brief admits an assumption about who runs a thing while the panel it colours carries no `assumed`
   (`brief-only`). A reader never sees the brief, and "only the brief admits it" was the judges' most repeated truth defect.
   Replayed on the last eval, it fires on 12 plates: the judges faulted 7 for exactly this, 4 more are the same case

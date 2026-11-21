@@ -10,13 +10,13 @@
    40,
    128,
    1560,
-   548
+   618
   ],
   "shop": [
    40,
    128,
    384,
-   548
+   618
   ],
   "send": [
    92,
@@ -24,17 +24,23 @@
    332,
    258
   ],
+  "error": [
+   92,
+   418,
+   332,
+   460
+  ],
   "done": [
    92,
-   486,
+   556,
    332,
-   528
+   598
   ],
   "gateway": [
    432,
    128,
    776,
-   548
+   618
   ],
   "take": [
    484,
@@ -54,23 +60,29 @@
    724,
    390
   ],
+  "refuse": [
+   484,
+   418,
+   724,
+   460
+  ],
   "pass": [
    484,
-   410,
+   480,
    724,
-   466
+   536
   ],
   "reply": [
    484,
-   486,
+   556,
    724,
-   528
+   598
   ],
   "identity": [
    824,
    128,
    1168,
-   548
+   618
   ],
   "verify": [
    876,
@@ -88,31 +100,31 @@
    1216,
    128,
    1560,
-   548
+   618
   ],
   "place": [
    1268,
-   418,
+   486,
    1508,
-   460
+   528
   ],
   "footer": [
    40,
-   566,
+   636,
    1560,
-   638
+   708
   ],
   "footer.principles": [
    40,
-   566,
+   636,
    1560,
-   610
+   678
   ],
   "footer.legend": [
    40,
-   620,
+   688,
    1560,
-   638
+   708
   ]
  },
  "text": [
@@ -124,7 +136,7 @@
   [
    40,
    104,
-   "An order request from the web shop, with a valid token; a refused token ends after step 3"
+   "An order request from the web shop; a refused token goes straight back and reaches no service"
   ],
   [
    52,
@@ -143,7 +155,12 @@
   ],
   [
    134,
-   510,
+   442,
+   "Asks to sign in again"
+  ],
+  [
+   134,
+   580,
    "Shows the order"
   ],
   [
@@ -168,17 +185,22 @@
   ],
   [
    526,
-   434,
+   442,
+   "Refuses a bad token"
+  ],
+  [
+   526,
+   504,
    "Passes the order on"
   ],
   [
    526,
-   452,
+   520,
    "adds the customer id"
   ],
   [
    526,
-   510,
+   580,
    "Returns the result"
   ],
   [
@@ -208,53 +230,63 @@
   ],
   [
    1310,
-   442,
+   510,
    "Places the order"
   ],
   [
    40,
-   580,
+   648,
    "Key principles"
   ],
   [
    50,
-   606,
+   674,
    "Services trust the customer id the gateway adds; none of them reads a token."
   ],
   [
    40,
-   632,
+   702,
    "Legend"
   ],
   [
    134,
-   632,
+   702,
    "Clients and external systems"
   ],
   [
    352,
-   632,
+   702,
    "Platform component"
   ],
   [
    520,
-   632,
+   702,
    "Direction of requests"
   ],
   [
    696,
-   632,
+   702,
    "Reply or event"
   ],
   [
    804,
-   632,
+   702,
    "1"
   ],
   [
    824,
-   632,
+   702,
    "Step in the order things happen"
+  ],
+  [
+   1034,
+   702,
+   "A"
+  ],
+  [
+   1054,
+   702,
+   "A refused token"
   ],
   [
    408,
@@ -272,13 +304,18 @@
    "3"
   ],
   [
-   996,
+   408,
    442,
+   "A"
+  ],
+  [
+   996,
+   512,
    "4"
   ],
   [
    408,
-   512,
+   582,
    "5"
   ]
  ],
@@ -333,15 +370,15 @@
   },
   {
    "i": 3,
-   "from": "pass",
-   "to": "place",
+   "from": "refuse",
+   "to": "error",
    "points": [
     [
-     732,
+     476,
      438
     ],
     [
-     1260,
+     340,
      438
     ]
    ],
@@ -349,16 +386,32 @@
   },
   {
    "i": 4,
+   "from": "pass",
+   "to": "place",
+   "points": [
+    [
+     732,
+     508
+    ],
+    [
+     1260,
+     508
+    ]
+   ],
+   "label": null
+  },
+  {
+   "i": 5,
    "from": "reply",
    "to": "done",
    "points": [
     [
      476,
-     508
+     578
     ],
     [
      340,
-     508
+     578
     ]
    ],
    "label": null

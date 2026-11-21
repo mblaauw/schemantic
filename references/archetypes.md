@@ -189,7 +189,12 @@ layout:
 - Every card has a `row`; one card per participant per row, one message per row, up to 12 on a lifeline. A step with no
   message is a card alone. Name a card for what happens, in a word or two: six lifelines leave little width.
 - A message crosses other lifelines only where their row is empty: lint names the card in the way.
-- `style: async` draws a reply or an event dashed. Keep it to one path: a second path is a second plate.
+- `style: async` draws a reply or an event dashed. The participant that starts it from outside (an app, a browser, a
+  partner) is `external`, the colour the legend calls clients and external systems.
+- Keep to one path, with one branch at most. A branch the title or subtitle names (a decline, a refusal) is drawn, not only
+  told: a row of its own right after the step that decides, cards named for when it happens ("Refuses a bad token"), and
+  a `story` through it with `draw: true`. Its messages are lettered A, B, the numbers pass over them, and the legend names
+  the branch. A second branch is a second plate.
 - The title claims the order that matters ("The gateway checks every token before a request reaches a service").
 - Example: `examples/token-check-sequence.yaml`.
 

@@ -269,7 +269,7 @@ def story_findings(spec: dict, known: set[str]) -> list[dict]:
             for n in drawn[MAX_DRAWN:]]
     stepped = [(n, f) for n, f in enumerate(spec.get("flows", [])) if f.get("step")]
     if drawn:
-        out += [finding("story", f"flows/{n}", f"the drawn story numbers its own flows; drop this flow's step {f['step']}")
+        out += [finding("story", f"flows/{n}", f"a drawn story marks its own flows; drop this flow's step {f['step']}")
                 for n, f in stepped]
     # A story that is only checked is invisible: the reader sees the routes that are drawn. Flows numbered by hand, or by
     # the layout, already show their order.
@@ -310,7 +310,7 @@ def route_ends(spec: dict) -> list[dict]:
                 continue
             if cid not in ends:
                 out.append(finding("route-end", cid, f"the title or subtitle names '{name}', but no arrow reaches the card", level="warning"))
-            elif drawn and cid not in on_route:
+            elif drawn and cid not in on_route and not archetypes.REGISTRY[spec["archetype"]].numbers_itself:
                 more = "draw a second story through it" if len(drawn) < MAX_DRAWN else "take the drawn routes through it"
                 out.append(finding("route-end", cid, f"the title or subtitle names '{name}', but no drawn route passes the card",
                                    level="warning", hint=f"A reader looks for what the title names on the numbered route: {more} "
