@@ -49,6 +49,19 @@ components, counts, nothing invented by name) and the judged half (a claim in th
 invented, no defect). One run per case is noisy; take three. A change to `judge.md` moves the numbers too, far more than
 the prompt's wording: when it changes, judge the last round's plates again under it before comparing.
 
+A round's specs and verdicts stay, and a new or changed check is tried on them before any agent runs:
+
+```bash
+python evals/replay.py <runs> --spec-only          # every check that needs no browser, in seconds; without the flag, all
+python evals/replay.py <runs> --show route-end     # each finding of one check beside the judge's words, then where it is quiet
+```
+
+It lints every delivered spec with the code as it is now and sets each check beside the judges: the plates it fires on, how
+many of those a judge faulted for that kind of defect, and how many the judges faulted in all. It says whether a finding is
+true, not what an agent does with it; that still takes a round. On the round of 2 November, before any of the checks it led to:
+`void` fired on 9 of the 50 plates judged to have holes, `orphan` on 3 of the 27 with a broken path, `role-fit` on none of the
+12 with a wrong colour, and `traceability` on none of the 29 with a truth defect.
+
 ```bash
 python evals/corrections.py prepare <runs> --skill <skill copy>   # a delivered plate and one sentence per run
 python evals/corrections.py grade <runs>                          # by code: done, nothing else changed, still clean

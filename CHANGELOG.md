@@ -4,6 +4,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Added
+- `evals/replay.py`: lints the specs of a judged eval round with the code as it is now and sets each check beside what the
+  judges said, so a new check is tried on a hundred judged plates before any agent runs.
+
 ### Changed
 - Panels in a row now end level on `hierarchy`, `decision-tree`, `state-machine` and `data-model`, however much shorter one is:
   the last eval's largest defect group was holes, many of them a blank band under the shorter panels of a row. The cards or the

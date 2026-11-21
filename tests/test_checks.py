@@ -446,3 +446,14 @@ def test_fields_name_a_source_and_their_keys_reach_the_legend():
     from schemantic.html import legend_entries
     keys = [e["key"] for e in legend_entries(spec, sp.load_locale("en")) if e["kind"] == "field-key"]
     assert keys == ["primary"]
+
+
+def test_replay_sorts_a_judges_defect_by_the_question_it_answers():
+    sys.path.insert(0, str(ROOT / "evals"))
+    import replay
+
+    kinds = replay.judged_kinds({"defects": ["Q5 Holes (part 1): the cards float apart", "Path: the route stops short",
+                                             "Truth / Open ends: Q1 is not a question the source raises", "The plate is fine"],
+                                 "invented": ["Order feed, a card the plan does not name"]})
+    assert {k: len(v) for k, v in kinds.items()} == {"holes": 1, "path": 1, "truth": 2, "other": 1}
+    assert set(replay.ABOUT.values()) <= {k for k, _ in replay.KINDS}
