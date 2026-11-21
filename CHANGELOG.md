@@ -5,6 +5,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- `<name>.build.json` records the warnings a plate was delivered with, and `evals/run_all.py` counts them per model. A check
+  only helps when agents act on it, and the last round could not say how many warnings its plates still had.
 - A `hierarchy` marks a line of its tree as assumed: `layout.assumed: {<panel>: <why>}` draws the line to that panel's parent
   amber and dashed. The tree's arrows follow from `children`, so until now a reporting line the sources only suggest could be
   admitted in the brief alone; two hierarchy plates in the last eval were faulted for it.

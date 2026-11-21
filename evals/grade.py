@@ -7,8 +7,8 @@ The run dir holds what the agent produced: one or more spec YAML files (skill ru
 counts when a PNG of the same name was built from it. The checks: an image exists; every spec builds without lint
 errors; the archetype, language and series match the rubric; required components appear; enough open questions,
 warnings, principles, statuses and steps; and no card is invented (its name's words, or a quoted ref, must be found
-in the inputs). The judged half (the title is a claim,
-the review questions find no defect) comes from evals/judge.md.
+in the inputs). It also reports, without grading it, the warnings the agent's last build gave and it delivered with. The
+judged half (the title is a claim, the review questions find no defect) comes from evals/judge.md.
 """
 from __future__ import annotations
 
@@ -103,6 +103,10 @@ def grade(case: Path, run: Path) -> dict:
         checks["steps"] = count(lambda d: sum(bool(f.get("step")) for f in d.get("flows", [])) + (
             sum(len(p.get("cards", [])) for p in d["panels"]) if d["archetype"] == "swimlane" else 0))
         checks["parts"] = len(specs)
+        # What the agent's own last build warned about and it delivered anyway (None when built before builds recorded it).
+        left = [json.loads(b.read_text(encoding="utf-8")).get("warnings") for b in run.rglob("*.build.json")
+                if "_work" not in b.parts and b.name.removesuffix(".build.json") in built]
+        checks["warnings_left"] = None if not left or None in left else sorted(w["check"] for ws in left for w in ws)
     else:
         checks["lang"] = language(text) == rubric["lang"] if text else False
     found = (text + " " + " ".join(json.dumps(doc) for _, doc in specs)).lower()
