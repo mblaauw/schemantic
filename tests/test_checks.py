@@ -10,6 +10,7 @@ from conftest import ROOT, sp
 from test_render import write
 
 from schemantic import cli, findings, pipeline
+from schemantic.lint import FOOTER_FLOOR_PX
 
 BASE = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
 LAYERS = sp.load_spec(ROOT / "examples" / "ontwikkelplatform-lagen.yaml")
@@ -39,6 +40,7 @@ SPEC_TRIGGERS = {
     "flow": lambda s: s["flows"].append({"from": "gateway", "to": "billing"}),
     "canvas": lambda s: s["canvas"].update(part=4),
     "chip-mirror": lambda s: s["footer"].update(open_questions={"extra": ["Event bus nu of pas in fase 3?"]}),
+    "brief-only": lambda s: s.update(brief={"assumptions": ["De klanten staan als extern getekend; de notulen zeggen niet wie ze beheert"]}),
     "icon": lambda s: s["panels"][0]["cards"][0].update(icon="unicorn"),
     "role": lambda s: s["panels"][0].update(role="security"),
     "focus": lambda s: (panel(s, "gateway").update(focus=True), panel(s, "identity").update(focus=True)),
@@ -176,7 +178,8 @@ def test_examples_have_no_voids_and_a_low_footer(path, mode, tmp_path):
     boxes = json.loads(Path(report["snapshot"]).read_text(encoding="utf-8"))["boxes"]
     height = float(re.search(r'height="([\d.]+)"', (tmp_path / "_work" / f"{path.stem}.svg").read_text()[:400]).group(1))
     footer = boxes["footer"][3] - boxes["footer"][1]
-    assert footer <= 0.13 * height + 2, f"footer {footer}px of {height}px"
+    # As lint has it (footer-share): a footer of a line or two passes on any plate, since a short plate has nothing left to cut
+    assert footer <= max(0.13 * height + 2, FOOTER_FLOOR_PX), f"footer {footer}px of {height}px"
 
 
 def test_route_end_finds_an_arrow_about_a_card_and_a_card_the_title_names():
