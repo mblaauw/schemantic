@@ -54,11 +54,25 @@ def language(text: str) -> str:
     return "nl" if sum(t in DUTCH for t in tokens) > sum(t in ENGLISH for t in tokens) else "en"
 
 
+def invented_cards(cards: list[dict], inputs: str) -> list[str]:
+    """Names of cards the inputs do not back. A card is traced when its name's words are in the sources, or a ref quotes
+    them (the text after "<source>:"). A card the plate marks `assumed` is not invented: the reader is told, which is the
+    judges' rule too (judge.md)."""
+    in_stems = {stem(w) for w in words(inputs)}
+    refs_of = lambda c: [r.split(":", 1)[-1] for r in c.get("refs", [])]  # noqa: E731
+    return [c["name"] for c in cards if not c.get("assumed") and c["name"].lower() not in inputs.lower()
+            and not traced(c["name"], in_stems) and not any(traced(r, in_stems, 0.6) for r in refs_of(c))]
+
+
+def missing(components: list[str], found: str) -> list[str]:
+    """Rubric components the plate does not name. A component may list the names it goes by: "virtual machines|VMs"."""
+    return [c for c in components if not any(name.strip().lower() in found.lower() for name in c.split("|"))]
+
+
 def grade(case: Path, run: Path) -> dict:
     rubric = yaml.safe_load((case / "rubric.yaml").read_text(encoding="utf-8"))
     inputs = " ".join(p.read_text(encoding="utf-8") for p in (case / "inputs").rglob("*") if p.is_file())
     inputs += " " + (case / "prompt.md").read_text(encoding="utf-8")
-    in_words = words(inputs)
     svgs = sorted(run.rglob("*.svg"))
     pngs = sorted(run.rglob("*.png"))
     specs = []
@@ -85,11 +99,7 @@ def grade(case: Path, run: Path) -> dict:
         checks["archetype"] = all(doc["archetype"] in rubric["archetype"] for _, doc in specs)
         checks["lang"] = all(doc["canvas"]["lang"] == rubric["lang"] for _, doc in specs)
         cards = [c for _, doc in specs for panel in doc["panels"] for c in panel.get("cards", [])]
-        in_stems = {stem(w) for w in in_words}
-        # A card is traced when its name's words are in the sources, or a ref quotes them (the text after "<source>:").
-        refs_of = lambda c: [r.split(":", 1)[-1] for r in c.get("refs", [])]  # noqa: E731
-        invented = [c["name"] for c in cards if c["name"].lower() not in inputs.lower()
-                    and not traced(c["name"], in_stems) and not any(traced(r, in_stems, 0.6) for r in refs_of(c))]
+        invented = invented_cards(cards, inputs)
         # A plate in another language than its sources translates every name; then only the judge can tell.
         checks["invented"] = invented if language(inputs) == rubric["lang"] else []
         checks["invented_checked"] = language(inputs) == rubric["lang"]
@@ -110,7 +120,7 @@ def grade(case: Path, run: Path) -> dict:
     else:
         checks["lang"] = language(text) == rubric["lang"] if text else False
     found = (text + " " + " ".join(json.dumps(doc) for _, doc in specs)).lower()
-    checks["components_missing"] = [c for c in rubric.get("components", []) if c.lower() not in found]
+    checks["components_missing"] = missing(rubric.get("components", []), found)
 
     passed = {"image": checks["image"], "lang": checks["lang"],
               "components": len(checks["components_missing"]) <= len(rubric.get("components", [])) // 4}

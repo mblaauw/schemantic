@@ -110,8 +110,10 @@ judge prompt had not changed since the last round, so the eight cases both round
 What it says: the new layouts did not cost the old ones anything, and every run took a layout the judges found fitting, with a
 claim in its title. The goals of one defect per plate and half of all runs passing are not met. A small gain on 48 plates is a
 direction, not a measurement, and judges differ. Kinds are sorted by keyword, so they are approximate: of 149 defects, holes 54,
-paths 34, truth 30, colour 16. Two of the five automated fails look like the grader's: an assumed card counted as invented, and
-"VMs" not matching "virtual machines".
+paths 34, truth 30, colour 16. Two of the five automated fails were the grader's: an assumed card counted as invented, and
+"VMs" not matching "virtual machines". Both are fixed since: a card the plate marks `assumed` is not invented, as the judges
+hold too, and a rubric component may list the names it goes by ("virtual machines|VMs"). Graded again, both runs pass, which
+makes the automated half 93 of 96.
 
 **Since then, not judged again.** Holes were the largest group, and on trees, state machines and data models most were a blank
 band under the short panels of a row, or an entity stretched into an empty cell. Rows there now end level, and a data model may

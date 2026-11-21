@@ -468,3 +468,14 @@ def test_a_gap_a_judge_sees_below_a_short_zone_is_reported(tmp_path):
     report = pipeline.build(write(tmp_path, spec, "short-zone"), tmp_path, deliver=False)
     found = [w for w in report["warnings"] if w["check"] == "void"]
     assert [w["id"] for w in found] == ["zone.dc"] and 48 < int(found[0]["detail"].split("px")[0]) < 96
+
+
+def test_the_grader_takes_an_assumed_card_and_a_second_name_as_the_judges_do():
+    sys.path.insert(0, str(ROOT / "evals"))
+    import grade
+
+    inputs = "Paper pick lists are removed. The WMS books shipments with the carrier."
+    cards = [{"name": "Pick list printing", "assumed": "the plan says only that paper lists go"}, {"name": "Order feed"},
+             {"name": "Carrier shipments"}, {"name": "Label printer", "refs": ["plan: books shipments with the carrier"]}]
+    assert grade.invented_cards(cards, inputs) == ["Order feed"]
+    assert grade.missing(["serverless", "virtual machines|VMs", "Kubernetes"], "Serverless beats VMs on cost") == ["Kubernetes"]
