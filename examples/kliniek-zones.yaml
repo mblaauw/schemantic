@@ -39,6 +39,7 @@ panels:
     cards:
       - {id: mtls, icon: shield-lock, name: "mTLS endpoint", note: "only the integration API may connect"}
       - {icon: file-search, name: "Access log", note: "kept for one year"}
+      - {icon: filter, name: "Allow list", note: "only the cloud's outbound addresses"}
   - id: ehr
     title: "Records system"
     subtitle: "Bought, run by the clinic"

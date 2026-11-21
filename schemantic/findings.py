@@ -160,9 +160,10 @@ CHECKS: dict[str, Check] = {
                    "Shorten the title by a few words so its last line is not a single word."),
     "chip-length": Check("layout", "a chip runs to three lines", "shorten it to one clear sentence",
                          "Shorten the chip to one sentence of about 50 characters."),
-    "void": Check("layout", "a run of empty space inside a body panel (warning over 96 px, error over 160 px), below a short "
-                  "panel next to taller ones in its row, inside a zone frame, in an empty cell of `layout.areas`, or as a "
-                  "blank band under the footer or around a plate on paper (warning over 96 px); or cards a row-spanning "
+    "void": Check("layout", "a run of empty space inside a body panel (warning over 64 px, error over 160 px), below a short "
+                  "panel next to taller ones in its row or inside a zone frame (warning over 48 px), in an empty cell of "
+                  "`layout.areas`, or as a blank band under the footer or around a plate on paper (warning over 96 px); or "
+                  "cards a row-spanning "
                   "panel spreads apart by most of a card's height",
                   "add real content (bullets, a pattern, an info chip); move the panel next to one of its height; merge it "
                   "with a neighbour; let a panel span an empty cell; give a spread panel fewer rows; in nested zones, put "

@@ -23,6 +23,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   judges said, so a new check is tried on a hundred judged plates before any agent runs.
 
 ### Changed
+- `void` warns sooner at a panel: from 48 px below a panel or zone that ends above its row, and from 64 px inside a panel; an
+  empty cell and a blank band stay at 96 px. Measured on the judged plates of the last eval: all 17 with 48 px or more below a
+  panel were faulted for holes, and all 4 with 64 px or more inside one, while lint warned on 2 and 1 of them. Two examples
+  had such a gap and are filled in (`kliniek-zones`, `ontwikkelplatform-lagen`).
 - Panels in a row now end level on `hierarchy`, `decision-tree`, `state-machine` and `data-model`, however much shorter one is:
   the last eval's largest defect group was holes, many of them a blank band under the shorter panels of a row. The cards or the
   last block take up the height, and a panel of only a header is all header.

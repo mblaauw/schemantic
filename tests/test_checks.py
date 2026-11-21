@@ -171,6 +171,8 @@ def test_examples_have_no_voids_and_a_low_footer(path, mode, tmp_path):
     # (test_void_checks_empty_cells_spread_cards_and_a_blank_band); here the holes are those inside the plate.
     inside = {k: v for k, v in report["voids"].items() if k != "canvas"}
     assert max(inside.values()) <= limit, inside
+    if mode == "fit":  # an example shows no hole a judge would see: agents copy what the examples do
+        assert not [w["detail"] for w in report["warnings"] if w["check"] == "void"]
     boxes = json.loads(Path(report["snapshot"]).read_text(encoding="utf-8"))["boxes"]
     height = float(re.search(r'height="([\d.]+)"', (tmp_path / "_work" / f"{path.stem}.svg").read_text()[:400]).group(1))
     footer = boxes["footer"][3] - boxes["footer"][1]
@@ -457,3 +459,12 @@ def test_replay_sorts_a_judges_defect_by_the_question_it_answers():
                                  "invented": ["Order feed, a card the plan does not name"]})
     assert {k: len(v) for k, v in kinds.items()} == {"holes": 1, "path": 1, "truth": 2, "other": 1}
     assert set(replay.ABOUT.values()) <= {k for k, _ in replay.KINDS}
+
+
+def test_a_gap_a_judge_sees_below_a_short_zone_is_reported(tmp_path):
+    """Lint warned from 96 px; on the judged plates every gap of 48 px or more below a panel or zone was faulted."""
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    panel(spec, "proxy")["cards"].pop()  # the card that brings the datacentre level with the cloud account
+    report = pipeline.build(write(tmp_path, spec, "short-zone"), tmp_path, deliver=False)
+    found = [w for w in report["warnings"] if w["check"] == "void"]
+    assert [w["id"] for w in found] == ["zone.dc"] and 48 < int(found[0]["detail"].split("px")[0]) < 96

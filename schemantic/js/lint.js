@@ -219,7 +219,7 @@ schemantic.lint = (cfg) => {
     gap = Math.max(gap, ib.b - 1 - cursor);
     voids[p.dataset.id] = Math.round(gap);
     density[p.dataset.id] = Math.round(Math.min(1, used / (ib.b - ib.t - 2)) * 100) / 100;
-    if (gap > cfg.voidError || gap > cfg.voidWarn)
+    if (gap > cfg.voidInside)
       add(
         gap > cfg.voidError ? "error" : "warning",
         "void",
@@ -231,7 +231,7 @@ schemantic.lint = (cfg) => {
   // row (panels end with their content), and an empty run inside a zone frame.
   const outside = (id, gap, where) => {
     voids[`outside.${id}`] = Math.round(gap);
-    if (gap > cfg.voidWarn)
+    if (gap > cfg.voidBeside)
       add(
         "warning",
         "void",

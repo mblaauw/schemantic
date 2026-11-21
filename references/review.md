@@ -24,7 +24,8 @@ left to you.
    system icons).
 5. **Holes.** Is any part of the plate visibly empty: a panel emptier than its neighbours, cards floating apart, a
    blank band? A last card fills its row and nearly level panels are evened out for you (on trees, state machines and data
-   models, all panels in a row); lint (`void`) warns at 96 px; a smaller hole you can see is still a defect.
+   models, all panels in a row); lint (`void`) warns from 48 px below a short panel and 64 px inside one; a smaller hole
+   you can see is still a defect.
 6. **Footer.** Does the footer draw the eye before the body? Its size is lint's (`footer-share`).
 7. **Words.** Is any name a term the reader would not know, or any note true of every system rather than this one?
    (No check can.)
