@@ -302,6 +302,10 @@
           "type": "object", "additionalProperties": {"type": "array", "minItems": 1, "items": {"type": "string"}},
           "description": "hierarchy: panel id -> the panels directly under it; the arrows follow from this."
         },
+        "assumed": {
+          "type": "object", "additionalProperties": {"type": "string", "maxLength": 120},
+          "description": "hierarchy: panel id -> why the line to its parent is assumed rather than found in the sources. The line is drawn amber and dashed, as any assumed arrow."
+        },
         "cells": {
           "type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "string"},
           "description": "quadrant: the four panels, left to right, top row first."
@@ -905,7 +909,7 @@
           "layout": {
             "required": ["root", "children"],
             "propertyNames": {
-              "enum": ["root", "children", "chips_at"]
+              "enum": ["root", "children", "assumed", "chips_at"]
             }
           }
         }

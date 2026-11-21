@@ -5,6 +5,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- A `hierarchy` marks a line of its tree as assumed: `layout.assumed: {<panel>: <why>}` draws the line to that panel's parent
+  amber and dashed. The tree's arrows follow from `children`, so until now a reporting line the sources only suggest could be
+  admitted in the brief alone; two hierarchy plates in the last eval were faulted for it.
 - A `comparison` says in its legend whose verdicts its icons give: "our reading of the sources", or `layout.verdicts` when
   the sources rate the options themselves. Half the comparison plates in the last eval were faulted for drawing their own
   reading as fact, admitted only in the brief.

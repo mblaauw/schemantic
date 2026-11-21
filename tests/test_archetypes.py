@@ -273,3 +273,18 @@ def test_a_comparison_says_whose_verdicts_its_icons_give():
     board["layout"]["verdicts"] = "The review board's verdict"
     assert not sp.check(board) and [e["label"] for e in verdict(board)] == ["The review board's verdict"]
     assert not verdict(SEQUENCE)
+
+
+def test_a_hierarchy_marks_a_line_of_its_tree_as_assumed():
+    spec = copy.deepcopy(HIERARCHY)
+    spec["layout"]["assumed"] = {"commerce": "the note says 'has', not 'reports to'"}
+    assert not [f for f in sp.check(spec) if f["level"] == "error"]
+    flows = archetypes.get("hierarchy").expand(spec)["flows"]
+    assert {"from": "head", "to": "commerce", "assumed": "the note says 'has', not 'reports to'"} in flows
+    assert {"from": "head", "to": "foundation"} in flows
+    assert any("has no line to a parent" in d for d in details(HIERARCHY, lambda s: s["layout"].update(assumed={"head": "x"})))
+    assert any(d for d in details(archetypes_spec("decision-tree"), lambda s: s["layout"].update(assumed={"x": "y"})))
+
+
+def archetypes_spec(name):
+    return sp.load_spec(next((ROOT / "examples").glob(f"*{name}.yaml")))

@@ -259,6 +259,9 @@ layout:
 - Up to 4 levels and 8 panels at the ends of the tree; each panel has one parent. Say `flows_mean` for what the tree
   means: `control` for reporting lines (the legend says "Leads"), `dependency` for what is made of what.
 - `flows` are only for what cuts across the tree, and are drawn on top of the tree's own arrows.
+- A line is a claim: this reports to that. When the sources only suggest it ("Clinical services has the wards"), mark the
+  line under `assumed`, by the panel at its lower end: `assumed: {nursing: "the note says 'has', not 'reports to'"}`. It is
+  drawn amber and dashed, like any assumed arrow.
 - Example: `examples/platform-org-hierarchy.yaml`.
 
 ## data-model
