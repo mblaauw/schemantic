@@ -442,15 +442,30 @@ def test_a_drawn_story_numbers_its_route_and_names_it_in_the_legend():
     assert steps == {("webapp", "records_api"): 1, ("records_api", "mtls"): 2, ("mtls", "patient_records"): 3}
     assert not any(f.get("step") for f in spec["flows"])  # the spec as written is left alone
     legend = html.legend_entries(numbered, sp.load_locale("en"))
-    assert {"kind": "step", "key": "step", "label": story["name"]} in legend
+    assert {"kind": "step", "key": "step", "mark": "1", "label": story["name"]} in legend
 
 
-def test_a_plate_draws_one_story_and_it_owns_the_steps():
+def test_a_second_drawn_story_letters_the_flows_that_are_its_own():
+    """Two routes in the title: the second reads A, B up to where it joins the first, and the legend names both."""
     spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
-    spec["stories"].append(dict(spec["stories"][0], name="Again"))
+    card = next(c for p in spec["panels"] for c in p.get("cards", []) if c.get("id") not in (None, "webapp", "records_api"))
+    spec["flows"].append({"from": card["id"], "to": "records_api"})
+    spec["stories"].append({"name": "The other way in", "path": [card["id"], "records_api", "mtls"], "draw": True})
+    assert not [f for f in sp.check(spec) if f["check"] == "story"]
+    numbered = sp.number_story(spec)
+    steps = {(f["from"], f["to"]): f["step"] for f in numbered["flows"] if f.get("step")}
+    assert steps[(card["id"], "records_api")] == "A" and steps[("records_api", "mtls")] == 2
+    legend = html.legend_entries(numbered, sp.load_locale("en"))
+    assert {"kind": "step", "key": "step-second", "mark": "A", "label": "The other way in"} in legend
+    assert 'flag-step-second">A<' in html.build_html(numbered)
+
+
+def test_a_plate_draws_two_stories_at_most_and_they_own_the_steps():
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    spec["stories"] += [dict(spec["stories"][0], name="Again"), dict(spec["stories"][0], name="And again")]
     spec["flows"][0]["step"] = 7
     found = [(f["id"], f["detail"]) for f in sp.check(spec) if f["check"] == "story"]
-    assert ("stories/1", "only one story is drawn: a plate numbers one route") in found
+    assert [i for i, _ in found if i.startswith("stories")] == ["stories/2"]
     assert ("flows/0", "the drawn story numbers its own flows; drop this flow's step 7") in found
 
 

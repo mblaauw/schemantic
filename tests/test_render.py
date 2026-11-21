@@ -571,3 +571,13 @@ def test_the_outline_says_where_everything_runs():
     md = markdown(sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml"))
     assert "- account: Cloud, production" in md and "  - cluster: Kubernetes" in md
     assert "(Patient portal)" in md and "Patients, Insurers" in md
+
+
+def test_a_second_route_is_drawn_in_hollow_lettered_badges(tmp_path):
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    spec["flows"].append({"from": "insurers", "to": "records_api"})
+    spec["stories"].append({"name": "The other way in", "path": ["insurers", "records_api", "mtls"], "draw": True})
+    code, report = run("build", write(tmp_path, spec, "two-routes"), "--out", tmp_path, "--dpi", 96)
+    assert code == 0, report["errors"]
+    svg = (tmp_path / "two-routes.svg").read_text(encoding="utf-8")
+    assert re.search(r'<circle[^>]*stroke-width="1.5"[^>]*>(</circle>)?<text[^>]*>A</text>', svg) and report["parity"]["pixels"] == 0

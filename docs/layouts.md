@@ -211,6 +211,7 @@ Arrows run between cards, or between panels when the sources speak of the whole 
 | A heavier blue arrow | the one arrow the plate is about | `focus: true` on the flow |
 | A head at both ends of an arrow | it runs both ways | `both: true` |
 | A number on an arrow | a step in the route the title tells | a story with `draw: true`, or `step` |
+| A letter on an arrow, in a hollow disc | a step in a second route the title tells | a second story with `draw: true` |
 | Q1 on a card or chip, again in the footer | an open question | a `warning` chip or card `flag` |
 | N1 on a card, again in the footer | a note on that card | a card `flag` of kind `info` |
 

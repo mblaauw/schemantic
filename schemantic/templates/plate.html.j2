@@ -186,7 +186,7 @@
 {%- if e.kind == 'role' %}<div class="lg"><span class="sw" style="background: var(--{{ e.key }}-sub); border: 1.5px solid var(--{{ e.key }}-head)"></span><span>{{ e.label }}</span></div>
 {%- elif e.kind == 'arrow' %}<div class="lg">{{ icon('arrow-right', 'ic', ' lg-arrow') }}<span>{{ e.label }}</span></div>
 {%- elif e.kind == 'line' %}<div class="lg"><span class="ls" data-line="{{ e.key }}"></span><span>{{ e.label }}</span></div>
-{%- elif e.kind == 'step' %}<div class="lg"><span class="flag flag-step">1</span><span>{{ e.label }}</span></div>
+{%- elif e.kind == 'step' %}<div class="lg"><span class="flag flag-step{% if e.mark != '1' %} flag-step-second{% endif %}">{{ e.mark }}</span><span>{{ e.label }}</span></div>
 {%- elif e.kind == 'status' %}<div class="lg">{{ tag(e.key) }}<span>{{ e.label }}</span></div>
 {%- elif e.kind == 'field-key' %}<div class="lg"><span class="fd-key fd-{{ e.key }}">{{ L.fields[e.key] }}</span><span>{{ e.label }}</span></div>
 {%- elif e.kind == 'rating' %}<div class="lg"><span class="rating"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></span><span>{{ e.label }}</span></div>

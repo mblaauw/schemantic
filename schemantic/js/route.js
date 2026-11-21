@@ -755,10 +755,15 @@ schemantic.route = (flows) => {
     }
     const [x, y] = spot;
     labelBoxes.push({ l: x - BADGE, r: x + BADGE, t: y - BADGE, b: y + BADGE });
+    // A number is the first drawn route; a letter the second, hollow so the two are told apart at a glance.
+    const second = typeof r.fl.step === "string";
+    const disc = second
+      ? `r="${BADGE - 0.75}" fill="${S.token("--paper")}" stroke="${S.token("--step")}" stroke-width="1.5"`
+      : `r="${BADGE}" fill="${S.token("--step")}"`;
     r.svg =
       (r.svg || "") +
-      `<circle cx="${r2(x)}" cy="${r2(y)}" r="${BADGE}" fill="${S.token("--step")}"/>` +
-      `<text x="${r2(x)}" y="${r2(y + STEP_TEXT * 0.36)}" text-anchor="middle" font-family="${font}" font-size="${STEP_TEXT}" font-weight="700" fill="${onHead}">${r.fl.step}</text>`;
+      `<circle cx="${r2(x)}" cy="${r2(y)}" ${disc}/>` +
+      `<text x="${r2(x)}" y="${r2(y + STEP_TEXT * 0.36)}" text-anchor="middle" font-family="${font}" font-size="${STEP_TEXT}" font-weight="700" fill="${second ? S.token("--step") : onHead}">${r.fl.step}</text>`;
     r.step = { x, y, n: r.fl.step };
   }
   for (const r of later) placeLabel(r);

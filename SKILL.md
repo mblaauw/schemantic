@@ -120,7 +120,8 @@ short version:
 - Everything the title or subtitle says moves, calls, reads or feeds gets an arrow on this plate; a step that lives
   only in a note is a gap. On a series, draw a stand-in panel for what sits on the other part, named for what it
   holds ("Lending"), never "Part 1"; `references/analysis.md` has a worked series. Write the main route
-  as a `story` with `draw: true`: lint checks that a finger can follow it, and the plate numbers its steps.
+  as a `story` with `draw: true`: lint checks that a finger can follow it, and the plate numbers its steps. A second
+  route the title or subtitle names is drawn too, and gets letters.
 - Show change with `status` (new, changed, planned, deprecated, removed) and the one element that matters with
   `focus`.
 - A `warning` chip or card `flag` marks an open choice; it appears again under open questions.

@@ -6,6 +6,7 @@ import re
 from functools import cache
 from itertools import pairwise
 from pathlib import Path
+from string import ascii_uppercase
 
 import jsonschema
 import yaml
@@ -24,6 +25,7 @@ FOOTER_STACK_MAX = 2
 PLACEHOLDER = re.compile(r"\bTODO\b")
 # A source file past this size (bytes) is no text a ref can quote: a binary, a dump.
 QUOTE_FILE_MAX = 2_000_000
+MAX_DRAWN = 2  # stories drawn on one plate: one numbered, one lettered
 
 
 def load_spec(path: str | Path) -> dict:
@@ -263,7 +265,8 @@ def story_findings(spec: dict, known: set[str]) -> list[dict]:
                 detail += f" (a flow joins their panels, '{home.get(a, a)}' to '{home.get(b, b)}'; the route goes through the cards)"
             out.append(finding("story", where, detail))
     drawn = [n for n, s in enumerate(spec.get("stories", [])) if s.get("draw")]
-    out += [finding("story", f"stories/{n}", "only one story is drawn: a plate numbers one route") for n in drawn[1:]]
+    out += [finding("story", f"stories/{n}", "two stories are drawn at most: a plate numbers one route and letters a second")
+            for n in drawn[MAX_DRAWN:]]
     if drawn:
         out += [finding("story", f"flows/{n}", f"the drawn story numbers its own flows; drop this flow's step {f['step']}")
                 for n, f in enumerate(spec.get("flows", [])) if f.get("step")]
@@ -298,20 +301,26 @@ def route_ends(spec: dict) -> list[dict]:
     return out
 
 
-def drawn_story(spec: dict) -> dict | None:
-    return next((s for s in spec.get("stories", []) if s.get("draw")), None)
+def drawn_stories(spec: dict) -> list[dict]:
+    return [s for s in spec.get("stories", []) if s.get("draw")][:MAX_DRAWN]
 
 
 def number_story(spec: dict) -> dict:
-    """A drawn story numbers the flows along its route, 1 to n, so the reader sees the route the title names. Runs on
-    a spec that checked clean: every step of the story has its flow, and no flow has a step of its own."""
-    story = drawn_story(spec)
-    if not story:
+    """A drawn story marks the flows along its route, so the reader sees the route the title names: the first 1 to n, a
+    second A, B, C on the flows that are its own, so it reads up to where it joins the first. Runs on a spec that checked
+    clean: every step of a story has its flow, and no flow has a step of its own."""
+    drawn = drawn_stories(spec)
+    if not drawn:
         return spec
     flows = [dict(f) for f in spec["flows"]]
-    for n, (a, b) in enumerate(pairwise(story["path"]), 1):
-        f = next(f for f in flows if (f["from"], f["to"]) == (a, b) or f.get("both") and (f["from"], f["to"]) == (b, a))
-        f.setdefault("step", n)  # a route that passes one flow twice keeps its first number
+    for k, story in enumerate(drawn):
+        own = 0
+        for n, (a, b) in enumerate(pairwise(story["path"]), 1):
+            f = next(f for f in flows if (f["from"], f["to"]) == (a, b) or f.get("both") and (f["from"], f["to"]) == (b, a))
+            if "step" in f:
+                continue  # a route that passes one flow twice, or joins the first route, keeps the mark that is there
+            own += 1
+            f["step"] = n if k == 0 else ascii_uppercase[own - 1]
     return {**spec, "flows": flows}
 
 

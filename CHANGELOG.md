@@ -5,6 +5,9 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- A plate draws two stories: the first is numbered as before, and a second story with `draw: true` gets hollow badges A, B, C
+  on the flows that are its own, with its name in the legend. The commonest path defect in the last eval was a title naming
+  two routes with one drawn, which the limit of one drawn story forced.
 - `evals/replay.py`: lints the specs of a judged eval round with the code as it is now and sets each check beside what the
   judges said, so a new check is tried on a hundred judged plates before any agent runs.
 
