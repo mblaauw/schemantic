@@ -26,6 +26,8 @@ All notable changes to this project. The format follows [Keep a Changelog](https
   judges said, so a new check is tried on a hundred judged plates before any agent runs.
 
 ### Changed
+- A step badge sits beside a short dashed arrow, not on it: across one gutter the disc hid the whole shaft, so an assumed
+  arrow or a reply on a numbered route could not be told from a fact. Solid arrows and long runs keep the badge on the line.
 - `void` warns sooner at a panel: from 48 px below a panel or zone that ends above its row, and from 64 px inside a panel; an
   empty cell and a blank band stay at 96 px. Measured on the judged plates of the last eval: all 17 with 48 px or more below a
   panel were faulted for holes, and all 4 with 64 px or more inside one, while lint warned on 2 and 1 of them. Two examples
