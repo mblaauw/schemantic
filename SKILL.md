@@ -94,7 +94,8 @@ and fix it before writing more:
 - What the sources do not say is marked or left out. Mark what you have reason to draw with `assumed: <why>`: the plate
   tags the card or panel and draws the arrow amber and dashed, so a reader can tell it from a fact. dbt builds Silver and
   Gold, so an arrow runs out of Bronze: `refs` if the notes say so, `assumed` if you worked it out. Leave out what has no
-  basis at all. The brief's `assumptions` are for what cannot be marked on the plate.
+  basis at all. The brief's `assumptions` are for what cannot be marked on the plate; who runs a thing can, since it is
+  its panel's colour: `assumed` on the panel.
 - A `status` is what the sources say about that thing. Someone asking for a report does not make it `planned`, and "not
   decided" is a warning, not a status: with nothing to quote, draw no status.
 - A panel name uses the sources' words. A grouping you coin that a reader would take for a real domain or team
@@ -140,7 +141,7 @@ nothing, and `preview` in the report names the unpublished files in `plates/out/
 line per check, errors first, with its count and `hint` (the first fix to try); its first line is the one to fix
 first. Each finding under `errors` and `warnings` has `check`, `id` and `detail`; `references/lint-fixes.md` has
 the full table. `changed` names the parts your last edit changed, so you see whether it did what you meant. Fix
-every error in the spec and build again. Treat `void`, `traceability`, `route-end` and `role-fit` warnings as real. After five rounds without
+every error in the spec and build again. Treat `void`, `traceability`, `route-end`, `story`, `brief-only` and `role-fit` warnings as real. After five rounds without
 progress, restructure: move cards between panels, change the archetype, or split the plate.
 
 ## 6. Look at it

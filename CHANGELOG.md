@@ -5,6 +5,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- Lint warns when the brief admits an assumption about who runs a thing while the panel it colours carries no `assumed`
+  (`brief-only`). A reader never sees the brief, and "only the brief admits it" was the judges' most repeated truth defect.
+  Replayed on the last eval, it fires on 12 plates: the judges faulted 7 for exactly this, 4 more are the same case
+  unjudged, and 1 was a false alarm that is fixed.
 - Lint warns when a card the title or subtitle names is on no drawn route (`route-end`), and when a story is checked but not
   drawn (`story`). Replayed on the last eval's plates, the first fires on 15, of which the judges faulted 13 for a path defect;
   the second on 5, of which 4. The worked examples in `references/analysis.md` now draw their stories; two of them did not,

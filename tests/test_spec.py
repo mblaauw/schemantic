@@ -509,3 +509,13 @@ def test_a_story_that_is_only_checked_is_reported_unless_the_arrows_are_numbered
     sequence = sp.load_spec(ROOT / "examples" / "token-check-sequence.yaml")
     sequence["stories"] = [{"name": "A request", "path": [sequence["flows"][0]["from"], sequence["flows"][0]["to"]]}]
     assert not [f for f in sp.check(sequence) if f["check"] == "story"]
+
+
+def test_an_assumption_about_who_runs_a_thing_belongs_on_its_panel_not_only_in_the_brief():
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    spec.setdefault("brief", {})["assumptions"] = ["Insurers are drawn as external: the note does not say who runs their systems",
+                                                   "The head of support holds that role by appointment"]
+    hits = [f for f in sp.check(spec) if f["check"] == "brief-only"]
+    assert [f["id"] for f in hits] == ["brief/assumptions/0"] and "'Insurers'" in hits[0]["detail"]
+    next(p for p in spec["panels"] if p["id"] == "insurers")["assumed"] = "the note does not say who runs them"
+    assert not [f for f in sp.check(spec) if f["check"] == "brief-only"]

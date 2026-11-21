@@ -204,7 +204,7 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
         for c in (c for c in warnings if c not in oq.get("extra", [])):
             out.append(finding("chip-mirror", "footer.open_questions", f"warning not repeated in open questions: '{c}'"))
 
-    out += traceability(spec)
+    out += traceability(spec) + brief_only(spec)
 
     focused = [p["id"] for p in spec["panels"] if p.get("focus")]
     focused += [card_id(p, i, c) for p in spec["panels"] for i, c in enumerate(p.get("cards", [])) if c.get("focus")]
@@ -396,6 +396,31 @@ def traceability(spec: dict) -> list[dict]:
         out.append(finding("traceability", "(plate)", f"{guessed} of {len(things)} cards and arrows are assumed: this plate says more "
                            "about the author than the sources", level="warning",
                            hint="Drop what has no basis, or make it an open question; ask for the source that settles the rest."))
+    return out
+
+
+# How a brief speaks of who runs a thing, which on the plate is a panel's colour.
+ROLE_TALK = re.compile(r"\bextern\w*|\bplatform (part|lane|component)s?\b|\b(colou?r\w*|kleur\w*)\b|\bwho (runs|owns)\b|\brun by\b"
+                       r"|\bbeheert\b|\boutside (\w+ ){0,4}(control|team)\b|\bbuiten (\w+ ){0,4}(controle|team)\b", re.I)
+
+
+def brief_only(spec: dict) -> list[dict]:
+    """An assumption about who runs a thing is an assumption about its panel's colour, which a reader takes as fact. The
+    brief is not on the plate, so one that admits it there alone leaves the plate claiming more than the sources say."""
+    if not archetypes.REGISTRY[spec["archetype"]].legend_roles:
+        return []
+    out = []
+    for n, text in enumerate((spec.get("brief") or {}).get("assumptions") or []):
+        if not ROLE_TALK.search(text):
+            continue
+        named = [p for p in spec["panels"]
+                 if any(len(name) >= 4 and re.search(rf"\b{re.escape(name)}\b", text, re.I)
+                        for name in [p["title"]] + [c["name"] for c in p.get("cards", [])])]
+        if all(p.get("assumed") for p in named) if named else any(p.get("assumed") for p in spec["panels"]):
+            continue
+        which = ", ".join(f"'{p['title']}'" for p in named if not p.get("assumed")) or "a panel"
+        out.append(finding("brief-only", f"brief/assumptions/{n}", f"the brief assumes who runs {which}, which the plate shows as "
+                           "a colour and a reader takes as fact", level="warning"))
     return out
 
 

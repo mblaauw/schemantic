@@ -102,6 +102,11 @@ CHECKS: dict[str, Check] = {
                           "add `refs: [\"<source id>: <path or quote>\"]` from the inventory (`status_ref` for a status); what the "
                           "sources do not say gets `assumed: <why>`, which the plate shows, or becomes an open question",
                           "Add refs quoting the source; what it does not say gets `assumed: <why>`, or drop it."),
+    "brief-only": Check("spec", "the brief admits an assumption about who runs a thing (external, platform, outside the team's "
+                        "control) that the plate shows as a panel's colour, unmarked (warning)",
+                        "give that panel `assumed: <why>`, so the plate tags it; a reader never sees the brief. If the sources "
+                        "do say who runs it, drop the assumption",
+                        "Give the panel `assumed: <why>`: the plate tags it and the legend says what the tag means."),
     "chip-mirror": Check("spec", "a warning chip or warning flag is not under open questions", "`open_questions: {from_chips: true}`",
                          "Set footer.open_questions.from_chips to true."),
     "icon": Check("spec", "unknown icon", "use one of the closest names in the hint, or search: `schemantic icons <word>`",

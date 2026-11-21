@@ -46,7 +46,10 @@ lint (`placeholder`) names each TODO left.
 ```
 
 Roles: `platform` for what the team builds or runs, `data` for data at rest and data platforms, `external` for
-systems outside the team's control, `actor` for people and teams. A theme can add roles (see the README).
+systems outside the team's control, `actor` for people and teams. A theme can add roles (see the README). A colour is a
+claim about who runs the thing, and a reader takes it as fact. When the sources do not say, pick the likelier role and
+give the panel `assumed: "the note does not say who runs it"`: the plate tags it. Saying so only in the brief leaves the
+plate claiming it (lint: `brief-only`).
 
 ## Cards
 
