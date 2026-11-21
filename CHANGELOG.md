@@ -5,6 +5,10 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 ## [Unreleased]
 
 ### Added
+- Lint warns when a card the title or subtitle names is on no drawn route (`route-end`), and when a story is checked but not
+  drawn (`story`). Replayed on the last eval's plates, the first fires on 15, of which the judges faulted 13 for a path defect;
+  the second on 5, of which 4. The worked examples in `references/analysis.md` now draw their stories; two of them did not,
+  and agents copy examples.
 - A plate draws two stories: the first is numbered as before, and a second story with `draw: true` gets hollow badges A, B, C
   on the flows that are its own, with its name in the legend. The commonest path defect in the last eval was a title naming
   two routes with one drawn, which the limit of one drawn story forced.

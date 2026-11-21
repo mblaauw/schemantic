@@ -14,8 +14,9 @@ left to you.
 1. **Message.** With the subtitle covered, does the picture fail to support the title's claim? (No check can.)
 2. **Path.** Is there a jump where a reader cannot follow the route the title or subtitle names, from its first
    card to its last? Lint (`story`) checks that a flow joins every step of a story; you check that every route the
-   title names has a story, drawn (`draw: true`), and that no step lives only in a card note. Lint (`route-end`) flags a
-   route that stops at a panel around the card it is about; you check the routes it cannot read from the words.
+   title names has a story, drawn (`draw: true`; two fit on a plate), and that no step lives only in a card note. Lint
+   (`route-end`) flags a route that stops at a panel around the card it is about, and a card the title names that no drawn
+   route passes; you check the routes it cannot read from the words.
 3. **Arrows.** Does any arrow point against what `flows_mean` says arrows mean (data where requests are meant)?
    Lint catches a roadmap arrow back in time (`timeline`); every other direction is yours.
 4. **Colour.** Does any panel have a role whose legend label is wrong for it? Lint (`role-fit`) judges a panel by

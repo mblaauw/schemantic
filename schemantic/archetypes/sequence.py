@@ -12,6 +12,7 @@ class Sequence(Archetype):
     required = frozenset({"participants"})
     allowed = frozenset({"participants", "chips_at"})
     cards_are_things = False
+    numbers_itself = True
     max_cards = 12
     legend_keys = {"style_async": "style_reply"}
 

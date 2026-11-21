@@ -57,15 +57,18 @@ CHECKS: dict[str, Check] = {
                     "warning and say why in your reply, make the relation an open question, or drop the "
                     "panel if it does not serve the message",
                     "Add the flow the sources name, or mark one they imply `assumed`; with no basis at all, leave the warning and say why."),
-    "story": Check("spec", "a story names an id that does not exist, or no flow runs from one of its steps to the next",
+    "story": Check("spec", "a story names an id that does not exist, or no flow runs from one of its steps to the next; or a story "
+                   "is checked but not drawn, so the reader does not see it (warning)",
                    "add the flow between the two steps the detail names, card to card when the route goes through cards "
-                   "(give both cards an id); if the sources name no such step, the story claims too much",
+                   "(give both cards an id); if the sources name no such step, the story claims too much. Give a story the "
+                   "title names `draw: true`; a plate draws two",
                    "Add a flow from the first named step to the second, card to card."),
     "route-end": Check("spec", "a route stops short of what it is about: a story through a panel that holds cards, an arrow labelled "
                        "with a card's name that ends on the panel around it, or a card the title or subtitle names that no arrow "
-                       "reaches (warning)",
+                       "reaches, or that no drawn route passes (warning)",
                        "give the cards ids and run the arrow to the card it is about; if the sources speak of the whole panel, say "
-                       "so in the label without a card's name",
+                       "so in the label without a card's name. A card the title names belongs on a drawn route: draw a second "
+                       "story through it, or take it out of the title",
                        "Run the arrow to the card, not the panel around it, and put that card in the story."),
     "series": Check("spec", "parts of one series disagree: numbering, `of`, language, what arrows mean, or one thing drawn in "
                     "two colours (people in one part, a platform component in another)",

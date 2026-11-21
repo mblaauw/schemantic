@@ -414,7 +414,7 @@ def test_a_story_breaks_where_no_flow_joins_two_steps():
     """A story is a route a finger can follow: each step joined to the next by a flow in its direction, or both ways."""
     spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
     assert spec["stories"] and [f for f in sp.check(spec) if f["check"] == "story"] == []
-    spec["stories"] = [{"name": "Backwards", "path": ["records_api", "webapp"]}]
+    spec["stories"] = [{"name": "Backwards", "path": ["records_api", "webapp"], "draw": True}]
     assert [f["detail"] for f in sp.check(spec) if f["check"] == "story"] == [
         "story 'Backwards' breaks between 'records_api' and 'webapp': no flow from 'records_api' to 'webapp'"]
     next(f for f in spec["flows"] if (f["from"], f["to"]) == ("webapp", "records_api"))["both"] = True
@@ -425,7 +425,7 @@ def test_a_story_through_cards_says_when_only_their_panels_are_joined():
     """The review's 'jump': an arrow that ends on a panel while the route goes through one of its cards."""
     spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
     next(f for f in spec["flows"] if f["from"] == "webapp").update({"from": "portal", "to": "integration"})
-    spec["stories"] = [{"name": "Card to card", "path": ["webapp", "records_api"]}]
+    spec["stories"] = [{"name": "Card to card", "path": ["webapp", "records_api"], "draw": True}]
     found = [f for f in sp.check(spec) if f["check"] == "story"]
     assert len(found) == 1 and "a flow joins their panels, 'portal' to 'integration'" in found[0]["detail"]
     spec["flows"].append({"from": "webapp", "to": "records_api"})
@@ -486,3 +486,26 @@ def test_before_after_marks_each_pair_that_faces_each_other():
     spec["panels"] = [p for p in spec["panels"] if p["id"] != "recon"]
     spec["flows"] = [f for f in spec["flows"] if "recon" not in (f["from"], f["to"])]
     assert html.build_html(spec).count('class="becomes"') == 2
+
+
+def test_a_card_the_title_names_belongs_on_a_drawn_route():
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    spec["subtitle"] = "The web app reaches patient records; the scheduling service does not"
+    hits = [f for f in sp.check(spec) if f["check"] == "route-end"]
+    assert not hits  # every card the subtitle names is on the drawn route, or has no card of that name
+    card = next(c for p in spec["panels"] for c in p.get("cards", []) if c.get("id") == "mtls")
+    spec["subtitle"] = f"Web app and {card['name']}"
+    spec["stories"][0]["path"] = ["webapp", "records_api"]
+    hits = [f for f in sp.check(spec) if f["check"] == "route-end"]
+    assert [f["id"] for f in hits] == ["mtls"] and "no drawn route passes" in hits[0]["detail"] and "second story" in hits[0]["hint"]
+
+
+def test_a_story_that_is_only_checked_is_reported_unless_the_arrows_are_numbered_another_way():
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    spec["stories"][0].pop("draw")
+    assert [f["id"] for f in sp.check(spec) if f["check"] == "story"] == ["stories/0"]
+    spec["flows"][0]["step"] = 1
+    assert not [f for f in sp.check(spec) if f["check"] == "story"]
+    sequence = sp.load_spec(ROOT / "examples" / "token-check-sequence.yaml")
+    sequence["stories"] = [{"name": "A request", "path": [sequence["flows"][0]["from"], sequence["flows"][0]["to"]]}]
+    assert not [f for f in sp.check(sequence) if f["check"] == "story"]

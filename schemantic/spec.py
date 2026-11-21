@@ -267,9 +267,17 @@ def story_findings(spec: dict, known: set[str]) -> list[dict]:
     drawn = [n for n, s in enumerate(spec.get("stories", [])) if s.get("draw")]
     out += [finding("story", f"stories/{n}", "two stories are drawn at most: a plate numbers one route and letters a second")
             for n in drawn[MAX_DRAWN:]]
+    stepped = [(n, f) for n, f in enumerate(spec.get("flows", [])) if f.get("step")]
     if drawn:
         out += [finding("story", f"flows/{n}", f"the drawn story numbers its own flows; drop this flow's step {f['step']}")
-                for n, f in enumerate(spec.get("flows", [])) if f.get("step")]
+                for n, f in stepped]
+    # A story that is only checked is invisible: the reader sees the routes that are drawn. Flows numbered by hand, or by
+    # the layout, already show their order.
+    if not stepped and len(drawn) < MAX_DRAWN and not archetypes.REGISTRY[spec["archetype"]].numbers_itself:
+        out += [finding("story", f"stories/{n}", f"story '{s['name']}' is checked but not drawn, so a reader does not see it",
+                        level="warning", hint="Add `draw: true` to the story: its flows are marked and the legend names the route. "
+                                              "A plate draws two.")
+                for n, s in enumerate(spec.get("stories", [])) if not s.get("draw")]
     return out
 
 
@@ -293,11 +301,20 @@ def route_ends(spec: dict) -> list[dict]:
                 out.append(finding("route-end", f"flows/{n}", f"arrow '{f['label']}' is about card '{hit}' but ends on panel '{f[end]}'",
                                    level="warning"))
     ends = {f[end] for f in spec["flows"] for end in ("from", "to")}
+    drawn = drawn_stories(spec)
+    on_route = {step for s in drawn for step in s["path"]}
     claim = f"{spec.get('title', '')} {spec.get('subtitle', '')}"
     for cards in cards_of.values():
         for cid, name in cards:
-            if len(name) >= 4 and cid not in ends and re.search(rf"\b{re.escape(name)}\b", claim, re.I):
+            if len(name) < 4 or not re.search(rf"\b{re.escape(name)}\b", claim, re.I):
+                continue
+            if cid not in ends:
                 out.append(finding("route-end", cid, f"the title or subtitle names '{name}', but no arrow reaches the card", level="warning"))
+            elif drawn and cid not in on_route:
+                more = "draw a second story through it" if len(drawn) < MAX_DRAWN else "take the drawn routes through it"
+                out.append(finding("route-end", cid, f"the title or subtitle names '{name}', but no drawn route passes the card",
+                                   level="warning", hint=f"A reader looks for what the title names on the numbered route: {more} "
+                                                         "(`draw: true`), or take it out of the title."))
     return out
 
 
