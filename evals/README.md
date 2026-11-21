@@ -117,9 +117,25 @@ makes the automated half 93 of 96.
 
 **Since then, not judged again.** Holes were the largest group, and on trees, state machines and data models most were a blank
 band under the short panels of a row, or an entity stretched into an empty cell. Rows there now end level, and a data model may
-leave a cell empty. Built again from the same 24 specs, the largest gap under a panel went from 62 to 82 px per case to 0, with
-no new warnings beyond the wide-entity one, which all six data models get. `review.md` gained a clause saying so. What the judges
-make of it needs the next round.
+leave a cell empty. Built again from the same 24 specs, the largest gap under a panel went from 62 to 82 px per case to 0.
+
+Then thirteen changes, each tried on this round's 96 plates with `replay.py` before it was kept. What the checks see of what the
+judges saw, before and after:
+
+| Check | Fires on, before | Fires on, after | Of those, faulted by a judge for that kind |
+| --- | --- | --- | --- |
+| `void` (48 px below a panel, 64 px inside one) | 9 plates | 23 | 23, of 50 with holes; about 20 of the other 27 are the rows that now end level |
+| `route-end` (a card the title names is on no drawn route) | 0 | 15 | 13, of 27 with a broken path |
+| `story` (a story checked but not drawn) | 0 | 5 | 4 |
+| `brief-only` (who runs a thing, admitted only in the brief) | 0 | 11 | 7 for exactly this, by reading them; the other 4 are the same case unjudged |
+
+Two checks were tried and dropped, which is what the replay is for: a drawn route over an assumed arrow fired on 15 plates and
+the judges faulted 2, and a client app coloured as a platform part on 22 and 4. The rest of the thirteen change what a plate can
+say or what the examples teach: a second drawn route, lettered; one lettered branch on a sequence; whose verdicts a comparison's
+icons give; a tree line marked assumed; a badge beside a short dashed arrow; a state without a coined card; and guidance on
+hedges, groups and manual work. `review.md` changed with them (questions 2, 5 and 9), so the next round is judged again under
+the new text before it is compared. What an agent does with a warning is not measured here: the build file now records the
+warnings a plate is delivered with, and `run_all.py` counts them.
 
 ### Corrections
 
