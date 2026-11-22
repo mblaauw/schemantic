@@ -15,7 +15,8 @@ spec.yaml ─► read_spec ─► schema + semantic checks ─► build_html ─
 `schemantic build` runs all of it in one Chromium session (`schemantic/pipeline.py`), one function per stage:
 `prepare`, `open_routed`, `lay_out`, `write_svg`, `parity`, `deliverables` and `publish` (`review_crops` with `--review`);
 `lint` skips writing the deliverables. `schemantic baseline` keeps a delivered plate, and each build after it reports
-`since_baseline`: the outline lines gone and new, the parts changed and the parts moved. The deliverables (SVG, PNG, outline and a `.build.json` manifest of versions and digests) are written
+`since_baseline`: the outline lines gone and new, the parts changed and the parts moved. The build file also keeps the
+warnings the plate was delivered with (`warnings`: check and id), so a round of evals can count what agents left. The deliverables (SVG, PNG, outline and a `.build.json` manifest of versions and digests) are written
 to `_work/` and move to the output folder only when the build has no errors. Chromium runs with the network refused
 (see [`offline.md`](offline.md)). Every step reports findings in one shape (`level`, `check`, `id`, `detail`,
 `hint`), and a failure anywhere is a finding, never a traceback.

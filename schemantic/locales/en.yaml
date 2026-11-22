@@ -49,6 +49,7 @@ legend:
   status_removed: "Removed in this phase"
   status_assumed: "Assumed: the sources do not say so"
   focus: "The point of this plate"
+  verdict: "Verdict: our reading of the sources"
 status:
   assumed: "assumed"
   start: "start"

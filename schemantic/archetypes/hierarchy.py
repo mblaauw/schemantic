@@ -12,7 +12,7 @@ MAX_LEVELS, MAX_LEAVES = 4, 8
 class Hierarchy(Archetype):
     name = "hierarchy"
     required = frozenset({"root", "children"})
-    allowed = frozenset({"root", "children", "chips_at"})
+    allowed = frozenset({"root", "children", "assumed", "chips_at"})
     legend_keys = {"mean_control": "mean_leads"}
     level_rows = True
 
@@ -27,6 +27,9 @@ class Hierarchy(Archetype):
         for parent in self.children(spec):
             if parent not in self.placed(spec):
                 out.append(finding("layout", f"layout.children.{parent}", f"'{parent}' has children but is not in the tree"))
+        kids = {c for cs in self.children(spec).values() for c in cs}
+        out += [finding("layout", f"layout.assumed.{pid}", f"'{pid}' has no line to a parent to mark as assumed")
+                for pid in lay.get("assumed") or {} if pid not in kids]
         if out or len(set(self.placed(spec))) != len(self.placed(spec)):
             return out  # a panel placed twice is reported with the shared placement checks
         levels = self.levels(spec)
@@ -65,7 +68,9 @@ class Hierarchy(Archetype):
         return set(self.placed(spec))
 
     def expand(self, spec: dict) -> dict:
-        tree = [{"from": parent, "to": kid} for parent, kids in spec["layout"]["children"].items() for kid in kids or []]
+        why = spec["layout"].get("assumed") or {}
+        tree = [{"from": parent, "to": kid, **({"assumed": why[kid]} if kid in why else {})}
+                for parent, kids in spec["layout"]["children"].items() for kid in kids or []]
         return {**spec, "flows": tree + spec.get("flows", [])}
 
 

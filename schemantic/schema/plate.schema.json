@@ -282,6 +282,10 @@
           "type": "integer", "minimum": 1,
           "description": "comparison: the option recommended (1 is the first), marked and tinted."
         },
+        "verdicts": {
+          "type": "string", "maxLength": 60,
+          "description": "comparison: whose verdicts the check, warning and cross icons give, for the legend (\"The review board's verdict\"). Without it the legend says they are your reading of the sources."
+        },
         "root": {
           "type": "string",
           "description": "hierarchy, decision-tree: the panel at the top of the tree."
@@ -297,6 +301,10 @@
         "children": {
           "type": "object", "additionalProperties": {"type": "array", "minItems": 1, "items": {"type": "string"}},
           "description": "hierarchy: panel id -> the panels directly under it; the arrows follow from this."
+        },
+        "assumed": {
+          "type": "object", "additionalProperties": {"type": "string", "maxLength": 120},
+          "description": "hierarchy: panel id -> why the line to its parent is assumed rather than found in the sources. The line is drawn amber and dashed, as any assumed arrow."
         },
         "cells": {
           "type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "string"},
@@ -484,7 +492,7 @@
     "stories": {
       "type": "array",
       "maxItems": 4,
-      "description": "The routes the title or subtitle tells, step by step. Lint checks that a flow joins every step to the next, so a reader can follow the route with a finger; `draw: true` numbers one of them on the plate.",
+      "description": "The routes the title or subtitle tells, step by step. Lint checks that a flow joins every step to the next, so a reader can follow the route with a finger; `draw: true` marks a route on the plate: one numbered, and a second lettered.",
       "items": {
         "type": "object",
         "required": [
@@ -509,7 +517,7 @@
           },
           "draw": {
             "type": "boolean",
-            "description": "Number the route on the plate: its flows get step badges 1 to n, and the legend names the story. One drawn story per plate; its flows take no step of their own."
+            "description": "Mark the route on the plate: its flows get step badges 1 to n, and the legend names the story. A second drawn story gets letters, A to n, on the flows the first does not pass. Two drawn stories per plate; their flows take no step of their own."
           }
         }
       }
@@ -879,7 +887,7 @@
           "layout": {
             "required": ["criteria", "options"],
             "propertyNames": {
-              "enum": ["criteria", "options", "pick", "chips_at"]
+              "enum": ["criteria", "options", "pick", "verdicts", "chips_at"]
             }
           }
         }
@@ -901,7 +909,7 @@
           "layout": {
             "required": ["root", "children"],
             "propertyNames": {
-              "enum": ["root", "children", "chips_at"]
+              "enum": ["root", "children", "assumed", "chips_at"]
             }
           }
         }

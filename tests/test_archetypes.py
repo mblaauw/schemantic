@@ -43,17 +43,24 @@ def test_sequence_checks(fn, says):
 
 
 def test_a_lifeline_holds_twelve_cards_and_other_panels_six():
-    many = [{"name": f"Step {n}", "row": n, **({"id": "place"} if n == 4 else {})} for n in range(1, 13)]
+    many = [{"name": f"Step {n}", "row": n, **({"id": "place"} if n == 5 else {})} for n in range(1, 13)]
     assert not details(SEQUENCE, lambda s: panel(s, "orders").update(cards=many))
     assert details(SEQUENCE, lambda s: panel(s, "orders").update(cards=[*many, {"name": "x", "row": 12}]))  # the schema's cap
     assert any("a panel holds 6" in d for d in details(MAP, lambda s: panel(s, "sell").update(cards=[{"name": f"C{n}"} for n in range(7)])))
 
 
-def test_sequence_numbers_its_messages_by_row_and_a_drawn_story_keeps_its_own():
+def test_sequence_numbers_its_messages_by_row_and_letters_one_branch():
+    """The example's refused token is a drawn story: its message is lettered, and the numbers pass over it."""
     arche = archetypes.get("sequence")
-    assert [f["step"] for f in arche.expand(SEQUENCE)["flows"]] == [1, 2, 3, 4, 5]
-    drawn = {**SEQUENCE, "stories": [{"name": "Out", "path": ["send", "take"], "draw": True}]}
-    assert "step" not in arche.expand(drawn)["flows"][0]
+    expanded = sp.number_story(arche.expand(SEQUENCE))
+    assert [f["step"] for f in expanded["flows"]] == [1, 2, 3, "A", 4, 5]
+    from schemantic.html import legend_entries
+    steps = [(e["mark"], e["label"]) for e in legend_entries(expanded, sp.load_locale("en")) if e["kind"] == "step"]
+    assert steps == [("1", "Step in the order things happen"), ("A", "A refused token")]
+    plain = {**SEQUENCE, "stories": []}
+    assert [f["step"] for f in arche.expand(plain)["flows"]] == [1, 2, 3, 4, 5, 6]
+    two = {**SEQUENCE, "stories": SEQUENCE["stories"] + [{"name": "Out", "path": ["send", "take"], "draw": True}]}
+    assert any("letters one branch" in f["detail"] for f in sp.check(two))
 
 
 @pytest.mark.parametrize("fn, says", [
@@ -194,7 +201,7 @@ def test_a_state_machine_marks_its_start_and_ends():
     spec = archetypes.get("state-machine").expand(sp.load_spec(ROOT / "examples" / "ferry-booking-state-machine.yaml"))
     assert {p["id"]: p.get("mark") for p in spec["panels"]} == {
         "requested": "start", "held": None, "confirmed": None, "expired": "end", "cancelled": "end", "boarded": "end"}
-    assert any(line.startswith("Requested [start]") for line in lines(spec))
+    assert any(line.startswith("Requested") and line.endswith("[start]") for line in lines(spec))
 
 
 @pytest.mark.parametrize(("fn", "says"), [
@@ -254,3 +261,30 @@ def test_a_data_model_may_leave_a_cell_empty_but_warns_about_a_wide_entity(tmp_p
     assert archetypes.get("data-model").grid(spec).open_cells
     spec["layout"]["areas"][-1] = " ".join([first, *rest[:-1], rest[-2]])
     assert [f["id"] for f in archetypes.get("data-model").advice(spec)] == [rest[-2]]
+
+
+def test_a_comparison_says_whose_verdicts_its_icons_give():
+    from schemantic.html import legend_entries
+    verdict = lambda s: [e for e in legend_entries(s, sp.load_locale("en")) if e["kind"] == "verdict"]  # noqa: E731
+    mine = verdict(COMPARISON)
+    assert [e["label"] for e in mine] == ["Verdict: our reading of the sources"]
+    assert mine[0]["icons"] == ["circle-check", "alert-triangle", "circle-x"]
+    board = copy.deepcopy(COMPARISON)
+    board["layout"]["verdicts"] = "The review board's verdict"
+    assert not sp.check(board) and [e["label"] for e in verdict(board)] == ["The review board's verdict"]
+    assert not verdict(SEQUENCE)
+
+
+def test_a_hierarchy_marks_a_line_of_its_tree_as_assumed():
+    spec = copy.deepcopy(HIERARCHY)
+    spec["layout"]["assumed"] = {"commerce": "the note says 'has', not 'reports to'"}
+    assert not [f for f in sp.check(spec) if f["level"] == "error"]
+    flows = archetypes.get("hierarchy").expand(spec)["flows"]
+    assert {"from": "head", "to": "commerce", "assumed": "the note says 'has', not 'reports to'"} in flows
+    assert {"from": "head", "to": "foundation"} in flows
+    assert any("has no line to a parent" in d for d in details(HIERARCHY, lambda s: s["layout"].update(assumed={"head": "x"})))
+    assert any(d for d in details(archetypes_spec("decision-tree"), lambda s: s["layout"].update(assumed={"x": "y"})))
+
+
+def archetypes_spec(name):
+    return sp.load_spec(next((ROOT / "examples").glob(f"*{name}.yaml")))

@@ -7,27 +7,24 @@ layout:
   start: first
   ends: [failed, last]
 
+# A state is its title, and the subtitle says what holds in it. Give a state a card only for a thing the sources name there.
 panels:
   - id: first
     title: "TODO: the state it starts in"
+    subtitle: "TODO: what holds in this state"
     role: platform
-    cards:
-      - {icon: circle, name: "TODO: what holds in this state", refs: ["notes: TODO"]}
   - id: middle
     title: "TODO: the state that follows"
+    subtitle: "TODO: what holds in this state"
     role: platform
-    cards:
-      - {icon: circle, name: "TODO: what holds in this state", refs: ["notes: TODO"]}
   - id: failed
     title: "TODO: a state it can end in"
+    subtitle: "TODO: what holds in this state"
     role: external
-    cards:
-      - {icon: circle, name: "TODO: what holds in this state", refs: ["notes: TODO"]}
   - id: last
     title: "TODO: a state it can end in"
+    subtitle: "TODO: what holds in this state"
     role: platform
-    cards:
-      - {icon: circle, name: "TODO: what holds in this state", refs: ["notes: TODO"]}
 
 flows_mean: transition
 flows:

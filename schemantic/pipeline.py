@@ -245,5 +245,9 @@ def build(spec_path: str | Path, out: str | Path, *, deliver: bool = True, scale
                       flow_problems=[dict(flow=spec["flows"][x["i"]], check=x["check"], problem=x["problem"])
                                      for x in plate["flows"]["problems"]])
     report.update(grouped(issues))
+    if "manifest" in staged:
+        # The plate goes out with the warnings its author chose to leave: the build file keeps them, so anyone can count them.
+        report["build"]["warnings"] = [{"check": w["check"], "id": w["id"]} for w in report["warnings"]]
+        staged["manifest"].write_text(json.dumps(report["build"], indent=1) + "\n", encoding="utf-8")
     publish(staged, report, out)
     return report

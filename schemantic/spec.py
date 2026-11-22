@@ -6,6 +6,7 @@ import re
 from functools import cache
 from itertools import pairwise
 from pathlib import Path
+from string import ascii_uppercase
 
 import jsonschema
 import yaml
@@ -24,6 +25,7 @@ FOOTER_STACK_MAX = 2
 PLACEHOLDER = re.compile(r"\bTODO\b")
 # A source file past this size (bytes) is no text a ref can quote: a binary, a dump.
 QUOTE_FILE_MAX = 2_000_000
+MAX_DRAWN = 2  # stories drawn on one plate: one numbered, one lettered
 
 
 def load_spec(path: str | Path) -> dict:
@@ -202,7 +204,7 @@ def semantic_errors(spec: dict, theme_css: str = "") -> list[dict]:
         for c in (c for c in warnings if c not in oq.get("extra", [])):
             out.append(finding("chip-mirror", "footer.open_questions", f"warning not repeated in open questions: '{c}'"))
 
-    out += traceability(spec)
+    out += traceability(spec) + brief_only(spec)
 
     focused = [p["id"] for p in spec["panels"] if p.get("focus")]
     focused += [card_id(p, i, c) for p in spec["panels"] for i, c in enumerate(p.get("cards", [])) if c.get("focus")]
@@ -263,10 +265,19 @@ def story_findings(spec: dict, known: set[str]) -> list[dict]:
                 detail += f" (a flow joins their panels, '{home.get(a, a)}' to '{home.get(b, b)}'; the route goes through the cards)"
             out.append(finding("story", where, detail))
     drawn = [n for n, s in enumerate(spec.get("stories", [])) if s.get("draw")]
-    out += [finding("story", f"stories/{n}", "only one story is drawn: a plate numbers one route") for n in drawn[1:]]
+    out += [finding("story", f"stories/{n}", "two stories are drawn at most: a plate numbers one route and letters a second")
+            for n in drawn[MAX_DRAWN:]]
+    stepped = [(n, f) for n, f in enumerate(spec.get("flows", [])) if f.get("step")]
     if drawn:
-        out += [finding("story", f"flows/{n}", f"the drawn story numbers its own flows; drop this flow's step {f['step']}")
-                for n, f in enumerate(spec.get("flows", [])) if f.get("step")]
+        out += [finding("story", f"flows/{n}", f"a drawn story marks its own flows; drop this flow's step {f['step']}")
+                for n, f in stepped]
+    # A story that is only checked is invisible: the reader sees the routes that are drawn. Flows numbered by hand, or by
+    # the layout, already show their order.
+    if not stepped and len(drawn) < MAX_DRAWN and not archetypes.REGISTRY[spec["archetype"]].numbers_itself:
+        out += [finding("story", f"stories/{n}", f"story '{s['name']}' is checked but not drawn, so a reader does not see it",
+                        level="warning", hint="Add `draw: true` to the story: its flows are marked and the legend names the route. "
+                                              "A plate draws two.")
+                for n, s in enumerate(spec.get("stories", [])) if not s.get("draw")]
     return out
 
 
@@ -290,28 +301,43 @@ def route_ends(spec: dict) -> list[dict]:
                 out.append(finding("route-end", f"flows/{n}", f"arrow '{f['label']}' is about card '{hit}' but ends on panel '{f[end]}'",
                                    level="warning"))
     ends = {f[end] for f in spec["flows"] for end in ("from", "to")}
+    drawn = drawn_stories(spec)
+    on_route = {step for s in drawn for step in s["path"]}
     claim = f"{spec.get('title', '')} {spec.get('subtitle', '')}"
     for cards in cards_of.values():
         for cid, name in cards:
-            if len(name) >= 4 and cid not in ends and re.search(rf"\b{re.escape(name)}\b", claim, re.I):
+            if len(name) < 4 or not re.search(rf"\b{re.escape(name)}\b", claim, re.I):
+                continue
+            if cid not in ends:
                 out.append(finding("route-end", cid, f"the title or subtitle names '{name}', but no arrow reaches the card", level="warning"))
+            elif drawn and cid not in on_route and not archetypes.REGISTRY[spec["archetype"]].numbers_itself:
+                more = "draw a second story through it" if len(drawn) < MAX_DRAWN else "take the drawn routes through it"
+                out.append(finding("route-end", cid, f"the title or subtitle names '{name}', but no drawn route passes the card",
+                                   level="warning", hint=f"A reader looks for what the title names on the numbered route: {more} "
+                                                         "(`draw: true`), or take it out of the title."))
     return out
 
 
-def drawn_story(spec: dict) -> dict | None:
-    return next((s for s in spec.get("stories", []) if s.get("draw")), None)
+def drawn_stories(spec: dict) -> list[dict]:
+    return [s for s in spec.get("stories", []) if s.get("draw")][:MAX_DRAWN]
 
 
 def number_story(spec: dict) -> dict:
-    """A drawn story numbers the flows along its route, 1 to n, so the reader sees the route the title names. Runs on
-    a spec that checked clean: every step of the story has its flow, and no flow has a step of its own."""
-    story = drawn_story(spec)
-    if not story:
+    """A drawn story marks the flows along its route, so the reader sees the route the title names: the first 1 to n, a
+    second A, B, C on the flows that are its own, so it reads up to where it joins the first. Runs on a spec that checked
+    clean: every step of a story has its flow, and no flow has a step of its own."""
+    drawn = drawn_stories(spec)
+    if not drawn:
         return spec
     flows = [dict(f) for f in spec["flows"]]
-    for n, (a, b) in enumerate(pairwise(story["path"]), 1):
-        f = next(f for f in flows if (f["from"], f["to"]) == (a, b) or f.get("both") and (f["from"], f["to"]) == (b, a))
-        f.setdefault("step", n)  # a route that passes one flow twice keeps its first number
+    for k, story in enumerate(drawn):
+        own = 0
+        for n, (a, b) in enumerate(pairwise(story["path"]), 1):
+            f = next(f for f in flows if (f["from"], f["to"]) == (a, b) or f.get("both") and (f["from"], f["to"]) == (b, a))
+            if "step" in f:
+                continue  # a route that passes one flow twice, or joins the first route, keeps the mark that is there
+            own += 1
+            f["step"] = n if k == 0 else ascii_uppercase[own - 1]
     return {**spec, "flows": flows}
 
 
@@ -370,6 +396,31 @@ def traceability(spec: dict) -> list[dict]:
         out.append(finding("traceability", "(plate)", f"{guessed} of {len(things)} cards and arrows are assumed: this plate says more "
                            "about the author than the sources", level="warning",
                            hint="Drop what has no basis, or make it an open question; ask for the source that settles the rest."))
+    return out
+
+
+# How a brief speaks of who runs a thing, which on the plate is a panel's colour.
+ROLE_TALK = re.compile(r"\bextern\w*|\bplatform (part|lane|component)s?\b|\b(colou?r\w*|kleur\w*)\b|\bwho (runs|owns)\b|\brun by\b"
+                       r"|\bbeheert\b|\boutside (\w+ ){0,4}(control|team)\b|\bbuiten (\w+ ){0,4}(controle|team)\b", re.I)
+
+
+def brief_only(spec: dict) -> list[dict]:
+    """An assumption about who runs a thing is an assumption about its panel's colour, which a reader takes as fact. The
+    brief is not on the plate, so one that admits it there alone leaves the plate claiming more than the sources say."""
+    if not archetypes.REGISTRY[spec["archetype"]].legend_roles:
+        return []
+    out = []
+    for n, text in enumerate((spec.get("brief") or {}).get("assumptions") or []):
+        if not ROLE_TALK.search(text):
+            continue
+        named = [p for p in spec["panels"]
+                 if any(len(name) >= 4 and re.search(rf"\b{re.escape(name)}\b", text, re.I)
+                        for name in [p["title"]] + [c["name"] for c in p.get("cards", [])])]
+        if all(p.get("assumed") for p in named) if named else any(p.get("assumed") for p in spec["panels"]):
+            continue
+        which = ", ".join(f"'{p['title']}'" for p in named if not p.get("assumed")) or "a panel"
+        out.append(finding("brief-only", f"brief/assumptions/{n}", f"the brief assumes who runs {which}, which the plate shows as "
+                           "a colour and a reader takes as fact", level="warning"))
     return out
 
 

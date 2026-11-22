@@ -6,7 +6,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from . import archetypes, icons, roles
 from .config import CANVAS_SIZES, TEMPLATES
 from .export import font_css
-from .spec import FOOTER_WEIGHTS, card_id, drawn_story, flags, footer_layout, load_locale, notes, open_questions
+from .spec import FOOTER_WEIGHTS, card_id, drawn_stories, flags, footer_layout, load_locale, notes, open_questions
 
 
 def grid_css(spec: dict) -> dict:
@@ -80,9 +80,13 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
         entries += [{"kind": "line", "key": s, "label": lg[f"style_{s}"]} for s in styles]
         if any(f.get("assumed") for f in flows):
             entries.append({"kind": "line", "key": "assumed", "label": lg["style_assumed"]})
-        if any(f.get("step") for f in flows):  # a drawn story's steps are its route: the legend names it
-            story = drawn_story(spec)
-            entries.append({"kind": "step", "key": "step", "label": story["name"] if story else lg["step"]})
+        # A drawn story's steps are its route, so the legend names it: the first by its numbers, a second by its letters.
+        # Where the layout numbers the arrows itself (a sequence), a drawn story is a branch, and takes the letters.
+        drawn = ([None] if arche.numbers_itself else []) + drawn_stories(spec)
+        if any(isinstance(f.get("step"), int) for f in flows):
+            entries.append({"kind": "step", "key": "step", "mark": "1", "label": drawn[0]["name"] if drawn and drawn[0] else lg["step"]})
+        if any(isinstance(f.get("step"), str) for f in flows):
+            entries.append({"kind": "step", "key": "step-second", "mark": "A", "label": drawn[1]["name"]})
     things = [p for p in spec["panels"]] + [c for p in spec["panels"] for c in p.get("cards", []) + p.get("patterns", [])]
     for st in ("new", "changed", "planned", "deprecated", "removed"):
         if any(t.get("status") == st for t in things):
@@ -95,6 +99,7 @@ def legend_entries(spec: dict, loc: dict, theme_css: str = "") -> list[dict]:
         entries.append({"kind": "rating", "key": "rating", "label": spec["rating_means"]})
     if any(t.get("focus") for t in things + spec.get("flows", [])):
         entries.append({"kind": "focus", "key": "focus", "label": lg["focus"]})
+    entries += arche.legend(spec, lg)
     kinds = [ch["kind"] for p in spec["panels"] for ch in p.get("chips", [])] + [f["kind"] for f in flags(spec)]
     for k in ("warning", "info"):
         if k in kinds:

@@ -49,6 +49,19 @@ components, counts, nothing invented by name) and the judged half (a claim in th
 invented, no defect). One run per case is noisy; take three. A change to `judge.md` moves the numbers too, far more than
 the prompt's wording: when it changes, judge the last round's plates again under it before comparing.
 
+A round's specs and verdicts stay, and a new or changed check is tried on them before any agent runs:
+
+```bash
+python evals/replay.py <runs> --spec-only          # every check that needs no browser, in seconds; without the flag, all
+python evals/replay.py <runs> --show route-end     # each finding of one check beside the judge's words, then where it is quiet
+```
+
+It lints every delivered spec with the code as it is now and sets each check beside the judges: the plates it fires on, how
+many of those a judge faulted for that kind of defect, and how many the judges faulted in all. It says whether a finding is
+true, not what an agent does with it; that still takes a round. On the round of 2 November, before any of the checks it led to:
+`void` fired on 9 of the 50 plates judged to have holes, `orphan` on 3 of the 27 with a broken path, `role-fit` on none of the
+12 with a wrong colour, and `traceability` on none of the 29 with a truth defect.
+
 ```bash
 python evals/corrections.py prepare <runs> --skill <skill copy>   # a delivered plate and one sentence per run
 python evals/corrections.py grade <runs>                          # by code: done, nothing else changed, still clean
@@ -97,14 +110,32 @@ judge prompt had not changed since the last round, so the eight cases both round
 What it says: the new layouts did not cost the old ones anything, and every run took a layout the judges found fitting, with a
 claim in its title. The goals of one defect per plate and half of all runs passing are not met. A small gain on 48 plates is a
 direction, not a measurement, and judges differ. Kinds are sorted by keyword, so they are approximate: of 149 defects, holes 54,
-paths 34, truth 30, colour 16. Two of the five automated fails look like the grader's: an assumed card counted as invented, and
-"VMs" not matching "virtual machines".
+paths 34, truth 30, colour 16. Two of the five automated fails were the grader's: an assumed card counted as invented, and
+"VMs" not matching "virtual machines". Both are fixed since: a card the plate marks `assumed` is not invented, as the judges
+hold too, and a rubric component may list the names it goes by ("virtual machines|VMs"). Graded again, both runs pass, which
+makes the automated half 93 of 96.
 
 **Since then, not judged again.** Holes were the largest group, and on trees, state machines and data models most were a blank
 band under the short panels of a row, or an entity stretched into an empty cell. Rows there now end level, and a data model may
-leave a cell empty. Built again from the same 24 specs, the largest gap under a panel went from 62 to 82 px per case to 0, with
-no new warnings beyond the wide-entity one, which all six data models get. `review.md` gained a clause saying so. What the judges
-make of it needs the next round.
+leave a cell empty. Built again from the same 24 specs, the largest gap under a panel went from 62 to 82 px per case to 0.
+
+Then thirteen changes, each tried on this round's 96 plates with `replay.py` before it was kept. What the checks see of what the
+judges saw, before and after:
+
+| Check | Fires on, before | Fires on, after | Of those, faulted by a judge for that kind |
+| --- | --- | --- | --- |
+| `void` (48 px below a panel, 64 px inside one) | 9 plates | 23 | 23, of 50 with holes; about 20 of the other 27 are the rows that now end level |
+| `route-end` (a card the title names is on no drawn route) | 0 | 15 | 13, of 27 with a broken path |
+| `story` (a story checked but not drawn) | 0 | 5 | 4 |
+| `brief-only` (who runs a thing, admitted only in the brief) | 0 | 11 | 7 for exactly this, by reading them; the other 4 are the same case unjudged |
+
+Two checks were tried and dropped, which is what the replay is for: a drawn route over an assumed arrow fired on 15 plates and
+the judges faulted 2, and a client app coloured as a platform part on 22 and 4. The rest of the thirteen change what a plate can
+say or what the examples teach: a second drawn route, lettered; one lettered branch on a sequence; whose verdicts a comparison's
+icons give; a tree line marked assumed; a badge beside a short dashed arrow; a state without a coined card; and guidance on
+hedges, groups and manual work. `review.md` changed with them (questions 2, 5 and 9), so the next round is judged again under
+the new text before it is compared. What an agent does with a warning is not measured here: the build file now records the
+warnings a plate is delivered with, and `run_all.py` counts them.
 
 ### Corrections
 

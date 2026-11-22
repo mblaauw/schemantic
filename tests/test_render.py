@@ -130,7 +130,13 @@ def test_clean_build_publishes_with_a_manifest(tmp_path):
     made = json.loads((tmp_path / "orderplatform-eventbus.build.json").read_text(encoding="utf-8"))
     assert made == report["build"]
     assert {"schemantic", "spec_version", "spec_sha256", "chromium", "playwright", "fonts"} <= set(made)
-    assert "Inter-Regular.woff2" in made["fonts"]
+    assert "Inter-Regular.woff2" in made["fonts"] and made["warnings"] == []
+    # A plate delivered with a warning says so in its build file, so a round of evals can count what agents left
+    spec = sp.load_spec(ROOT / "examples" / "orderplatform-eventbus.yaml")
+    spec.pop("flows_mean")
+    code, report = run("build", write(tmp_path, spec, "left"), "--out", tmp_path, "--dpi", 96)
+    left = json.loads((tmp_path / "left.build.json").read_text(encoding="utf-8"))["warnings"]
+    assert code == 0 and {"check": "flows-mean", "id": "flows_mean"} in left
     # The layout document the SVG was written from stays in _work/ to inspect: groups named by their element
     layout = json.loads((tmp_path / "_work" / "orderplatform-eventbus.layout.json").read_text(encoding="utf-8"))
     def groups(items):
@@ -571,3 +577,13 @@ def test_the_outline_says_where_everything_runs():
     md = markdown(sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml"))
     assert "- account: Cloud, production" in md and "  - cluster: Kubernetes" in md
     assert "(Patient portal)" in md and "Patients, Insurers" in md
+
+
+def test_a_second_route_is_drawn_in_hollow_lettered_badges(tmp_path):
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    spec["flows"].append({"from": "insurers", "to": "records_api"})
+    spec["stories"].append({"name": "The other way in", "path": ["insurers", "records_api", "mtls"], "draw": True})
+    code, report = run("build", write(tmp_path, spec, "two-routes"), "--out", tmp_path, "--dpi", 96)
+    assert code == 0, report["errors"]
+    svg = (tmp_path / "two-routes.svg").read_text(encoding="utf-8")
+    assert re.search(r'<circle[^>]*stroke-width="1.5"[^>]*>(</circle>)?<text[^>]*>A</text>', svg) and report["parity"]["pixels"] == 0

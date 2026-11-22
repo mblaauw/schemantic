@@ -7,11 +7,13 @@ from ..findings import finding
 from . import GridSpec
 from .swimlane import Swimlane
 
+VERDICT_ICONS = ("circle-check", "alert-triangle", "circle-x")
+
 
 class Comparison(Swimlane):
     name = "comparison"
     required = frozenset({"criteria", "options"})
-    allowed = frozenset({"criteria", "options", "pick", "chips_at"})
+    allowed = frozenset({"criteria", "options", "pick", "verdicts", "chips_at"})
     legend_roles = False
     cards_are_things = False
 
@@ -34,6 +36,13 @@ class Comparison(Swimlane):
             if len([c for c in cols if c]) != len({c for c in cols if c}) or any(c and c > n for c in cols):
                 out.append(finding("layout", p["id"], f"one card per option, with `col` from 1 to {n}"))
         return out
+
+    def legend(self, spec: dict, labels: dict) -> list[dict]:
+        """A verdict icon is a judgement, and a reader takes it for the sources' own unless the plate says whose it is."""
+        icons = {c.get("icon") for p in spec["panels"] if p["id"] in spec["layout"]["criteria"] for c in p.get("cards", [])}
+        shown = [i for i in VERDICT_ICONS if i in icons]
+        label = spec["layout"].get("verdicts") or labels["verdict"]
+        return [{"kind": "verdict", "key": "verdict", "icons": shown, "label": label}] if shown else []
 
     def grid(self, spec: dict) -> GridSpec:
         lay = spec["layout"]

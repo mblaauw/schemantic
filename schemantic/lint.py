@@ -11,9 +11,14 @@ from .config import MM_PER_PX, PRINT_FLOOR_PT, SLIDE_FLOOR_PX, TYPE_FLOOR_PX
 from .export import FONTS, covered, num
 from .findings import finding
 
-# A run of empty space inside a body panel longer than this reads as a hole in the plate (review question 4).
+# A run of empty space longer than this reads as a hole in the plate (review question 5): an empty cell, a blank band.
 VOID_WARN_PX = 96
 VOID_ERROR_PX = 160
+# Holes at a panel are seen sooner. Measured on the 96 judged plates of the eval of 2 November: every one of the 17 with
+# 48 px or more below a panel that ends above its row was faulted for holes, and every one of the 4 with 64 px or more
+# inside a panel; under that, a gap says nothing (11 of 18 plates with 32 to 48 px inside a panel, against 56 of 103 in all).
+VOID_BESIDE_PX = 48
+VOID_INSIDE_PX = 64
 # Cards a row-spanning panel spreads further apart than this share of their height (and this many px) float, and
 # read as holes: name-only cards 40 px apart do, cards with notes and bullets 47 px apart do not.
 SPREAD_SHARE = 0.75
@@ -142,6 +147,7 @@ def widow_findings(layout: dict, spec: dict) -> list[dict]:
 def dom_lint(page, segs: list[dict], slide: bool = False) -> dict:
     """{issues, density, voids} for the plate in `page`, with the routed connectors in `segs`."""
     return call(page, "lint", {"floor": SLIDE_FLOOR_PX if slide else TYPE_FLOOR_PX, "segs": segs,
-                               "voidWarn": VOID_WARN_PX, "voidError": VOID_ERROR_PX, "spreadShare": SPREAD_SHARE,
+                               "voidWarn": VOID_WARN_PX, "voidError": VOID_ERROR_PX, "voidBeside": VOID_BESIDE_PX,
+                               "voidInside": VOID_INSIDE_PX, "spreadShare": SPREAD_SHARE,
                                "spreadFloor": SPREAD_FLOOR_PX, "footerShare": FOOTER_SHARE, "footerFloor": FOOTER_FLOOR_PX,
                                "wideCard": WIDE_CARD_PX, "cardFill": CARD_FILL})

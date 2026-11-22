@@ -57,15 +57,18 @@ CHECKS: dict[str, Check] = {
                     "warning and say why in your reply, make the relation an open question, or drop the "
                     "panel if it does not serve the message",
                     "Add the flow the sources name, or mark one they imply `assumed`; with no basis at all, leave the warning and say why."),
-    "story": Check("spec", "a story names an id that does not exist, or no flow runs from one of its steps to the next",
+    "story": Check("spec", "a story names an id that does not exist, or no flow runs from one of its steps to the next; or a story "
+                   "is checked but not drawn, so the reader does not see it (warning)",
                    "add the flow between the two steps the detail names, card to card when the route goes through cards "
-                   "(give both cards an id); if the sources name no such step, the story claims too much",
+                   "(give both cards an id); if the sources name no such step, the story claims too much. Give a story the "
+                   "title names `draw: true`; a plate draws two",
                    "Add a flow from the first named step to the second, card to card."),
     "route-end": Check("spec", "a route stops short of what it is about: a story through a panel that holds cards, an arrow labelled "
                        "with a card's name that ends on the panel around it, or a card the title or subtitle names that no arrow "
-                       "reaches (warning)",
+                       "reaches, or that no drawn route passes (warning)",
                        "give the cards ids and run the arrow to the card it is about; if the sources speak of the whole panel, say "
-                       "so in the label without a card's name",
+                       "so in the label without a card's name. A card the title names belongs on a drawn route: draw a second "
+                       "story through it, or take it out of the title",
                        "Run the arrow to the card, not the panel around it, and put that card in the story."),
     "series": Check("spec", "parts of one series disagree: numbering, `of`, language, what arrows mean, or one thing drawn in "
                     "two colours (people in one part, a platform component in another)",
@@ -99,6 +102,11 @@ CHECKS: dict[str, Check] = {
                           "add `refs: [\"<source id>: <path or quote>\"]` from the inventory (`status_ref` for a status); what the "
                           "sources do not say gets `assumed: <why>`, which the plate shows, or becomes an open question",
                           "Add refs quoting the source; what it does not say gets `assumed: <why>`, or drop it."),
+    "brief-only": Check("spec", "the brief admits an assumption about who runs a thing (external, platform, outside the team's "
+                        "control) that the plate shows as a panel's colour, unmarked (warning)",
+                        "give that panel `assumed: <why>`, so the plate tags it; a reader never sees the brief. If the sources "
+                        "do say who runs it, drop the assumption",
+                        "Give the panel `assumed: <why>`: the plate tags it and the legend says what the tag means."),
     "chip-mirror": Check("spec", "a warning chip or warning flag is not under open questions", "`open_questions: {from_chips: true}`",
                          "Set footer.open_questions.from_chips to true."),
     "icon": Check("spec", "unknown icon", "use one of the closest names in the hint, or search: `schemantic icons <word>`",
@@ -152,9 +160,10 @@ CHECKS: dict[str, Check] = {
                    "Shorten the title by a few words so its last line is not a single word."),
     "chip-length": Check("layout", "a chip runs to three lines", "shorten it to one clear sentence",
                          "Shorten the chip to one sentence of about 50 characters."),
-    "void": Check("layout", "a run of empty space inside a body panel (warning over 96 px, error over 160 px), below a short "
-                  "panel next to taller ones in its row, inside a zone frame, in an empty cell of `layout.areas`, or as a "
-                  "blank band under the footer or around a plate on paper (warning over 96 px); or cards a row-spanning "
+    "void": Check("layout", "a run of empty space inside a body panel (warning over 64 px, error over 160 px), below a short "
+                  "panel next to taller ones in its row or inside a zone frame (warning over 48 px), in an empty cell of "
+                  "`layout.areas`, or as a blank band under the footer or around a plate on paper (warning over 96 px); or "
+                  "cards a row-spanning "
                   "panel spreads apart by most of a card's height",
                   "add real content (bullets, a pattern, an info chip); move the panel next to one of its height; merge it "
                   "with a neighbour; let a panel span an empty cell; give a spread panel fewer rows; in nested zones, put "

@@ -10,6 +10,7 @@ from conftest import ROOT, sp
 from test_render import write
 
 from schemantic import cli, findings, pipeline
+from schemantic.lint import FOOTER_FLOOR_PX
 
 BASE = sp.load_spec(ROOT / "examples" / "orderplatform-toegang.yaml")
 LAYERS = sp.load_spec(ROOT / "examples" / "ontwikkelplatform-lagen.yaml")
@@ -39,6 +40,7 @@ SPEC_TRIGGERS = {
     "flow": lambda s: s["flows"].append({"from": "gateway", "to": "billing"}),
     "canvas": lambda s: s["canvas"].update(part=4),
     "chip-mirror": lambda s: s["footer"].update(open_questions={"extra": ["Event bus nu of pas in fase 3?"]}),
+    "brief-only": lambda s: s.update(brief={"assumptions": ["De klanten staan als extern getekend; de notulen zeggen niet wie ze beheert"]}),
     "icon": lambda s: s["panels"][0]["cards"][0].update(icon="unicorn"),
     "role": lambda s: s["panels"][0].update(role="security"),
     "focus": lambda s: (panel(s, "gateway").update(focus=True), panel(s, "identity").update(focus=True)),
@@ -171,10 +173,13 @@ def test_examples_have_no_voids_and_a_low_footer(path, mode, tmp_path):
     # (test_void_checks_empty_cells_spread_cards_and_a_blank_band); here the holes are those inside the plate.
     inside = {k: v for k, v in report["voids"].items() if k != "canvas"}
     assert max(inside.values()) <= limit, inside
+    if mode == "fit":  # an example shows no hole a judge would see: agents copy what the examples do
+        assert not [w["detail"] for w in report["warnings"] if w["check"] == "void"]
     boxes = json.loads(Path(report["snapshot"]).read_text(encoding="utf-8"))["boxes"]
     height = float(re.search(r'height="([\d.]+)"', (tmp_path / "_work" / f"{path.stem}.svg").read_text()[:400]).group(1))
     footer = boxes["footer"][3] - boxes["footer"][1]
-    assert footer <= 0.13 * height + 2, f"footer {footer}px of {height}px"
+    # As lint has it (footer-share): a footer of a line or two passes on any plate, since a short plate has nothing left to cut
+    assert footer <= max(0.13 * height + 2, FOOTER_FLOOR_PX), f"footer {footer}px of {height}px"
 
 
 def test_route_end_finds_an_arrow_about_a_card_and_a_card_the_title_names():
@@ -446,3 +451,34 @@ def test_fields_name_a_source_and_their_keys_reach_the_legend():
     from schemantic.html import legend_entries
     keys = [e["key"] for e in legend_entries(spec, sp.load_locale("en")) if e["kind"] == "field-key"]
     assert keys == ["primary"]
+
+
+def test_replay_sorts_a_judges_defect_by_the_question_it_answers():
+    sys.path.insert(0, str(ROOT / "evals"))
+    import replay
+
+    kinds = replay.judged_kinds({"defects": ["Q5 Holes (part 1): the cards float apart", "Path: the route stops short",
+                                             "Truth / Open ends: Q1 is not a question the source raises", "The plate is fine"],
+                                 "invented": ["Order feed, a card the plan does not name"]})
+    assert {k: len(v) for k, v in kinds.items()} == {"holes": 1, "path": 1, "truth": 2, "other": 1}
+    assert set(replay.ABOUT.values()) <= {k for k, _ in replay.KINDS}
+
+
+def test_a_gap_a_judge_sees_below_a_short_zone_is_reported(tmp_path):
+    """Lint warned from 96 px; on the judged plates every gap of 48 px or more below a panel or zone was faulted."""
+    spec = sp.load_spec(ROOT / "examples" / "kliniek-zones.yaml")
+    panel(spec, "proxy")["cards"].pop()  # the card that brings the datacentre level with the cloud account
+    report = pipeline.build(write(tmp_path, spec, "short-zone"), tmp_path, deliver=False)
+    found = [w for w in report["warnings"] if w["check"] == "void"]
+    assert [w["id"] for w in found] == ["zone.dc"] and 48 < int(found[0]["detail"].split("px")[0]) < 96
+
+
+def test_the_grader_takes_an_assumed_card_and_a_second_name_as_the_judges_do():
+    sys.path.insert(0, str(ROOT / "evals"))
+    import grade
+
+    inputs = "Paper pick lists are removed. The WMS books shipments with the carrier."
+    cards = [{"name": "Pick list printing", "assumed": "the plan says only that paper lists go"}, {"name": "Order feed"},
+             {"name": "Carrier shipments"}, {"name": "Label printer", "refs": ["plan: books shipments with the carrier"]}]
+    assert grade.invented_cards(cards, inputs) == ["Order feed"]
+    assert grade.missing(["serverless", "virtual machines|VMs", "Kubernetes"], "Serverless beats VMs on cost") == ["Kubernetes"]

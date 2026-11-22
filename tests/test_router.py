@@ -112,3 +112,14 @@ def test_a_second_pass_removes_a_crossing_the_first_could_not_see(route):
              {"from": "d1", "to": "a"}]
     out = route(html, flows)
     assert out["problems"] == [] and crossings(out["segs"]) == 1  # 2 without the second pass
+
+
+def test_a_badge_sits_beside_a_short_arrow_whose_dashes_say_something(route):
+    """Across one gutter a disc on the line hides the shaft, and with it the dashes of an assumed arrow or a reply."""
+    page = page_with({"a": (0, 100, 200, 300), "b": (248, 100, 200, 300)})
+    solid = route(page, [{"from": "a", "to": "b", "step": 1}])["segs"][0]
+    assumed = route(page, [{"from": "a", "to": "b", "step": 1, "assumed": "we think so"}])["segs"][0]
+    assert solid["points"] == assumed["points"] == [[207, 250], [241, 250]]
+    assert solid["step"]["y"] == 250                      # on the line
+    assert abs(assumed["step"]["y"] - 250) > 9            # clear of it, by more than the disc's radius
+    assert 207 < assumed["step"]["x"] < 241

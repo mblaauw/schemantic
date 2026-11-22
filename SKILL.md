@@ -56,7 +56,8 @@ it. Then pick the layout on the reader's question. When unsure, use `column-flow
 A `capability-map`, `comparison` or `quadrant` says it by position and needs no arrows; a `hierarchy` draws them from
 its tree. On those, the arrow rules below apply only to the arrows you do draw. On a `data-model`, a panel is an entity that
 holds `fields` instead of cards, and its arrows end on panels. On a `state-machine` and a `decision-tree`, a panel is a state,
-or a question or outcome; each arrow ends on a panel and must say in its label what causes it, or which answer it is.
+or a question or outcome, and needs no cards; each arrow ends on a panel and must say in its label what causes it, or
+which answer it is.
 
 Settle the reader's language (`nl` or `en`, following the user; in `nl` technical terms stay English). More than 6 panels (on a `hierarchy` or `decision-tree`, more than 8 at the ends of the tree) or 30 cards is two plates, each with its own message: a series (`series`, `part`, `of`); once every part
 builds, run `"$PY" "$SKILL/scripts/plate.py" series plates/*.yaml` so the parts agree (language, what arrows mean or a subtitle that says so, one colour
@@ -94,17 +95,20 @@ and fix it before writing more:
 - What the sources do not say is marked or left out. Mark what you have reason to draw with `assumed: <why>`: the plate
   tags the card or panel and draws the arrow amber and dashed, so a reader can tell it from a fact. dbt builds Silver and
   Gold, so an arrow runs out of Bronze: `refs` if the notes say so, `assumed` if you worked it out. Leave out what has no
-  basis at all. The brief's `assumptions` are for what cannot be marked on the plate.
+  basis at all. The brief's `assumptions` are for what cannot be marked on the plate; who runs a thing can, since it is
+  its panel's colour: `assumed` on the panel.
 - A `status` is what the sources say about that thing. Someone asking for a report does not make it `planned`, and "not
   decided" is a warning, not a status: with nothing to quote, draw no status.
 - A panel name uses the sources' words. A grouping you coin that a reader would take for a real domain or team
-  ("Customers and sales") gets `assumed`, or a plainer name.
+  ("Customers and sales") gets `assumed`, or a plainer name. A thing stays in the group the sources give it: an event bus
+  listed under Data is a card in Data, also when it is the hub of the story. A panel of its own ("Events") is a claim.
 - The title, subtitle, principles and notes say only what the sources say. An "only", an "every", a "never" or a detail
   you inferred goes in the brief, or is left out. Check every "every" against the plate's own open questions.
 - Every uncertainty in the sources is a warning chip, a card flag or an open question. Before you keep a question,
   look for its answer: one the sources settle ("everything publishes", "test mirrors production") is a fact to draw. A
-  question the sources do not raise goes in your reply to the user, not on the plate.
-- Every route the title or subtitle names ("A via B to C") is a `story` through cards that exist.
+  hedge ("by our estimate", "roughly") is the source's wording, not a question: quote it in the note. A question the
+  sources do not raise goes in your reply to the user, not on the plate.
+- Every route the title or subtitle names ("A via B to C") is a `story` through cards that exist, and is drawn.
 
 ## 4. Fill the spec
 
@@ -120,7 +124,8 @@ short version:
 - Everything the title or subtitle says moves, calls, reads or feeds gets an arrow on this plate; a step that lives
   only in a note is a gap. On a series, draw a stand-in panel for what sits on the other part, named for what it
   holds ("Lending"), never "Part 1"; `references/analysis.md` has a worked series. Write the main route
-  as a `story` with `draw: true`: lint checks that a finger can follow it, and the plate numbers its steps.
+  as a `story` with `draw: true`: lint checks that a finger can follow it, and the plate numbers its steps. A second
+  route the title or subtitle names is drawn too, and gets letters.
 - Show change with `status` (new, changed, planned, deprecated, removed) and the one element that matters with
   `focus`.
 - A `warning` chip or card `flag` marks an open choice; it appears again under open questions.
@@ -139,7 +144,7 @@ nothing, and `preview` in the report names the unpublished files in `plates/out/
 line per check, errors first, with its count and `hint` (the first fix to try); its first line is the one to fix
 first. Each finding under `errors` and `warnings` has `check`, `id` and `detail`; `references/lint-fixes.md` has
 the full table. `changed` names the parts your last edit changed, so you see whether it did what you meant. Fix
-every error in the spec and build again. Treat `void`, `traceability`, `route-end` and `role-fit` warnings as real. After five rounds without
+every error in the spec and build again. Treat `void`, `traceability`, `route-end`, `story`, `brief-only` and `role-fit` warnings as real. After five rounds without
 progress, restructure: move cards between panels, change the archetype, or split the plate.
 
 ## 6. Look at it

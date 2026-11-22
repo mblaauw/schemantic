@@ -41,6 +41,7 @@ class Archetype:
     ends_on_panels: bool = False              # True when an arrow joins panels by rule, so it is never short of a card
     self_loops: bool = False                  # True when an arrow can leave a box and come back to it
     cards_are_things: bool = True             # False when cards are steps or verdicts, so their icons do not say who
+    numbers_itself: bool = False              # True when the layout numbers its arrows, so a story need not be drawn
     level_rows: bool = False                  # True when the panels of a row read as one line, so they end level
 
     def placed(self, spec: dict) -> list[str]:
@@ -65,6 +66,10 @@ class Archetype:
     def loud(self, spec: dict) -> set[str]:
         """Panels with a filled header when the plate has no focus: the layout's own centre, if it has one."""
         return set()
+
+    def legend(self, spec: dict, labels: dict) -> list[dict]:
+        """Legend entries only this layout has, given the legend's labels in the plate's language."""
+        return []
 
     def advice(self, spec: dict) -> list[dict]:
         """Warnings of this layout, on a plate whose layout checked clean."""

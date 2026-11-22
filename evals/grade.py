@@ -7,8 +7,8 @@ The run dir holds what the agent produced: one or more spec YAML files (skill ru
 counts when a PNG of the same name was built from it. The checks: an image exists; every spec builds without lint
 errors; the archetype, language and series match the rubric; required components appear; enough open questions,
 warnings, principles, statuses and steps; and no card is invented (its name's words, or a quoted ref, must be found
-in the inputs). The judged half (the title is a claim,
-the review questions find no defect) comes from evals/judge.md.
+in the inputs). It also reports, without grading it, the warnings the agent's last build gave and it delivered with. The
+judged half (the title is a claim, the review questions find no defect) comes from evals/judge.md.
 """
 from __future__ import annotations
 
@@ -54,11 +54,25 @@ def language(text: str) -> str:
     return "nl" if sum(t in DUTCH for t in tokens) > sum(t in ENGLISH for t in tokens) else "en"
 
 
+def invented_cards(cards: list[dict], inputs: str) -> list[str]:
+    """Names of cards the inputs do not back. A card is traced when its name's words are in the sources, or a ref quotes
+    them (the text after "<source>:"). A card the plate marks `assumed` is not invented: the reader is told, which is the
+    judges' rule too (judge.md)."""
+    in_stems = {stem(w) for w in words(inputs)}
+    refs_of = lambda c: [r.split(":", 1)[-1] for r in c.get("refs", [])]  # noqa: E731
+    return [c["name"] for c in cards if not c.get("assumed") and c["name"].lower() not in inputs.lower()
+            and not traced(c["name"], in_stems) and not any(traced(r, in_stems, 0.6) for r in refs_of(c))]
+
+
+def missing(components: list[str], found: str) -> list[str]:
+    """Rubric components the plate does not name. A component may list the names it goes by: "virtual machines|VMs"."""
+    return [c for c in components if not any(name.strip().lower() in found.lower() for name in c.split("|"))]
+
+
 def grade(case: Path, run: Path) -> dict:
     rubric = yaml.safe_load((case / "rubric.yaml").read_text(encoding="utf-8"))
     inputs = " ".join(p.read_text(encoding="utf-8") for p in (case / "inputs").rglob("*") if p.is_file())
     inputs += " " + (case / "prompt.md").read_text(encoding="utf-8")
-    in_words = words(inputs)
     svgs = sorted(run.rglob("*.svg"))
     pngs = sorted(run.rglob("*.png"))
     specs = []
@@ -85,11 +99,7 @@ def grade(case: Path, run: Path) -> dict:
         checks["archetype"] = all(doc["archetype"] in rubric["archetype"] for _, doc in specs)
         checks["lang"] = all(doc["canvas"]["lang"] == rubric["lang"] for _, doc in specs)
         cards = [c for _, doc in specs for panel in doc["panels"] for c in panel.get("cards", [])]
-        in_stems = {stem(w) for w in in_words}
-        # A card is traced when its name's words are in the sources, or a ref quotes them (the text after "<source>:").
-        refs_of = lambda c: [r.split(":", 1)[-1] for r in c.get("refs", [])]  # noqa: E731
-        invented = [c["name"] for c in cards if c["name"].lower() not in inputs.lower()
-                    and not traced(c["name"], in_stems) and not any(traced(r, in_stems, 0.6) for r in refs_of(c))]
+        invented = invented_cards(cards, inputs)
         # A plate in another language than its sources translates every name; then only the judge can tell.
         checks["invented"] = invented if language(inputs) == rubric["lang"] else []
         checks["invented_checked"] = language(inputs) == rubric["lang"]
@@ -103,10 +113,14 @@ def grade(case: Path, run: Path) -> dict:
         checks["steps"] = count(lambda d: sum(bool(f.get("step")) for f in d.get("flows", [])) + (
             sum(len(p.get("cards", [])) for p in d["panels"]) if d["archetype"] == "swimlane" else 0))
         checks["parts"] = len(specs)
+        # What the agent's own last build warned about and it delivered anyway (None when built before builds recorded it).
+        left = [json.loads(b.read_text(encoding="utf-8")).get("warnings") for b in run.rglob("*.build.json")
+                if "_work" not in b.parts and b.name.removesuffix(".build.json") in built]
+        checks["warnings_left"] = None if not left or None in left else sorted(w["check"] for ws in left for w in ws)
     else:
         checks["lang"] = language(text) == rubric["lang"] if text else False
     found = (text + " " + " ".join(json.dumps(doc) for _, doc in specs)).lower()
-    checks["components_missing"] = [c for c in rubric.get("components", []) if c.lower() not in found]
+    checks["components_missing"] = missing(rubric.get("components", []), found)
 
     passed = {"image": checks["image"], "lang": checks["lang"],
               "components": len(checks["components_missing"]) <= len(rubric.get("components", [])) // 4}

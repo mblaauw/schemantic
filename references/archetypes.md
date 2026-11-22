@@ -150,6 +150,8 @@ layout:
 - `labels: ["Today", "Phase 2"]` overrides the column labels (default Before / After; in Dutch Nu / Straks).
 - Leave a row's other side empty by giving one side more panels: a part that is new, or gone.
 - The title claims the difference ("Invoices reach the bank the same day"), not the topic.
+- Work people do by hand on the before side (paper lists, booking by phone) is a panel of people, `actor`, and the people
+  who do it stay on the after side when they still do the work: a reader looks for them there.
 - Example: `examples/invoicing-before-after.yaml`.
 
 ## roadmap
@@ -189,7 +191,12 @@ layout:
 - Every card has a `row`; one card per participant per row, one message per row, up to 12 on a lifeline. A step with no
   message is a card alone. Name a card for what happens, in a word or two: six lifelines leave little width.
 - A message crosses other lifelines only where their row is empty: lint names the card in the way.
-- `style: async` draws a reply or an event dashed. Keep it to one path: a second path is a second plate.
+- `style: async` draws a reply or an event dashed. The participant that starts it from outside (an app, a browser, a
+  partner) is `external`, the colour the legend calls clients and external systems.
+- Keep to one path, with one branch at most. A branch the title or subtitle names (a decline, a refusal) is drawn, not only
+  told: a row of its own right after the step that decides, cards named for when it happens ("Refuses a bad token"), and
+  a `story` through it with `draw: true`. Its messages are lettered A, B, the numbers pass over them, and the legend names
+  the branch. A second branch is a second plate.
 - The title claims the order that matters ("The gateway checks every token before a request reaches a service").
 - Example: `examples/token-check-sequence.yaml`.
 
@@ -229,8 +236,9 @@ layout:
 ```
 
 - Every criterion has one card per option; `col` names the option. The name is the verdict, the note the reason.
-- The icon carries the verdict: `circle-check`, `alert-triangle`, `circle-x`. Panel colours mean nothing here and stay
-  out of the legend.
+- The icon carries the verdict: `circle-check`, `alert-triangle`, `circle-x`. A verdict is a judgement, so the legend says
+  whose: yours ("our reading of the sources") unless the sources give the verdicts themselves, and then you say so with
+  `verdicts: "The review board's verdict"`. Panel colours mean nothing here and stay out of the legend.
 - Nothing decided yet? Leave out `pick`, and put the choice in a flag: the plate still shows the trade-off.
 - Example: `examples/search-engine-comparison.yaml`.
 
@@ -253,6 +261,9 @@ layout:
 - Up to 4 levels and 8 panels at the ends of the tree; each panel has one parent. Say `flows_mean` for what the tree
   means: `control` for reporting lines (the legend says "Leads"), `dependency` for what is made of what.
 - `flows` are only for what cuts across the tree, and are drawn on top of the tree's own arrows.
+- A line is a claim: this reports to that. When the sources only suggest it ("Clinical services has the wards"), mark the
+  line under `assumed`, by the panel at its lower end: `assumed: {nursing: "the note says 'has', not 'reports to'"}`. It is
+  drawn amber and dashed, like any assumed arrow.
 - Example: `examples/platform-org-hierarchy.yaml`.
 
 ## data-model
@@ -298,8 +309,9 @@ layout:
 
 - Set `flows_mean: transition`. Every arrow runs between panels and has a `label`, the event that causes it, in a word or two.
   `{from: held, to: held, label: "hold extended"}` draws an arrow back to its own state.
-- A panel's cards say what holds in that state; give it none when the sources say nothing more. The layout sets the colours, one for
-  a state and one for an end, whatever `role` a panel names.
+- A state is its title, and its `subtitle` says what holds in it. Give it no cards: a card needs a name, and for a state the
+  sources give none, so one would be coined ("Seat asked for"). A thing the sources do name in a state (a hold timer, a fee)
+  may be a card. The layout sets the colours, one for a state and one for an end, whatever `role` a panel names.
 - Lint warns about a state the start cannot reach, a state nothing leaves that is not in `ends`, and an end that something leaves.
 - Lay out the main path along the first row, and the states it can fall out to under it. When an arrow crosses or a label has no
   room, move a state; past about ten transitions on one plate, labels start to run out of room.

@@ -738,13 +738,28 @@ schemantic.route = (flows) => {
       // A badge sits on its own arrow, so it only has to keep off what the arrow keeps off (not its endpoints' panels).
       return !r.obstacles.some((o) => hits(b, o)) && !labelBoxes.some((o) => hits(b, o));
     };
+    // A line whose style says something (assumed, a reply, optional) has to show its dashes: on a run too short to show
+    // them past the disc, the badge sits beside the run instead of on it.
+    const styled = r.fl.assumed || (r.fl.style && r.fl.style !== "sync");
+    const DASHES = 2 * BADGE + 2 * HEAD + 16;
+    const beside = ([p, q]) => {
+      const len = runLength([p, q]);
+      const [nx, ny] = [(q[1] - p[1]) / len, -(q[0] - p[0]) / len];
+      const k = (len - HEAD) / 2 / len; // the middle of the shaft, clear of the head
+      const [mx, my] = [p[0] + (q[0] - p[0]) * k, p[1] + (q[1] - p[1]) * k];
+      return [1, -1].map((s) => [mx + s * nx * (BADGE + 4), my + s * ny * (BADGE + 4)]);
+    };
+    const longest = longestFirst(r.pts)[0];
+    const aside = styled && runLength(longest) < DASHES ? beside(longest).find(clear) : null;
     // An arrow across one narrow gutter (between rows, from a hub to its spoke) has no run that long: its badge is
     // pinned on the tail, where the arrow leaves its source.
     const spot =
+      aside ||
       longestFirst(r.pts)
         .filter((run) => runLength(run) >= 2 * BADGE + HEAD + 4)
         .map(centre)
-        .find(clear) || [r.pts[0]].find(clear);
+        .find(clear) ||
+      [r.pts[0]].find(clear);
     if (!spot) {
       problems.push({
         i: r.i,
@@ -755,10 +770,15 @@ schemantic.route = (flows) => {
     }
     const [x, y] = spot;
     labelBoxes.push({ l: x - BADGE, r: x + BADGE, t: y - BADGE, b: y + BADGE });
+    // A number is the first drawn route; a letter the second, hollow so the two are told apart at a glance.
+    const second = typeof r.fl.step === "string";
+    const disc = second
+      ? `r="${BADGE - 0.75}" fill="${S.token("--paper")}" stroke="${S.token("--step")}" stroke-width="1.5"`
+      : `r="${BADGE}" fill="${S.token("--step")}"`;
     r.svg =
       (r.svg || "") +
-      `<circle cx="${r2(x)}" cy="${r2(y)}" r="${BADGE}" fill="${S.token("--step")}"/>` +
-      `<text x="${r2(x)}" y="${r2(y + STEP_TEXT * 0.36)}" text-anchor="middle" font-family="${font}" font-size="${STEP_TEXT}" font-weight="700" fill="${onHead}">${r.fl.step}</text>`;
+      `<circle cx="${r2(x)}" cy="${r2(y)}" ${disc}/>` +
+      `<text x="${r2(x)}" y="${r2(y + STEP_TEXT * 0.36)}" text-anchor="middle" font-family="${font}" font-size="${STEP_TEXT}" font-weight="700" fill="${second ? S.token("--step") : onHead}">${r.fl.step}</text>`;
     r.step = { x, y, n: r.fl.step };
   }
   for (const r of later) placeLabel(r);
@@ -828,6 +848,7 @@ schemantic.route = (flows) => {
         toPanel: panelOf(r.B),
         points: r.pts,
         label: r.label || null,
+        step: r.step || null,
       };
       if (s.label) s.label.box = rel(ov.querySelector(`[data-label="${r.i}"]`));
       return s;

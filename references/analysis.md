@@ -55,7 +55,8 @@ panel with seven needs splitting.
 Write the title as a claim the grouping supports ("Every customer question lands in one Zendesk queue"). If no claim
 fits, the grouping is wrong, or the plate is two plates. The subtitle says how the claim is true.
 When the title or subtitle names a route ("A via B to C"), that route is the claim: connect its cards, not their
-panels, and write it as a `story` so lint checks a finger can follow it. Each worked example below does.
+panels, and write it as a `story` with `draw: true`, so lint checks a finger can follow it and the plate marks it. Each
+worked example below does; when the title names two routes, both are drawn.
 
 ## 4. The cut
 
@@ -129,6 +130,7 @@ flows:
 stories:
   - name: "A bug leaves Zendesk only through Jira"
     path: [form, zendesk, second, jira]
+    draw: true
 footer:
   principles:
     - "Every customer question becomes a Zendesk ticket."
@@ -206,6 +208,7 @@ flows:
 stories:
   - name: "An upload, from the API through the queue to the bucket"
     path: [api, queue, worker, bucket]
+    draw: true
 footer:
   principles:
     - "Nothing slow runs inside a request; it becomes a job on the queue."
@@ -268,15 +271,17 @@ panels:
          refs: ["process: paid with the next salary run"]}
 flows_mean: control
 flows:
-  - {from: submit, to: approve, step: 1, refs: ["process: Their manager approves or rejects it"]}
-  - {from: approve, to: check, step: 2, refs: ["process: Finance checks claims over 500 euro"]}
-  - {from: check, to: pay, step: 3, refs: ["process: Approved claims are paid"]}
+  - {from: submit, to: approve, refs: ["process: Their manager approves or rejects it"]}
+  - {from: approve, to: check, refs: ["process: Finance checks claims over 500 euro"]}
+  - {from: check, to: pay, refs: ["process: Approved claims are paid"]}
   - {from: approve, to: pay, refs: ["process: Approved claims are paid"]}
 stories:
-  - name: "A claim over 500 euro"
+  - name: "A claim over 500 euro"            # numbered 1, 2, 3
     path: [submit, approve, check, pay]
-  - name: "A claim of 500 euro or less"
+    draw: true
+  - name: "A claim of 500 euro or less"      # lettered where it leaves the first: A, from approval straight to payment
     path: [submit, approve, pay]
+    draw: true
 footer:
   principles:
     - "Every claim is approved by the employee's manager."
@@ -294,7 +299,8 @@ calls members; branches call lending.*
 The inventory tells two stories, the calls between areas and the events across them, and one plate carries one message.
 Part 1 takes the calls between lending, members and branches. Part 2, below, takes the events. Its title makes two
 claims, so both get arrows: a stand-in panel holds what part 1 owns, named for what it holds, and the hub is a card of
-its own in the middle. An arrow from a whole panel is right here: every card in it publishes, so one arrow says it
+its own in the middle. It may stand alone because this inventory lists the hub under no area; had it said "Reporting:
+dashboards, exports, the event hub", the hub would stay a card in Reporting, and Reporting would take the middle. An arrow from a whole panel is right here: every card in it publishes, so one arrow says it
 without seven. The inventory names no owner or status, so no card has a note and nothing is asked about either.
 
 <!-- lint: full -->

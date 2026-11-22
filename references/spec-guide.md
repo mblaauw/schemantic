@@ -46,7 +46,10 @@ lint (`placeholder`) names each TODO left.
 ```
 
 Roles: `platform` for what the team builds or runs, `data` for data at rest and data platforms, `external` for
-systems outside the team's control, `actor` for people and teams. A theme can add roles (see the README).
+systems outside the team's control, `actor` for people and teams. A theme can add roles (see the README). A colour is a
+claim about who runs the thing, and a reader takes it as fact. When the sources do not say, pick the likelier role and
+give the panel `assumed: "the note does not say who runs it"`: the plate tags it. Saying so only in the brief leaves the
+plate claiming it (lint: `brief-only`).
 
 ## Cards
 
@@ -142,13 +145,15 @@ and a line style only when the plate uses it.
 When the title or subtitle tells a route ("the portal reaches the records system only through one API"), write it
 down as a story: the steps a reader's finger follows, first to last. Lint (`story`) checks that a flow runs from
 every step to the next, in that direction (or with `both`). Draw the story the title names (`draw: true`): its flows
-get step badges 1 to n and the legend names the route, so the reader sees it, not only lint.
+get step badges 1 to n and the legend names the route, so the reader sees it, not only lint. When the title or subtitle
+names a second route ("tills and webshop both land in Bronze"), draw that too: it gets hollow badges A, B, C on the flows
+that are its own, up to where it joins the first.
 
 ```yaml
 stories:                                              # up to 4
   - name: "From the portal to the records system"     # 60, the route in the title's words; the legend shows it
     path: [portal, integration, proxy, ehr]           # card or panel ids; 2 to 10
-    draw: true                                        # one drawn story per plate; its flows take no `step`
+    draw: true                                        # up to two drawn stories per plate; their flows take no `step`
 ```
 
 A route through cards needs flows between those cards, not their panels; lint says when only the panels are joined.

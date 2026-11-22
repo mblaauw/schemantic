@@ -4,7 +4,45 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Added
+- `<name>.build.json` records the warnings a plate was delivered with, and `evals/run_all.py` counts them per model. A check
+  only helps when agents act on it, and the last round could not say how many warnings its plates still had.
+- A `hierarchy` marks a line of its tree as assumed: `layout.assumed: {<panel>: <why>}` draws the line to that panel's parent
+  amber and dashed. The tree's arrows follow from `children`, so until now a reporting line the sources only suggest could be
+  admitted in the brief alone; two hierarchy plates in the last eval were faulted for it.
+- A `comparison` says in its legend whose verdicts its icons give: "our reading of the sources", or `layout.verdicts` when
+  the sources rate the options themselves. Half the comparison plates in the last eval were faulted for drawing their own
+  reading as fact, admitted only in the brief.
+- A `sequence` draws one branch: a drawn story there is a branch off the numbered order (a decline, a refusal), lettered A, B
+  while the numbers pass over it, and named in the legend. Five of six sequence plates in the last eval named a decline in
+  the subtitle and drew nothing, as the example itself did; the example now draws its refused token.
+- Lint warns when the brief admits an assumption about who runs a thing while the panel it colours carries no `assumed`
+  (`brief-only`). A reader never sees the brief, and "only the brief admits it" was the judges' most repeated truth defect.
+  Replayed on the last eval, it fires on 12 plates: the judges faulted 7 for exactly this, 4 more are the same case
+  unjudged, and 1 was a false alarm that is fixed.
+- Lint warns when a card the title or subtitle names is on no drawn route (`route-end`), and when a story is checked but not
+  drawn (`story`). Replayed on the last eval's plates, the first fires on 15, of which the judges faulted 13 for a path defect;
+  the second on 5, of which 4. The worked examples in `references/analysis.md` now draw their stories; two of them did not,
+  and agents copy examples.
+- A plate draws two stories: the first is numbered as before, and a second story with `draw: true` gets hollow badges A, B, C
+  on the flows that are its own, with its name in the legend. The commonest path defect in the last eval was a title naming
+  two routes with one drawn, which the limit of one drawn story forced.
+- `evals/replay.py`: lints the specs of a judged eval round with the code as it is now and sets each check beside what the
+  judges said, so a new check is tried on a hundred judged plates before any agent runs.
+
 ### Changed
+- Guidance for three defects no check can see, each found on several plates of the last eval: a hedge ("by our estimate") is
+  not an open question; a thing stays in the group the sources give it (an event bus listed under Data is not a panel of its
+  own); and on a `before-after`, work done by hand is a panel of people, who stay on the after side when they still do it.
+- A state in a `state-machine` is its title and a subtitle, without cards. The starter and the example gave every state a card
+  with a coined name ("Seat asked for"), and agents followed: two runs in the last eval failed for invented card names, and a
+  third invented where a tool waits. Both are redrawn, and the guide says why.
+- A step badge sits beside a short dashed arrow, not on it: across one gutter the disc hid the whole shaft, so an assumed
+  arrow or a reply on a numbered route could not be told from a fact. Solid arrows and long runs keep the badge on the line.
+- `void` warns sooner at a panel: from 48 px below a panel or zone that ends above its row, and from 64 px inside a panel; an
+  empty cell and a blank band stay at 96 px. Measured on the judged plates of the last eval: all 17 with 48 px or more below a
+  panel were faulted for holes, and all 4 with 64 px or more inside one, while lint warned on 2 and 1 of them. Two examples
+  had such a gap and are filled in (`kliniek-zones`, `ontwikkelplatform-lagen`).
 - Panels in a row now end level on `hierarchy`, `decision-tree`, `state-machine` and `data-model`, however much shorter one is:
   the last eval's largest defect group was holes, many of them a blank band under the shorter panels of a row. The cards or the
   last block take up the height, and a panel of only a header is all header.
